@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Session - Trading Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        dark: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1
+                        class="text-3xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
+                        Edit Session
+                    </h1>
+                    <p class="text-gray-400 mt-2">Update session details</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ route('sessions.index') }}"
+                        class="bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 transition-all duration-300">
+                        <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
+                        <span>Back to Sessions</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Form Container -->
+        <div class="max-w-2xl mx-auto">
+            <div
+                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl border border-gray-700/30 shadow-xl overflow-hidden">
+                <!-- Form Header -->
+                <div class="px-6 py-4 border-b border-gray-700/50 bg-dark-800/50">
+                    <div class="flex items-center">
+                        <div class="bg-amber-500/20 p-3 rounded-xl mr-4">
+                            <i class="fas fa-edit text-amber-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold">Edit Session</h2>
+                            <p class="text-gray-400 text-sm mt-1">Update session hours in NY Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Content -->
+                <form action="{{ route('sessions.update', $session) }}" method="POST" class="p-6">
+                    @csrf @method('PUT')
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label for="name" class="block text-sm font-medium text-gray-300">
+                                <i class="fas fa-tag mr-2 text-primary-500"></i>Session Name
+                            </label>
+                            <input type="text" name="name" value="{{ $session->name }}"
+                                class="w-full bg-dark-800 border border-primary-700/30 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                                placeholder="e.g., London Session, NY Session" required>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label for="start_hour" class="block text-sm font-medium text-gray-300">
+                                    <i class="fas fa-clock mr-2 text-green-500"></i>Start Hour (0-23, NY Time)
+                                </label>
+                                <input type="number" name="start_hour" value="{{ $session->start_hour }}"
+                                    min="0" max="23"
+                                    class="w-full bg-dark-800 border border-green-700/30 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                                    required>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="end_hour" class="block text-sm font-medium text-gray-300">
+                                    <i class="fas fa-clock mr-2 text-red-500"></i>End Hour (0-23, NY Time)
+                                </label>
+                                <input type="number" name="end_hour" value="{{ $session->end_hour }}" min="0"
+                                    max="23"
+                                    class="w-full bg-dark-800 border border-red-700/30 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-700/50">
+                        <a href="{{ route('sessions.index') }}"
+                            class="flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Sessions
+                        </a>
+                        <button type="submit"
+                            class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center">
+                            <i class="fas fa-save mr-2"></i>
+                            Update Session
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Custom input styles */
+        input[type="text"],
+        input[type="number"] {
+            background-color: #1e293b;
+            border-color: #475569;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            background-color: #1e293b;
+            border-color: #0ea5e9;
+        }
+    </style>
+</body>
+
+</html>
