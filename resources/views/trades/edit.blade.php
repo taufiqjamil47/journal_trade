@@ -1,42 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Update Exit - Trading Journal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+@extends('Layouts.index')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-8">
@@ -349,13 +312,13 @@
             const type = '{{ $trade->type }}';
             const pipValue = {{ $trade->symbol->pip_value ?? 0.0001 }};
 
-            // GUNAKAN PIP VALUE YANG SAMA DENGAN CONTROLLER
-            const pipWorth = 10; // Konsisten dengan controller
+            // GUNAKAN PIP WORTH YANG SAMA DENGAN CONTROLLER - KONSISTEN!
+            const pipWorth = 10; // Harus sama dengan $pipWorth di controller
 
             if (entry && exit && lotSize > 0) {
                 let pips;
 
-                // PERHITUNGAN PIPS YANG SAMA DENGAN CONTROLLER
+                // PERHITUNGAN PIPS YANG SAMA PERSIS DENGAN CONTROLLER
                 if (type === 'buy') {
                     pips = (exit - entry) / pipValue;
                 } else {
@@ -365,10 +328,10 @@
                 // BULATKAN KE 1 DESIMAL SEPERTI CONTROLLER
                 pips = Math.round(pips * 10) / 10;
 
-                // PERHITUNGAN PROFIT/LOSS YANG SAMA
+                // PERHITUNGAN PROFIT/LOSS YANG SAMA DENGAN CONTROLLER
                 const profitLoss = pips * lotSize * pipWorth;
 
-                // BULATKAN KE 2 DESIMAL
+                // BULATKAN KE 2 DESIMAL SEPERTI CONTROLLER
                 const roundedProfitLoss = Math.round(profitLoss * 100) / 100;
 
                 document.getElementById('potentialPL').textContent = `$${roundedProfitLoss.toFixed(2)}`;
@@ -463,6 +426,4 @@
             }
         });
     </script>
-</body>
-
-</html>
+@endsection

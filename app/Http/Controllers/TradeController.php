@@ -12,22 +12,36 @@ use App\Imports\TradesImport;
 
 class TradeController extends Controller
 {
+    // Di method index() TradeController, tambahkan:
     public function index(Request $request)
     {
-        $sortBy = $request->get('sort_by', 'date'); // default date
-        $order  = $request->get('order', 'desc');   // default desc
+        $sortBy = $request->get('sort_by', 'date');
+        $order  = $request->get('order', 'desc');
 
-        $trades = \App\Models\Trade::with('symbol')
-            ->orderBy($sortBy, $order)
-            ->paginate(10);
+        $query = Trade::with('symbol');
+        $trades = $query->orderBy($sortBy, $order)->paginate(10);
 
-        return view('trades.index', compact('trades', 'sortBy', 'order'));
+        // HITUNG WINRATE DARI SEMUA TRADE (BUKAN HANYA YANG DIPAGINATE)
+        $allTrades = Trade::all();
+        $totalTrades = $allTrades->count();
+        $wins = $allTrades->where('hasil', 'win')->count();
+        $winrate = $totalTrades > 0 ? round(($wins / $totalTrades) * 100, 2) : 0;
+
+        return view('trades.index', compact(
+            'trades',
+            'sortBy',
+            'order',
+            'winrate'
+        ));
     }
 
+    // Update method create() untuk kirim equity ke view
     public function create()
     {
         $symbols = Symbol::where('active', true)->get();
-        return view('trades.create', compact('symbols'));
+        $currentEquity = $this->getCurrentEquity();
+
+        return view('trades.create', compact('symbols', 'currentEquity'));
     }
 
     public function edit($id)
@@ -268,5 +282,18 @@ class TradeController extends Controller
         Excel::import(new TradesImport, $request->file('file'));
 
         return redirect()->route('trades.index')->with('success', 'Trades imported successfully!');
+    }
+
+    // Di TradeController.php, tambahkan method helper
+    private function getCurrentEquity()
+    {
+        $account = Account::first();
+        $initialBalance = $account->initial_balance;
+
+        // Hitung total profit/loss dari semua trade yang sudah selesai
+        $completedTrades = Trade::where('exit', '!=', null)->get();
+        $totalProfitLoss = $completedTrades->sum('profit_loss');
+
+        return $initialBalance + $totalProfitLoss;
     }
 }

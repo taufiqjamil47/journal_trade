@@ -78,4 +78,9 @@ class Trade extends Model
 
         $this->session = 'Non-Session';
     }
+
+    public function scopeBetweenDates($query, $start, $end)
+    {
+        return $query->whereBetween('date', [$start, $end]);
+    }
 }

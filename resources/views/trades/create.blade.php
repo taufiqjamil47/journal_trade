@@ -1,42 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tambah Trade - Trading Journal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+@extends('Layouts.index')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-8">
@@ -195,27 +158,173 @@
                                 placeholder="0.00000" required>
                         </div>
 
-                        <!-- Risk Calculator -->
-                        <div class="md:col-span-2 bg-dark-800/50 rounded-xl p-4 border border-gray-700/50">
-                            <h3 class="text-lg font-semibold mb-3 flex items-center">
-                                <i class="fas fa-calculator mr-2 text-amber-500"></i>Risk Calculator
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-                                <div class="text-center p-3 bg-dark-700/30 rounded-lg">
-                                    <p class="text-gray-400">Risk/Reward Ratio</p>
-                                    <p class="text-lg font-semibold text-amber-400" id="riskRewardRatio">-</p>
+                        <!-- Updated Risk Calculator dengan Design Lebih Menarik -->
+                        <div
+                            class="md:col-span-2 bg-gradient-to-br from-dark-800 to-amber-900/20 rounded-2xl p-6 border border-amber-700/30 shadow-lg">
+                            <!-- Header dengan Icon Animasi -->
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <div class="relative">
+                                        <div class="bg-amber-500/20 p-3 rounded-xl mr-4">
+                                            <i class="fas fa-calculator text-amber-400 text-xl"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-amber-300">Smart Risk Calculator</h3>
+                                        <p class="text-amber-200/70 text-sm mt-1">Live calculation based on current
+                                            equity</p>
+                                    </div>
                                 </div>
-                                <div class="text-center p-3 bg-dark-700/30 rounded-lg">
-                                    <p class="text-gray-400">SL Distance (Pips)</p>
-                                    <p class="text-lg font-semibold text-red-400" id="slPips">-</p>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-amber-400">$<span
+                                            id="currentEquity">{{ number_format($currentEquity, 2) }}</span></div>
+                                    <div class="text-xs text-amber-300/70">Current Equity</div>
                                 </div>
-                                <div class="text-center p-3 bg-dark-700/30 rounded-lg">
-                                    <p class="text-gray-400">TP Distance (Pips)</p>
-                                    <p class="text-lg font-semibold text-green-400" id="tpPips">-</p>
+                            </div>
+
+                            <!-- Risk Metrics Grid -->
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                <!-- Risk/Reward Card -->
+                                <div
+                                    class="bg-gradient-to-br from-amber-900/30 to-amber-800/20 rounded-xl p-4 border border-amber-600/30 group hover:border-amber-500/50 transition-all duration-300">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="bg-amber-500/20 p-2 rounded-lg">
+                                            <i class="fas fa-balance-scale text-amber-400 text-sm"></i>
+                                        </div>
+                                        <div
+                                            class="text-amber-400 text-xs font-semibold bg-amber-500/10 px-2 py-1 rounded-full">
+                                            R:R</div>
+                                    </div>
+                                    <p class="text-gray-400 text-xs mb-1">Risk/Reward Ratio</p>
+                                    <p class="text-2xl font-bold text-amber-300" id="riskRewardRatio">-</p>
+                                    <div class="h-1 bg-amber-500/20 rounded-full mt-2">
+                                        <div id="ratioBar"
+                                            class="h-1 bg-amber-400 rounded-full transition-all duration-500"
+                                            style="width: 0%"></div>
+                                    </div>
                                 </div>
-                                <div class="text-center p-3 bg-dark-700/30 rounded-lg">
-                                    <p class="text-gray-400">Position Size</p>
-                                    <p class="text-lg font-semibold text-cyan-400" id="positionSize">-</p>
+
+                                <!-- SL Distance Card -->
+                                <div
+                                    class="bg-gradient-to-br from-red-900/30 to-red-800/20 rounded-xl p-4 border border-red-600/30 group hover:border-red-500/50 transition-all duration-300">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="bg-red-500/20 p-2 rounded-lg">
+                                            <i class="fas fa-hand-paper text-red-400 text-sm"></i>
+                                        </div>
+                                        <div
+                                            class="text-red-400 text-xs font-semibold bg-red-500/10 px-2 py-1 rounded-full">
+                                            SL</div>
+                                    </div>
+                                    <p class="text-gray-400 text-xs mb-1">Stop Loss Distance</p>
+                                    <p class="text-2xl font-bold text-red-300" id="slPips">-</p>
+                                    <p class="text-xs text-red-400/70 mt-1">pips</p>
+                                </div>
+
+                                <!-- TP Distance Card -->
+                                <div
+                                    class="bg-gradient-to-br from-green-900/30 to-green-800/20 rounded-xl p-4 border border-green-600/30 group hover:border-green-500/50 transition-all duration-300">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="bg-green-500/20 p-2 rounded-lg">
+                                            <i class="fas fa-trophy text-green-400 text-sm"></i>
+                                        </div>
+                                        <div
+                                            class="text-green-400 text-xs font-semibold bg-green-500/10 px-2 py-1 rounded-full">
+                                            TP</div>
+                                    </div>
+                                    <p class="text-gray-400 text-xs mb-1">Take Profit Distance</p>
+                                    <p class="text-2xl font-bold text-green-300" id="tpPips">-</p>
+                                    <p class="text-xs text-green-400/70 mt-1">pips</p>
+                                </div>
+
+                                <!-- Lot Size Card -->
+                                <div
+                                    class="bg-gradient-to-br from-cyan-900/30 to-cyan-800/20 rounded-xl p-4 border border-cyan-600/30 group hover:border-cyan-500/50 transition-all duration-300">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="bg-cyan-500/20 p-2 rounded-lg">
+                                            <i class="fas fa-weight-scale text-cyan-400 text-sm"></i>
+                                        </div>
+                                        <div
+                                            class="text-cyan-400 text-xs font-semibold bg-cyan-500/10 px-2 py-1 rounded-full">
+                                            LOT</div>
+                                    </div>
+                                    <p class="text-gray-400 text-xs mb-1">Recommended Lot Size</p>
+                                    <p class="text-2xl font-bold text-cyan-300" id="positionSize">-</p>
+                                    <p class="text-xs text-cyan-400/70 mt-1" id="riskAmountDisplay">-</p>
+                                </div>
+                            </div>
+
+                            <!-- Risk Level Selector -->
+                            <div class="bg-dark-800/50 rounded-xl p-4 border border-gray-700/50">
+                                <h4 class="text-sm font-semibold text-amber-300 mb-3 flex items-center">
+                                    <i class="fas fa-sliders-h mr-2 text-amber-400"></i>
+                                    Risk Management Level
+                                </h4>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <!-- Conservative -->
+                                    <label class="risk-level-card">
+                                        <input type="radio" name="risk_percent" value="1"
+                                            class="risk-percent-radio hidden" checked>
+                                        <div class="risk-level-content bg-green-900/20 border-2 border-green-600/30">
+                                            <div class="text-center">
+                                                <div class="text-green-400 text-lg font-bold">1%</div>
+                                                <div class="text-green-300 text-xs mt-1">Conservative</div>
+                                                <div class="text-green-400/60 text-xs mt-2">Safe</div>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Moderate -->
+                                    <label class="risk-level-card">
+                                        <input type="radio" name="risk_percent" value="2"
+                                            class="risk-percent-radio hidden">
+                                        <div class="risk-level-content bg-blue-900/20 border-2 border-blue-600/30">
+                                            <div class="text-center">
+                                                <div class="text-blue-400 text-lg font-bold">2%</div>
+                                                <div class="text-blue-300 text-xs mt-1">Moderate</div>
+                                                <div class="text-blue-400/60 text-xs mt-2">Balanced</div>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Aggressive -->
+                                    <label class="risk-level-card">
+                                        <input type="radio" name="risk_percent" value="3"
+                                            class="risk-percent-radio hidden">
+                                        <div class="risk-level-content bg-orange-900/20 border-2 border-orange-600/30">
+                                            <div class="text-center">
+                                                <div class="text-orange-400 text-lg font-bold">3%</div>
+                                                <div class="text-orange-300 text-xs mt-1">Aggressive</div>
+                                                <div class="text-orange-400/60 text-xs mt-2">Growth</div>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- High Risk -->
+                                    <label class="risk-level-card">
+                                        <input type="radio" name="risk_percent" value="5"
+                                            class="risk-percent-radio hidden">
+                                        <div class="risk-level-content bg-red-900/20 border-2 border-red-600/30">
+                                            <div class="text-center">
+                                                <div class="text-red-400 text-lg font-bold">5%</div>
+                                                <div class="text-red-300 text-xs mt-1">High Risk</div>
+                                                <div class="text-red-400/60 text-xs mt-2">Expert</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Quick Status Bar -->
+                            <div class="mt-4 bg-dark-800/30 rounded-lg p-3 border border-gray-600/30">
+                                <div class="flex items-center justify-between text-xs">
+                                    <div class="flex items-center text-gray-400">
+                                        <i class="fas fa-info-circle mr-2 text-amber-400"></i>
+                                        <span>Risk management aktif berdasarkan equity real-time</span>
+                                    </div>
+                                    <div id="calculationStatus" class="text-amber-400 font-semibold">
+                                        <i class="fas fa-sync-alt animate-spin mr-1"></i>
+                                        Ready
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -246,19 +355,24 @@
                         <i class="fas fa-lightbulb text-amber-500 text-xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-semibold text-amber-300">Tips Trading</h3>
+                        <h3 class="text-lg font-semibold text-amber-300">Risk Management Tips</h3>
                         <ul class="mt-2 space-y-2 text-amber-100/80 text-sm">
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
-                                Pastikan risk/reward ratio minimal 1:1.5 untuk trading yang sehat
+                                <strong>Equity Aktual: ${{ number_format($currentEquity, 2) }}</strong> - Lot size
+                                disesuaikan secara otomatis
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
-                                Gunakan stop loss yang sesuai dengan risk management Anda
+                                Risk 1-2% untuk konservatif, 3-5% untuk agresif (sesuaikan dengan style trading)
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
-                                Catat semua detail trading untuk analisis di masa depan
+                                Risk/Reward ratio minimal 1:1.5 untuk trading yang profitable
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
+                                Lot size akan dihitung ulang saat update exit berdasarkan equity terbaru
                             </li>
                         </ul>
                     </div>
@@ -268,7 +382,7 @@
     </div>
 
     <script>
-        // Enhanced Risk Calculator
+        // Enhanced Risk Calculator dengan EQUITY DINAMIS
         function calculateRisk() {
             const entry = parseFloat(document.querySelector('input[name="entry"]').value) || 0;
             const stopLoss = parseFloat(document.querySelector('input[name="stop_loss"]').value) || 0;
@@ -278,22 +392,21 @@
             if (entry && stopLoss && takeProfit) {
                 let slDistance, tpDistance;
 
-                // Hitung distance dalam price
+                // Hitung distance - SAMA DENGAN CONTROLLER
                 if (type === 'buy') {
-                    slDistance = entry - stopLoss;
-                    tpDistance = takeProfit - entry;
+                    slDistance = Math.abs(entry - stopLoss);
+                    tpDistance = Math.abs(takeProfit - entry);
                 } else {
-                    slDistance = stopLoss - entry;
-                    tpDistance = entry - takeProfit;
+                    slDistance = Math.abs(stopLoss - entry);
+                    tpDistance = Math.abs(entry - takeProfit);
                 }
 
-                // Hitung pips (asumsi untuk forex pairs)
-                // Untuk pairs dengan 5 decimal places, 1 pip = 0.00010
-                // Untuk pairs dengan 3 decimal places (seperti USD/JPY), 1 pip = 0.010
-                const pipValue = 0.00010; // Default untuk EUR/USD, GBP/USD, dll
+                // GUNAKAN PIP VALUE YANG REALISTIS
+                const pipValue = 0.00010;
 
-                const slPips = Math.abs(slDistance) / pipValue;
-                const tpPips = Math.abs(tpDistance) / pipValue;
+                // Hitung pips - SAMA DENGAN CONTROLLER
+                const slPips = slDistance / pipValue;
+                const tpPips = tpDistance / pipValue;
 
                 // Update SL & TP Pips display
                 document.getElementById('slPips').textContent = `${slPips.toFixed(1)} pips`;
@@ -301,33 +414,39 @@
 
                 // Calculate Risk/Reward Ratio
                 const ratio = slPips > 0 ? (tpPips / slPips) : 0;
-                document.getElementById('riskRewardRatio').textContent = ratio > 0 ? `1:${ratio.toFixed(2)}` : '-';
+                const ratioDisplay = ratio > 0 ? `1:${ratio.toFixed(2)}` : '-';
+                document.getElementById('riskRewardRatio').textContent = ratioDisplay;
                 document.getElementById('rr_ratio').value = ratio.toFixed(2);
 
-                // Calculate Position Size (Lot Size) berdasarkan risk management
+                // Calculate Position Size dengan EQUITY DINAMIS
                 calculatePositionSize(slPips);
 
             } else {
-                // Reset jika data tidak lengkap
                 resetRiskCalculator();
             }
         }
 
-        // Function untuk menghitung position size (lot size)
+        // Function untuk menghitung position size dengan EQUITY DINAMIS
         function calculatePositionSize(slPips) {
-            // Asumsi:
-            const accountBalance = 1000; // Balance akun dalam USD (bisa disesuaikan)
-            const riskPercent = 2; // Risk 2% per trade (bisa disesuaikan)
-            const pipWorth = 10; // $10 per pip per 1 lot (standard lot)
+            const pipWorth = 10; // $10 per pip per 1 lot
+            const currentEquity = parseFloat({{ $currentEquity }}); // EQUITY DINAMIS dari controller
 
-            if (slPips > 0) {
-                const riskUSD = accountBalance * (riskPercent / 100);
+            // Dapatkan risk percent yang dipilih user
+            const selectedRisk = document.querySelector('input[name="risk_percent"]:checked');
+            const riskPercent = selectedRisk ? parseFloat(selectedRisk.value) : 2; // Default 2%
+
+            if (slPips > 0 && currentEquity > 0) {
+                const riskUSD = currentEquity * (riskPercent / 100);
                 const lotSize = riskUSD / (slPips * pipWorth);
 
-                // Tampilkan position size
-                document.getElementById('positionSize').textContent = `${lotSize.toFixed(2)} lots`;
+                // Tampilkan position size dengan batasan minimal 0.01
+                const finalLotSize = Math.max(lotSize, 0.01).toFixed(2);
+                document.getElementById('positionSize').textContent = `${finalLotSize} lots`;
+                document.getElementById('riskAmountDisplay').textContent = `Risk: $${riskUSD.toFixed(2)} (${riskPercent}%)`;
+
             } else {
                 document.getElementById('positionSize').textContent = '-';
+                document.getElementById('riskAmountDisplay').textContent = '-';
             }
         }
 
@@ -337,6 +456,7 @@
             document.getElementById('slPips').textContent = '-';
             document.getElementById('tpPips').textContent = '-';
             document.getElementById('positionSize').textContent = '-';
+            document.getElementById('riskAmountDisplay').textContent = '-';
             document.getElementById('rr_ratio').value = '0';
         }
 
@@ -358,7 +478,29 @@
             // Trigger initial calculation jika ada nilai
             calculateRisk();
         });
-    </script>
-</body>
 
-</html>
+        // Add event listeners untuk risk percent selector
+        document.querySelectorAll('.risk-percent-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Trigger ulang perhitungan ketika risk percent berubah
+                const entry = parseFloat(document.querySelector('input[name="entry"]').value) || 0;
+                const stopLoss = parseFloat(document.querySelector('input[name="stop_loss"]').value) || 0;
+
+                if (entry && stopLoss) {
+                    let slDistance;
+                    const type = document.querySelector('select[name="type"]').value;
+
+                    if (type === 'buy') {
+                        slDistance = Math.abs(entry - stopLoss);
+                    } else {
+                        slDistance = Math.abs(stopLoss - entry);
+                    }
+
+                    const pipValue = 0.00010;
+                    const slPips = slDistance / pipValue;
+                    calculatePositionSize(slPips);
+                }
+            });
+        });
+    </script>
+@endsection

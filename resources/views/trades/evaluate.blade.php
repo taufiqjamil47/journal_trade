@@ -1,42 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Evaluasi Trade - Trading Journal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+@extends('Layouts.index')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-8">
@@ -181,8 +144,7 @@
                                         </label>
                                         <input type="text" name="entry_type"
                                             class="w-full bg-dark-800 border border-blue-700/30 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                            value="{{ $trade->entry_type }}"
-                                            placeholder="Contoh: Order Block, FVG, dll">
+                                            value="{{ $trade->entry_type }}" placeholder="Contoh: Order Block, FVG, dll">
                                     </div>
 
                                     <div class="space-y-2">
@@ -420,6 +382,4 @@
             border-color: #10b981;
         }
     </style>
-</body>
-
-</html>
+@endsection

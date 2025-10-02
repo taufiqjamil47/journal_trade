@@ -1,42 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Trading Journal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+@extends('Layouts.index')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-8">
@@ -147,7 +110,12 @@
                         <!-- Export Button -->
                         <a href="{{ route('trades.export.excel') }}"
                             class="bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center">
-                            <i class="fas fa-file-export mr-2"></i>Export Excel
+                            <i class="fas fa-file-export mr-2"></i>Excel
+                        </a>
+
+                        <a href="{{ route('reports.weekly.pdf') }}"
+                            class="bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center">
+                            <i class="fas fa-file-export mr-2"></i>PDF
                         </a>
 
                         <!-- Add New Trade Button -->
@@ -279,7 +247,7 @@
                         <div>
                             <p class="text-sm text-gray-400">Win Rate</p>
                             <p class="text-lg font-semibold">
-                                {{ number_format(($trades->where('hasil', 'win')->count() / $trades->count()) * 100, 1) }}%
+                                {{ $winrate }}%
                             </p>
                         </div>
                     </div>
@@ -358,7 +326,7 @@
                 }
 
                 if (!importDropdownButton.contains(event.target) && !importDropdown.contains(event
-                    .target)) {
+                        .target)) {
                     importDropdown.classList.add('hidden');
                 }
             });
@@ -385,6 +353,4 @@
             background: rgba(255, 255, 255, 0.3);
         }
     </style>
-</body>
-
-</html>
+@endsection

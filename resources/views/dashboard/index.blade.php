@@ -1,43 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Trading Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            900: '#0c4a6e',
-                        },
-                        dark: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+@extends('Layouts.index')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-10">
@@ -126,8 +88,7 @@
             class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl mb-8">
             <div class="flex flex-col md:flex-row md:items-center md:space-x-6 space-y-4 md:space-y-0">
                 <div class="flex-1">
-                    <form method="GET" action="{{ route('dashboard') }}"
-                        class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="period" class="block text-sm font-medium text-gray-300 mb-1">Period</label>
                             <select name="period" onchange="this.form.submit()"
@@ -164,8 +125,8 @@
                                 <option value="OB" {{ $entryFilter === 'OB' ? 'selected' : '' }}>Order Block (OB)
                                 </option>
                                 <option value="FVG" {{ $entryFilter === 'FVG' ? 'selected' : '' }}>FVG</option>
-                                <option value="Liquidity Sweep"
-                                    {{ $entryFilter === 'Liquidity Sweep' ? 'selected' : '' }}>Liquidity Sweep</option>
+                                <option value="Liquidity Sweep" {{ $entryFilter === 'Liquidity Sweep' ? 'selected' : '' }}>
+                                    Liquidity Sweep</option>
                                 <option value="Breaker Block" {{ $entryFilter === 'Breaker Block' ? 'selected' : '' }}>
                                     Breaker Block</option>
                             </select>
@@ -189,8 +150,7 @@
                         <p class="text-gray-300 mt-1">
                             {{ $summary['trades'] }} trades ·
                             Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
-                            <span
-                                class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
+                            <span class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
                         </p>
@@ -557,6 +517,4 @@
             });
         }
     </script>
-</body>
-
-</html>
+@endsection

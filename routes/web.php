@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradeController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\DashboardController;
 
@@ -33,3 +34,6 @@ Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])
 Route::resource('sessions', SessionController::class);
 Route::get('/trades/export/excel', [TradeController::class, 'exportExcel'])->name('trades.export.excel');
 Route::post('/trades/import', [TradeController::class, 'importExcel'])->name('trades.import.excel');
+
+Route::get('/reports/weekly', [ReportController::class, 'weeklyReport'])->name('reports.weekly');
+Route::get('/reports/weekly/pdf', [ReportController::class, 'weeklyReportPdf'])->name('reports.weekly.pdf');
