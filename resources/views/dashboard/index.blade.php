@@ -4,25 +4,26 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="mb-10">
-            <div class="flex justify-between items-center">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
                 <div>
                     <h1
-                        class="text-3xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
-                        Trading Dashboard</h1>
+                        class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
+                        Trading Dashboard
+                    </h1>
                     <p class="text-gray-400 mt-2">Monitor your trading performance and analytics</p>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex flex-wrap gap-3">
                     <a href="{{ route('trades.index') }}"
-                        class="bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 transition-all duration-300">
-                        <i class="fas fa-chart-line text-primary-500 mr-2"></i>
+                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                        <i class="fas fa-chart-line text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>Trades</span>
                     </a>
                     <a href="{{ route('sessions.index') }}"
-                        class="bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 transition-all duration-300">
-                        <i class="fas fa-clock text-primary-500 mr-2"></i>
+                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                        <i class="fas fa-clock text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>Sessions</span>
                     </a>
-                    <div class="bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50">
+                    <div class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50">
                         <i class="fas fa-user text-primary-500 mr-2"></i>
                         <span>Trader</span>
                     </div>
@@ -31,9 +32,9 @@
         </header>
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div
-                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl">
+                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl hover:shadow-2xl hover:border-primary-500/30 transition-all duration-300">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-400 text-sm font-medium">Balance</p>
@@ -50,7 +51,7 @@
             </div>
 
             <div
-                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl">
+                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl hover:shadow-2xl hover:border-blue-500/30 transition-all duration-300">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-400 text-sm font-medium">Equity</p>
@@ -67,7 +68,7 @@
             </div>
 
             <div
-                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl">
+                class="bg-gradient-to-br from-dark-800 to-dark-800/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/30 shadow-xl hover:shadow-2xl hover:border-green-500/30 transition-all duration-300">
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-400 text-sm font-medium">Win Rate</p>
@@ -93,18 +94,17 @@
                         <div>
                             <label for="period" class="block text-sm font-medium text-gray-300 mb-1">Period</label>
                             <select name="period" onchange="this.form.submit()"
-                                class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
                                 <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
                                 <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
-                                <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days
-                                </option>
+                                <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
                             </select>
                         </div>
 
                         <div>
                             <label for="session" class="block text-sm font-medium text-gray-300 mb-1">Session</label>
                             <select name="session" onchange="this.form.submit()"
-                                class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
                                 <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>All Sessions
                                 </option>
                                 @foreach ($availableSessions as $sessionName)
@@ -117,12 +117,10 @@
                         </div>
 
                         <div>
-                            <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry
-                                Type</label>
+                            <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry Type</label>
                             <select name="entry_type" onchange="this.form.submit()"
-                                class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types
-                                </option>
+                                class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
+                                <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types</option>
                                 <option value="OB" {{ $entryFilter === 'OB' ? 'selected' : '' }}>Order Block (OB)
                                 </option>
                                 <option value="FVG" {{ $entryFilter === 'FVG' ? 'selected' : '' }}>FVG</option>
@@ -140,7 +138,7 @@
         @if ($summary)
             <!-- Summary Alert -->
             <div
-                class="bg-gradient-to-r from-primary-900/30 to-blue-900/30 backdrop-blur-sm rounded-2xl p-5 border border-primary-700/30 shadow-lg mb-8">
+                class="bg-gradient-to-r from-primary-900/30 to-blue-900/30 backdrop-blur-sm rounded-2xl p-5 border border-primary-700/30 shadow-lg mb-8 animate-pulse-subtle">
                 <div class="flex items-center">
                     <div class="bg-primary-500/20 p-3 rounded-xl mr-4">
                         <i class="fas fa-chart-pie text-primary-500 text-xl"></i>
@@ -171,11 +169,10 @@
                 <div class="mt-4 md:mt-0">
                     <form method="GET" action="{{ route('dashboard') }}">
                         <select name="period" id="period" onchange="this.form.submit()"
-                            class="bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            class="bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
                             <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
                             <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
-                            <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days
-                            </option>
+                            <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
                         </select>
                     </form>
                 </div>
@@ -211,7 +208,7 @@
                         </thead>
                         <tbody>
                             @foreach ($pairData as $symbol => $pl)
-                                <tr class="border-b border-gray-800/50">
+                                <tr class="border-b border-gray-800/50 hover:bg-gray-800/20 transition-colors">
                                     <td class="py-3">{{ $symbol }}</td>
                                     <td
                                         class="py-3 text-right font-medium {{ $pl >= 0 ? 'text-green-400' : 'text-red-400' }}">
@@ -251,7 +248,7 @@
                         </thead>
                         <tbody>
                             @foreach ($entryTypeData as $type => $data)
-                                <tr class="border-b border-gray-800/50">
+                                <tr class="border-b border-gray-800/50 hover:bg-gray-800/20 transition-colors">
                                     <td class="py-3">{{ $type ?? 'N/A' }}</td>
                                     <td class="py-3 text-center">{{ $data['trades'] }}</td>
                                     <td class="py-3 text-center">{{ $data['winrate'] }}%</td>
@@ -518,4 +515,45 @@
             });
         }
     </script>
+
+    <style>
+        @keyframes pulse-subtle {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.9;
+            }
+        }
+
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite;
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.5);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.8);
+        }
+    </style>
 @endsection

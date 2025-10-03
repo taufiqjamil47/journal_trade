@@ -14,7 +14,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('dashboard') }}"
-                        class="bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 transition-all duration-300">
+                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>Back to Dashboard</span>
                     </a>
