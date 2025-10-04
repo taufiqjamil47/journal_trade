@@ -67,11 +67,14 @@
 
         /* Styling untuk running text */
         .running-text-container {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(13, 22, 39, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(14, 165, 233, 0.3);
             overflow: hidden;
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
         }
 
         .running-text-wrapper {
@@ -95,10 +98,9 @@
             margin: 0 2px;
             padding: 2px 16px;
             background: rgba(14, 165, 233, 0.1);
-            /* border-radius: 4px; */
-            border: 1px solid rgba(14, 165, 233, 0.3);
+            /* border: 1px solid rgba(14, 165, 233, 0.3); */
             transition: all 0.3s ease;
-            flex-shrink: 0;
+            flex-shrink: 01;
         }
 
         .currency-pair.up {
@@ -175,14 +177,18 @@
 
 <body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
     <!-- Running Text Section -->
-    <div class="running-text-container py-2">
+    <div class="running-text-container py-2" id="runningTextContainer">
         <div class="running-text-wrapper">
             <div class="running-text" id="runningText">
                 <!-- Data pair akan di-generate oleh JavaScript -->
             </div>
         </div>
     </div>
-    @yield('content')
+
+    <!-- Content placeholder -->
+    <div class="container mx-auto py-1">
+        @yield('content')
+    </div>
 
     <script>
         // Data pair forex dengan format yang lebih detail
