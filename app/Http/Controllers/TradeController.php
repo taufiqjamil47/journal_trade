@@ -217,6 +217,18 @@ class TradeController extends Controller
         return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
     }
 
+    // Tambahkan method ini di TradeController.php
+    public function show($id)
+    {
+        $trade = Trade::with('symbol', 'account')->findOrFail($id);
+
+        // Generate image URLs dari TradingView links
+        $beforeChartImage = $this->generateTradingViewImage($trade->before_link);
+        $afterChartImage = $this->generateTradingViewImage($trade->after_link);
+
+        return view('trades.show', compact('trade', 'beforeChartImage', 'afterChartImage'));
+    }
+
     public function detail($id)
     {
         $trade = Trade::with('symbol', 'account')->findOrFail($id);
@@ -242,8 +254,8 @@ class TradeController extends Controller
             'profit_loss' => $trade->profit_loss,
             'rr' => $trade->rr,
             'hasil' => $trade->hasil,
-            'streak_win' => $trade->streak_win,
-            'streak_loss' => $trade->streak_loss,
+            // 'streak_win' => $trade->streak_win,
+            // 'streak_loss' => $trade->streak_loss,
             'before_link' => $trade->before_link, // TAMBAHKAN INI
             'after_link' => $trade->after_link,   // TAMBAHKAN INI
         ]);
@@ -327,5 +339,24 @@ class TradeController extends Controller
         $totalProfitLoss = $completedTrades->sum('profit_loss');
 
         return $initialBalance + $totalProfitLoss;
+    }
+
+    private function generateTradingViewImage($tradingViewLink)
+    {
+        if (!$tradingViewLink) return null;
+
+        // Ekstrak chart ID dari TradingView link
+        // Format: https://www.tradingview.com/x/UNIQUE_CHART_ID/
+        preg_match('/tradingview\.com\/x\/([a-zA-Z0-9_\-]+)/', $tradingViewLink, $matches);
+
+        if (isset($matches[1])) {
+            $chartId = $matches[1];
+
+            // TradingView image snapshot URL
+            // Note: Ini adalah endpoint publik TradingView untuk snapshot chart
+            return "https://www.tradingview.com/x/{$chartId}";
+        }
+
+        return null;
     }
 }
