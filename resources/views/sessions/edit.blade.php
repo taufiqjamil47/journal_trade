@@ -10,7 +10,7 @@
                         class="text-3xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
                         Edit Session
                     </h1>
-                    <p class="text-gray-400 mt-2">Update session details</p>
+                    <p class="text-gray-400 mt-2">Perbarui detail sesi</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('sessions.index') }}"

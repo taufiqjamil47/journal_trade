@@ -10,7 +10,7 @@
                         class="text-3xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
                         Trading Journal
                     </h1>
-                    <p class="text-gray-400 mt-2">Kelola dan pantau semua trading Anda</p>
+                    <p class="text-gray-400 mt-2">Pantau kinerja dan analitik perdagangan Anda</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('dashboard') }}"

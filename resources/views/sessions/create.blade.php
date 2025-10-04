@@ -10,7 +10,7 @@
                         class="text-3xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
                         Add Session
                     </h1>
-                    <p class="text-gray-400 mt-2">Create a new trading session</p>
+                    <p class="text-gray-400 mt-2">Buat sesi perdagangan baru</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('sessions.index') }}"

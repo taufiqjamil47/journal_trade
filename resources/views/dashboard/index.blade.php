@@ -10,7 +10,7 @@
                         class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary-500 to-cyan-400 bg-clip-text text-transparent">
                         Trading Dashboard
                     </h1>
-                    <p class="text-gray-400 mt-2">Monitor your trading performance and analytics</p>
+                    <p class="text-gray-400 mt-2">Pantau kinerja dan analitik perdagangan Anda</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('trades.index') }}"
@@ -164,7 +164,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div>
                     <h2 class="text-xl font-bold">Equity Curve per Session</h2>
-                    <p class="text-gray-400 text-sm mt-1">Performance across different trading sessions</p>
+                    <p class="text-gray-400 text-sm mt-1">Performa di berbagai sesi perdagangan</p>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <form method="GET" action="{{ route('dashboard') }}">
@@ -189,7 +189,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h2 class="text-xl font-bold">Profit/Loss per Symbol</h2>
-                        <p class="text-gray-400 text-sm mt-1">Performance by trading pair</p>
+                        <p class="text-gray-400 text-sm mt-1">Kinerja berdasarkan pasangan perdagangan</p>
                     </div>
                     <div class="bg-blue-500/20 p-2 rounded-lg">
                         <i class="fas fa-coins text-blue-500"></i>
@@ -227,7 +227,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h2 class="text-xl font-bold">Performance per Entry Type</h2>
-                        <p class="text-gray-400 text-sm mt-1">Strategy effectiveness analysis</p>
+                        <p class="text-gray-400 text-sm mt-1">Analisis efektivitas strategi</p>
                     </div>
                     <div class="bg-green-500/20 p-2 rounded-lg">
                         <i class="fas fa-chart-bar text-green-500"></i>
