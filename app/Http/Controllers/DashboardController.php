@@ -75,6 +75,13 @@ class DashboardController extends Controller
             ->pluck('session')
             ->toArray();
 
+        // DAPATKAN ENTRY TYPE YANG TERSEDIA SECARA DINAMIS DARI DATABASE
+        $availableEntryTypes = Trade::distinct('entry_type')
+            ->whereNotNull('entry_type')
+            ->where('entry_type', '!=', '')
+            ->pluck('entry_type')
+            ->toArray();
+
         // Equity Curve per Session - DINAMIS
         $equityData = [];
         $allDates = $trades->sortBy('date')->pluck('date')->unique()->values();
@@ -130,7 +137,8 @@ class DashboardController extends Controller
             'entryTypeData',
             'period',
             'summary',
-            'availableSessions' // TAMBAHKAN INI
+            'availableSessions',
+            'availableEntryTypes' // TAMBAHKAN INI
         ));
     }
 }

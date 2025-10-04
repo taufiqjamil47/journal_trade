@@ -116,18 +116,18 @@
                             </select>
                         </div>
 
+                        <!-- Ganti bagian dropdown Entry Type di dalam form -->
                         <div>
                             <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry Type</label>
                             <select name="entry_type" onchange="this.form.submit()"
                                 class="w-full bg-dark-800 border border-gray-700 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200">
                                 <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types</option>
-                                <option value="OB" {{ $entryFilter === 'OB' ? 'selected' : '' }}>Order Block (OB)
-                                </option>
-                                <option value="FVG" {{ $entryFilter === 'FVG' ? 'selected' : '' }}>FVG</option>
-                                <option value="Liquidity Sweep" {{ $entryFilter === 'Liquidity Sweep' ? 'selected' : '' }}>
-                                    Liquidity Sweep</option>
-                                <option value="Breaker Block" {{ $entryFilter === 'Breaker Block' ? 'selected' : '' }}>
-                                    Breaker Block</option>
+                                @foreach ($availableEntryTypes as $entryType)
+                                    <option value="{{ $entryType }}"
+                                        {{ $entryFilter === $entryType ? 'selected' : '' }}>
+                                        {{ $entryType }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </form>

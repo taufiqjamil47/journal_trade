@@ -16,7 +16,7 @@ class TradeController extends Controller
     public function index(Request $request)
     {
         $sortBy = $request->get('sort_by', 'date');
-        $order  = $request->get('order', 'desc');
+        $order  = $request->get('order', 'asc');
 
         $query = Trade::with('symbol');
         $trades = $query->orderBy($sortBy, $order)->paginate(10);
@@ -215,6 +215,38 @@ class TradeController extends Controller
         $trade->save();
 
         return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
+    }
+
+    public function detail($id)
+    {
+        $trade = Trade::with('symbol', 'account')->findOrFail($id);
+
+        return response()->json([
+            'id' => $trade->id,
+            'symbol' => [
+                'name' => $trade->symbol->name
+            ],
+            'type' => $trade->type,
+            'session' => $trade->session,
+            'timestamp' => $trade->timestamp,
+            'entry' => $trade->entry,
+            'exit' => $trade->exit,
+            'exit_pips' => $trade->exit_pips,
+            'stop_loss' => $trade->stop_loss,
+            'take_profit' => $trade->take_profit,
+            'sl_pips' => $trade->sl_pips,
+            'tp_pips' => $trade->tp_pips,
+            'lot_size' => $trade->lot_size,
+            'risk_percent' => $trade->risk_percent,
+            'risk_usd' => $trade->risk_usd,
+            'profit_loss' => $trade->profit_loss,
+            'rr' => $trade->rr,
+            'hasil' => $trade->hasil,
+            'streak_win' => $trade->streak_win,
+            'streak_loss' => $trade->streak_loss,
+            'before_link' => $trade->before_link, // TAMBAHKAN INI
+            'after_link' => $trade->after_link,   // TAMBAHKAN INI
+        ]);
     }
 
     private function calculatePips($entry, $target, $type, $symbol)

@@ -182,7 +182,7 @@
                                 </div>
                                 <p class="text-xs text-gray-400">R/R Ratio</p>
                             </div>
-                            <p class="text-lg font-bold text-purple-400">{{ $trade->rr_ratio ?? '0' }}</p>
+                            <p class="text-lg font-bold text-purple-400">{{ $trade->rr ?? '0' }}</p>
                         </div>
                     </div>
 
@@ -414,7 +414,7 @@
                                                 {{ in_array($rule, $selectedRules) ? 'checked' : '' }}
                                                 class="rule-checkbox hidden">
                                             <div
-                                                class="rule-checkbox-content bg-dark-800/50 border-2 border-gray-600 rounded-xl p-4 transition-all duration-300 hover:border-green-500/50 hover:scale-105 cursor-pointer">
+                                                class="my-2 mx-5 rule-checkbox-content bg-dark-800/50 border-2 border-gray-600 rounded-xl p-2 transition-all duration-200 hover:border-green-500/50 hover:scale-105 cursor-pointer">
                                                 <div class="flex items-center">
                                                     <div
                                                         class="rule-checkbox-icon bg-gray-700 w-6 h-6 rounded-lg flex items-center justify-center mr-4 transition-all duration-300">

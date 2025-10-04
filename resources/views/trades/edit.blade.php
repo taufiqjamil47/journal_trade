@@ -179,7 +179,7 @@
                                 </div>
                                 <p class="text-sm text-gray-400">R/R Ratio</p>
                             </div>
-                            <p class="text-lg font-semibold text-cyan-400">{{ $trade->rr_ratio ?? '0' }}</p>
+                            <p class="text-lg font-semibold text-cyan-400">{{ $trade->rr ?? '0' }}</p>
                         </div>
                     </div>
                 </div>

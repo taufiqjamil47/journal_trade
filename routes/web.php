@@ -28,6 +28,7 @@ Route::get('/trades/create', [TradeController::class, 'create'])->name('trades.c
 Route::post('/trades', [TradeController::class, 'store'])->name('trades.store');
 Route::get('/trades/{id}/edit', [TradeController::class, 'edit'])->name('trades.edit');
 Route::put('/trades/{id}', [TradeController::class, 'update'])->name('trades.update');
+Route::get('/trades/{id}/detail', [TradeController::class, 'detail'])->name('trades.detail');
 Route::get('/trades/{id}/evaluate', [TradeController::class, 'evaluate'])->name('trades.evaluate');
 Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])->name('trades.saveEvaluation');
 
