@@ -13,6 +13,11 @@
                     <p class="text-gray-400 mt-2">Pantau kinerja dan analitik perdagangan Anda</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('reports.calendar') }}"
+                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                        <i class="fas fa-file text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span>Report</span>
+                    </a>
                     <a href="{{ route('trades.index') }}"
                         class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
                         <i class="fas fa-chart-line text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>

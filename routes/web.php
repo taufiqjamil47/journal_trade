@@ -39,3 +39,5 @@ Route::post('/trades/import', [TradeController::class, 'importExcel'])->name('tr
 
 Route::get('/reports/weekly', [ReportController::class, 'weeklyReport'])->name('reports.weekly');
 Route::get('/reports/weekly/pdf', [ReportController::class, 'weeklyReportPdf'])->name('reports.weekly.pdf');
+
+Route::get('/reports/calendar', [App\Http\Controllers\TradeReportController::class, 'calendar'])->name('reports.calendar');

@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
+    // === WEEKLY REPORT ===
     public function weeklyReportPdf()
     {
         $start = Carbon::now()->startOfWeek();
