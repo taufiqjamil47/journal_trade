@@ -5,6 +5,7 @@ use App\Http\Controllers\TradeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TradingRuleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::get('/trades/{id}/evaluate', [TradeController::class, 'evaluate'])->name(
 Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])->name('trades.saveEvaluation');
 
 Route::resource('sessions', SessionController::class);
+Route::resource('trading-rules', TradingRuleController::class);
+Route::put('/trading-rules/{id}/order', [TradingRuleController::class, 'updateOrder'])->name('trading-rules.order');
+
 Route::get('/trades/export/excel', [TradeController::class, 'exportExcel'])->name('trades.export.excel');
 Route::post('/trades/import', [TradeController::class, 'importExcel'])->name('trades.import.excel');
 

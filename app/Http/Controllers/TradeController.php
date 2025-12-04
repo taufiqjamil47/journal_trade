@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Trade;
 use App\Models\Symbol;
 use App\Models\Account;
+use App\Models\TradingRule; // Tambahkan ini
 use Illuminate\Http\Request;
 use App\Exports\TradesExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -12,13 +13,13 @@ use App\Imports\TradesImport;
 
 class TradeController extends Controller
 {
-    // Di method index() TradeController, tambahkan:
     public function index(Request $request)
     {
         $sortBy = $request->get('sort_by', 'date');
         $order  = $request->get('order', 'asc');
 
-        $query = Trade::with('symbol');
+        // Tambahkan eager loading untuk tradingRules
+        $query = Trade::with('symbol', 'tradingRules'); // Update ini
         $trades = $query->orderBy($sortBy, $order)->paginate(10);
 
         // HITUNG WINRATE DARI SEMUA TRADE (BUKAN HANYA YANG DIPAGINATE)
@@ -35,13 +36,16 @@ class TradeController extends Controller
         ));
     }
 
-    // Update method create() untuk kirim equity ke view
+    // Update method create() untuk kirim equity dan rules ke view
     public function create()
     {
         $symbols = Symbol::where('active', true)->get();
         $currentEquity = $this->getCurrentEquity();
+        $tradingRules = TradingRule::where('is_active', true) // Tambahkan ini
+            ->orderBy('order')
+            ->get();
 
-        return view('trades.create', compact('symbols', 'currentEquity'));
+        return view('trades.create', compact('symbols', 'currentEquity', 'tradingRules'));
     }
 
     public function edit($id)
@@ -56,19 +60,26 @@ class TradeController extends Controller
 
         $balance = $initialBalance + $previousTrades->sum('profit_loss');
 
-        $trade = Trade::findOrFail($id);
-        return view('trades.edit', compact('trade', 'balance'));
+        // Tambahkan eager loading untuk tradingRules
+        $trade = Trade::with('tradingRules')->findOrFail($id); // Update ini
+        $tradingRules = TradingRule::where('is_active', true) // Tambahkan ini
+            ->orderBy('order')
+            ->get();
+
+        return view('trades.edit', compact('trade', 'balance', 'tradingRules'));
     }
 
     public function update(Request $request, $id)
     {
-        $trade = \App\Models\Trade::with('symbol', 'account')->findOrFail($id);
+        $trade = \App\Models\Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
 
         $data = $request->validate([
             'exit' => 'required|numeric',
             'lot_size' => 'nullable|numeric|min:0.01',
             'risk_percent' => 'nullable|numeric|min:0|max:100',
             'risk_usd' => 'nullable|numeric|min:0',
+            'rules' => 'nullable|array', // tambahkan jika mau update rules di sini juga
+            'rules.*' => 'exists:trading_rules,id'
         ]);
 
         $trade->exit = $data['exit'];
@@ -164,11 +175,25 @@ class TradeController extends Controller
                 $trade->streak_loss = 0;
             }
         }
-        // AKHIR DARI KODE YANG DITAMBAHKAN
 
         $trade->fill($data);
         $trade->setSessionFromTimestamp();
+        // SYNC RULES JIKA ADA
+        if ($request->has('rules')) {
+            $trade->tradingRules()->sync($request->rules);
+
+            $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
+                ->pluck('name')
+                ->toArray();
+
+            $trade->withoutEvents(function () use ($trade, $ruleNames) {
+                $trade->update(['rules' => implode(',', $ruleNames)]);
+            });
+        }
+
         $trade->save();
+
+        // HAPUS KODE LAMA: $trade->rules = implode(',', $request->rules ?? []);
 
         return redirect()->route('trades.index')->with('success', 'Trade berhasil diperbarui dengan Exit, Risk%, dan Lot Size');
     }
@@ -183,6 +208,8 @@ class TradeController extends Controller
             'entry'       => 'required|numeric',
             'stop_loss'   => 'required|numeric',
             'take_profit' => 'required|numeric',
+            'rules'       => 'nullable|array', // Tambahkan validasi untuk rules
+            'rules.*'     => 'exists:trading_rules,id' // Validasi ID rules
         ]);
 
         // ambil konfigurasi symbol
@@ -205,7 +232,6 @@ class TradeController extends Controller
         // sementara account_id fix dulu (nanti bisa pilih kalau multi akun)
         $data['account_id'] = 1;
 
-        // Trade::create($data);
         $trade = new Trade($data);
         $trade->account_id = 1;
 
@@ -214,13 +240,29 @@ class TradeController extends Controller
 
         $trade->save();
 
+        // SYNC RULES JIKA ADA (setelah trade dibuat)
+        if ($request->has('rules')) {
+            // 1. Sync ke pivot table
+            $trade->tradingRules()->sync($request->rules);
+
+            // 2. Ambil nama rules untuk kolom
+            $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
+                ->pluck('name')
+                ->toArray();
+
+            // 3. Update kolom rules (tanpa trigger event)
+            $trade->withoutEvents(function () use ($trade, $ruleNames) {
+                $trade->update(['rules' => implode(',', $ruleNames)]);
+            });
+        }
+
         return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
     }
 
-    // Tambahkan method ini di TradeController.php
+    // Update method show() untuk include tradingRules
     public function show($id)
     {
-        $trade = Trade::with('symbol', 'account')->findOrFail($id);
+        $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
 
         // Generate image URLs dari TradingView links
         $beforeChartImage = $this->generateTradingViewImage($trade->before_link);
@@ -231,7 +273,10 @@ class TradeController extends Controller
 
     public function detail($id)
     {
-        $trade = Trade::with('symbol', 'account')->findOrFail($id);
+        $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
+
+        // Get rule names
+        $ruleNames = $trade->tradingRules->pluck('name')->toArray();
 
         return response()->json([
             'id' => $trade->id,
@@ -254,10 +299,9 @@ class TradeController extends Controller
             'profit_loss' => $trade->profit_loss,
             'rr' => $trade->rr,
             'hasil' => $trade->hasil,
-            // 'streak_win' => $trade->streak_win,
-            // 'streak_loss' => $trade->streak_loss,
-            'before_link' => $trade->before_link, // TAMBAHKAN INI
-            'after_link' => $trade->after_link,   // TAMBAHKAN INI
+            'rules' => $ruleNames, // Tambahkan rules
+            'before_link' => $trade->before_link,
+            'after_link' => $trade->after_link,
         ]);
     }
 
@@ -278,19 +322,23 @@ class TradeController extends Controller
 
     public function evaluate($id)
     {
-        $trade = \App\Models\Trade::findOrFail($id);
-        return view('trades.evaluate', compact('trade'));
+        $trade = Trade::with('tradingRules')->findOrFail($id); // Update ini
+        $tradingRules = TradingRule::where('is_active', true) // Tambahkan ini
+            ->orderBy('order')
+            ->get();
+
+        return view('trades.evaluate', compact('trade', 'tradingRules'));
     }
 
     public function saveEvaluation(Request $request, $id)
     {
-        $trade = \App\Models\Trade::findOrFail($id);
+        $trade = Trade::with('tradingRules')->findOrFail($id);
 
         $data = $request->validate([
             'entry_type'      => 'nullable|string',
             'follow_rules'    => 'nullable|boolean',
             'rules'           => 'nullable|array',
-            'rules.*'         => 'string',
+            'rules.*'         => 'exists:trading_rules,id',
             'market_condition' => 'nullable|string',
             'entry_reason'    => 'nullable|string',
             'why_sl_tp'       => 'nullable|string',
@@ -301,15 +349,36 @@ class TradeController extends Controller
             'after_link'      => 'nullable|url',
         ]);
 
-        // Convert array checkbox → string "Rule1,Rule2,Rule3"
-        if (!empty($data['rules'])) {
-            $data['rules'] = implode(',', $data['rules']);
+        // Update field lainnya
+        $trade->fill($request->except('rules'));
+
+        // SYNC RULES: Pivot Table → Kolom Rules
+        if ($request->has('rules')) {
+            // 1. Sync ke pivot table
+            $trade->tradingRules()->sync($request->rules);
+
+            // 2. Ambil nama rules untuk kolom
+            $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
+                ->pluck('name')
+                ->toArray();
+
+            // 3. Update kolom rules (tanpa trigger event)
+            $trade->withoutEvents(function () use ($trade, $ruleNames) {
+                $trade->update(['rules' => implode(',', $ruleNames)]);
+            });
+        } else {
+            // Jika tidak ada rules yang dipilih
+            $trade->tradingRules()->detach();
+            $trade->withoutEvents(function () use ($trade) {
+                $trade->update(['rules' => null]);
+            });
         }
 
-        $trade->fill($data);
+        // Save perubahan lainnya
         $trade->save();
 
-        return redirect()->route('trades.index')->with('success', 'Evaluasi trade berhasil disimpan');
+        return redirect()->route('trades.index')
+            ->with('success', 'Evaluasi trade berhasil disimpan');
     }
 
     public function exportExcel()

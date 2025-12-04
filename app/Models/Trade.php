@@ -45,6 +45,7 @@ class Trade extends Model
         'session',
     ];
 
+
     public function account()
     {
         return $this->belongsTo(Account::class);
@@ -82,5 +83,101 @@ class Trade extends Model
     public function scopeBetweenDates($query, $start, $end)
     {
         return $query->whereBetween('date', [$start, $end]);
+    }
+
+    public function tradingRules()
+    {
+        return $this->belongsToMany(TradingRule::class, 'trade_rule')
+            ->withTimestamps();
+    }
+
+    // Tambahkan accessor untuk backward compatibility
+    public function getRulesAttribute()
+    {
+        return $this->tradingRules ?? collect(); // Kembalikan collection kosong jika null
+    }
+
+    /**
+     * METHOD UNTUK SYNC PIVOT KE COLUMN (rules)
+     */
+    public function syncRulesToColumn()
+    {
+        // Hindari infinite loop
+        if ($this->isSyncingRules ?? false) {
+            return;
+        }
+
+        $this->isSyncingRules = true;
+
+        try {
+            // Ambil nama rules dari pivot table
+            $ruleNames = $this->tradingRules()
+                ->pluck('name')
+                ->toArray();
+
+            $rulesString = !empty($ruleNames) ? implode(',', $ruleNames) : null;
+
+            // Update kolom rules TANPA trigger event
+            if ($this->rules !== $rulesString) {
+                $this->withoutEvents(function () use ($rulesString) {
+                    $this->update(['rules' => $rulesString]);
+                });
+            }
+        } finally {
+            $this->isSyncingRules = false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * METHOD UNTUK SYNC COLUMN KE PIVOT (reverse)
+     */
+    public function syncRulesFromColumn()
+    {
+        if (empty($this->rules)) {
+            $this->tradingRules()->detach();
+            return $this;
+        }
+
+        // Split rules string menjadi array
+        $ruleNames = array_map('trim', explode(',', $this->rules));
+
+        // Cari ID rules berdasarkan nama
+        $ruleIds = \App\Models\TradingRule::whereIn('name', $ruleNames)
+            ->pluck('id')
+            ->toArray();
+
+        // Sync ke pivot table
+        $this->tradingRules()->sync($ruleIds);
+
+        return $this;
+    }
+
+    /**
+     * ACCESSOR UNTUK KOMPATIBILITAS
+     */
+    public function getRulesArrayAttribute()
+    {
+        if (!empty($this->rules)) {
+            return array_map('trim', explode(',', $this->rules));
+        }
+        return [];
+    }
+
+    /**
+     * MUTATOR UNTUK RULES
+     */
+    public function setRulesAttribute($value)
+    {
+        if (is_array($value)) {
+            // Jika value adalah array of IDs (dari form)
+            $this->attributes['rules'] = null; // temporary
+            // Nanti akan di-sync di controller
+
+        } elseif (is_string($value)) {
+            // Jika value adalah string (dari import/old data)
+            $this->attributes['rules'] = $value;
+        }
     }
 }

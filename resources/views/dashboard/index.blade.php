@@ -28,6 +28,11 @@
                         <i class="fas fa-clock text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>Sessions</span>
                     </a>
+                    <a href="{{ route('trading-rules.index') }}"
+                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                        <i class="fas fa-list text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span>Rules</span>
+                    </a>
                     <div class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50">
                         <i class="fas fa-user text-primary-500 mr-2"></i>
                         <span>Trader</span>

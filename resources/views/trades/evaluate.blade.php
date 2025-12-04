@@ -385,7 +385,7 @@
                                     Trading Rules Checklist
                                 </h3>
 
-                                <div class="space-y-4 max-h-96 overflow-y-auto pr-3 custom-scrollbar">
+                                {{-- <div class="space-y-4 max-h-96 overflow-y-auto pr-3 custom-scrollbar">
                                     @php
                                         $rulesList = [
                                             'Time 07.00 AM (Forex) - 08.00 AM (Indexs)',
@@ -421,6 +421,42 @@
                                                         <i class="fas fa-check text-transparent text-xs"></i>
                                                     </div>
                                                     <span class="text-sm text-gray-300 flex-1">{{ $rule }}</span>
+                                                    <div
+                                                        class="rule-number bg-gray-700 text-gray-400 text-xs w-6 h-6 rounded-full flex items-center justify-center">
+                                                        {{ $index + 1 }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div> --}}
+                                <div class="space-y-4 max-h-96 overflow-y-auto pr-3 custom-scrollbar">
+                                    @php
+                                        // Ambil dari database, hanya yang aktif
+                                        $rulesList = \App\Models\TradingRule::where('is_active', true)
+                                            ->orderBy('order')
+                                            ->get();
+
+                                        $selectedRules = $trade->rules->pluck('id')->toArray() ?? [];
+                                    @endphp
+
+                                    @foreach ($rulesList as $index => $rule)
+                                        <label class="rule-checkbox-item">
+                                            <input type="checkbox" name="rules[]" value="{{ $rule->id }}"
+                                                {{ in_array($rule->id, $selectedRules) ? 'checked' : '' }}
+                                                class="rule-checkbox hidden">
+                                            <div
+                                                class="my-2 mx-5 rule-checkbox-content bg-dark-800/50 border-2 border-gray-600 rounded-xl p-2 transition-all duration-200 hover:border-green-500/50 hover:scale-105 cursor-pointer">
+                                                <div class="flex items-center">
+                                                    <div
+                                                        class="rule-checkbox-icon bg-gray-700 w-6 h-6 rounded-lg flex items-center justify-center mr-4 transition-all duration-300">
+                                                        <i class="fas fa-check text-transparent text-xs"></i>
+                                                    </div>
+                                                    <span class="text-sm text-gray-300 flex-1">{{ $rule->name }}</span>
+                                                    @if ($rule->description)
+                                                        <i class="fas fa-info-circle text-gray-500 mr-2 cursor-help"
+                                                            title="{{ $rule->description }}"></i>
+                                                    @endif
                                                     <div
                                                         class="rule-number bg-gray-700 text-gray-400 text-xs w-6 h-6 rounded-full flex items-center justify-center">
                                                         {{ $index + 1 }}
