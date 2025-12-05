@@ -14,48 +14,15 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection()
     {
-        return Trade::with('symbol')->get();
-        // return Trade::all([
-        //     'id',
-        //     'symbol_id',
-        //     'timestamp',
-        //     'date',
-        //     'type',
-        //     'entry',
-        //     'stop_loss',
-        //     'sl_pips',
-        //     'take_profit',
-        //     'tp_pips',
-        //     'exit',
-        //     'exit_pips',
-        //     'risk_percent',
-        //     'risk_usd',
-        //     'rr',
-        //     'lot_size',
-        //     'profit_loss',
-        //     'entry_type',
-        //     'follow_rules',
-        //     'rules',
-        //     'market_condition',
-        //     'entry_reason',
-        //     'why_sl_tp',
-        //     'entry_emotion',
-        //     'close_emotion',
-        //     'note',
-        //     'before_link',
-        //     'after_link',
-        //     'hasil',
-        //     'streak_win',
-        //     'streak_loss',
-        //     'session',
-        // ]);
+        // PASTIKAN eager loading untuk tradingRules
+        return Trade::with(['symbol', 'tradingRules'])->get();
     }
 
     public function headings(): array
     {
         return [
             'ID',
-            'Symbol ID',
+            'Symbol',
             'Timestamp',
             'Date',
             'Type',
@@ -73,7 +40,7 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
             'PnL',
             'Entry_Type',
             'Follow_Rules',
-            'Rules',
+            'Rules', // Kolom rules sebagai string
             'Market_Condition',
             'Entry_Reason',
             'Why_sl_tp ?',
@@ -91,9 +58,35 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
 
     public function map($trade): array
     {
+        // AMBIL RULES DARI KOLOM DATABASE (bukan dari relationship)
+        $rules = $trade->rules; // Ini sudah string karena kita sync
+
+        // Atau jika kolom rules belum diisi, ambil dari relationship
+        if (empty($rules) && $trade->relationLoaded('tradingRules')) {
+            $rules = $trade->tradingRules->pluck('name')->implode(', ');
+        }
+
+        // Pastikan formatnya string biasa, bukan JSON
+        if (is_array($rules)) {
+            $rules = implode(', ', $rules);
+        }
+
+        // Decode JSON jika masih format JSON
+        if (str_starts_with($rules, '[') || str_starts_with($rules, '{')) {
+            $decoded = json_decode($rules, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                // Jika JSON array, ambil hanya nama rules
+                if (isset($decoded[0]['name'])) {
+                    $rules = collect($decoded)->pluck('name')->implode(', ');
+                } elseif (is_array($decoded)) {
+                    $rules = implode(', ', $decoded);
+                }
+            }
+        }
+
         return [
             $trade->id,
-            $trade->symbol_id ? $trade->symbol->name : '', // <-- pake nama, bukan ID
+            $trade->symbol_id ? $trade->symbol->name : '',
             $trade->timestamp,
             $trade->date,
             $trade->type,
@@ -109,21 +102,21 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
             $trade->rr,
             $trade->lot_size,
             $trade->profit_loss,
-            $trade->entry_type,
-            $trade->follow_rules,
-            $trade->rules,
-            $trade->market_condition,
-            $trade->entry_reason,
-            $trade->why_sl_tp,
-            $trade->entry_emotion,
-            $trade->close_emotion,
-            $trade->note,
-            $trade->before_link,
-            $trade->after_link,
-            $trade->hasil,
-            $trade->streak_win,
-            $trade->streak_loss,
-            $trade->session
+            $trade->entry_type ?? '',
+            $trade->follow_rules ? 'Yes' : 'No',
+            $rules ?? '', // Gunakan rules yang sudah di-format
+            $trade->market_condition ?? '',
+            $trade->entry_reason ?? '',
+            $trade->why_sl_tp ?? '',
+            $trade->entry_emotion ?? '',
+            $trade->close_emotion ?? '',
+            $trade->note ?? '',
+            $trade->before_link ?? '',
+            $trade->after_link ?? '',
+            $trade->hasil ?? '',
+            $trade->streak_win ?? 0,
+            $trade->streak_loss ?? 0,
+            $trade->session ?? ''
         ];
     }
 }

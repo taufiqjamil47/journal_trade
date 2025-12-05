@@ -380,6 +380,33 @@
             setInterval(updatePrices, 2000);
         });
     </script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Untuk menampilkan success/error message dari session
+        @if (session('success'))
+            Swal.fire({
+                icon: '{{ session('icon') ?? 'success' }}',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                position: 'top-end',
+                toast: true
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33'
+            });
+        @endif
+    </script>
 </body>
 
 </html>

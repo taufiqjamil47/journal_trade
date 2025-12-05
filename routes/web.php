@@ -41,6 +41,9 @@ Route::put('/trading-rules/{id}/order', [TradingRuleController::class, 'updateOr
 Route::get('/trades/export/excel', [TradeController::class, 'exportExcel'])->name('trades.export.excel');
 Route::post('/trades/import', [TradeController::class, 'importExcel'])->name('trades.import.excel');
 
+// Route::get('/trades/confirm-clear', [TradeController::class, 'confirmClear'])->name('trades.confirm-clear');
+Route::delete('/trades/clear-all', [TradeController::class, 'clearAll'])->name('trades.clear-all');
+
 Route::get('/reports/weekly', [ReportController::class, 'weeklyReport'])->name('reports.weekly');
 Route::get('/reports/weekly/pdf', [ReportController::class, 'weeklyReportPdf'])->name('reports.weekly.pdf');
 

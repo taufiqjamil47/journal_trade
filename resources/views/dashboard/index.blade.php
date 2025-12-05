@@ -13,26 +13,39 @@
                     <p class="text-gray-400 mt-2">Pantau kinerja dan analitik perdagangan Anda</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('reports.calendar') }}"
+                    <!-- Toggle Button untuk Menyembunyikan/Menampilkan Nav -->
+                    <button id="navToggle"
                         class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
-                        <i class="fas fa-calendar text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
-                        <span>PnL Calendar</span>
-                    </a>
-                    <a href="{{ route('trades.index') }}"
-                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
-                        <i class="fas fa-chart-line text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
-                        <span>Trades</span>
-                    </a>
-                    <a href="{{ route('sessions.index') }}"
-                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
-                        <i class="fas fa-clock text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
-                        <span>Sessions</span>
-                    </a>
-                    <a href="{{ route('trading-rules.index') }}"
-                        class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
-                        <i class="fas fa-list text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
-                        <span>Rules</span>
-                    </a>
+                        <i id="navToggleIcon"
+                            class="fas fa-chevron-right text-primary-500 group-hover:scale-110 transition-transform"></i>
+                    </button>
+
+                    <!-- Navigation Items yang bisa di-toggle (tersembunyi secara default) -->
+                    <div id="navItems" class="hidden flex-wrap gap-3">
+                        <a href="{{ route('reports.calendar') }}"
+                            class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                            <i class="fas fa-calendar text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span>PnL Calendar</span>
+                        </a>
+                        <a href="{{ route('trades.index') }}"
+                            class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                            <i
+                                class="fas fa-chart-line text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span>Trades</span>
+                        </a>
+                        <a href="{{ route('sessions.index') }}"
+                            class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                            <i class="fas fa-clock text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span>Sessions</span>
+                        </a>
+                        <a href="{{ route('trading-rules.index') }}"
+                            class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group">
+                            <i class="fas fa-list text-primary-500 mr-2 group-hover:scale-110 transition-transform"></i>
+                            <span>Rules</span>
+                        </a>
+                    </div>
+
+                    <!-- Trader Item (selalu terlihat) -->
                     <div class="flex items-center bg-dark-800/50 backdrop-blur-sm rounded-lg p-3 border border-gray-700/50">
                         <i class="fas fa-user text-primary-500 mr-2"></i>
                         <span>Trader</span>
@@ -274,6 +287,44 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('navToggle');
+            const navToggleIcon = document.getElementById('navToggleIcon');
+            const navToggleText = document.getElementById('navToggleText');
+            const navItems = document.getElementById('navItems');
+
+            // Cek state dari localStorage (default: tersembunyi)
+            let isNavVisible = localStorage.getItem('navVisible') === 'true';
+
+            // Set initial state
+            updateNavVisibility(isNavVisible);
+
+            // Toggle event
+            navToggle.addEventListener('click', function() {
+                isNavVisible = !isNavVisible;
+                updateNavVisibility(isNavVisible);
+                localStorage.setItem('navVisible', isNavVisible);
+            });
+
+            function updateNavVisibility(visible) {
+                if (visible) {
+                    navItems.classList.remove('hidden');
+                    navItems.classList.add('flex');
+                    navToggleIcon.classList.remove('fa-chevron-left');
+                    navToggleIcon.classList.add('fa-chevron-right');
+                    // navToggleText.textContent = 'Hide Nav';
+                } else {
+                    navItems.classList.remove('flex');
+                    navItems.classList.add('hidden');
+                    navToggleIcon.classList.remove('fa-chevron-right');
+                    navToggleIcon.classList.add('fa-chevron-left');
+                    // navToggleText.textContent = 'Show Nav';
+                }
+            }
+        });
+    </script>
 
     <script>
         // Equity Chart - Dynamic session handling

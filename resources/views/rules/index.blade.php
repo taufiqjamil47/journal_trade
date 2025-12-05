@@ -36,7 +36,7 @@
                         <p class="text-3xl font-bold text-blue-400">{{ $rules->count() }}</p>
                     </div>
                     <div class="bg-blue-500/20 p-4 rounded-xl">
-                        <i class="fas fa-rules text-blue-500 text-2xl"></i>
+                        <i class="fas fa-list text-blue-500 text-2xl"></i>
                     </div>
                 </div>
             </div>

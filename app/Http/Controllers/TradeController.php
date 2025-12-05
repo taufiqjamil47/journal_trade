@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Trade;
 use App\Models\Symbol;
 use App\Models\Account;
-use App\Models\TradingRule; // Tambahkan ini
 use Illuminate\Http\Request;
 use App\Exports\TradesExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\TradesImport;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\TradingRule; // Tambahkan ini
 
 class TradeController extends Controller
 {
@@ -36,7 +38,6 @@ class TradeController extends Controller
         ));
     }
 
-    // Update method create() untuk kirim equity dan rules ke view
     public function create()
     {
         $symbols = Symbol::where('active', true)->get();
@@ -259,7 +260,6 @@ class TradeController extends Controller
         return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
     }
 
-    // Update method show() untuk include tradingRules
     public function show($id)
     {
         $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
@@ -303,6 +303,104 @@ class TradeController extends Controller
             'before_link' => $trade->before_link,
             'after_link' => $trade->after_link,
         ]);
+    }
+
+    // app/Http/Controllers/TradeController.php
+    public function clearAll(Request $request)
+    {
+        // Debug log
+        Log::info('Clear All Trades Request:', [
+            'confirmation' => $request->all(),
+            'ajax' => $request->ajax(),
+            'expectsJson' => $request->expectsJson()
+        ]);
+
+        // Support both form submit and AJAX
+        $confirmation = $request->input('confirmation') ??
+            ($request->json('confirmation') ?? null);
+
+        // Validate confirmation
+        if ($confirmation !== 'DELETE_ALL_TRADES') {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => '❌ Kode konfirmasi tidak valid. Silakan ketik DELETE_ALL_TRADES.'
+                ], 400);
+            }
+
+            return redirect()->route('trades.index')
+                ->with('error', '❌ Kode konfirmasi tidak valid')
+                ->with('icon', 'error');
+        }
+
+        try {
+            // SIMPLE APPROACH - tanpa transaction (karena TRUNCATE auto-commit)
+
+            // 1. Nonaktifkan foreign key check
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+            // 2. Hapus semua data di pivot table terlebih dahulu
+            DB::table('trade_rule')->truncate();
+            Log::info('Pivot table cleared');
+
+            // 3. Hapus semua trades
+            DB::table('trades')->truncate();
+            Log::info('Trades table cleared');
+
+            // 4. Reset auto increment
+            DB::statement('ALTER TABLE trades AUTO_INCREMENT = 1');
+            DB::statement('ALTER TABLE trade_rule AUTO_INCREMENT = 1');
+            Log::info('Auto-increment reset');
+
+            // 5. Aktifkan kembali foreign key check
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+            // 6. Clear session/cache jika ada
+            session()->forget('trade_stats');
+            Log::info('Session cleared');
+
+            // Success response
+            $successMessage = '✅ Semua perdagangan telah berhasil diselesaikan!';
+            Log::info($successMessage);
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $successMessage,
+                    'count' => 0,
+                    'timestamp' => now()->toDateTimeString()
+                ], 200);
+            }
+
+            return redirect()->route('trades.index')
+                ->with('success', $successMessage)
+                ->with('icon', 'success');
+        } catch (\Exception $e) {
+            // ERROR HANDLING
+
+            // Pastikan foreign key check kembali aktif jika error
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+            $errorMessage = '❌ Gagal menyelesaikan perdagangan: ' . $e->getMessage();
+            Log::error('Kesalahan Hapus Semua Perdagangan: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage,
+                    'error' => config('app.debug') ? $e->getMessage() : null,
+                    'file' => config('app.debug') ? $e->getFile() : null,
+                    'line' => config('app.debug') ? $e->getLine() : null
+                ], 500);
+            }
+
+            return redirect()->route('trades.index')
+                ->with('error', $errorMessage)
+                ->with('icon', 'error');
+        }
     }
 
     private function calculatePips($entry, $target, $type, $symbol)
@@ -397,7 +495,6 @@ class TradeController extends Controller
         return redirect()->route('trades.index')->with('success', 'Trades imported successfully!');
     }
 
-    // Di TradeController.php, tambahkan method helper
     private function getCurrentEquity()
     {
         $account = Account::first();

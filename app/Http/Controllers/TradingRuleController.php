@@ -9,7 +9,7 @@ class TradingRuleController extends Controller
 {
     public function index()
     {
-        $rules = TradingRule::orderBy('order')->paginate(20); // atau jumlah per halaman yang diinginkan
+        $rules = TradingRule::orderBy('order')->paginate(10); // atau jumlah per halaman yang diinginkan
         return view('rules.index', compact('rules'));
     }
 

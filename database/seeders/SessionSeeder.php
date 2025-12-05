@@ -13,10 +13,10 @@ class SessionSeeder extends Seeder
     public function run()
     {
         $sessions = [
-            ['name' => 'Asia',   'start_hour' => 20, 'end_hour' => 2],
-            ['name' => 'London', 'start_hour' => 2,  'end_hour' => 7],
-            ['name' => 'New York', 'start_hour' => 7, 'end_hour' => 12],
-            ['name' => 'Non-Session', 'start_hour' => 13, 'end_hour' => 19],
+            ['name' => 'Asia',   'start_hour' => 8, 'end_hour' => 12],
+            ['name' => 'London', 'start_hour' => 14,  'end_hour' => 17],
+            ['name' => 'New York', 'start_hour' => 19, 'end_hour' => 23],
+            ['name' => 'Non-Session', 'start_hour' => 1, 'end_hour' => 5],
         ];
 
         foreach ($sessions as $s) {
