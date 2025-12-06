@@ -4,10 +4,12 @@ namespace App\Imports;
 
 use App\Models\Trade;
 use App\Models\Symbol;
+use App\Models\TradingRule;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use Illuminate\Support\Str;
 
 class TradesImport implements ToModel, WithHeadingRow
 {
@@ -20,10 +22,7 @@ class TradesImport implements ToModel, WithHeadingRow
 
     public function onHeadingRow(array $headings)
     {
-        // Simpan headings untuk referensi
         $this->headings = $headings;
-
-        // Normalize headings (lowercase, replace spaces)
         $this->headings = array_map(function ($h) {
             return strtolower(str_replace([' ', '_', '-'], '', $h));
         }, $headings);
@@ -31,14 +30,14 @@ class TradesImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        // Normalize row keys untuk matching
+        // Normalize row keys
         $normalizedRow = [];
         foreach ($row as $key => $value) {
             $normalizedKey = strtolower(str_replace([' ', '_', '-'], '', $key));
             $normalizedRow[$normalizedKey] = $value;
         }
 
-        // Cari symbol dengan berbagai kemungkinan nama kolom
+        // Cari symbol
         $symbolValue = null;
         $possibleSymbolKeys = ['symbol', 'symbolid', 'symbolname', 'pair', 'currencypair'];
 
@@ -50,30 +49,17 @@ class TradesImport implements ToModel, WithHeadingRow
         }
 
         if (!$symbolValue) {
-            throw new \Exception("Symbol not found in row. Available keys: " . implode(', ', array_keys($normalizedRow)));
+            throw new \Exception("Symbol not found in row.");
         }
 
-        // Cari symbol di database
         $symbol = Symbol::where('name', $symbolValue)->first();
-
         if (!$symbol) {
-            // Jika symbol tidak ditemukan, buat baru atau skip
-            // Pilihan 1: Skip dengan error
             throw new \Exception("Symbol '{$symbolValue}' not found in database.");
-
-            // Pilihan 2: Buat otomatis
-            // $symbol = Symbol::create([
-            //     'name' => $symbolValue,
-            //     'pip_value' => 0.0001, // default
-            //     'active' => true
-            // ]);
         }
 
-        // Convert Excel Date untuk berbagai format
+        // Parse date dan time
         $date = $this->parseDate($normalizedRow, 'date');
         $time = $this->parseTime($normalizedRow, 'timestamp');
-
-        // Gabung Date + Time
         $timestamp = null;
         if ($date && $time) {
             $timestamp = Carbon::parse("{$date} {$time}")->format('Y-m-d H:i:s');
@@ -81,10 +67,14 @@ class TradesImport implements ToModel, WithHeadingRow
             $timestamp = $date . ' 00:00:00';
         }
 
-        // Convert Yes/No to boolean
+        // Parse boolean
         $followRules = $this->parseBoolean($normalizedRow, 'followrules');
 
-        return new Trade([
+        // Ambil nilai rules dari Excel
+        $rulesString = $this->getValue($normalizedRow, 'rules');
+
+        // Simpan trade pertama tanpa rules di pivot table
+        $trade = new Trade([
             'account_id'        => 1,
             'symbol_id'         => $symbol->id,
             'timestamp'         => $timestamp,
@@ -104,7 +94,7 @@ class TradesImport implements ToModel, WithHeadingRow
             'profit_loss'       => $this->getValue($normalizedRow, ['profitloss', 'profit_loss', 'pnl']),
             'entry_type'        => $this->getValue($normalizedRow, ['entrytype', 'entry_type']),
             'follow_rules'      => $followRules,
-            'rules'             => $this->getValue($normalizedRow, 'rules'),
+            'rules'             => $rulesString, // Simpan string asli
             'market_condition'  => $this->getValue($normalizedRow, ['marketcondition', 'market_condition']),
             'entry_reason'      => $this->getValue($normalizedRow, ['entryreason', 'entry_reason']),
             'why_sl_tp'         => $this->getValue($normalizedRow, ['whysltp', 'why_sl_tp']),
@@ -118,6 +108,43 @@ class TradesImport implements ToModel, WithHeadingRow
             'streak_loss'       => $this->getValue($normalizedRow, ['streakloss', 'streak_loss'], 0),
             'session'           => $this->getValue($normalizedRow, 'session'),
         ]);
+
+        // Simpan trade terlebih dahulu
+        $trade->save();
+
+        // PROSES RULES DARI STRING KE PIVOT TABLE
+        if (!empty($rulesString)) {
+            $this->processRulesFromString($trade, $rulesString);
+        }
+
+        return $trade;
+    }
+
+    /**
+     * Proses rules string dan sync ke pivot table
+     */
+    private function processRulesFromString(Trade $trade, string $rulesString)
+    {
+        $cleanedString = $this->cleanRulesText($rulesString);
+        $ruleNames = array_map('trim', explode(',', $cleanedString));
+        $ruleNames = array_filter($ruleNames);
+
+        if (empty($ruleNames)) {
+            return;
+        }
+
+        // Hanya cari rules yang sudah ada
+        $ruleIds = TradingRule::whereIn('name', $ruleNames)
+            ->pluck('id')
+            ->toArray();
+
+        if (!empty($ruleIds)) {
+            $trade->tradingRules()->sync($ruleIds);
+
+            $trade->withoutEvents(function () use ($trade, $cleanedString) {
+                $trade->update(['rules' => $cleanedString]);
+            });
+        }
     }
 
     /**
@@ -132,12 +159,9 @@ class TradesImport implements ToModel, WithHeadingRow
         }
 
         try {
-            // Coba parse sebagai Excel date
             if (is_numeric($value)) {
                 return Carbon::instance(ExcelDate::excelToDateTimeObject($value))->format('Y-m-d');
             }
-
-            // Coba parse sebagai string date
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
             return null;
@@ -156,12 +180,9 @@ class TradesImport implements ToModel, WithHeadingRow
         }
 
         try {
-            // Coba parse sebagai Excel time (fraction of day)
             if (is_numeric($value)) {
                 return Carbon::instance(ExcelDate::excelToDateTimeObject($value))->format('H:i:s');
             }
-
-            // Coba parse sebagai string time
             return Carbon::parse($value)->format('H:i:s');
         } catch (\Exception $e) {
             return null;
@@ -203,10 +224,55 @@ class TradesImport implements ToModel, WithHeadingRow
 
         foreach ($keys as $key) {
             if (isset($row[$key]) && $row[$key] !== '') {
-                return $row[$key];
+                $value = $row[$key];
+
+                if (is_string($value)) {
+                    $value = str_replace('_x000D_', ' ', $value);
+                    $value = preg_replace('/\s+/', ' ', $value);
+                    $value = trim($value);
+                }
+
+                return $value;
             }
         }
 
         return $default;
+    }
+
+    /**
+     * Helper khusus untuk membersihkan text rules
+     */
+    private function cleanRulesText($text)
+    {
+        if (!is_string($text)) {
+            return '';
+        }
+
+        // Ganti _x000D_ dengan koma dan spasi
+        $text = str_replace('_x000D_', ', ', $text);
+
+        // Hapus karakter break line lainnya
+        $text = str_replace(["\r\n", "\r", "\n"], ', ', $text);
+
+        // Hapus titik berlebih setelah "dst"
+        $text = str_replace('dst..,', 'dst,', $text);
+        $text = str_replace('dst..', 'dst', $text);
+
+        // Hapus spasi berlebih
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        // Hapus koma berlebih
+        $text = preg_replace('/,+/', ',', $text);
+
+        // Hapus koma di awal atau akhir
+        $text = trim($text, ', ');
+
+        // Hapus spasi sebelum koma
+        $text = preg_replace('/\s+,/', ',', $text);
+
+        // Tambahkan spasi setelah koma jika tidak ada
+        $text = preg_replace('/,(\S)/', ', $1', $text);
+
+        return $text;
     }
 }

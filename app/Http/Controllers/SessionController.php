@@ -9,7 +9,7 @@ class SessionController extends Controller
 {
     public function index()
     {
-        $sessions = Session::all();
+        $sessions = Session::orderBy('id')->paginate(5);
         return view('sessions.index', compact('sessions'));
     }
 

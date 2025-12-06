@@ -18,7 +18,7 @@ class TradeController extends Controller
     public function index(Request $request)
     {
         $sortBy = $request->get('sort_by', 'date');
-        $order  = $request->get('order', 'asc');
+        $order  = $request->get('order', 'desc');
 
         // Tambahkan eager loading untuk tradingRules
         $query = Trade::with('symbol', 'tradingRules'); // Update ini
