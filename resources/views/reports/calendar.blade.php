@@ -82,31 +82,58 @@
 
         <!-- Calendar -->
         <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
-            <h3 class="text-xl font-bold text-primary-300 mb-4">Monthly Calendar</h3>
+            <h3 class="text-xl font-bold text-primary-300 mb-4">Day Calendar ({{ $year }})</h3>
 
-            <!-- Day headers -->
-            <div class="grid grid-cols-7 gap-1 mb-2">
-                @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                    <div class="text-center font-medium text-gray-400 py-2 bg-gray-750 rounded-lg">{{ $day }}
+            <!-- Day headers + Weekly Summary Header -->
+            <div class="grid grid-cols-9 gap-1 mb-2">
+                @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Week Summary'] as $day)
+                    <div
+                        class="text-center font-medium text-gray-400 py-2 bg-gray-750 rounded-lg {{ $loop->last ? 'col-span-2' : '' }}">
+                        {{ $day }}
                     </div>
                 @endforeach
             </div>
 
-            <!-- Calendar days -->
-            <div class="grid grid-cols-7 gap-1">
-                @foreach ($period as $day)
+            <!-- Calendar days + Weekly Summary -->
+            <div class="grid grid-cols-9 gap-1 grid-flow-row-dense">
+                @php
+                    $weekNumber = null;
+                    $weekDays = [];
+                    $weekTotalProfit = 0;
+                    $weekTotalTrades = 0;
+                    $currentWeekStart = null;
+                @endphp
+
+                @foreach ($period as $index => $day)
                     @php
                         $date = $day->format('Y-m-d');
                         $info = $daily[$date] ?? null;
                         $profit = $info->total_profit ?? 0;
                         $dayTrades = $trades[$date] ?? collect();
                         $isCurrentMonth = $day->month == $month;
-                        $opacityClass = $isCurrentMonth ? 'opacity-100' : 'opacity-40';
+                        $opacityClass = $isCurrentMonth ? 'opacity-100' : 'opacity-30';
                         $isToday = $date == date('Y-m-d');
+                        $dayOfWeek = $day->dayOfWeek; // 0 = Sunday, 6 = Saturday
+                        $currentWeekNum = $day->weekOfYear;
+
+                        // Accumulate weekly data
+                        if ($weekNumber === null) {
+                            $weekNumber = $currentWeekNum;
+                            $currentWeekStart = $day->copy()->startOfWeek();
+                        }
+
+                        $weekTotalProfit += $profit;
+                        $weekTotalTrades += count($dayTrades);
+                        $weekDays[$dayOfWeek] = [
+                            'date' => $date,
+                            'profit' => $profit,
+                            'trades' => count($dayTrades),
+                            'day' => $day,
+                        ];
 
                         // Determine colors based on profit
                         if ($profit > 0) {
-                            $bgColor = 'bg-green-500/20';
+                            $bgColor = 'bg-green-800/20';
                             $borderColor = 'border-green-500/40';
                             $textColor = 'text-green-400';
                         } elseif ($profit < 0) {
@@ -119,13 +146,13 @@
                             $textColor = 'text-gray-400';
                         }
 
-                        // Today's date highlight
-if ($isToday) {
-    $borderColor = 'border-primary-500';
-    $bgColor = $bgColor . ' bg-primary-500/10';
+                        if ($isToday) {
+                            $borderColor = 'border-primary-500';
+                            $bgColor = $bgColor . ' bg-primary-500/10';
                         }
                     @endphp
 
+                    <!-- Day Cell -->
                     <div class="p-2 rounded-lg border {{ $borderColor }} {{ $bgColor }} {{ $opacityClass }} cursor-pointer day-cell transition-colors hover:bg-gray-700/50"
                         data-date="{{ $date }}" data-trades='@json($dayTrades)'
                         data-profit="{{ $profit }}">
@@ -138,10 +165,126 @@ if ($isToday) {
                                 </span>
                             @endif
                         </div>
-                        <div class="mt-1 text-xs {{ $textColor }} font-medium">
+                        <div class="mt-1 text-xs lg:text-lg {{ $textColor }} font-medium">
                             ${{ number_format($profit, 2) }}
                         </div>
+                        <div class="pt-3 border-t border-gray-600/50 mt-1">
+                            <div class="flex justify-center items-center">
+                                @if ($profit != 0)
+                                    <div class="w-16 h-8">
+                                        <svg viewBox="0 0 100 40" class="w-full h-full">
+                                            @if ($profit > 0)
+                                                <!-- Green upward trend line -->
+                                                <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5" stroke="#10B981"
+                                                    stroke-width="2" fill="none" class="profit-line" />
+                                                <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5 L100,40 L0,40 Z"
+                                                    fill="rgba(16, 185, 129, 0.1)" class="profit-fill" />
+                                            @else
+                                                <!-- Red downward trend line -->
+                                                <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35" stroke="#EF4444"
+                                                    stroke-width="2" fill="none" class="loss-line" />
+                                                <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35 L100,40 L0,40 Z"
+                                                    fill="rgba(239, 68, 68, 0.1)" class="loss-fill" />
+                                            @endif
+                                        </svg>
+                                    </div>
+                                    <span class="text-sm {{ $profit > 0 ? 'text-green-400' : 'text-red-400' }} ml-2">
+                                        {{ $profit > 0 ? 'Profit' : 'Loss' }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Weekly Summary Column (Every Saturday OR last day of month) -->
+                    @if ($dayOfWeek == 6 || $loop->last)
+                        @php
+                            // Calculate week stats
+                            $weekProfitColor =
+                                $weekTotalProfit > 0
+                                    ? 'text-green-400'
+                                    : ($weekTotalProfit < 0
+                                        ? 'text-red-400'
+                                        : 'text-gray-400');
+                            $weekBgColor =
+                                $weekTotalProfit > 0
+                                    ? 'bg-green-900/20'
+                                    : ($weekTotalProfit < 0
+                                        ? 'bg-red-900/20'
+                                        : 'bg-gray-750');
+                            $weekBorderColor =
+                                $weekTotalProfit > 0
+                                    ? 'border-green-500/40'
+                                    : ($weekTotalProfit < 0
+                                        ? 'border-red-500/40'
+                                        : 'border-gray-600');
+
+                            // Check if current week
+                            $isCurrentWeek =
+                                $currentWeekStart <= now() && now() <= $currentWeekStart->copy()->endOfWeek();
+                            if ($isCurrentWeek) {
+                                $weekBorderColor = 'border-primary-500';
+                                $weekBgColor .= ' bg-primary-500/10';
+                            }
+
+                            // Get week range
+                            $weekStartFormatted = $currentWeekStart->format('M d');
+                            $weekEndFormatted = $currentWeekStart->copy()->endOfWeek()->format('M d');
+                            $weekRange = "{$weekStartFormatted} - {$weekEndFormatted}";
+                        @endphp
+
+                        <!-- Weekly Summary Cell -->
+                        <div class="p-2 col-span-2 rounded-lg border {{ $weekBorderColor }} {{ $weekBgColor }} cursor-pointer weekly-cell transition-colors hover:bg-gray-700/50"
+                            data-week="{{ $weekNumber }}" data-week-start="{{ $currentWeekStart->format('Y-m-d') }}"
+                            data-week-end="{{ $currentWeekStart->copy()->endOfWeek()->format('Y-m-d') }}"
+                            data-week-profit="{{ $weekTotalProfit }}" data-week-trades="{{ $weekTotalTrades }}">
+                            <div class="flex justify-between items-start mb-1">
+                                <strong class="text-sm text-gray-200">
+                                    W{{ $weekNumber }}
+                                </strong>
+                                @if ($isCurrentWeek)
+                                    <span class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">Now</span>
+                                @endif
+                            </div>
+                            <div class="text-xs text-gray-400 mb-1">{{ $weekRange }}</div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-gray-400">Trades:</span>
+                                    <span class="text-xs font-medium text-gray-300">{{ $weekTotalTrades }}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-gray-400">P/L:</span>
+                                    <span class="text-xs font-bold {{ $weekProfitColor }}">
+                                        ${{ number_format($weekTotalProfit, 2) }}
+                                    </span>
+                                </div>
+                                @if ($weekTotalTrades > 0)
+                                    <div class="pt-1 border-t border-gray-600/50 mt-1">
+                                        <div class="flex justify-center">
+                                            @if ($weekTotalProfit > 0)
+                                                <i class="fas fa-arrow-up text-green-500 text-xs"></i>
+                                                <span class="text-xs text-green-400 ml-1">Profit</span>
+                                            @elseif ($weekTotalProfit < 0)
+                                                <i class="fas fa-arrow-down text-red-500 text-xs"></i>
+                                                <span class="text-xs text-red-400 ml-1">Loss</span>
+                                            @else
+                                                <span class="text-xs text-gray-400">Even</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        @php
+                            // Reset weekly counters for next week
+                            $weekNumber = $currentWeekNum;
+                            $weekTotalProfit = 0;
+                            $weekTotalTrades = 0;
+                            $weekDays = [];
+                            $currentWeekStart = $day->copy()->addDay()->startOfWeek();
+                        @endphp
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -149,89 +292,176 @@ if ($isToday) {
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Weekly Summary -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary-300">Weekly Summary</h3>
-                    <div class="bg-blue-500/20 p-2 rounded-lg">
-                        <i class="fas fa-calendar-week text-blue-500"></i>
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-primary-300">Profit/Loss Trend</h3>
+                        <p id="chartPeriodInfo" class="text-sm text-gray-400 mt-1">
+                            {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <!-- Period Selector -->
+                        <div class="flex bg-gray-750 rounded-lg p-1 border border-gray-600">
+                            <button type="button" data-period="weekly"
+                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-primary-600 text-white">
+                                Weekly
+                            </button>
+                            <button type="button" data-period="monthly"
+                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-700">
+                                Monthly
+                            </button>
+                            <button type="button" data-period="yearly"
+                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-700">
+                                Yearly
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="text-xs text-gray-400 hidden md:block" id="dataCountInfo">{{ $weekly->count() }}
+                                weeks</div>
+                            <div class="bg-blue-500/20 p-1.5 rounded-lg">
+                                <i class="fas fa-chart-line text-blue-500 text-sm"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-gray-600">
-                                <th class="text-left py-2 text-gray-400 font-medium">Week</th>
-                                <th class="text-center py-2 text-gray-400 font-medium">Total Trades</th>
-                                <th class="text-right py-2 text-gray-400 font-medium">P/L ($)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($weekly as $w)
-                                @php
-                                    $color =
-                                        $w->total_profit > 0
-                                            ? 'text-green-400'
-                                            : ($w->total_profit < 0
-                                                ? 'text-red-400'
-                                                : 'text-gray-400');
-                                @endphp
-                                <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                    <td class="py-2 text-gray-300">Week {{ $w->week }}</td>
-                                    <td class="py-2 text-center text-gray-300">{{ $w->total_trades }}</td>
-                                    <td class="py-2 text-right font-medium {{ $color }}">
-                                        ${{ number_format($w->total_profit, 2) }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <!-- Chart Container -->
+                <div class="relative">
+                    <!-- Loading State -->
+                    <div id="chartLoading"
+                        class="hidden absolute inset-0 bg-gray-800/80 flex items-center justify-center z-10 rounded-lg">
+                        <div class="flex flex-col items-center">
+                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500 mb-2">
+                            </div>
+                            <p class="text-sm text-gray-400">Loading chart...</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart Canvas -->
+                    <div class="h-80">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+
+                    <!-- No Data State -->
+                    <div id="noDataMessage" class="hidden flex flex-col items-center justify-center py-12 text-gray-400">
+                        <i class="fas fa-chart-bar text-3xl mb-3 opacity-50"></i>
+                        <p class="text-base text-gray-300">No data available for selected period</p>
+                        <p class="text-sm mt-1">Start trading to see your performance trend</p>
+                    </div>
+                </div>
+
+                <!-- Chart Legend -->
+                <div class="mt-4 flex flex-wrap gap-4 justify-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span class="text-sm text-gray-300">Profit/Loss ($)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span class="text-sm text-gray-300">Trades Count</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-primary-500 rounded-full"></div>
+                        <span class="text-sm text-gray-300">Profit</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span class="text-sm text-gray-300">Loss</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Monthly Summary -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary-300">Monthly Summary ({{ $year }})</h3>
-                    <div class="bg-green-500/20 p-2 rounded-lg">
-                        <i class="fas fa-chart-line text-green-500"></i>
+                    <h3 class="text-lg font-bold text-primary-300">Monthly Calendar ({{ $year }})</h3>
+                    <div class="flex items-center gap-2">
+                        <div class="text-xs text-gray-400">{{ $monthly->count() }} months with trades</div>
+                        <div class="bg-green-500/20 p-1.5 rounded-lg">
+                            <i class="fas fa-calendar-alt text-green-500 text-sm"></i>
+                        </div>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto max-h-96">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-gray-600">
-                                <th class="text-left py-2 text-gray-400 font-medium">Month</th>
-                                <th class="text-center py-2 text-gray-400 font-medium">Total Trades</th>
-                                <th class="text-right py-2 text-gray-400 font-medium">P/L ($)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($monthly as $m)
-                                @php
-                                    $monthName = \Carbon\Carbon::create()->month($m->month)->format('F');
-                                    $color =
-                                        $m->total_profit > 0
-                                            ? 'text-green-400'
-                                            : ($m->total_profit < 0
-                                                ? 'text-red-400'
-                                                : 'text-gray-400');
-                                    $isCurrentMonth = $m->month == $month && $m->year == $year;
-                                    $rowClass = $isCurrentMonth ? 'bg-primary-500/10' : '';
-                                @endphp
-                                <tr
-                                    class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors {{ $rowClass }}">
-                                    <td class="py-2 text-gray-300">{{ $monthName }}</td>
-                                    <td class="py-2 text-center text-gray-300">{{ $m->total_trades }}</td>
-                                    <td class="py-2 text-right font-medium {{ $color }}">
-                                        ${{ number_format($m->total_profit, 2) }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                @if ($monthly->count() > 0)
+                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-1">
+                        @php
+                            $currentMonth = date('n');
+                            $currentYear = date('Y');
+                        @endphp
+
+                        @foreach ($monthly as $m)
+                            @php
+                                $monthName = \Carbon\Carbon::create()->month($m->month)->format('M');
+                                $totalProfit = $m->total_profit ?? 0;
+                                $totalTrades = $m->total_trades ?? 0;
+
+                                // Determine colors
+                                $profitColor = 'text-gray-400';
+                                $profitBg = '';
+
+                                if ($totalProfit > 0) {
+                                    $profitColor = 'text-green-400';
+                                    $profitBg = 'bg-green-900/10';
+                                } elseif ($totalProfit < 0) {
+                                    $profitColor = 'text-red-400';
+                                    $profitBg = 'bg-red-900/10';
+                                }
+
+                                $isCurrentMonth = $m->month == $currentMonth && $m->year == $currentYear;
+                                $borderClass = $isCurrentMonth ? 'ring-1 ring-primary-500' : 'border border-gray-700';
+                            @endphp
+
+                            <div
+                                class="{{ $profitBg }} {{ $borderClass }} rounded-lg p-2 hover:bg-gray-750/30 transition-colors">
+                                <!-- Month Header -->
+                                <div class="mb-1">
+                                    <div class="flex justify-between items-center">
+                                        <h4 class="font-semibold text-gray-200 text-sm">{{ $monthName }}</h4>
+                                        @if ($isCurrentMonth)
+                                            <span
+                                                class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">Now</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="space-y-1 flex items-center justify-between">
+                                    <!-- Trades -->
+                                    <div>
+                                        <div class="text-xs text-gray-400 mb-0.5">Trades</div>
+                                        <div class="font-bold text-gray-200 text-base">
+                                            {{ $totalTrades }}
+                                        </div>
+                                    </div>
+
+                                    <!-- P/L -->
+                                    <div>
+                                        <div class="text-xs text-gray-400 mb-0.5">P/L</div>
+                                        <div class="font-bold {{ $profitColor }} text-lg flex items-center gap-2">
+                                            ${{ number_format($totalProfit, 0) }}
+                                            @if ($totalProfit != 0)
+                                                @if ($totalProfit > 0)
+                                                    <i class="fas fa-arrow-up text-green-500 text-xs mr-1"></i>
+                                                @else
+                                                    <i class="fas fa-arrow-down text-red-500 text-xs mr-1"></i>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 mb-2">
+                            <i class="fas fa-calendar-times text-3xl"></i>
+                        </div>
+                        <p class="text-gray-400">No trades recorded for {{ $year }}</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -363,6 +593,69 @@ if ($isToday) {
                 });
             });
 
+            // Event listener for weekly summary cells
+            document.querySelectorAll('.weekly-cell').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const weekNumber = this.getAttribute('data-week');
+                    const weekStart = this.getAttribute('data-week-start');
+                    const weekEnd = this.getAttribute('data-week-end');
+                    const weekProfit = parseFloat(this.getAttribute('data-week-profit'));
+                    const weekTrades = parseInt(this.getAttribute('data-week-trades'));
+
+                    // Format dates
+                    const startDate = new Date(weekStart);
+                    const endDate = new Date(weekEnd);
+                    const options = {
+                        month: 'short',
+                        day: 'numeric'
+                    };
+                    const formattedStart = startDate.toLocaleDateString('en-US', options);
+                    const formattedEnd = endDate.toLocaleDateString('en-US', options);
+
+                    // Set modal title
+                    modalTitle.textContent =
+                        `Week ${weekNumber} (${formattedStart} - ${formattedEnd})`;
+
+                    // Create modal content for weekly summary
+                    let content = `
+                        <div class="mb-4 p-3 rounded-lg ${weekProfit > 0 ? 'bg-green-500/10 border border-green-500/30' : weekProfit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="text-sm text-gray-400 mb-1">Total Trades</div>
+                                    <div class="text-2xl font-bold text-gray-200">${weekTrades}</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-400 mb-1">Total P/L</div>
+                                    <div class="text-2xl font-bold ${weekProfit > 0 ? 'text-green-400' : weekProfit < 0 ? 'text-red-400' : 'text-gray-400'}">
+                                        $${weekProfit.toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-gray-600">
+                                <div class="text-sm text-gray-400">Week Range</div>
+                                <div class="text-gray-300">
+                                    ${startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} 
+                                    to 
+                                    ${endDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Note: Untuk menampilkan detail trades per hari dalam minggu tersebut,
+                    // Anda perlu fetch data via AJAX atau mengirim data yang sudah ada
+                    content += `
+                        <div class="text-center py-4">
+                            <p class="text-gray-400">Click on individual days to see detailed trades</p>
+                        </div>
+                    `;
+
+                    modalContent.innerHTML = content;
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
             // Close modal button
             closeModalBtn.addEventListener('click', function() {
                 modal.classList.add('hidden');
@@ -387,6 +680,367 @@ if ($isToday) {
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chart.js Initialization
+            const chartCanvas = document.getElementById('performanceChart');
+            const ctx = chartCanvas.getContext('2d');
+            const chartLoading = document.getElementById('chartLoading');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const periodButtons = document.querySelectorAll('.period-btn');
+            const chartPeriodInfo = document.getElementById('chartPeriodInfo');
+            const dataCountInfo = document.getElementById('dataCountInfo');
+
+            // Data dari backend - format ulang agar lebih mudah digunakan
+            const backendData = {
+                daily: @json($daily),
+                trades: @json($trades),
+                weekly: @json($weekly),
+                monthly: @json($monthly),
+                currentMonth: {{ $month }},
+                currentYear: {{ $year }}
+            };
+
+            console.log('Backend Data:', backendData); // Debug
+
+            let performanceChart = null;
+            let currentPeriod = 'weekly';
+
+            // Initialize Chart
+            function initChart() {
+                if (performanceChart) {
+                    performanceChart.destroy();
+                }
+
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+                gradient.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
+
+                performanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Profit/Loss ($)',
+                            data: [],
+                            borderColor: '#3b82f6',
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: function(context) {
+                                const value = context.dataset.data[context.dataIndex];
+                                return value >= 0 ? '#10b981' : '#ef4444';
+                            },
+                            pointBorderColor: '#1f2937',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#1f2937',
+                                titleColor: '#d1d5db',
+                                bodyColor: '#d1d5db',
+                                borderColor: '#374151',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        return `P/L: $${value.toFixed(2)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: '#9ca3af',
+                                    maxRotation: 45
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: '#9ca3af',
+                                    callback: function(value) {
+                                        return '$' + value.toFixed(0);
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Profit/Loss ($)',
+                                    color: '#9ca3af'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Load initial data
+                loadChartData('weekly');
+            }
+
+            // Get weekly data
+            function getWeeklyData() {
+                console.log('Getting weekly data...');
+
+                if (!backendData.weekly || backendData.weekly.length === 0) {
+                    console.log('No weekly data available');
+                    return [];
+                }
+
+                // Sort by year, month, week
+                const sortedWeekly = [...backendData.weekly].sort((a, b) => {
+                    if (a.year !== b.year) return a.year - b.year;
+                    if (a.month !== b.month) return a.month - b.month;
+                    return a.week - b.week;
+                });
+
+                const data = sortedWeekly.map(week => {
+                    const weekStart = new Date(week.year, week.month - 1, 1);
+                    // Adjust week start based on week number
+                    const weekStartDate = new Date(weekStart);
+                    weekStartDate.setDate((week.week - 1) * 7 + 1);
+
+                    return {
+                        label: `W${week.week}`,
+                        profit: parseFloat(week.total_profit || 0),
+                        trades: week.total_trades || 0,
+                        weekNumber: week.week,
+                        month: week.month,
+                        year: week.year,
+                        weekRange: `W${week.week} (${weekStartDate.getDate()}/${week.month})`
+                    };
+                });
+
+                console.log('Weekly data prepared:', data);
+                return data;
+            }
+
+            // Get monthly data (daily view for current month)
+            function getMonthlyData() {
+                console.log('Getting monthly data...');
+
+                const monthData = [];
+                const daysInMonth = new Date(backendData.currentYear, backendData.currentMonth, 0).getDate();
+
+                // Get data for each day of the current month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr =
+                        `${backendData.currentYear}-${String(backendData.currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayData = backendData.daily[dateStr];
+                    const dayTrades = backendData.trades[dateStr];
+
+                    monthData.push({
+                        label: String(day),
+                        profit: dayData ? parseFloat(dayData.total_profit || 0) : 0,
+                        trades: dayTrades ? dayTrades.length : 0,
+                        date: dateStr
+                    });
+                }
+
+                console.log('Monthly data prepared:', monthData);
+                return monthData;
+            }
+
+            // Get yearly data
+            function getYearlyData() {
+                console.log('Getting yearly data...');
+
+                if (!backendData.monthly || backendData.monthly.length === 0) {
+                    console.log('No monthly data available');
+                    return [];
+                }
+
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov',
+                    'Dec'
+                ];
+
+                // Filter data for current year
+                const yearData = backendData.monthly
+                    .filter(month => month.year === backendData.currentYear)
+                    .sort((a, b) => a.month - b.month)
+                    .map(month => ({
+                        label: monthNames[month.month - 1],
+                        profit: parseFloat(month.total_profit || 0),
+                        trades: month.total_trades || 0,
+                        month: month.month
+                    }));
+
+                console.log('Yearly data prepared:', yearData);
+                return yearData;
+            }
+
+            // Load Chart Data
+            function loadChartData(period) {
+                console.log(`Loading chart data for period: ${period}`);
+
+                chartLoading.classList.remove('hidden');
+                chartCanvas.classList.add('opacity-50');
+                noDataMessage.classList.add('hidden');
+
+                let data = [];
+                let periodInfo = '';
+
+                switch (period) {
+                    case 'weekly':
+                        data = getWeeklyData();
+                        periodInfo =
+                            `Weekly View - ${new Date(backendData.currentYear, backendData.currentMonth - 1).toLocaleString('default', { month: 'long' })} ${backendData.currentYear}`;
+                        break;
+                    case 'monthly':
+                        data = getMonthlyData();
+                        periodInfo =
+                            `Daily View - ${new Date(backendData.currentYear, backendData.currentMonth - 1).toLocaleString('default', { month: 'long' })} ${backendData.currentYear}`;
+                        break;
+                    case 'yearly':
+                        data = getYearlyData();
+                        periodInfo = `Monthly View - ${backendData.currentYear}`;
+                        break;
+                }
+
+                // Update UI
+                chartPeriodInfo.textContent = periodInfo;
+                dataCountInfo.textContent =
+                    `${data.length} ${period === 'weekly' ? 'weeks' : period === 'monthly' ? 'days' : 'months'}`;
+
+                // Update chart
+                updateChartWithData(data, period);
+
+                // Hide loading
+                setTimeout(() => {
+                    chartLoading.classList.add('hidden');
+                    chartCanvas.classList.remove('opacity-50');
+                }, 300);
+            }
+
+            // Update Chart with Data
+            function updateChartWithData(data, period) {
+                console.log(`Updating chart with ${data.length} data points for ${period} period`);
+
+                if (!data || data.length === 0) {
+                    chartCanvas.classList.add('hidden');
+                    noDataMessage.classList.remove('hidden');
+                    console.log('No data available, showing no data message');
+                    return;
+                }
+
+                chartCanvas.classList.remove('hidden');
+                noDataMessage.classList.add('hidden');
+
+                // Extract labels and data
+                const labels = data.map(item => item.label);
+                const profits = data.map(item => item.profit);
+
+                console.log('Chart labels:', labels);
+                console.log('Chart profits:', profits);
+
+                // Update chart data
+                performanceChart.data.labels = labels;
+                performanceChart.data.datasets[0].data = profits;
+
+                // Customize tooltip based on period
+                performanceChart.options.plugins.tooltip.callbacks.title = function(tooltipItems) {
+                    const index = tooltipItems[0].dataIndex;
+                    const item = data[index];
+
+                    if (period === 'weekly' && item.weekRange) {
+                        return item.weekRange;
+                    } else if (period === 'monthly' && item.date) {
+                        const date = new Date(item.date);
+                        return date.toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                    } else if (period === 'yearly' && item.month) {
+                        const monthName = new Date(backendData.currentYear, item.month - 1)
+                            .toLocaleString('default', {
+                                month: 'long'
+                            });
+                        return `${monthName} ${backendData.currentYear}`;
+                    }
+
+                    return item.label;
+                };
+
+                performanceChart.update();
+            }
+
+            // Period Button Click Handler
+            periodButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const period = this.getAttribute('data-period');
+
+                    // Update active button
+                    periodButtons.forEach(btn => {
+                        btn.classList.remove('bg-primary-600', 'text-white');
+                        btn.classList.add('text-gray-300', 'hover:text-white',
+                            'hover:bg-gray-700');
+                    });
+
+                    this.classList.remove('text-gray-300', 'hover:text-white', 'hover:bg-gray-700');
+                    this.classList.add('bg-primary-600', 'text-white');
+
+                    // Update chart data
+                    currentPeriod = period;
+                    loadChartData(period);
+                });
+            });
+
+            // Initialize the chart
+            initChart();
+
+            // Resize chart on window resize
+            window.addEventListener('resize', function() {
+                if (performanceChart) {
+                    performanceChart.resize();
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .period-btn {
+            transition: all 0.2s ease;
+            min-width: 70px;
+        }
+
+        .period-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        #performanceChart {
+            width: 100% !important;
+            height: 320px !important;
+        }
+    </style>
+
     <style>
         /* Simple scrollbar for modal */
         #modalContent::-webkit-scrollbar {
@@ -403,8 +1057,16 @@ if ($isToday) {
         }
 
         /* Calendar day hover effect */
-        .day-cell:hover {
+        .day-cell:hover,
+        .weekly-cell:hover {
             transform: translateY(-1px);
+        }
+
+        /* Grid layout for 8 columns */
+        @media (min-width: 768px) {
+            .grid-cols-8 {
+                grid-template-columns: repeat(8, minmax(0, 1fr));
+            }
         }
     </style>
 @endsection

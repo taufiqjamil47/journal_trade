@@ -36,7 +36,12 @@ Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])
 
 Route::resource('sessions', SessionController::class);
 Route::resource('trading-rules', TradingRuleController::class);
-Route::put('/trading-rules/{id}/order', [TradingRuleController::class, 'updateOrder'])->name('trading-rules.order');
+Route::put('/trading-rules/{id}', [TradingRuleController::class, 'updateOrder'])
+    ->name('trading-rules.update');
+Route::put('/trading-rules/{id}/order', [TradingRuleController::class, 'updateOrder'])
+    ->name('trading-rules.update-order');
+Route::post('/trading-rules/reorder', [TradingRuleController::class, 'reorder'])
+    ->name('trading-rules.reorder');
 
 Route::get('/trades/export/excel', [TradeController::class, 'exportExcel'])->name('trades.export.excel');
 Route::post('/trades/import', [TradeController::class, 'importExcel'])->name('trades.import.excel');

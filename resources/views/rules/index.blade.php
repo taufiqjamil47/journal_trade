@@ -152,14 +152,18 @@
                     </thead>
                     <tbody class="divide-y divide-gray-700/50" id="rulesTableBody">
                         @forelse($rules as $rule)
-                            <tr class="hover:bg-gray-750 transition-colors duration-150 rule-item"
-                                data-name="{{ strtolower($rule->name) }}"
-                                data-description="{{ strtolower($rule->description ?? '') }}">
+                            <tr class="hover:bg-gray-750 transition-colors duration-150 rule-item draggable-row"
+                                data-id="{{ $rule->id }}" data-name="{{ strtolower($rule->name) }}"
+                                data-description="{{ strtolower($rule->description ?? '') }}"
+                                data-order="{{ $rule->order }}" draggable="true">
                                 <td class="py-3 px-4">
-                                    <span
-                                        class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
-                                        {{ $loop->iteration }}
-                                    </span>
+                                    <div class="flex items-center">
+                                        <span
+                                            class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium mr-2">
+                                            {{ $loop->iteration }}
+                                        </span>
+                                        <i class="fas fa-grip-vertical text-gray-500 cursor-move drag-handle"></i>
+                                    </div>
                                 </td>
                                 <td class="py-3 px-4 font-medium">{{ $rule->name }}</td>
                                 <td class="py-3 px-4 text-sm text-gray-400">
@@ -172,22 +176,10 @@
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <div class="flex items-center gap-2">
-                                        <span
-                                            class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
-                                            {{ $rule->order }}
-                                        </span>
-                                        <div class="flex flex-col">
-                                            <button onclick="moveUp({{ $rule->id }})"
-                                                class="text-gray-400 hover:text-green-400 text-xs">
-                                                <i class="fas fa-chevron-up"></i>
-                                            </button>
-                                            <button onclick="moveDown({{ $rule->id }})"
-                                                class="text-gray-400 hover:text-red-400 text-xs">
-                                                <i class="fas fa-chevron-down"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <span
+                                        class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                        {{ $rule->order }}
+                                    </span>
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="flex space-x-2">
@@ -206,24 +198,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="py-12 text-center">
-                                    <div class="flex flex-col items-center justify-center text-gray-400 space-y-3">
-                                        <div class="bg-gray-700 rounded-full p-4">
-                                            <i class="fas fa-rules text-2xl opacity-50"></i>
-                                        </div>
-                                        <div class="space-y-1">
-                                            <p class="text-base font-medium">Belum ada rules</p>
-                                            <p class="text-sm">Mulai dengan menambahkan rule pertama Anda</p>
-                                        </div>
-                                        <button onclick="openCreateModal()"
-                                            class="mt-2 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg flex items-center">
-                                            <i class="fas fa-plus mr-2"></i>
-                                            Tambah Rule Pertama
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <!-- ... existing empty state ... -->
                         @endforelse
                     </tbody>
                 </table>
@@ -681,6 +656,272 @@
             });
         });
     </script>
+
+    <script>
+        // Tambahkan di bagian <script> sebelum fungsi lainnya
+
+        // Drag & Drop Functionality
+        let draggedRow = null;
+        let draggedIndex = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.draggable-row');
+            const tableBody = document.getElementById('rulesTableBody');
+
+            rows.forEach(row => {
+                // Make whole row draggable
+                row.addEventListener('dragstart', function(e) {
+                    draggedRow = this;
+                    draggedIndex = Array.from(rows).indexOf(this);
+                    this.classList.add('dragging');
+
+                    // Hanya tambahkan sedikit opacity untuk feedback visual
+                    this.style.opacity = '0.8';
+
+                    // Set data untuk transfer
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/html', this.innerHTML);
+
+                    // Gunakan ghost image yang lebih sederhana
+                    setTimeout(() => {
+                        this.style.display = 'none';
+                    }, 0);
+                });
+
+                row.addEventListener('dragend', function(e) {
+                    this.style.display = '';
+                    this.style.opacity = '';
+                    this.classList.remove('dragging');
+
+                    // Hapus semua class drag-over dari row lain
+                    rows.forEach(r => r.classList.remove('drag-over'));
+
+                    // Update order numbers
+                    updateRowNumbers();
+
+                    // Reset
+                    draggedRow = null;
+                    draggedIndex = null;
+                });
+
+                // Events untuk memberikan feedback visual saat drag over
+                row.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    if (this !== draggedRow) {
+                        this.classList.add('drag-over');
+                    }
+                });
+
+                row.addEventListener('dragleave', function(e) {
+                    this.classList.remove('drag-over');
+                });
+            });
+
+            // Drag over event for the table body
+            tableBody.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+
+                // Cari elemen setelah posisi drag
+                const draggableElements = [...tableBody.querySelectorAll('.draggable-row:not(.dragging)')];
+                const afterElement = getDragAfterElement(tableBody, e.clientY);
+
+                if (afterElement == null) {
+                    tableBody.appendChild(draggedRow);
+                } else {
+                    tableBody.insertBefore(draggedRow, afterElement);
+                }
+            });
+
+            // Drop event
+            tableBody.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Save new order to database
+                saveNewOrder();
+            });
+
+            // Touch events untuk mobile support
+            rows.forEach(row => {
+                let touchStartY = 0;
+                let touchEndY = 0;
+
+                row.addEventListener('touchstart', function(e) {
+                    touchStartY = e.touches[0].clientY;
+                    this.classList.add('touch-active');
+                }, {
+                    passive: true
+                });
+
+                row.addEventListener('touchend', function(e) {
+                    this.classList.remove('touch-active');
+                }, {
+                    passive: true
+                });
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable-row:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return {
+                        offset: offset,
+                        element: child
+                    };
+                } else {
+                    return closest;
+                }
+            }, {
+                offset: Number.NEGATIVE_INFINITY
+            }).element;
+        }
+
+        function updateRowNumbers() {
+            const rows = document.querySelectorAll('.draggable-row');
+            rows.forEach((row, index) => {
+                const numberCell = row.querySelector('td:first-child .bg-gray-700');
+                if (numberCell) {
+                    numberCell.textContent = index + 1;
+                }
+
+                // Update order di data attribute
+                row.dataset.order = index + 1;
+
+                // Update order display di kolom urutan
+                const orderCell = row.querySelector('td:nth-child(5) .bg-gray-700');
+                if (orderCell) {
+                    orderCell.textContent = index + 1;
+                }
+            });
+        }
+
+        async function saveNewOrder() {
+            const rows = document.querySelectorAll('.draggable-row');
+            const rules = [];
+
+            rows.forEach((row, index) => {
+                rules.push({
+                    id: row.dataset.id,
+                    order: index + 1
+                });
+            });
+
+            try {
+                const response = await fetch('{{ route('trading-rules.reorder') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rules
+                    })
+                });
+
+                if (response.ok) {
+                    // Show success notification
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Urutan rules telah diperbarui',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        background: '#1f2937',
+                        color: '#d1d5db',
+                        iconColor: '#10b981'
+                    });
+                } else {
+                    throw new Error('Failed to save order');
+                }
+            } catch (error) {
+                console.error('Error saving order:', error);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal menyimpan urutan baru',
+                    confirmButtonColor: '#d33'
+                });
+            }
+        }
+    </script>
+
+    <style>
+        /* ... existing styles ... */
+
+        /* Drag & Drop Styles yang lebih minimal */
+        .draggable-row {
+            cursor: move;
+            user-select: none;
+            transition: background-color 0.2s ease;
+            position: relative;
+        }
+
+        .draggable-row.dragging {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+            border: 1px solid #3b82f6 !important;
+            opacity: 0.8;
+            z-index: 1000;
+            position: relative;
+        }
+
+        .draggable-row.drag-over {
+            border-top: 2px solid #3b82f6 !important;
+        }
+
+        .draggable-row.drag-over-top {
+            border-top: 2px solid #3b82f6 !important;
+        }
+
+        .draggable-row.drag-over-bottom {
+            border-bottom: 2px solid #3b82f6 !important;
+        }
+
+        .drag-handle {
+            cursor: move;
+            transition: color 0.2s;
+        }
+
+        .drag-handle:hover {
+            color: #3b82f6;
+        }
+
+        .draggable-row:active {
+            cursor: grabbing;
+        }
+
+        /* Feedback untuk touch devices */
+        .draggable-row.touch-active {
+            background-color: rgba(59, 130, 246, 0.05) !important;
+        }
+
+        /* Highlight area saat drag */
+        .drag-placeholder {
+            height: 2px;
+            background-color: #3b82f6;
+            margin: 2px 0;
+        }
+
+        /* Visual feedback minimal selama drag */
+        #rulesTableBody {
+            min-height: 100px;
+            transition: all 0.2s ease;
+        }
+
+        /* Efek saat hover untuk drag handle */
+        .draggable-row:hover .drag-handle {
+            color: #3b82f6;
+        }
+    </style>
 
     <style>
         /* SweetAlert Custom Styles - Consistent with other pages */

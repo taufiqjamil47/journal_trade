@@ -184,10 +184,19 @@
                                         <label for="entry_type" class="block text-sm font-semibold text-gray-300">
                                             Entry Type (Setup)
                                         </label>
-                                        <input type="text" name="entry_type" id="entry_type"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                            value="{{ $trade->entry_type }}"
-                                            placeholder="Contoh: Order Block, FVG, Breaker Block, dll">
+                                        <select name="entry_type" id="entry_type"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent">
+                                            <option value="">Pilih tipe entry</option>
+                                            <option value="Limit Order"
+                                                {{ $trade->entry_type == 'Limit Order' ? 'selected' : '' }}>Limit Order
+                                            </option>
+                                            <option value="Market Order"
+                                                {{ $trade->entry_type == 'Market Order' ? 'selected' : '' }}>Market Order
+                                            </option>
+                                            <option value="Stop Order"
+                                                {{ $trade->entry_type == 'Stop Order' ? 'selected' : '' }}>Stop Order
+                                            </option>
+                                        </select>
                                     </div>
 
                                     <div class="space-y-2">
@@ -230,9 +239,37 @@
                                         <label for="market_condition" class="block text-sm font-semibold text-gray-300">
                                             Market Condition Analysis
                                         </label>
-                                        <textarea name="market_condition" id="market_condition" rows="3"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent resize-none"
-                                            placeholder="Deskripsikan kondisi market saat entry...">{{ $trade->market_condition }}</textarea>
+                                        <select name="market_condition" id="market_condition"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent">
+                                            <option value="">Pilih kondisi market</option>
+                                            <option value="Uptrend"
+                                                {{ $trade->market_condition == 'Uptrend' ? 'selected' : '' }}>Uptrend
+                                            </option>
+                                            <option value="Downtrend"
+                                                {{ $trade->market_condition == 'Downtrend' ? 'selected' : '' }}>Downtrend
+                                            </option>
+                                            <option value="Sideways/Range"
+                                                {{ $trade->market_condition == 'Sideways/Range' ? 'selected' : '' }}>
+                                                Sideways/Range</option>
+                                            <option value="Breakout"
+                                                {{ $trade->market_condition == 'Breakout' ? 'selected' : '' }}>Breakout
+                                            </option>
+                                            <option value="Pullback/Retracement"
+                                                {{ $trade->market_condition == 'Pullback/Retracement' ? 'selected' : '' }}>
+                                                Pullback/Retracement</option>
+                                            <option value="Consolidation"
+                                                {{ $trade->market_condition == 'Consolidation' ? 'selected' : '' }}>
+                                                Consolidation</option>
+                                            <option value="Volatile/Choppy"
+                                                {{ $trade->market_condition == 'Volatile/Choppy' ? 'selected' : '' }}>
+                                                Volatile/Choppy</option>
+                                            <option value="Reversal"
+                                                {{ $trade->market_condition == 'Reversal' ? 'selected' : '' }}>Reversal
+                                            </option>
+                                            <option value="Trend Continuation"
+                                                {{ $trade->market_condition == 'Trend Continuation' ? 'selected' : '' }}>
+                                                Trend Continuation</option>
+                                        </select>
                                     </div>
 
                                     <div class="space-y-2">
@@ -309,18 +346,83 @@
                                         <label for="entry_emotion" class="block text-sm font-semibold text-gray-300">
                                             Entry Emotion
                                         </label>
-                                        <input type="text" name="entry_emotion" id="entry_emotion"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
-                                            value="{{ $trade->entry_emotion }}" placeholder="Emosi saat entry">
+                                        <select name="entry_emotion" id="entry_emotion"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent">
+                                            <option value="">Pilih emosi saat entry</option>
+                                            <option value="Confident"
+                                                {{ $trade->entry_emotion == 'Confident' ? 'selected' : '' }}>Confident
+                                                (Percaya diri)</option>
+                                            <option value="Fearful"
+                                                {{ $trade->entry_emotion == 'Fearful' ? 'selected' : '' }}>Fearful (Takut)
+                                            </option>
+                                            <option value="Greedy"
+                                                {{ $trade->entry_emotion == 'Greedy' ? 'selected' : '' }}>Greedy (Serakah)
+                                            </option>
+                                            <option value="Anxious"
+                                                {{ $trade->entry_emotion == 'Anxious' ? 'selected' : '' }}>Anxious (Cemas)
+                                            </option>
+                                            <option value="Hopeful"
+                                                {{ $trade->entry_emotion == 'Hopeful' ? 'selected' : '' }}>Hopeful
+                                                (Berharap)</option>
+                                            <option value="Impatient"
+                                                {{ $trade->entry_emotion == 'Impatient' ? 'selected' : '' }}>Impatient
+                                                (Tidak sabar)</option>
+                                            <option value="Calm"
+                                                {{ $trade->entry_emotion == 'Calm' ? 'selected' : '' }}>Calm (Tenang)
+                                            </option>
+                                            <option value="FOMO"
+                                                {{ $trade->entry_emotion == 'FOMO' ? 'selected' : '' }}>FOMO (Fear Of
+                                                Missing Out)</option>
+                                            <option value="Revenge Trading"
+                                                {{ $trade->entry_emotion == 'Revenge Trading' ? 'selected' : '' }}>Revenge
+                                                Trading (Balas dendam)</option>
+                                            <option value="Overconfident"
+                                                {{ $trade->entry_emotion == 'Overconfident' ? 'selected' : '' }}>
+                                                Overconfident (Terlalu percaya diri)</option>
+                                        </select>
                                     </div>
 
                                     <div class="space-y-2">
                                         <label for="close_emotion" class="block text-sm font-semibold text-gray-300">
                                             Close Emotion
                                         </label>
-                                        <input type="text" name="close_emotion" id="close_emotion"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
-                                            value="{{ $trade->close_emotion }}" placeholder="Emosi saat close">
+                                        <select name="close_emotion" id="close_emotion"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent">
+                                            <option value="">Pilih emosi saat close</option>
+                                            <option value="Satisfied"
+                                                {{ $trade->close_emotion == 'Satisfied' ? 'selected' : '' }}>Satisfied
+                                                (Puas)</option>
+                                            <option value="Relieved"
+                                                {{ $trade->close_emotion == 'Relieved' ? 'selected' : '' }}>Relieved
+                                                (Legas)</option>
+                                            <option value="Regretful"
+                                                {{ $trade->close_emotion == 'Regretful' ? 'selected' : '' }}>Regretful
+                                                (Menyesal)</option>
+                                            <option value="Frustrated"
+                                                {{ $trade->close_emotion == 'Frustrated' ? 'selected' : '' }}>Frustrated
+                                                (Frustasi)</option>
+                                            <option value="Happy"
+                                                {{ $trade->close_emotion == 'Happy' ? 'selected' : '' }}>Happy (Senang)
+                                            </option>
+                                            <option value="Disappointed"
+                                                {{ $trade->close_emotion == 'Disappointed' ? 'selected' : '' }}>
+                                                Disappointed (Kecewa)</option>
+                                            <option value="Neutral"
+                                                {{ $trade->close_emotion == 'Neutral' ? 'selected' : '' }}>Neutral (Netral)
+                                            </option>
+                                            <option value="Greedy (Holding too long)"
+                                                {{ $trade->close_emotion == 'Greedy (Holding too long)' ? 'selected' : '' }}>
+                                                Greedy (Holding too long)</option>
+                                            <option value="Fearful (Exiting too early)"
+                                                {{ $trade->close_emotion == 'Fearful (Exiting too early)' ? 'selected' : '' }}>
+                                                Fearful (Exiting too early)</option>
+                                            <option value="Angry"
+                                                {{ $trade->close_emotion == 'Angry' ? 'selected' : '' }}>Angry (Marah)
+                                            </option>
+                                            <option value="Learning"
+                                                {{ $trade->close_emotion == 'Learning' ? 'selected' : '' }}>Learning
+                                                (Mengambil pelajaran)</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -368,6 +470,18 @@
                             <label for="note" class="block text-sm font-semibold text-gray-300">
                                 Catatan Tambahan & Pembelajaran
                             </label>
+
+                            <!-- Tombol Generate -->
+                            <div class="mb-3">
+                                <button type="button" id="generateNoteBtn"
+                                    class="bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center text-sm">
+                                    <i class="fas fa-magic mr-2"></i>
+                                    Generate Catatan Otomatis
+                                </button>
+                                <p class="text-xs text-gray-400 mt-1">Klik untuk membuat catatan berdasarkan inputan di
+                                    atas</p>
+                            </div>
+
                             <textarea name="note" id="note" rows="4"
                                 class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-transparent resize-none"
                                 placeholder="Pembelajaran dan insight dari trade ini...">{{ $trade->note }}</textarea>
@@ -444,5 +558,253 @@
                 // Allow normal submission
             });
         });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded - check generate button');
+
+            // Cek apakah tombol ada
+            const generateBtn = document.getElementById('generateNoteBtn');
+            console.log('Generate button found:', generateBtn);
+
+            // Auto-resize textareas
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+
+                // Initial resize
+                setTimeout(() => {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = (textarea.scrollHeight) + 'px';
+                }, 100);
+            });
+
+            // Fungsi untuk generate catatan otomatis yang ringkas dan natural
+            function generateNote() {
+                console.log('Generate button clicked!');
+
+                try {
+                    // Ambil semua nilai dari form
+                    const entryType = document.getElementById('entry_type')?.value || '';
+                    const marketCondition = document.getElementById('market_condition')?.value || '';
+                    const entryReason = document.getElementById('entry_reason')?.value || '';
+                    const whySlTp = document.getElementById('why_sl_tp')?.value || '';
+                    const entryEmotion = document.getElementById('entry_emotion')?.value || '';
+                    const closeEmotion = document.getElementById('close_emotion')?.value || '';
+
+                    // Debug: lihat nilai yang diambil
+                    console.log('Entry Type:', entryType);
+                    console.log('Market Condition:', marketCondition);
+                    console.log('Entry Emotion:', entryEmotion);
+
+                    // Check follow rules
+                    const followRulesElement = document.querySelector('input[name="follow_rules"]:checked');
+                    const followRules = followRulesElement ? followRulesElement.value : '';
+                    console.log('Follow Rules:', followRules);
+
+                    // Ambil trading rules yang dipilih (hitung jumlahnya)
+                    const selectedRules = document.querySelectorAll('input[name="rules[]"]:checked');
+                    const selectedRulesCount = selectedRules.length;
+                    console.log('Selected rules count:', selectedRulesCount);
+
+                    // Bangun kalimat natural berdasarkan kondisi
+                    let note = "";
+
+                    // Bagian 1: Konteks Trading
+                    if (entryType && marketCondition) {
+                        note +=
+                            `Melakukan ${entryType.toLowerCase()} pada kondisi market ${marketCondition.toLowerCase()}. `;
+                    }
+
+                    // Bagian 2: Psikologi dan Alasan Entry
+                    if (entryEmotion && entryReason) {
+                        if (entryEmotion.includes('Confident') || entryEmotion.includes('Calm')) {
+                            note +=
+                                `Dengan kondisi psikologi ${entryEmotion.toLowerCase()}, entry diambil karena ${entryReason.toLowerCase()}. `;
+                        } else if (entryEmotion.includes('Fear') || entryEmotion.includes('Anxious')) {
+                            note +=
+                                `Meski merasa ${entryEmotion.toLowerCase()}, tetap mengambil posisi karena ${entryReason.toLowerCase()}. `;
+                        } else if (entryEmotion.includes('FOMO') || entryEmotion.includes('Revenge')) {
+                            note +=
+                                `Entry dilakukan dengan emosi ${entryEmotion.toLowerCase()} karena ${entryReason.toLowerCase()}. `;
+                        } else {
+                            note +=
+                                `Emosi saat entry: ${entryEmotion.toLowerCase()}. Alasan entry: ${entryReason.toLowerCase()}. `;
+                        }
+                    }
+
+                    // Bagian 3: Risk Management
+                    if (whySlTp) {
+                        // Potong teks jika terlalu panjang
+                        const shortWhySlTp = whySlTp.length > 100 ? whySlTp.substring(0, 100) + '...' : whySlTp;
+                        note += `SL/TP ditempatkan ${shortWhySlTp.toLowerCase()} `;
+                    }
+
+                    // Bagian 4: Disiplin Trading Rules
+                    if (followRules === '1') {
+                        note += `Trade ini mengikuti ${selectedRulesCount} trading rules dengan disiplin. `;
+                    } else if (followRules === '0') {
+                        note += `Trade ini tidak sepenuhnya mengikuti trading rules. `;
+                    }
+
+                    // Bagian 5: Psikologi Exit dan Pembelajaran
+                    if (closeEmotion) {
+                        note += `Saat close, merasa ${closeEmotion.toLowerCase()}. `;
+                    }
+
+                    // Bagian 6: Insight berdasarkan hasil (jika ada)
+                    const tradeResult = "{{ $trade->hasil }}"; // Ini akan dari server
+
+                    if (tradeResult === 'win') {
+                        if (followRules === '1') {
+                            note +=
+                                `Hasil WIN menunjukkan bahwa mengikuti rules dengan disiplin memberikan hasil positif. `;
+                        } else {
+                            note += `Meski WIN, perlu evaluasi karena tidak sepenuhnya mengikuti rules. `;
+                        }
+
+                        if (entryEmotion.includes('Calm') || entryEmotion.includes('Confident')) {
+                            note += `Psikologi yang baik berkontribusi pada keberhasilan trade ini. `;
+                        }
+                    } else if (tradeResult === 'loss') {
+                        if (entryEmotion.includes('FOMO') || entryEmotion.includes('Revenge')) {
+                            note += `Loss terjadi kemungkinan karena trading dengan emosi negatif. `;
+                        } else if (followRules === '0') {
+                            note += `Loss mengingatkan pentingnya konsisten dengan trading rules. `;
+                        } else {
+                            note += `Meski loss, trade ini tetap memberikan pembelajaran berharga. `;
+                        }
+                    }
+
+                    // Bagian 7: Actionable insight
+                    if (note.length > 0) {
+                        note += "\n\nPembelajaran: ";
+
+                        const insights = [];
+
+                        // Insight berdasarkan psikologi entry
+                        if (entryEmotion.includes('FOMO') || entryEmotion.includes('Revenge')) {
+                            insights.push("hindari trading berdasarkan emosi negatif");
+                        } else if (entryEmotion.includes('Calm') || entryEmotion.includes('Confident')) {
+                            insights.push("pertahankan psikologi yang stabil");
+                        }
+
+                        // Insight berdasarkan follow rules
+                        if (followRules === '1' && selectedRulesCount > 3) {
+                            insights.push("disiplin mengikuti rules memberikan konsistensi");
+                        } else if (followRules === '0') {
+                            insights.push("perlu meningkatkan kedisiplinan dalam mengikuti rules");
+                        }
+
+                        // Insight berdasarkan market condition
+                        if (marketCondition.includes('Trend')) {
+                            insights.push("trading dengan trend memberikan probabilitas lebih tinggi");
+                        } else if (marketCondition.includes('Volatile') || marketCondition.includes('Choppy')) {
+                            insights.push("perlu extra caution pada kondisi market yang volatile");
+                        }
+
+                        // Gabungkan insights
+                        if (insights.length > 0) {
+                            note += insights.join(", ") + ".";
+                        } else {
+                            note += "evaluasi lebih lanjut diperlukan untuk trade ini.";
+                        }
+
+                        // Bagian 8: Action untuk next trade
+                        if (followRules === '0' || entryEmotion.includes('FOMO') || entryEmotion.includes(
+                            'Revenge')) {
+                            note += `\n\nAction: Fokus pada trading plan dan hindari impulsive decisions.`;
+                        } else {
+                            note += `\n\nAction: Pertahankan konsistensi dan terus review setup yang bekerja.`;
+                        }
+                    } else {
+                        note = "Silakan isi beberapa field terlebih dahulu untuk generate catatan otomatis.";
+                    }
+
+                    // Masukkan ke textarea
+                    const noteTextarea = document.getElementById('note');
+                    if (noteTextarea) {
+                        noteTextarea.value = note.trim();
+                        console.log('Note generated:', note);
+
+                        // Auto-resize textarea
+                        noteTextarea.style.height = 'auto';
+                        noteTextarea.style.height = (noteTextarea.scrollHeight) + 'px';
+
+                        // Show success message
+                        const button = document.getElementById('generateNoteBtn');
+                        if (button) {
+                            const originalHTML = button.innerHTML;
+                            button.innerHTML = '<i class="fas fa-check mr-2"></i>Catatan Digenerate!';
+                            button.classList.remove('bg-amber-600', 'hover:bg-amber-700');
+                            button.classList.add('bg-green-600', 'hover:bg-green-700');
+
+                            setTimeout(() => {
+                                button.innerHTML = originalHTML;
+                                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                                button.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                            }, 2000);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error generating note:', error);
+                    alert('Terjadi error saat generate catatan. Lihat console untuk detail.');
+                }
+            }
+
+            // Event listener untuk tombol generate
+            if (generateBtn) {
+                generateBtn.addEventListener('click', generateNote);
+                console.log('Event listener attached to generate button');
+            } else {
+                console.error('Generate button not found!');
+            }
+
+            // Simple form submission feedback
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        const originalText = submitButton.innerHTML;
+                        submitButton.innerHTML =
+                            '<i class="fas fa-spinner animate-spin mr-2"></i>Menyimpan...';
+                        submitButton.disabled = true;
+                    }
+                });
+            }
+        });
+
+        // CSS untuk animasi spinner
+        const style = document.createElement('style');
+        style.textContent = `
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    #generateNoteBtn {
+        transition: all 0.3s ease;
+    }
+    
+    #generateNoteBtn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    
+    #generateNoteBtn:active {
+        transform: translateY(0);
+    }
+`;
+        document.head.appendChild(style);
     </script>
 @endsection

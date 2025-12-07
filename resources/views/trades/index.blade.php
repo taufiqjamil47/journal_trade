@@ -103,92 +103,132 @@
 
                     <div class="flex flex-wrap items-center gap-3">
                         <!-- Sorting Dropdown -->
-                        <div class="relative">
-                            <button id="sortDropdownButton"
-                                class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                        <div class="relative group">
+                            <button
+                                class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
                                 <i class="fas fa-sort mr-2"></i>
                                 Sort By
-                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
-                            <div id="sortDropdown"
-                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg border border-gray-600 z-10 hidden">
-                                <div class="py-1">
+                            <!-- Dropdown ke samping kanan -->
+                            <div
+                                class="absolute left-0 top-full mt-1 w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <div class="py-2">
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'desc']) }}"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
-                                        <i class="fas fa-calendar-alt mr-2 text-primary-400"></i>
-                                        Date (Newest)
+                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        <i class="fas fa-calendar-alt mr-3 text-primary-400 w-5 text-center"></i>
+                                        <div>
+                                            <div class="font-medium">Date</div>
+                                            <div class="text-xs text-gray-400">Newest First</div>
+                                        </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'asc']) }}"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
-                                        <i class="fas fa-calendar mr-2 text-primary-400"></i>
-                                        Date (Oldest)
+                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        <i class="fas fa-calendar mr-3 text-primary-400 w-5 text-center"></i>
+                                        <div>
+                                            <div class="font-medium">Date</div>
+                                            <div class="text-xs text-gray-400">Oldest First</div>
+                                        </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'desc']) }}"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
-                                        <i class="fas fa-hashtag mr-2 text-primary-400"></i>
-                                        ID (Highest)
+                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        <i class="fas fa-hashtag mr-3 text-primary-400 w-5 text-center"></i>
+                                        <div>
+                                            <div class="font-medium">ID</div>
+                                            <div class="text-xs text-gray-400">Highest First</div>
+                                        </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'asc']) }}"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
-                                        <i class="fas fa-hashtag mr-2 text-primary-400"></i>
-                                        ID (Lowest)
+                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
+                                        <i class="fas fa-hashtag mr-3 text-primary-400 w-5 text-center"></i>
+                                        <div>
+                                            <div class="font-medium">ID</div>
+                                            <div class="text-xs text-gray-400">Lowest First</div>
+                                        </div>
                                     </a>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Import Dropdown -->
-                        <div class="relative">
-                            <button id="importDropdownButton"
-                                class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
-                                <i class="fas fa-file-import mr-2"></i>
-                                Import
-                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        <!-- Import/Export Group -->
+                        <div class="relative group">
+                            <button
+                                class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
+                                <i class="fas fa-exchange-alt mr-2"></i>
+                                Data
+                                <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
-                            <div id="importDropdown"
-                                class="z-10 absolute right-0 mt-2 w-64 bg-gray-800 rounded-lg border border-gray-600 z-10 hidden">
-                                <div class="p-4">
-                                    <form action="{{ route('trades.import.excel') }}" method="POST"
-                                        enctype="multipart/form-data" class="space-y-3">
-                                        @csrf
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-300 mb-1">
-                                                <i class="fas fa-file-excel mr-1 text-green-400"></i>
-                                                Select Excel File
-                                            </label>
-                                            <input type="file" name="file" accept=".xlsx,.xls,.csv" required
-                                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-white file:border-0 file:text-black file:rounded file:px-3 file:py-1">
+                            <!-- Dropdown ke samping kanan -->
+                            <div
+                                class="absolute left-0 top-full mt-1 w-64 bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <div class="p-3">
+                                    <!-- Import Section -->
+                                    <div class="mb-3">
+                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                            <i class="fas fa-file-import mr-2 text-purple-400"></i>
+                                            Import Data
                                         </div>
-                                        <button type="submit"
-                                            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-upload mr-2"></i>
-                                            Upload File
-                                        </button>
-                                    </form>
+                                        <form action="{{ route('trades.import.excel') }}" method="POST"
+                                            enctype="multipart/form-data" class="space-y-2">
+                                            @csrf
+                                            <input type="file" name="file" accept=".xlsx,.xls,.csv" required
+                                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-purple-600 file:border-0 file:text-white file:rounded file:px-3 file:py-1 file:text-sm file:hover:bg-purple-700">
+                                            <button type="submit"
+                                                class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                <i class="fas fa-upload mr-2"></i>
+                                                Upload File
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Export Section -->
+                                    <div>
+                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                            <i class="fas fa-file-export mr-2 text-green-400"></i>
+                                            Export Data
+                                        </div>
+                                        <a href="{{ route('trades.export.excel') }}"
+                                            class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                            <i class="fas fa-file-excel mr-2"></i>
+                                            Export to Excel
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Export Buttons -->
-                        <div class="flex gap-2">
-                            <a href="{{ route('trades.export.excel') }}"
-                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
-                                <i class="fas fa-file-excel mr-2"></i>
-                                Excel
-                            </a>
-                            <button onclick="quickClearAll()"
-                                class="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg">
-                                <i class="fas fa-broom mr-2"></i>
-                                Clear All
+                        <!-- Management Actions -->
+                        <div class="relative group">
+                            <button
+                                class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
+                                <i class="fas fa-tools mr-2"></i>
+                                Manage
+                                <i
+                                    class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
+                            <!-- Dropdown ke samping kanan -->
+                            <div
+                                class="absolute left-0 top-full mt-1 w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <div class="py-2">
+                                    <a href="{{ route('trades.create') }}"
+                                        class="block px-4 py-3 text-sm hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
+                                        <i class="fas fa-plus-circle mr-3 text-blue-400 w-5 text-center"></i>
+                                        <div>
+                                            <div class="font-medium">Add New Trade</div>
+                                            <div class="text-xs text-gray-400">Create new entry</div>
+                                        </div>
+                                    </a>
+                                    <button onclick="quickClearAll()"
+                                        class="w-full text-left px-4 py-3 text-sm hover:bg-red-500/20 hover:text-red-300 flex items-center">
+                                        <i class="fas fa-trash-alt mr-3 text-red-400 w-5 text-center"></i>
+                                        <div>
+                                            <div class="font-medium">Clear All Trades</div>
+                                            <div class="text-xs text-gray-400">Remove all data</div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- Add New Trade Button -->
-                        <a href="{{ route('trades.create') }}"
-                            class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
-                            <i class="fas fa-plus mr-2"></i>
-                            Tambah Trade Baru
-                        </a>
                     </div>
                 </div>
             </div>
@@ -570,6 +610,27 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionsDropdownButton = document.getElementById('actionsDropdownButton');
+            const actionsDropdown = document.getElementById('actionsDropdown');
+
+            if (actionsDropdownButton && actionsDropdown) {
+                actionsDropdownButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    actionsDropdown.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!actionsDropdown.contains(e.target) && !actionsDropdownButton.contains(e.target)) {
+                        actionsDropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+
     <style>
         /* SweetAlert Custom Styles */
         .swal2-popup {
@@ -622,6 +683,21 @@
             /* border: 1px solid rgba(239, 68, 68, 0.3) !important; */
             color: #fca5a5 !important;
             /* border-radius: 0.25rem !important; */
+        }
+    </style>
+
+    <style>
+        .group:hover .group-hover\:rotate-180 {
+            transform: rotate(180deg);
+        }
+
+        .relative>div {
+            transition: all 0.2s ease-in-out;
+            transform: translateY(-5px);
+        }
+
+        .group:hover>div {
+            transform: translateY(0);
         }
     </style>
 @endsection
