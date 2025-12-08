@@ -304,7 +304,7 @@
             document.getElementById('risk_percent').addEventListener('input', function() {
                 const riskPercent = parseFloat(this.value);
                 const slPips = {{ $trade->sl_pips ?? 0 }};
-                const balance = {{ $balance }};
+                const balance = {{ $balance }}; // Ini sudah benar dari controller yang diperbaiki
                 const pipWorth = 10;
 
                 if (!isNaN(riskPercent) && riskPercent > 0 && slPips > 0) {

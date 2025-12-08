@@ -106,6 +106,409 @@
             </div>
         </div>
 
+        <!-- Advanced Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <!-- Profit Factor -->
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">Profit Factor</p>
+                        <h3 class="text-xl font-bold mt-1">
+                            @if (is_numeric($profitFactor))
+                                {{ number_format($profitFactor, 2) }}
+                            @else
+                                {{ $profitFactor }}
+                            @endif
+                        </h3>
+                    </div>
+                    <div class="bg-purple-500/20 p-2 rounded-lg">
+                        <i class="fas fa-scale-balanced text-purple-500"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="text-xs text-gray-500">
+                        @if (is_numeric($profitFactor))
+                            @if ($profitFactor > 2)
+                                <span class="text-green-400">Excellent</span>
+                            @elseif($profitFactor > 1.5)
+                                <span class="text-yellow-400">Good</span>
+                            @elseif($profitFactor > 1)
+                                <span class="text-orange-400">Marginal</span>
+                            @else
+                                <span class="text-red-400">Unprofitable</span>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Win/Loss -->
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">Avg Win/Loss</p>
+                        <h3 class="text-xl font-bold mt-1">{{ number_format($averageRR, 2) }}:1</h3>
+                    </div>
+                    <div class="bg-blue-500/20 p-2 rounded-lg">
+                        <i class="fas fa-arrows-left-right text-blue-500"></i>
+                    </div>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">Avg Win</p>
+                        <p class="text-sm font-medium text-green-400">${{ number_format($averageWin, 2) }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">Avg Loss</p>
+                        <p class="text-sm font-medium text-red-400">${{ number_format($averageLoss, 2) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Largest Trades -->
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">Perdagangan Terbesar</p>
+                        <h3 class="text-xl font-bold mt-1">${{ number_format(abs($largestWin) + abs($largestLoss), 2) }}
+                        </h3>
+                    </div>
+                    <div class="bg-yellow-500/20 p-2 rounded-lg">
+                        <i class="fas fa-chart-simple text-yellow-500"></i>
+                    </div>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">Kemenangan Terbesar</p>
+                        <p class="text-sm font-medium text-green-400">${{ number_format($largestWin, 2) }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">Kerugian Terbesar</p>
+                        <p class="text-sm font-medium text-red-400">${{ number_format($largestLoss, 2) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Win/Loss Streaks -->
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm">Win/Loss Streaks</p>
+                        <h3 class="text-xl font-bold mt-1">
+                            @if ($currentStreakType == 'win')
+                                <span class="text-green-400">{{ $currentStreak }}W</span>
+                            @elseif($currentStreakType == 'loss')
+                                <span class="text-red-400">{{ $currentStreak }}L</span>
+                            @else
+                                -
+                            @endif
+                        </h3>
+                    </div>
+                    <div class="bg-indigo-500/20 p-2 rounded-lg">
+                        <i class="fas fa-fire-flame-curved text-indigo-500"></i>
+                    </div>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">Best Win Streak</p>
+                        <p class="text-sm font-medium text-green-400">{{ $longestWinStreak }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs text-gray-500">Worst Loss Streak</p>
+                        <p class="text-sm font-medium text-red-400">{{ $longestLossStreak }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expectancy Card (Full Width) -->
+        <div class="mb-6">
+            <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Harapan Sistem</p>
+                        <h3 class="text-2xl font-bold mt-1">
+                            ${{ number_format($expectancy, 2) }}
+                            <span class="text-lg text-gray-400">per trade</span>
+                        </h3>
+                        <p class="text-gray-500 text-sm mt-2">
+                            Rata-rata keuntungan yang diharapkan per perdagangan berdasarkan statistik saat ini
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <div class="bg-gray-700/50 rounded-lg p-4">
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p class="text-xs text-gray-500">Total Profit</p>
+                                    <p class="text-lg font-bold text-green-400">${{ number_format($totalProfit, 2) }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Total Loss</p>
+                                    <p class="text-lg font-bold text-red-400">${{ number_format($totalLoss, 2) }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Net Profit</p>
+                                    <p
+                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                        ${{ number_format($netProfit, 2) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Management Metrics -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-primary-300">Risk Management</h2>
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-shield mr-1"></i>
+                    Risk Assessment
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Max Drawdown -->
+                <div
+                    class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full -translate-y-6 translate-x-6">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-400 text-sm">Max Drawdown</p>
+                                <h3 class="text-2xl font-bold mt-1 text-red-400">
+                                    {{ number_format($maxDrawdownPercentage, 1) }}%
+                                </h3>
+                                <p class="text-gray-500 text-sm">${{ number_format($maxDrawdown, 2) }}</p>
+                            </div>
+                            <div class="bg-red-500/20 p-3 rounded-lg">
+                                <i class="fas fa-arrow-down text-red-500 text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>Current DD: {{ number_format($currentDrawdownPercentage, 1) }}%</span>
+                                <span>{{ $currentDrawdownPercentage <= 10 ? 'Low' : ($currentDrawdownPercentage <= 20 ? 'Medium' : 'High') }}</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full"
+                                    style="width: {{ min($currentDrawdownPercentage, 100) }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recovery Factor -->
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Recovery Factor</p>
+                            <h3 class="text-2xl font-bold mt-1">
+                                @if (is_numeric($recoveryFactor))
+                                    {{ number_format($recoveryFactor, 2) }}
+                                @else
+                                    {{ $recoveryFactor }}
+                                @endif
+                            </h3>
+                            <p class="text-gray-500 text-sm">Profit per $1 drawdown</p>
+                        </div>
+                        <div class="bg-green-500/20 p-3 rounded-lg">
+                            <i class="fas fa-arrow-up-from-bracket text-green-500 text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm">
+                            @if (is_numeric($recoveryFactor))
+                                @if ($recoveryFactor > 2)
+                                    <span class="text-green-400">
+                                        <i class="fas fa-check-circle mr-1"></i> Excellent Recovery
+                                    </span>
+                                @elseif($recoveryFactor > 1)
+                                    <span class="text-yellow-400">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Moderate Recovery
+                                    </span>
+                                @else
+                                    <span class="text-red-400">
+                                        <i class="fas fa-times-circle mr-1"></i> Poor Recovery
+                                    </span>
+                                @endif
+                            @else
+                                <span class="text-green-400">
+                                    <i class="fas fa-infinity mr-1"></i> No Drawdown
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sharpe Ratio -->
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Sharpe Ratio</p>
+                            <h3 class="text-2xl font-bold mt-1">
+                                {{ number_format($sharpeRatio, 2) }}
+                            </h3>
+                            <p class="text-gray-500 text-sm">Risk-adjusted returns</p>
+                        </div>
+                        <div class="bg-blue-500/20 p-3 rounded-lg">
+                            <i class="fas fa-chart-line text-blue-500 text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center text-sm">
+                            @if ($sharpeRatio > 1.5)
+                                <span class="text-green-400">
+                                    <i class="fas fa-star mr-1"></i> Excellent
+                                </span>
+                            @elseif($sharpeRatio > 1)
+                                <span class="text-yellow-400">
+                                    <i class="fas fa-star-half-alt mr-1"></i> Good
+                                </span>
+                            @elseif($sharpeRatio > 0)
+                                <span class="text-orange-400">
+                                    <i class="fas fa-chart-line mr-1"></i> Acceptable
+                                </span>
+                            @else
+                                <span class="text-red-400">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Risky
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Consistency -->
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Consistency Score</p>
+                            <h3 class="text-2xl font-bold mt-1">
+                                {{ $consistencyScore }}%
+                            </h3>
+                            <p class="text-gray-500 text-sm">Profitable months</p>
+                        </div>
+                        <div class="bg-purple-500/20 p-3 rounded-lg">
+                            <i class="fas fa-chart-pie text-purple-500 text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
+                            <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                                style="width: {{ $consistencyScore }}%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>{{ $monthlyReturns->filter(fn($m) => $m['profit'] > 0)->count() }} profitable</span>
+                            <span>{{ $monthlyReturns->count() }} total months</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Risk Metrics (Expanded on click) -->
+            <div class="mt-4">
+                <button id="toggleRiskDetails"
+                    class="flex items-center justify-center w-full py-2 text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-chevron-down mr-2"></i>
+                    <span class="text-sm">Show Detailed Risk Metrics</span>
+                </button>
+
+                <div id="riskDetails" class="hidden mt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Risk per Trade -->
+                        <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
+                            <h4 class="font-medium text-gray-300 mb-3">Risk Per Trade</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-400">Average Risk</span>
+                                        <span
+                                            class="{{ $averageRiskPerTrade <= 2 ? 'text-green-400' : ($averageRiskPerTrade <= 5 ? 'text-yellow-400' : 'text-red-400') }}">
+                                            {{ $averageRiskPerTrade }}%
+                                        </span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-1.5 rounded-full"
+                                            style="width: {{ min($averageRiskPerTrade * 10, 100) }}%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-400">Max Risk</span>
+                                        <span class="text-red-400">{{ $maxRiskPerTrade }}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                        <div class="bg-gradient-to-r from-red-500 to-orange-500 h-1.5 rounded-full"
+                                            style="width: {{ min($maxRiskPerTrade * 5, 100) }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-2">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Recommended: 1-2% risk per trade
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Risk/Reward Distribution -->
+                        <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
+                            <h4 class="font-medium text-gray-300 mb-3">Risk/Reward Profile</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-400">Avg R:R Ratio</span>
+                                    <span
+                                        class="{{ $averageRiskReward >= 2 ? 'text-green-400' : ($averageRiskReward >= 1 ? 'text-yellow-400' : 'text-red-400') }}">
+                                        {{ $averageRiskReward }}:1
+                                    </span>
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    @if ($averageRiskReward >= 2)
+                                        <i class="fas fa-check-circle text-green-400 mr-1"></i>
+                                        Good risk management - seeking 2:1 or better
+                                    @elseif($averageRiskReward >= 1)
+                                        <i class="fas fa-exclamation-circle text-yellow-400 mr-1"></i>
+                                        Risk equals reward - consider improving
+                                    @else
+                                        <i class="fas fa-times-circle text-red-400 mr-1"></i>
+                                        Risk exceeds reward - needs improvement
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Position Size Analysis -->
+                        <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
+                            <h4 class="font-medium text-gray-300 mb-3">Position Size Performance</h4>
+                            @if ($positionSizes->count() > 0)
+                                <div class="space-y-2 max-h-32 overflow-y-auto pr-2">
+                                    @foreach ($positionSizes as $size => $data)
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-gray-400">{{ $size }}</span>
+                                            <div class="flex items-center">
+                                                <span
+                                                    class="{{ $data['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} mr-2">
+                                                    ${{ number_format($data['profit'], 2) }}
+                                                </span>
+                                                <span
+                                                    class="text-xs {{ $data['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                    {{ $data['winrate'] }}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-gray-500 text-sm">No position size data available</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Filters -->
         <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
             <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -164,7 +567,8 @@
                         <p class="text-gray-300 text-sm mt-1">
                             {{ $summary['trades'] }} trades ·
                             Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
-                            <span class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
+                            <span
+                                class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
                         </p>
@@ -558,6 +962,84 @@
         }
     </script>
 
+    <script>
+        // Tambahkan di script section
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Toggle detail view atau tooltip
+                const tooltip = this.querySelector('.stat-tooltip');
+                if (tooltip) {
+                    tooltip.classList.toggle('hidden');
+                }
+            });
+        });
+
+        // Animate number counters
+        function animateCounter(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = formatNumber(value);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Tambahkan di script section (setelah animasi counter)
+        // Risk Metrics Toggle
+        const toggleRiskDetails = document.getElementById('toggleRiskDetails');
+        const riskDetails = document.getElementById('riskDetails');
+        const toggleRiskIcon = toggleRiskDetails?.querySelector('i');
+
+        if (toggleRiskDetails && riskDetails) {
+            toggleRiskDetails.addEventListener('click', function() {
+                riskDetails.classList.toggle('hidden');
+                if (toggleRiskIcon) {
+                    if (riskDetails.classList.contains('hidden')) {
+                        toggleRiskIcon.classList.remove('fa-chevron-up');
+                        toggleRiskIcon.classList.add('fa-chevron-down');
+                        toggleRiskDetails.querySelector('span').textContent = 'Show Detailed Risk Metrics';
+                    } else {
+                        toggleRiskIcon.classList.remove('fa-chevron-down');
+                        toggleRiskIcon.classList.add('fa-chevron-up');
+                        toggleRiskDetails.querySelector('span').textContent = 'Hide Detailed Risk Metrics';
+                    }
+                }
+            });
+        }
+
+        // Drawdown Gauge Chart (jika mau lebih fancy)
+        function createDrawdownGauge(currentDD, maxDD) {
+            const ctx = document.createElement('canvas');
+            ctx.width = 100;
+            ctx.height = 100;
+
+            // ... kode untuk gauge chart ...
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000) {
+                return '$' + (num / 1000).toFixed(1) + 'k';
+            }
+            return '$' + num.toFixed(2);
+        }
+
+        // Jalankan animasi saat halaman load
+        document.addEventListener('DOMContentLoaded', function() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const value = parseFloat(stat.textContent.replace(/[^0-9.-]+/g, ""));
+                if (!isNaN(value)) {
+                    animateCounter(stat, 0, value, 1000);
+                }
+            });
+        });
+    </script>
+
     <style>
         /* Simple scrollbar */
         .overflow-x-auto::-webkit-scrollbar {
@@ -576,6 +1058,71 @@
         /* Hover effects for tables */
         tr:hover {
             background-color: rgba(55, 65, 81, 0.3);
+        }
+    </style>
+
+    <style>
+        /* Tambahkan di style section */
+        .gradient-border {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #1f2937, #374151) padding-box,
+                linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tambahkan di style section */
+        .risk-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-width: 1px;
+            border-style: solid;
+        }
+
+        .risk-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.1);
+        }
+
+        .risk-card:nth-child(1):hover {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .risk-card:nth-child(2):hover {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .risk-card:nth-child(3):hover {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .risk-card:nth-child(4):hover {
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        /* Progress bar animation */
+        .progress-bar {
+            transition: width 1.5s ease-in-out;
+        }
+
+        /* Scrollbar untuk position size */
+        .max-h-32::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .max-h-32::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .max-h-32::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
         }
     </style>
 @endsection

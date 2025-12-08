@@ -54,16 +54,16 @@ class TradeController extends Controller
         $account = Account::first();
         $initialBalance = $account->initial_balance;
 
-        // HITUNG BALANCE TANPA TRADE YANG SEDANG DIEDIT
-        $previousTrades = Trade::where('id', '<', $id)
-            ->where('exit', '!=', null) // Hanya trade yang sudah selesai
+        // PERBAIKAN: Hitung balance yang benar termasuk semua trade selesai kecuali yang sedang diedit
+        $completedTrades = Trade::where('exit', '!=', null)
+            ->where('id', '!=', $id) // JANGAN sertakan trade yang sedang diedit
             ->get();
 
-        $balance = $initialBalance + $previousTrades->sum('profit_loss');
+        $balance = $initialBalance + $completedTrades->sum('profit_loss');
 
         // Tambahkan eager loading untuk tradingRules
-        $trade = Trade::with('tradingRules')->findOrFail($id); // Update ini
-        $tradingRules = TradingRule::where('is_active', true) // Tambahkan ini
+        $trade = Trade::with('tradingRules')->findOrFail($id);
+        $tradingRules = TradingRule::where('is_active', true)
             ->orderBy('order')
             ->get();
 
@@ -72,14 +72,14 @@ class TradeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $trade = \App\Models\Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
+        $trade = \App\Models\Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id);
 
         $data = $request->validate([
             'exit' => 'required|numeric',
             'lot_size' => 'nullable|numeric|min:0.01',
             'risk_percent' => 'nullable|numeric|min:0|max:100',
             'risk_usd' => 'nullable|numeric|min:0',
-            'rules' => 'nullable|array', // tambahkan jika mau update rules di sini juga
+            'rules' => 'nullable|array',
             'rules.*' => 'exists:trading_rules,id'
         ]);
 
@@ -94,13 +94,21 @@ class TradeController extends Controller
         }
         $trade->exit_pips = round($exitPips, 1);
 
-        // Hitung Risk % & Lot Size otomatis
-        $pipWorth = 10; // default: $10 per pip per 1 lot
-        $slPips = $trade->sl_pips ?? 0;
-        $accountBalance = $trade->account->initial_balance; // nanti bisa equity
+        // PERBAIKAN: Hitung balance yang benar untuk perhitungan risk%
+        $initialBalance = $trade->account->initial_balance;
+
+        // Ambil semua trade selesai SEBELUM trade ini (dengan exit != null dan id < $id)
+        $previousTrades = Trade::where('account_id', $trade->account_id)
+            ->where('id', '<', $id)
+            ->where('exit', '!=', null)
+            ->get();
+
+        $accountBalance = $initialBalance + $previousTrades->sum('profit_loss');
 
         // VARIABLE UNTUK MENYIMPAN risk_usd
         $calculatedRiskUSD = null;
+        $pipWorth = 10; // default: $10 per pip per 1 lot
+        $slPips = $trade->sl_pips ?? 0;
 
         // PRIORITASKAN RISK PERCENT JIKA DIISI
         if (!empty($data['risk_percent']) && $slPips > 0) {
@@ -109,23 +117,28 @@ class TradeController extends Controller
 
             $trade->risk_percent = $data['risk_percent'];
             $trade->lot_size = round($lotSize, 2);
-
-            // SIMPAN risk_usd YANG DIHITUNG
             $trade->risk_usd = round($calculatedRiskUSD, 2);
         } elseif (!empty($data['lot_size'])) {
+            // JIKA LOT SIZE DIISI
             $calculatedRiskUSD = $slPips * $pipWorth * $data['lot_size'];
             $riskPercent = $accountBalance > 0 ? ($calculatedRiskUSD / $accountBalance) * 100 : 0;
 
             $trade->lot_size = $data['lot_size'];
             $trade->risk_percent = round($riskPercent, 2);
-
-            // SIMPAN risk_usd YANG DIHITUNG
             $trade->risk_usd = round($calculatedRiskUSD, 2);
+        } elseif (!empty($data['risk_usd'])) {
+            // JIKA RISK USD DIISI LANGSUNG
+            $riskPercent = $accountBalance > 0 ? ($data['risk_usd'] / $accountBalance) * 100 : 0;
+            $lotSize = $slPips > 0 ? $data['risk_usd'] / ($slPips * $pipWorth) : 0;
+
+            $trade->risk_usd = $data['risk_usd'];
+            $trade->risk_percent = round($riskPercent, 2);
+            $trade->lot_size = $slPips > 0 ? round($lotSize, 2) : 0.01;
         } else {
+            // DEFAULT JIKA TIDAK ADA INPUT
             $trade->lot_size = $trade->lot_size ?? 0.01;
             $trade->risk_percent = $trade->risk_percent ?? 0;
-            // JIKA risk_usd DIINPUT MANUAL, GUNAKAN ITU
-            $trade->risk_usd = $data['risk_usd'] ?? $trade->risk_usd;
+            $trade->risk_usd = $trade->risk_usd ?? 0;
         }
 
         // JIKA risk_usd DIINPUT MANUAL DAN TIDAK PAKAI RISK%, GUNAKAN YANG MANUAL
