@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TradingRuleController;
 
@@ -23,6 +24,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
 
 Route::get('/trades', [TradeController::class, 'index'])->name('trades.index');
 Route::get('/trades/create', [TradeController::class, 'create'])->name('trades.create');
