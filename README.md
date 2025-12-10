@@ -1,179 +1,127 @@
-Here’s a **draft for your trading journal Laravel app**:
+# Trading Journal
 
----
+Aplikasi Trading Journal untuk mencatat, menganalisis, dan mengelola catatan trading. Proyek ini dibuat dengan Laravel dan menyediakan fitur impor/ekspor, analisis trade, dan manajemen simbol/akun.
 
-````markdown
-# Trading Journal (Laravel)
+**Ringkasan:**
 
-A custom trading journal application built with **Laravel**.  
-It allows traders to record, evaluate, and analyze their trades with advanced features like automatic pip calculation, risk-based lot sizing, session mapping, and detailed performance dashboards.
+-   **Stack:** PHP (Laravel), MySQL, Composer, Node (Vite)
+-   **Folder penting:** `app/Models`, `app/Http/Controllers`, `app/Imports`, `app/Exports`, `database/migrations`
 
----
+**Persyaratan**
 
-## 🚀 Features
-
--   **Trade Entry Form**
-
-    -   Auto-calculated SL/TP in pips
-    -   Risk % ↔ Lot size auto-fill
-    -   Multi-currency support (USD default, extensible for more)
-    -   Symbol-based pip calculation
-
--   **Trade Evaluation**
-
-    -   Record exit price, profit/loss (USD & pips)
-    -   Emotions tracking (entry/close)
-    -   Rules selection via checkboxes
-    -   Before/After screenshot links
-
--   **Dashboard**
-
-    -   Balance, equity, winrate
-    -   Equity curve (with period filters: All, Weekly, Monthly)
-    -   Performance by session (Asia, London, NY, etc.)
-    -   Profit/Loss by symbol (pairs)
-    -   Performance by entry type (OB, FVG, Liquidity Sweep, etc.)
-    -   Combined filters (Session + Entry Type)
-    -   Quick summary box for filtered data
-
--   **Session Management**
-    -   Sessions (Asia, London, NY) stored in DB
-    -   Adjustable start/end hours (NY time)
-    -   CRUD interface to modify sessions
-
----
-
-## 📦 Requirements
-
--   PHP >= 8.1
+-   PHP 8.1+ dan ekstensi umum (PDO, mbstring, OpenSSL, dll.)
 -   Composer
--   Laravel >= 10
--   MySQL / MariaDB
--   Node.js & npm (for frontend assets)
--   Git (recommended)
+-   Node.js & npm (untuk assets / Vite)
+-   MySQL atau MariaDB
+-   XAMPP (opsional di Windows) atau web server lain
 
----
+## Instalasi
 
-## ⚙️ Installation Steps
+Ikuti langkah-langkah berikut dari command line (PowerShell direkomendasikan di Windows):
 
-### 1. Clone Repository
+1. Clone repository
 
-```bash
-git clone https://github.com/your-username/trading-journal.git
-cd trading-journal
+```powershell
+git clone https://github.com/taufiqjamil47/journal_trade.git
+cd journal_trade
 ```
-````
 
-### 2. Install Dependencies
+2. Install dependency PHP
 
-```bash
+```powershell
 composer install
+```
+
+3. Install dependency JavaScript
+
+```powershell
 npm install
 ```
 
-### 3. Environment Setup
+4. Salin file environment dan buat application key
 
-Copy `.env.example` to `.env`:
-
-```bash
-cp .env.example .env
-```
-
-Update `.env` with your database configuration:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=trading_journal
-DB_USERNAME=root
-DB_PASSWORD=yourpassword
-```
-
-### 4. Generate App Key
-
-```bash
+```powershell
+copy .env.example .env
 php artisan key:generate
 ```
 
-### 5. Run Migrations & Seeders
+5. Konfigurasikan koneksi database di file `.env` (atur `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`)
 
-```bash
-php artisan migrate --seed
+6. Jalankan migrasi dan seeder (jika ada)
+
+```powershell
+php artisan migrate
+php artisan db:seed
 ```
 
-This will create the database tables and insert default **sessions** (Asia, London, NY).
+7. (Opsional) Buat symlink storage
 
-### 6. Compile Frontend Assets
+```powershell
+php artisan storage:link
+```
 
-```bash
+8. Build assets (development atau production)
+
+Development:
+
+```powershell
 npm run dev
 ```
 
-### 7. Start the Application
+Production:
 
-```bash
+```powershell
+npm run build
+```
+
+9. Jalankan aplikasi
+
+Gunakan built-in server Laravel (untuk pengembangan cepat):
+
+```powershell
 php artisan serve
 ```
 
-Now open [http://localhost:8000](http://localhost:8000) in your browser.
+Atau konfigurasikan virtual host di XAMPP/Apache dan arahkan ke folder `public`.
 
----
+## Import / Export
 
-## 📖 Usage Guide
+-   Import trade: periksa `app/Imports/TradesImport.php`.
+-   Export trade: periksa `app/Exports/TradesExport.php`.
 
-### 1. Adding Trades
+Jika aplikasi menggunakan package Excel (mis. `maatwebsite/excel`), import/export biasanya lewat UI atau command khusus.
 
--   Navigate to **Trades > Add New Trade**
--   Enter symbol, entry price, SL, TP, etc.
--   SL/TP in pips are auto-calculated.
+## Menjalankan test
 
-### 2. Evaluating Trades
-
--   After closing a trade, click **Evaluate**.
--   Fill exit price, emotions, reasons, and upload links to screenshots.
--   Select rules via checkboxes (OB, FVG, etc.).
-
-### 3. Dashboard
-
--   Go to **Dashboard**
--   See balance, equity, winrate, equity curve.
--   Filter by **Period** (All, Weekly, Monthly).
--   Breakdown analysis by **Session**, **Symbol**, **Entry Type**.
--   Use combined filters (e.g. OB trades in London session).
-
-### 4. Managing Sessions
-
--   Go to **Sessions**
--   Add/edit/remove sessions with start & end hours (NY time).
--   Session assignment for trades is auto-calculated.
-
----
-
-## 📊 Future Enhancements
-
--   Export reports (PDF, Excel)
--   Weekly/Monthly auto-reports
--   Emotions distribution chart
--   Top 3 strategies/pairs ranking
-
----
-
-## 👨‍💻 Contributing
-
-1. Fork the repo
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -m "Add feature"`
-4. Push branch: `git push origin feature-name`
-5. Open a Pull Request
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License.
-
+```powershell
+php artisan test
 ```
 
----
+atau
+
+```powershell
+vendor/bin/phpunit
 ```
+
+## Penggunaan singkat
+
+-   Masuk ke aplikasi di browser (mis. `http://127.0.0.1:8000` jika memakai `php artisan serve`).
+-   Gunakan fitur impor untuk memasukkan data trade, lalu lihat analisis di halaman yang tersedia.
+
+## Kontribusi
+
+-   Fork repository, buat branch fitur (`feature/<nama-fitur>`), lalu buat pull request.
+-   Ikuti coding style proyek dan sertakan deskripsi perubahan di PR.
+
+## Troubleshooting
+
+-   Error migration: periksa kredensial DB di `.env` dan pastikan database sudah dibuat.
+-   Error dependency: jalankan `composer install` dan `npm install` lagi, lalu clear cache: `php artisan config:clear && php artisan cache:clear`.
+
+## Lisensi
+
+Lisensi proyek: sesuaikan dengan yang diinginkan (tidak ditentukan di repo ini). Tambahkan file `LICENSE` jika diperlukan.
+
+## Kontak
+
+Jika perlu bantuan, buka issue di repository atau hubungi maintainer.
