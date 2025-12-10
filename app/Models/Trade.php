@@ -45,6 +45,30 @@ class Trade extends Model
         'session',
     ];
 
+    /**
+     * Cast attributes to proper types
+     */
+    protected $casts = [
+        'timestamp' => 'datetime',
+        'date' => 'date',
+        'profit_loss' => 'float',
+        'rr' => 'float',
+        'lot_size' => 'float',
+        'sl_pips' => 'integer',
+        'tp_pips' => 'integer',
+        'exit_pips' => 'integer',
+        'risk_percent' => 'float',
+    ];
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getFormattedDateAttribute()
+    {
+        return Carbon::parse($this->attributes['date'])->format('d M Y');
+    }
 
     public function account()
     {
@@ -58,8 +82,10 @@ class Trade extends Model
 
     public function setSessionFromTimestamp()
     {
-        $nyTime = Carbon::parse($this->timestamp)->timezone('UTC');
-        $hour = (int) $nyTime->format('H');
+        // Use application timezone (configurable). Falls back to UTC.
+        $appTz = config('app.timezone', 'UTC');
+        $tzTime = Carbon::parse($this->timestamp)->setTimezone($appTz);
+        $hour = (int) $tzTime->format('H');
 
         foreach (Session::all() as $s) {
             if ($s->start_hour < $s->end_hour) {

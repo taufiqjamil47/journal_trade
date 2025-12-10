@@ -143,30 +143,46 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Risk Management Card -->
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
-                <h3 class="text-lg font-semibold text-primary-400 mb-4 flex items-center">
+                <h3 class="text-lg font-semibold text-primary-400 mb-6 flex items-center">
                     <i class="fas fa-shield-alt mr-2"></i>
                     Manajemen Risiko
                 </h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="text-center bg-gray-750 rounded-lg p-3">
-                        <span class="text-sm text-gray-400 block mb-1">Lot Size</span>
-                        <span class="font-bold text-lg">{{ $trade->lot_size ?? '-' }}</span>
+
+                <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+                    <!-- Lot Size -->
+                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                        <span class="text-sm text-gray-400 block mb-2">Lot Size</span>
+                        <span class="font-bold text-xl text-white">{{ $trade->lot_size ?? '-' }}</span>
                     </div>
-                    <div class="text-center bg-gray-750 rounded-lg p-3">
-                        <span class="text-sm text-gray-400 block mb-1">Risk %</span>
-                        <span
-                            class="font-bold text-lg">{{ $trade->risk_percent ? $trade->risk_percent . '%' : '-' }}</span>
+
+                    <!-- Risk % -->
+                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                        <span class="text-sm text-gray-400 block mb-2">Risk %</span>
+                        <span class="font-bold text-xl text-white">
+                            {{ $trade->risk_percent ? $trade->risk_percent . '%' : '-' }}
+                        </span>
                     </div>
-                    <div class="text-center bg-gray-750 rounded-lg p-3">
-                        <span class="text-sm text-gray-400 block mb-1">Risk USD</span>
-                        <span
-                            class="font-bold text-lg">{{ $trade->risk_usd ? '$' . number_format($trade->risk_usd, 2) : '-' }}</span>
+
+                    <!-- Risk USD -->
+                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                        <span class="text-sm text-gray-400 block mb-2">Risk USD</span>
+                        <span class="font-bold text-xl text-white">
+                            {{ $trade->risk_usd ? '$' . number_format($trade->risk_usd, 2) : '-' }}
+                        </span>
                     </div>
-                    <div class="text-center bg-gray-750 rounded-lg p-3">
-                        <span class="text-sm text-gray-400 block mb-1">Pips</span>
-                        <div class="flex justify-between mt-2 text-sm">
-                            <span class="text-green-400">TP: {{ $trade->tp_pips ?? '0' }}</span>
-                            <span class="text-red-400 ml-2">SL: {{ $trade->sl_pips ?? '0' }}</span>
+
+                    <!-- Pips -->
+                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                        <span class="text-sm text-gray-400 block mb-2">Pips</span>
+                        <div class="grid grid-cols-2">
+                            <div class="flex items-center justify-center">
+                                <span class="text-lg text-gray-400 mr-2">TP:</span>
+                                <span class="font-semibold text-green-400 text-lg">{{ $trade->tp_pips ?? '0' }} pips</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <span class="text-lg text-gray-400 mr-2">SL:</span>
+                                <span class="font-semibold text-red-400 text-lg">{{ $trade->sl_pips ?? '0' }} pips</span>
+                            </div>
                         </div>
                     </div>
                 </div>
