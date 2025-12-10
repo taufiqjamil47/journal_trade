@@ -636,7 +636,7 @@
                     <div class="h-56 mb-4">
                         <canvas id="monthlyChart"></canvas>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-y-auto h-64">
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-600">
@@ -647,7 +647,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($monthlyPerformance->take(6)->sortDesc() as $month)
+                                {{-- @foreach ($monthlyPerformance->take(6)->sortDesc() as $month) --}}
+                                @foreach ($monthlyPerformance->sortDesc() as $month)
                                     <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
                                         <td class="py-2 text-sm">{{ $month['month_name'] }}</td>
                                         <td class="py-2 text-center text-sm">{{ $month['trades'] }}</td>
