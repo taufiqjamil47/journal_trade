@@ -9,7 +9,7 @@
                     <h1 class="text-2xl font-bold text-primary-500">
                         Trading Analysis
                     </h1>
-                    <p class="text-gray-500 mt-1">Advanced analytics and performance insights</p>
+                    <p class="text-gray-500 mt-1">Analisis tingkat lanjut dan wawasan kinerja</p>
                 </div>
 
                 <!-- Navigation -->
@@ -84,7 +84,7 @@
                     </div>
                     <div class="mt-4 md:mt-0">
                         <div class="bg-gray-700/50 rounded-lg p-4">
-                            <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="grid grid-cols-3 gap-8 text-center">
                                 <div>
                                     <p class="text-xs text-gray-500">Total Profit</p>
                                     <p class="text-lg font-bold text-green-400">${{ number_format($totalProfit, 2) }}</p>
@@ -352,7 +352,7 @@
                             <h3 class="text-2xl font-bold mt-1">
                                 {{ $consistencyScore }}%
                             </h3>
-                            <p class="text-gray-500 text-sm">Profitable months</p>
+                            <p class="text-gray-500 text-sm">Bulan Menguntungkan</p>
                         </div>
                         <div class="bg-purple-500/20 p-3 rounded-lg">
                             <i class="fas fa-chart-pie text-purple-500 text-lg"></i>

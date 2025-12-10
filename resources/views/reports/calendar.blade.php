@@ -17,6 +17,11 @@
                         <i class="fas fa-home text-primary-500 mr-2"></i>
                         <span>Dashboard</span>
                     </a>
+                    <a href="{{ route('analysis.index') }}"
+                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
+                        <i class="fa-solid fa-magnifying-glass-chart text-primary-500 mr-2"></i>
+                        <span>Analysis</span>
+                    </a>
                     <a href="{{ route('trades.index') }}"
                         class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-chart-line text-primary-500 mr-2"></i>
@@ -61,7 +66,8 @@
                         <select id="yearSelect"
                             class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                             @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
-                                <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>{{ $y }}
+                                <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
+                                    {{ $y }}
                                 </option>
                             @endfor
                         </select>
