@@ -6,18 +6,21 @@ use App\Models\Trade;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TradeAnalysisService
 {
     /**
      * Get filtered trades based on request parameters
+     * Uses eager loading to prevent N+1 queries
      */
     public function getFilteredTrades(Request $request, $withRelations = true)
     {
         $query = Trade::query();
 
+        // Eager load relationships to prevent N+1 queries
         if ($withRelations) {
-            $query->with('symbol');
+            $query->with(['symbol', 'account', 'tradingRules']);
         }
 
         $query->orderBy('date');
@@ -178,6 +181,11 @@ class TradeAnalysisService
      */
     public function calculatePairAnalysis($trades)
     {
+        // If $trades is a query builder, delegate to DB aggregation
+        if ($trades instanceof \Illuminate\Database\Eloquent\Builder) {
+            return $this->calculatePairAnalysisDb($trades);
+        }
+
         return $trades->groupBy('symbol.name')->map(function ($group) {
             return $group->sum('profit_loss');
         });
@@ -188,6 +196,10 @@ class TradeAnalysisService
      */
     public function calculateEntryTypeAnalysis($trades)
     {
+        if ($trades instanceof \Illuminate\Database\Eloquent\Builder) {
+            return $this->calculateEntryTypeAnalysisDb($trades);
+        }
+
         return $trades->groupBy('entry_type')->map(function ($group) {
             $wins = $group->where('hasil', 'win')->count();
             $total = $group->count();
@@ -197,6 +209,42 @@ class TradeAnalysisService
                 'profit_loss' => $group->sum('profit_loss')
             ];
         });
+    }
+
+    /**
+     * DB-backed pair analysis (faster for large datasets)
+     */
+    public function calculatePairAnalysisDb($query)
+    {
+        $rows = $query->select('symbols.name as symbol_name', DB::raw('SUM(trades.profit_loss) as total'))
+            ->join('symbols', 'symbols.id', '=', 'trades.symbol_id')
+            ->groupBy('symbols.name')
+            ->get();
+
+        return $rows->pluck('total', 'symbol_name');
+    }
+
+    /**
+     * DB-backed entry type analysis
+     */
+    public function calculateEntryTypeAnalysisDb($query)
+    {
+        $rows = $query->select('entry_type', DB::raw("SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins"), DB::raw('COUNT(*) as total'), DB::raw('SUM(profit_loss) as total_profit'))
+            ->groupBy('entry_type')
+            ->get();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $total = (int) $row->total;
+            $wins = (int) $row->wins;
+            $result[$row->entry_type] = [
+                'trades' => $total,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit_loss' => (float) $row->total_profit
+            ];
+        }
+
+        return collect($result);
     }
 
     /**

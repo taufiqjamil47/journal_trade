@@ -14,6 +14,8 @@ use Illuminate\Support\Str;
 class TradesImport implements ToModel, WithHeadingRow
 {
     private $headings = [];
+    private $symbolCache = [];  // Cache symbols to prevent N+1 queries
+    private $ruleCache = [];    // Cache rules to prevent N+1 queries
 
     public function headingRow(): int
     {
@@ -52,10 +54,15 @@ class TradesImport implements ToModel, WithHeadingRow
             throw new \Exception("Symbol not found in row.");
         }
 
-        $symbol = Symbol::where('name', $symbolValue)->first();
-        if (!$symbol) {
-            throw new \Exception("Symbol '{$symbolValue}' not found in database.");
+        // Use cache to avoid N+1 queries
+        if (!isset($this->symbolCache[$symbolValue])) {
+            $symbol = Symbol::where('name', $symbolValue)->first();
+            if (!$symbol) {
+                throw new \Exception("Symbol '{$symbolValue}' not found in database.");
+            }
+            $this->symbolCache[$symbolValue] = $symbol;
         }
+        $symbol = $this->symbolCache[$symbolValue];
 
         // Parse date dan time
         $date = $this->parseDate($normalizedRow, 'date');

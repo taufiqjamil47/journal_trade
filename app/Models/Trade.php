@@ -87,7 +87,12 @@ class Trade extends Model
         $tzTime = Carbon::parse($this->timestamp)->setTimezone($appTz);
         $hour = (int) $tzTime->format('H');
 
-        foreach (Session::all() as $s) {
+        // Cache sessions to prevent N+1 queries
+        $sessions = cache()->remember('trading_sessions', 3600, function () {
+            return Session::all();
+        });
+
+        foreach ($sessions as $s) {
             if ($s->start_hour < $s->end_hour) {
                 // Range normal (ex: 7–12)
                 if ($hour >= $s->start_hour && $hour < $s->end_hour) {

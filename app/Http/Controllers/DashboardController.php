@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Services\TradeAnalysisService;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -17,51 +18,143 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        // Get account and initial balance
-        $account = Account::first();
-        $initialBalance = $account ? $account->initial_balance : 10000;
+        try {
+            // Get account and initial balance
+            $account = Account::first();
+            if (!$account) {
+                Log::warning('No account found in dashboard');
+                $initialBalance = 10000;
+            } else {
+                $initialBalance = $account->initial_balance;
+            }
 
-        // Get filtered trades
-        $query = $this->analysisService->getFilteredTrades($request);
-        $trades = $query->get();
+            // Get filtered trades query (don't fetch yet) so we can use DB aggregations
+            try {
+                $query = $this->analysisService->getFilteredTrades($request, true);
+                // Add eager loading for cases where collections are used
+                $query = $query->with('symbol', 'account', 'tradingRules');
+            } catch (\Exception $e) {
+                Log::error('Error building filtered trades query: ' . $e->getMessage());
+                $query = null;
+            }
 
-        // Get filter values
-        $period = $request->get('period', 'all');
-        $sessionFilter = $request->get('session', 'all');
-        $entryFilter = $request->get('entry_type', 'all');
+            // Get filter values
+            $period = $request->get('period', 'all');
+            $sessionFilter = $request->get('session', 'all');
+            $entryFilter = $request->get('entry_type', 'all');
 
-        // Calculate basic metrics
-        $basicMetrics = $this->analysisService->calculateBasicMetrics($trades, $initialBalance);
+            // Use caching for dashboard payload to reduce repeated heavy calculations
+            try {
+                $period = $request->get('period', 'all');
+                $sessionFilter = $request->get('session', 'all');
+                $entryFilter = $request->get('entry_type', 'all');
 
-        // Calculate summary if filters active
-        $summary = $this->analysisService->calculateSummary($trades, $entryFilter, $sessionFilter);
+                // Use last trade updated timestamp to invalidate cache when trades change
+                $tradesMaxUpdated = \App\Models\Trade::max('updated_at') ?: now()->toDateTimeString();
+                $cacheKey = "dashboard:period={$period}:session={$sessionFilter}:entry={$entryFilter}:account={$account->id}:tmax={$tradesMaxUpdated}";
 
-        // Get available filters
-        $availableSessions = $this->analysisService->getAvailableSessions();
-        $availableEntryTypes = $this->analysisService->getAvailableEntryTypes();
+                $cached = cache()->remember($cacheKey, 60, function () use ($query, $initialBalance, $sessionFilter, $entryFilter) {
+                    // Fetch collection only once for collection-based calculations
+                    $trades = $query ? $query->get() : collect();
 
-        // Calculate equity data
-        $equityData = $this->analysisService->calculateEquityData(
-            $trades,
-            $initialBalance,
-            $availableSessions
-        );
+                    $basicMetrics = $this->analysisService->calculateBasicMetrics($trades, $initialBalance);
+                    $summary = $this->analysisService->calculateSummary($trades, $entryFilter, $sessionFilter);
+                    $availableSessions = $this->analysisService->getAvailableSessions();
+                    $availableEntryTypes = $this->analysisService->getAvailableEntryTypes();
+                    $equityData = $this->analysisService->calculateEquityData($trades, $initialBalance, $availableSessions);
 
-        // Calculate pair and entry type data (simple version for dashboard)
-        $pairData = $this->analysisService->calculatePairAnalysis($trades);
-        $entryTypeData = $this->analysisService->calculateEntryTypeAnalysis($trades);
+                    // Use DB-backed aggregations where possible for speed
+                    $pairData = $query ? $this->analysisService->calculatePairAnalysis($query) : collect();
+                    $entryTypeData = $query ? $this->analysisService->calculateEntryTypeAnalysis($query) : collect();
 
-        // Combine all data
-        return view('dashboard.index', array_merge($basicMetrics, [
-            'period' => $period,
-            'sessionFilter' => $sessionFilter,
-            'entryFilter' => $entryFilter,
-            'summary' => $summary,
-            'availableSessions' => $availableSessions,
-            'availableEntryTypes' => $availableEntryTypes,
-            'equityData' => $equityData,
-            'pairData' => $pairData,
-            'entryTypeData' => $entryTypeData,
-        ]));
+                    return compact('basicMetrics', 'summary', 'availableSessions', 'availableEntryTypes', 'equityData', 'pairData', 'entryTypeData');
+                });
+
+                $basicMetrics = $cached['basicMetrics'] ?? $this->getDefaultMetrics($initialBalance);
+                $summary = $cached['summary'] ?? [];
+                $availableSessions = $cached['availableSessions'] ?? [];
+                $availableEntryTypes = $cached['availableEntryTypes'] ?? [];
+                $equityData = $cached['equityData'] ?? [];
+                $pairData = $cached['pairData'] ?? collect();
+                $entryTypeData = $cached['entryTypeData'] ?? collect();
+            } catch (\Exception $e) {
+                Log::error('Error calculating dashboard payload: ' . $e->getMessage());
+                $basicMetrics = $this->getDefaultMetrics($initialBalance);
+                $summary = [];
+                $availableSessions = [];
+                $availableEntryTypes = [];
+                $equityData = [];
+                $pairData = collect();
+                $entryTypeData = collect();
+            }
+
+            // Combine all data
+            return view('dashboard.index', array_merge($basicMetrics, [
+                'period' => $period,
+                'sessionFilter' => $sessionFilter,
+                'entryFilter' => $entryFilter,
+                'summary' => $summary,
+                'availableSessions' => $availableSessions,
+                'availableEntryTypes' => $availableEntryTypes,
+                'equityData' => $equityData,
+                'pairData' => $pairData,
+                'entryTypeData' => $entryTypeData,
+            ]));
+        } catch (\Exception $e) {
+            Log::error('Critical error in dashboard: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            return view('dashboard.index', $this->getDefaultDashboardData());
+        }
+    }
+
+    /**
+     * Get default metrics if calculation fails
+     */
+    private function getDefaultMetrics($initialBalance)
+    {
+        return [
+            'balance' => $initialBalance,
+            'equity' => $initialBalance,
+            'winrate' => 0,
+            'totalProfit' => 0,
+            'totalLoss' => 0,
+            'netProfit' => 0,
+            'averageWin' => 0,
+            'averageLoss' => 0,
+            'largestWin' => 0,
+            'largestLoss' => 0,
+            'averageRR' => 0,
+            'profitFactor' => 0,
+            'expectancy' => 0,
+            'maxDrawdown' => 0,
+            'maxDrawdownPercentage' => 0,
+            'currentDrawdown' => 0,
+            'totalTrades' => 0,
+            'wins' => 0,
+            'losses' => 0,
+            'breakEvens' => 0,
+            'consecutiveWins' => 0,
+            'consecutiveLosses' => 0,
+        ];
+    }
+
+    /**
+     * Get default dashboard data if critical error occurs
+     */
+    private function getDefaultDashboardData()
+    {
+        return array_merge($this->getDefaultMetrics(10000), [
+            'period' => 'all',
+            'sessionFilter' => 'all',
+            'entryFilter' => 'all',
+            'summary' => [],
+            'availableSessions' => [],
+            'availableEntryTypes' => [],
+            'equityData' => [],
+            'pairData' => [],
+            'entryTypeData' => [],
+        ]);
     }
 }

@@ -11,24 +11,36 @@ use App\Imports\TradesImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\TradingRule; // Tambahkan ini
+use App\Models\TradingRule;
+use App\Exceptions\TradeException;
+use App\Exceptions\DataNotFoundException;
+use App\Exceptions\ImportException;
+use App\Services\PerformanceMonitorService;
 
 class TradeController extends Controller
 {
     public function index(Request $request)
     {
+        $perf = (new PerformanceMonitorService)->start('TradeController::index');
+
         $sortBy = $request->get('sort_by', 'date');
         $order  = $request->get('order', 'desc');
 
-        // Tambahkan eager loading untuk tradingRules
-        $query = Trade::with('symbol', 'tradingRules'); // Update ini
-        $trades = $query->orderBy($sortBy, $order)->paginate(10);
+        // Eager load relationships untuk avoid N+1 queries
+        $query = Trade::with('symbol', 'tradingRules');
+        $perf->checkpoint('eager_load_initialized');
 
-        // HITUNG WINRATE DARI SEMUA TRADE (BUKAN HANYA YANG DIPAGINATE)
-        $allTrades = Trade::all();
+        $trades = $query->orderBy($sortBy, $order)->paginate(10);
+        $perf->checkpoint('trades_fetched');
+
+        // HITUNG WINRATE DARI SEMUA TRADE - Use selective columns to minimize data transfer
+        $allTrades = Trade::select('id', 'hasil')->get();
         $totalTrades = $allTrades->count();
         $wins = $allTrades->where('hasil', 'win')->count();
         $winrate = $totalTrades > 0 ? round(($wins / $totalTrades) * 100, 2) : 0;
+        $perf->checkpoint('winrate_calculated');
+
+        $perf->end('Trade index rendered');
 
         return view('trades.index', compact(
             'trades',
@@ -40,34 +52,56 @@ class TradeController extends Controller
 
     public function create()
     {
-        $symbols = Symbol::where('active', true)->get();
-        $currentEquity = $this->getCurrentEquity();
-        $tradingRules = TradingRule::where('is_active', true) // Tambahkan ini
-            ->orderBy('order')
-            ->get();
+        try {
+            $symbols = Symbol::where('active', true)->get();
+            if ($symbols->isEmpty()) {
+                Log::warning('No active symbols available');
+            }
 
-        return view('trades.create', compact('symbols', 'currentEquity', 'tradingRules'));
+            $currentEquity = $this->getCurrentEquity();
+            $tradingRules = TradingRule::where('is_active', true)
+                ->orderBy('order')
+                ->get();
+
+            return view('trades.create', compact('symbols', 'currentEquity', 'tradingRules'));
+        } catch (\Exception $e) {
+            Log::error('Error loading create trade form: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memuat form pembuatan trade');
+        }
     }
 
     public function edit($id)
     {
-        $account = Account::first();
-        $initialBalance = $account->initial_balance;
+        try {
+            $trade = Trade::with('tradingRules')->findOrFail($id);
 
-        // PERBAIKAN: Hitung balance yang benar termasuk semua trade selesai kecuali yang sedang diedit
-        $completedTrades = Trade::where('exit', '!=', null)
-            ->where('id', '!=', $id) // JANGAN sertakan trade yang sedang diedit
-            ->get();
+            $account = Account::first();
+            if (!$account) {
+                Log::error('No account found');
+                throw new DataNotFoundException('Account');
+            }
 
-        $balance = $initialBalance + $completedTrades->sum('profit_loss');
+            $initialBalance = $account->initial_balance;
 
-        // Tambahkan eager loading untuk tradingRules
-        $trade = Trade::with('tradingRules')->findOrFail($id);
-        $tradingRules = TradingRule::where('is_active', true)
-            ->orderBy('order')
-            ->get();
+            // PERBAIKAN: Hitung balance yang benar termasuk semua trade selesai kecuali yang sedang diedit
+            $completedTrades = Trade::where('exit', '!=', null)
+                ->where('id', '!=', $id) // JANGAN sertakan trade yang sedang diedit
+                ->get();
 
-        return view('trades.edit', compact('trade', 'balance', 'tradingRules'));
+            $balance = $initialBalance + $completedTrades->sum('profit_loss');
+
+            $tradingRules = TradingRule::where('is_active', true)
+                ->orderBy('order')
+                ->get();
+
+            return view('trades.edit', compact('trade', 'balance', 'tradingRules'));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning("Trade not found: ID {$id}");
+            return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
+        } catch (\Exception $e) {
+            Log::error('Error loading edit form: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memuat form edit trade');
+        }
     }
 
     public function update(Request $request, $id)
@@ -192,20 +226,30 @@ class TradeController extends Controller
 
         $trade->fill($data);
         $trade->setSessionFromTimestamp();
-        // SYNC RULES JIKA ADA
-        if ($request->has('rules')) {
-            $trade->tradingRules()->sync($request->rules);
 
-            $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
-                ->pluck('name')
-                ->toArray();
+        // Wrap save + rule sync in transaction
+        DB::transaction(function () use ($request, $trade) {
+            // SYNC RULES JIKA ADA
+            if ($request->has('rules')) {
+                $trade->tradingRules()->sync($request->rules);
 
-            $trade->withoutEvents(function () use ($trade, $ruleNames) {
-                $trade->update(['rules' => implode(',', $ruleNames)]);
-            });
-        }
+                $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
+                    ->pluck('name')
+                    ->toArray();
 
-        $trade->save();
+                $trade->withoutEvents(function () use ($trade, $ruleNames) {
+                    $trade->update(['rules' => implode(',', $ruleNames)]);
+                });
+            } else {
+                // Jika tidak ada rules yang dipilih
+                $trade->tradingRules()->detach();
+                $trade->withoutEvents(function () use ($trade) {
+                    $trade->update(['rules' => null]);
+                });
+            }
+
+            $trade->save();
+        });
 
         // HAPUS KODE LAMA: $trade->rules = implode(',', $request->rules ?? []);
 
@@ -214,108 +258,157 @@ class TradeController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'symbol_id'   => 'required|exists:symbols,id',
-            'timestamp'   => 'required|date',
-            'date'        => 'required|date',
-            'type'        => 'required|in:buy,sell',
-            'entry'       => 'required|numeric',
-            'stop_loss'   => 'required|numeric',
-            'take_profit' => 'required|numeric',
-            'rules'       => 'nullable|array', // Tambahkan validasi untuk rules
-            'rules.*'     => 'exists:trading_rules,id' // Validasi ID rules
-        ]);
+        $perf = (new PerformanceMonitorService)->start('TradeController::store');
 
-        // ambil konfigurasi symbol
-        $symbol = Symbol::findOrFail($data['symbol_id']);
+        try {
+            $data = $request->validate([
+                'symbol_id'   => 'required|exists:symbols,id',
+                'timestamp'   => 'required|date',
+                'date'        => 'required|date',
+                'type'        => 'required|in:buy,sell',
+                'entry'       => 'required|numeric',
+                'stop_loss'   => 'required|numeric',
+                'take_profit' => 'required|numeric',
+                'rules'       => 'nullable|array',
+                'rules.*'     => 'exists:trading_rules,id'
+            ]);
+            $perf->checkpoint('validation_passed');
 
-        // hitung otomatis pips
-        $slPips = $this->calculatePips($data['entry'], $data['stop_loss'], $data['type'], $symbol);
-        $tpPips = $this->calculatePips($data['entry'], $data['take_profit'], $data['type'], $symbol);
+            // ambil konfigurasi symbol
+            $symbol = Symbol::findOrFail($data['symbol_id']);
 
-        $data['sl_pips'] = $slPips;
-        $data['tp_pips'] = $tpPips;
+            // hitung otomatis pips
+            $slPips = $this->calculatePips($data['entry'], $data['stop_loss'], $data['type'], $symbol);
+            $tpPips = $this->calculatePips($data['entry'], $data['take_profit'], $data['type'], $symbol);
 
-        // HITUNG RR RATIO - TAMBAHKAN INI
-        if ($slPips > 0) {
-            $data['rr'] = round($tpPips / $slPips, 2);
-        } else {
-            $data['rr'] = 0;
-        }
+            $data['sl_pips'] = $slPips;
+            $data['tp_pips'] = $tpPips;
 
-        // sementara account_id fix dulu (nanti bisa pilih kalau multi akun)
-        $data['account_id'] = 1;
+            // HITUNG RR RATIO
+            if ($slPips > 0) {
+                $data['rr'] = round($tpPips / $slPips, 2);
+            } else {
+                $data['rr'] = 0;
+            }
 
-        $trade = new Trade($data);
-        $trade->account_id = 1;
+            // sementara account_id fix dulu (nanti bisa pilih kalau multi akun)
+            $data['account_id'] = 1;
 
-        // Set session otomatis
-        $trade->setSessionFromTimestamp();
+            // Jalankan transaction dan dapatkan hasilnya
+            $trade = DB::transaction(function () use ($data, $request, $perf) {
+                $trade = new Trade($data);
+                $trade->account_id = 1;
 
-        $trade->save();
+                // Set session otomatis
+                $trade->setSessionFromTimestamp();
 
-        // SYNC RULES JIKA ADA (setelah trade dibuat)
-        if ($request->has('rules')) {
-            // 1. Sync ke pivot table
-            $trade->tradingRules()->sync($request->rules);
+                $trade->save();
+                $perf->checkpoint('trade_saved');
 
-            // 2. Ambil nama rules untuk kolom
-            $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
-                ->pluck('name')
-                ->toArray();
+                // SYNC RULES JIKA ADA (setelah trade dibuat)
+                if ($request->has('rules')) {
+                    // 1. Sync ke pivot table
+                    $trade->tradingRules()->sync($request->rules);
 
-            // 3. Update kolom rules (tanpa trigger event)
-            $trade->withoutEvents(function () use ($trade, $ruleNames) {
-                $trade->update(['rules' => implode(',', $ruleNames)]);
+                    // 2. Ambil nama rules untuk kolom
+                    $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
+                        ->pluck('name')
+                        ->toArray();
+
+                    // 3. Update kolom rules (tanpa trigger event)
+                    $trade->withoutEvents(function () use ($trade, $ruleNames) {
+                        $trade->update(['rules' => implode(',', $ruleNames)]);
+                    });
+                    $perf->checkpoint('rules_synced');
+                }
+
+                return $trade; // Return trade dari closure
             });
-        }
 
-        return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
+            $perf->end('Trade created successfully');
+            Log::info('Trade created successfully', ['trade_id' => $trade->id, 'symbol_id' => $data['symbol_id']]);
+            return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Validation error when creating trade', ['errors' => $e->errors()]);
+            return back()->withInput()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            $perf->end('Trade creation failed');
+            Log::error('Error creating trade: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            return back()->withInput()->with('error', 'Gagal membuat trade: ' . $e->getMessage());
+        }
     }
 
     public function show($id)
     {
-        $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
+        try {
+            $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id);
 
-        // Generate image URLs dari TradingView links
-        $beforeChartImage = $this->generateTradingViewImage($trade->before_link);
-        $afterChartImage = $this->generateTradingViewImage($trade->after_link);
+            // Generate image URLs dari TradingView links
+            $beforeChartImage = $this->generateTradingViewImage($trade->before_link);
+            $afterChartImage = $this->generateTradingViewImage($trade->after_link);
 
-        return view('trades.show', compact('trade', 'beforeChartImage', 'afterChartImage'));
+            return view('trades.show', compact('trade', 'beforeChartImage', 'afterChartImage'));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning("Trade not found: ID {$id}");
+            return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
+        } catch (\Exception $e) {
+            Log::error('Error loading trade details: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memuat detail trade');
+        }
     }
 
     public function detail($id)
     {
-        $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id); // Update ini
+        try {
+            $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id);
 
-        // Get rule names
-        $ruleNames = $trade->tradingRules->pluck('name')->toArray();
+            // Get rule names
+            $ruleNames = $trade->tradingRules->pluck('name')->toArray();
 
-        return response()->json([
-            'id' => $trade->id,
-            'symbol' => [
-                'name' => $trade->symbol->name
-            ],
-            'type' => $trade->type,
-            'session' => $trade->session,
-            'timestamp' => $trade->timestamp,
-            'entry' => $trade->entry,
-            'exit' => $trade->exit,
-            'exit_pips' => $trade->exit_pips,
-            'stop_loss' => $trade->stop_loss,
-            'take_profit' => $trade->take_profit,
-            'sl_pips' => $trade->sl_pips,
-            'tp_pips' => $trade->tp_pips,
-            'lot_size' => $trade->lot_size,
-            'risk_percent' => $trade->risk_percent,
-            'risk_usd' => $trade->risk_usd,
-            'profit_loss' => $trade->profit_loss,
-            'rr' => $trade->rr,
-            'hasil' => $trade->hasil,
-            'rules' => $ruleNames, // Tambahkan rules
-            'before_link' => $trade->before_link,
-            'after_link' => $trade->after_link,
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $trade->id,
+                    'symbol' => [
+                        'name' => $trade->symbol->name
+                    ],
+                    'type' => $trade->type,
+                    'session' => $trade->session,
+                    'timestamp' => $trade->timestamp,
+                    'entry' => $trade->entry,
+                    'exit' => $trade->exit,
+                    'exit_pips' => $trade->exit_pips,
+                    'stop_loss' => $trade->stop_loss,
+                    'take_profit' => $trade->take_profit,
+                    'sl_pips' => $trade->sl_pips,
+                    'tp_pips' => $trade->tp_pips,
+                    'lot_size' => $trade->lot_size,
+                    'risk_percent' => $trade->risk_percent,
+                    'risk_usd' => $trade->risk_usd,
+                    'profit_loss' => $trade->profit_loss,
+                    'rr' => $trade->rr,
+                    'hasil' => $trade->hasil,
+                    'rules' => $ruleNames,
+                    'before_link' => $trade->before_link,
+                    'after_link' => $trade->after_link,
+                ]
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning("Trade detail not found: ID {$id}");
+            return response()->json([
+                'success' => false,
+                'message' => "Trade dengan ID {$id} tidak ditemukan"
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error loading trade detail: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat detail trade'
+            ], 500);
+        }
     }
 
     // app/Http/Controllers/TradeController.php
@@ -463,30 +556,33 @@ class TradeController extends Controller
         // Update field lainnya
         $trade->fill($request->except('rules'));
 
-        // SYNC RULES: Pivot Table → Kolom Rules
-        if ($request->has('rules')) {
-            // 1. Sync ke pivot table
-            $trade->tradingRules()->sync($request->rules);
+        // Wrap evaluation save + pivot sync in transaction
+        DB::transaction(function () use ($request, $trade) {
+            // SYNC RULES: Pivot Table → Kolom Rules
+            if ($request->has('rules')) {
+                // 1. Sync ke pivot table
+                $trade->tradingRules()->sync($request->rules);
 
-            // 2. Ambil nama rules untuk kolom
-            $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
-                ->pluck('name')
-                ->toArray();
+                // 2. Ambil nama rules untuk kolom
+                $ruleNames = \App\Models\TradingRule::whereIn('id', $request->rules)
+                    ->pluck('name')
+                    ->toArray();
 
-            // 3. Update kolom rules (tanpa trigger event)
-            $trade->withoutEvents(function () use ($trade, $ruleNames) {
-                $trade->update(['rules' => implode(',', $ruleNames)]);
-            });
-        } else {
-            // Jika tidak ada rules yang dipilih
-            $trade->tradingRules()->detach();
-            $trade->withoutEvents(function () use ($trade) {
-                $trade->update(['rules' => null]);
-            });
-        }
+                // 3. Update kolom rules (tanpa trigger event)
+                $trade->withoutEvents(function () use ($trade, $ruleNames) {
+                    $trade->update(['rules' => implode(',', $ruleNames)]);
+                });
+            } else {
+                // Jika tidak ada rules yang dipilih
+                $trade->tradingRules()->detach();
+                $trade->withoutEvents(function () use ($trade) {
+                    $trade->update(['rules' => null]);
+                });
+            }
 
-        // Save perubahan lainnya
-        $trade->save();
+            // Save perubahan lainnya
+            $trade->save();
+        });
 
         return redirect()->route('trades.index')
             ->with('success', 'Evaluasi trade berhasil disimpan');
@@ -494,48 +590,103 @@ class TradeController extends Controller
 
     public function exportExcel()
     {
-        return Excel::download(new TradesExport, 'trades.xlsx');
+        $perf = (new PerformanceMonitorService)->start('TradeController::exportExcel');
+
+        try {
+            $perf->checkpoint('export_started');
+            Log::info('Exporting trades to Excel');
+
+            $fileName = 'trades_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+            $perf->checkpoint('filename_prepared');
+
+            $perf->end('Excel export generated');
+            return Excel::download(new TradesExport, $fileName);
+        } catch (\Exception $e) {
+            $perf->end('Excel export failed');
+            Log::error('Error exporting trades: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengekspor trades: ' . $e->getMessage());
+        }
     }
 
     public function importExcel(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,csv'
-        ]);
+        $perf = (new PerformanceMonitorService)->start('TradeController::importExcel');
 
-        Excel::import(new TradesImport, $request->file('file'));
+        try {
+            $request->validate([
+                'file' => 'required|mimes:xlsx,csv'
+            ]);
+            $perf->checkpoint('file_validated');
 
-        return redirect()->route('trades.index')->with('success', 'Trades imported successfully!');
+            Log::info('Starting trade import', ['file' => $request->file('file')->getClientOriginalName()]);
+            $perf->checkpoint('import_started');
+
+            DB::transaction(function () use ($request, $perf) {
+                Excel::import(new TradesImport, $request->file('file'));
+                $perf->checkpoint('excel_import_completed');
+            });
+
+            $perf->end('Trade import completed successfully');
+            Log::info('Trade import completed successfully');
+            return redirect()->route('trades.index')->with('success', 'Trades berhasil diimpor!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('File validation failed for import');
+            return back()->withInput()->withErrors(['file' => 'File harus berupa Excel atau CSV']);
+        } catch (\Exception $e) {
+            $perf->end('Trade import failed');
+            Log::error('Error importing trades: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            return back()->with('error', 'Gagal mengimpor trades: ' . $e->getMessage());
+        }
     }
 
     private function getCurrentEquity()
     {
-        $account = Account::first();
-        $initialBalance = $account->initial_balance;
+        try {
+            $account = Account::first();
+            if (!$account) {
+                Log::error('No account found when calculating current equity');
+                return 0;
+            }
 
-        // Hitung total profit/loss dari semua trade yang sudah selesai
-        $completedTrades = Trade::where('exit', '!=', null)->get();
-        $totalProfitLoss = $completedTrades->sum('profit_loss');
+            $initialBalance = $account->initial_balance;
 
-        return $initialBalance + $totalProfitLoss;
+            // Eager load & select specific columns to avoid N+1 queries
+            $completedTrades = Trade::whereNotNull('exit')
+                ->select('id', 'profit_loss')
+                ->get();
+            $totalProfitLoss = $completedTrades->sum('profit_loss');
+
+            return $initialBalance + $totalProfitLoss;
+        } catch (\Exception $e) {
+            Log::error('Error calculating current equity: ' . $e->getMessage());
+            return 0;
+        }
     }
 
     private function generateTradingViewImage($tradingViewLink)
     {
-        if (!$tradingViewLink) return null;
+        try {
+            if (!$tradingViewLink) return null;
 
-        // Ekstrak chart ID dari TradingView link
-        // Format: https://www.tradingview.com/x/UNIQUE_CHART_ID/
-        preg_match('/tradingview\.com\/x\/([a-zA-Z0-9_\-]+)/', $tradingViewLink, $matches);
+            // Ekstrak chart ID dari TradingView link
+            // Format: https://www.tradingview.com/x/UNIQUE_CHART_ID/
+            preg_match('/tradingview\.com\/x\/([a-zA-Z0-9_\-]+)/', $tradingViewLink, $matches);
 
-        if (isset($matches[1])) {
-            $chartId = $matches[1];
+            if (isset($matches[1])) {
+                $chartId = $matches[1];
 
-            // TradingView image snapshot URL
-            // Note: Ini adalah endpoint publik TradingView untuk snapshot chart
-            return "https://www.tradingview.com/x/{$chartId}";
+                // TradingView image snapshot URL
+                // Note: Ini adalah endpoint publik TradingView untuk snapshot chart
+                return "https://www.tradingview.com/x/{$chartId}";
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::warning('Error generating TradingView image: ' . $e->getMessage());
+            return null;
         }
-
-        return null;
     }
 }
