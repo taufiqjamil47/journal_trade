@@ -20,6 +20,7 @@ class Trade extends Model
         'stop_loss',
         'take_profit',
         'exit',
+        'exit_timestamp',
         'sl_pips',
         'tp_pips',
         'exit_pips',
@@ -50,6 +51,7 @@ class Trade extends Model
      */
     protected $casts = [
         'timestamp' => 'datetime',
+        'exit_timestamp' => 'datetime',
         'date' => 'date',
         'profit_loss' => 'float',
         'rr' => 'float',

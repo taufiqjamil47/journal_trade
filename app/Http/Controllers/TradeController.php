@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TradingRule;
+use Carbon\Carbon;
 use App\Exceptions\TradeException;
 use App\Exceptions\DataNotFoundException;
 use App\Exceptions\ImportException;
@@ -263,8 +264,9 @@ class TradeController extends Controller
         try {
             $data = $request->validate([
                 'symbol_id'   => 'required|exists:symbols,id',
-                'timestamp'   => 'required|date',
-                'date'        => 'required|date',
+                // accept time-only in H:i format
+                'timestamp'   => 'required|date_format:H:i',
+                'date'        => 'required|date_format:Y-m-d',
                 'type'        => 'required|in:buy,sell',
                 'entry'       => 'required|numeric',
                 'stop_loss'   => 'required|numeric',
@@ -273,6 +275,15 @@ class TradeController extends Controller
                 'rules.*'     => 'exists:trading_rules,id'
             ]);
             $perf->checkpoint('validation_passed');
+
+            // Combine date + time into full timestamp (DB stores datetime)
+            try {
+                $combined = $data['date'] . ' ' . $data['timestamp'];
+                $data['timestamp'] = Carbon::createFromFormat('Y-m-d H:i', $combined)->toDateTimeString();
+            } catch (\Exception $e) {
+                // fallback: parse tolerant
+                $data['timestamp'] = Carbon::parse($data['date'] . ' ' . $data['timestamp'])->toDateTimeString();
+            }
 
             // ambil konfigurasi symbol
             $symbol = Symbol::findOrFail($data['symbol_id']);
@@ -551,10 +562,35 @@ class TradeController extends Controller
             'note'            => 'nullable|string',
             'before_link'     => 'nullable|url',
             'after_link'      => 'nullable|url',
+            // Exit timestamp inputs (evaluate view)
+            'exit_date'       => 'nullable|date_format:Y-m-d',
+            'exit_time'       => 'nullable|date_format:H:i',
         ]);
 
         // Update field lainnya
         $trade->fill($request->except('rules'));
+
+        // If exit date and/or time provided, combine into exit_timestamp
+        $exitDate = $request->input('exit_date');
+        $exitTime = $request->input('exit_time');
+
+        if ($exitDate || $exitTime) {
+            // Default missing parts: if date missing use trade->date, if time missing use current time
+            $datePart = $exitDate ?? $trade->date?->format('Y-m-d') ?? now()->format('Y-m-d');
+            $timePart = $exitTime ?? now()->format('H:i');
+
+            try {
+                $combined = Carbon::parse($datePart . ' ' . $timePart);
+                $trade->exit_timestamp = $combined;
+            } catch (\Exception $e) {
+                // If parse fails, ignore and let validation/controller handle
+                Log::warning('Gagal parse exit_date/exit_time: ' . $e->getMessage(), [
+                    'exit_date' => $exitDate,
+                    'exit_time' => $exitTime,
+                    'trade_id' => $trade->id
+                ]);
+            }
+        }
 
         // Wrap evaluation save + pivot sync in transaction
         DB::transaction(function () use ($request, $trade) {

@@ -117,7 +117,7 @@
                                     <label for="timestamp" class="block text-sm font-semibold text-gray-300">
                                         Waktu Entry
                                     </label>
-                                    <input type="datetime-local" name="timestamp"
+                                    <input type="time" name="timestamp"
                                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                         required>
                                 </div>
@@ -415,8 +415,10 @@
         // Set current datetime as default
         document.addEventListener('DOMContentLoaded', function() {
             const now = new Date();
-            const timestamp = now.toISOString().slice(0, 16);
-            document.querySelector('input[name="timestamp"]').value = timestamp;
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const timeOnly = `${hours}:${minutes}`;
+            document.querySelector('input[name="timestamp"]').value = timeOnly;
 
             const today = now.toISOString().slice(0, 10);
             document.querySelector('input[name="date"]').value = today;

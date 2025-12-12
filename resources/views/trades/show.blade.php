@@ -148,40 +148,140 @@
                     Manajemen Risiko
                 </h3>
 
-                <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
-                    <!-- Lot Size -->
-                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                        <span class="text-sm text-gray-400 block mb-2">Lot Size</span>
-                        <span class="font-bold text-xl text-white">{{ $trade->lot_size ?? '-' }}</span>
-                    </div>
-
-                    <!-- Risk % -->
-                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                        <span class="text-sm text-gray-400 block mb-2">Risk %</span>
-                        <span class="font-bold text-xl text-white">
-                            {{ $trade->risk_percent ? $trade->risk_percent . '%' : '-' }}
-                        </span>
-                    </div>
-
-                    <!-- Risk USD -->
-                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                        <span class="text-sm text-gray-400 block mb-2">Risk USD</span>
-                        <span class="font-bold text-xl text-white">
-                            {{ $trade->risk_usd ? '$' . number_format($trade->risk_usd, 2) : '-' }}
-                        </span>
-                    </div>
-
-                    <!-- Pips -->
-                    <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                        <span class="text-sm text-gray-400 block mb-2">Pips</span>
-                        <div class="grid grid-cols-2">
-                            <div class="flex items-center justify-center">
-                                <span class="text-lg text-gray-400 mr-2">TP:</span>
-                                <span class="font-semibold text-green-400 text-lg">{{ $trade->tp_pips ?? '0' }} pips</span>
+                <div class="space-y-6">
+                    <!-- Kelompok 1: Risk Parameters -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-300 mb-3 flex items-center">
+                            <i class="fas fa-chart-line mr-2 text-sm"></i>
+                            Risk Parameters
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Lot Size -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-2">Lot Size</span>
+                                <span class="font-bold text-xl text-white">{{ $trade->lot_size ?? '-' }}</span>
                             </div>
-                            <div class="flex items-center justify-center">
-                                <span class="text-lg text-gray-400 mr-2">SL:</span>
-                                <span class="font-semibold text-red-400 text-lg">{{ $trade->sl_pips ?? '0' }} pips</span>
+
+                            <!-- Risk % -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-2">Risk %</span>
+                                <span class="font-bold text-xl text-white">
+                                    {{ $trade->risk_percent ? $trade->risk_percent . '%' : '-' }}
+                                </span>
+                            </div>
+
+                            <!-- Risk USD -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-2">Risk USD</span>
+                                <span class="font-bold text-xl text-white">
+                                    {{ $trade->risk_usd ? '$' . number_format($trade->risk_usd, 2) : '-' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kelompok 2: Trade Levels -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-300 mb-3 flex items-center">
+                            <i class="fas fa-ruler-combined mr-2 text-sm"></i>
+                            Trade Levels
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Pips -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-3">Pips</span>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-arrow-up text-green-400 mr-2 text-sm"></i>
+                                            <span class="text-gray-400">Take Profit:</span>
+                                        </div>
+                                        <span class="font-semibold text-green-400">{{ $trade->tp_pips ?? '0' }} pips</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-arrow-down text-red-400 mr-2 text-sm"></i>
+                                            <span class="text-gray-400">Stop Loss:</span>
+                                        </div>
+                                        <span class="font-semibold text-red-400">{{ $trade->sl_pips ?? '0' }} pips</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Risk-Reward Ratio -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-3">Risk-Reward Ratio</span>
+                                <div class="flex items-center justify-center">
+                                    <span
+                                        class="font-bold text-2xl {{ $trade->rr >= 1 ? 'text-green-400' : 'text-yellow-400' }}">
+                                        {{ $trade->rr ?? '-' }}:1
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kelompok 3: Time Management -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-300 mb-3 flex items-center">
+                            <i class="fas fa-clock mr-2 text-sm"></i>
+                            Time Management
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            @php
+                                $entryDt = optional($trade->timestamp)
+                                    ? \Carbon\Carbon::parse($trade->timestamp)
+                                    : null;
+                                $exitDt = optional($trade->exit_timestamp)
+                                    ? \Carbon\Carbon::parse($trade->exit_timestamp)
+                                    : null;
+                                $duration = null;
+                                if ($entryDt && $exitDt) {
+                                    $secs = $entryDt->diffInSeconds($exitDt);
+                                    $duration = \Carbon\CarbonInterval::seconds($secs)->cascade()->forHumans();
+                                } elseif ($entryDt && !$exitDt) {
+                                    $secs = $entryDt->diffInSeconds(now());
+                                    $duration = \Carbon\CarbonInterval::seconds($secs)->cascade()->forHumans();
+                                }
+                            @endphp
+
+                            <!-- Entry Time -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-2">Entry Time</span>
+                                <div class="flex flex-col items-center">
+                                    <span class="font-bold text-lg text-white">
+                                        {{ $entryDt ? $entryDt->format('d/m/Y') : '-' }}
+                                    </span>
+                                    <span class="text-sm text-gray-300 mt-1">
+                                        {{ $entryDt ? $entryDt->format('H:i') : '' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Exit Time -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-2">Exit Time</span>
+                                <div class="flex flex-col items-center">
+                                    <span class="font-bold text-lg text-white">
+                                        {{ $exitDt ? $exitDt->format('d/m/Y') : '-' }}
+                                    </span>
+                                    <span class="text-sm text-gray-300 mt-1">
+                                        {{ $exitDt ? $exitDt->format('H:i') : '' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Duration -->
+                            <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
+                                <span class="text-sm text-gray-400 block mb-2">Duration</span>
+                                <div class="flex flex-col items-center">
+                                    <span class="font-bold text-lg text-white">{{ $duration ?? '-' }}</span>
+                                    @if ($entryDt && !$exitDt)
+                                        <span class="text-xs text-yellow-400 mt-1 bg-yellow-400/10 px-2 py-1 rounded-full">
+                                            <i class="fas fa-sync-alt mr-1"></i> Ongoing
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

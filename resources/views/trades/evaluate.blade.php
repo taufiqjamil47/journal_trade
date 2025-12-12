@@ -299,6 +299,32 @@
                                         placeholder="Analisis penempatan Stop Loss dan Take Profit...">{{ $trade->why_sl_tp }}</textarea>
                                 </div>
                             </div>
+
+                            <!-- Exit Timestamp -->
+                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-indigo-300">
+                                    <i class="fas fa-clock text-indigo-400 mr-3"></i>
+                                    Exit Timestamp (Tanggal & Jam Keluar)
+                                </h3>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-2">
+                                        <label for="exit_date" class="block text-sm font-semibold text-gray-300">Tanggal
+                                            Keluar</label>
+                                        <input type="date" name="exit_date" id="exit_date"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
+                                            value="{{ optional($trade->exit_timestamp)->format('Y-m-d') }}">
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <label for="exit_time" class="block text-sm font-semibold text-gray-300">Jam
+                                            Keluar</label>
+                                        <input type="time" name="exit_time" id="exit_time"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
+                                            value="{{ optional($trade->exit_timestamp)->format('H:i') }}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Right Column -->
@@ -716,7 +742,7 @@
 
                         // Bagian 8: Action untuk next trade
                         if (followRules === '0' || entryEmotion.includes('FOMO') || entryEmotion.includes(
-                            'Revenge')) {
+                                'Revenge')) {
                             note += `\n\nAction: Fokus pada trading plan dan hindari impulsive decisions.`;
                         } else {
                             note += `\n\nAction: Pertahankan konsistensi dan terus review setup yang bekerja.`;
