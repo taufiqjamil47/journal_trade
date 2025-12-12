@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Trade;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -24,6 +25,7 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
             'ID',
             'Symbol',
             'Timestamp',
+            'Exit_Timestamp',
             'Date',
             'Type',
             'Entry',
@@ -58,6 +60,16 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
 
     public function map($trade): array
     {
+        // Determine exit timestamp for export
+        $exitTimestamp = $trade->exit_timestamp ?? null;
+        if (empty($exitTimestamp) && !empty($trade->timestamp)) {
+            try {
+                $exitTimestamp = Carbon::parse($trade->timestamp)->addHours(3)->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                $exitTimestamp = null;
+            }
+        }
+
         // AMBIL RULES DARI KOLOM DATABASE (bukan dari relationship)
         $rules = $trade->rules; // Ini sudah string karena kita sync
 
@@ -88,6 +100,7 @@ class TradesExport implements FromCollection, WithHeadings, WithMapping
             $trade->id,
             $trade->symbol_id ? $trade->symbol->name : '',
             $trade->timestamp,
+            $exitTimestamp ?? '',
             $trade->date,
             $trade->type,
             $trade->entry,

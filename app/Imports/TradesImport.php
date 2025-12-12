@@ -85,6 +85,7 @@ class TradesImport implements ToModel, WithHeadingRow
             'account_id'        => 1,
             'symbol_id'         => $symbol->id,
             'timestamp'         => $timestamp,
+            'exit_timestamp'    => $this->determineExitTimestamp($normalizedRow, $timestamp),
             'date'              => $date,
             'type'              => $this->getValue($normalizedRow, 'type'),
             'entry'             => $this->getValue($normalizedRow, 'entry'),
@@ -194,6 +195,52 @@ class TradesImport implements ToModel, WithHeadingRow
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * Determine exit timestamp: use provided exit timestamp if available,
+     * otherwise fallback to entry timestamp + 3 hours.
+     */
+    private function determineExitTimestamp(array $row, $entryTimestamp)
+    {
+        // Try possible keys for exit timestamp
+        $possibleKeys = ['exittimestamp', 'exit_timestamp', 'exit time', 'exittime', 'exit_time', 'exitdate', 'exit_date'];
+
+        foreach ($possibleKeys as $k) {
+            $val = $this->getValue($row, $k, null);
+            if ($val !== null && $val !== '') {
+                try {
+                    if (is_numeric($val)) {
+                        return Carbon::instance(ExcelDate::excelToDateTimeObject($val))->format('Y-m-d H:i:s');
+                    }
+                    return Carbon::parse($val)->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    // ignore and fallback
+                }
+            }
+        }
+
+        // No explicit exit timestamp; use entry timestamp + 3 hours if entry exists
+        if (!empty($entryTimestamp)) {
+            try {
+                return Carbon::parse($entryTimestamp)->addHours(3)->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        // As a last resort, try to build from date + timestamp fields
+        $date = $this->parseDate($row, 'date');
+        $time = $this->parseTime($row, 'timestamp');
+        if ($date && $time) {
+            try {
+                return Carbon::parse("{$date} {$time}")->addHours(3)->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        return null;
     }
 
     /**

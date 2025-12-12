@@ -53,10 +53,22 @@ class PerformanceMonitoring
             ]);
         }
 
-        // Attach performance headers
-        $response->header('X-Response-Time-Ms', round($duration, 2));
-        $response->header('X-Query-Count', $queryCount);
-        $response->header('X-Memory-Peak-Mb', round($peakMemory, 2));
+        // Attach performance headers (use headers->set to support BinaryFileResponse)
+        if (method_exists($response, 'headers') || isset($response->headers)) {
+            // Symfony responses expose a HeaderBag at $response->headers
+            $response->headers->set('X-Response-Time-Ms', round($duration, 2));
+            $response->headers->set('X-Query-Count', $queryCount);
+            $response->headers->set('X-Memory-Peak-Mb', round($peakMemory, 2));
+        } else {
+            // Fallback: try Laravel response helper method if available
+            try {
+                $response->header('X-Response-Time-Ms', round($duration, 2));
+                $response->header('X-Query-Count', $queryCount);
+                $response->header('X-Memory-Peak-Mb', round($peakMemory, 2));
+            } catch (\Throwable $e) {
+                // no-op if headers cannot be attached
+            }
+        }
 
         // Standard info log for all requests (if APP_DEBUG)
         if (config('app.debug')) {

@@ -488,6 +488,7 @@
         </div>
     </div>
 
+    <!-- Scripts Section -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('tradeModal');
@@ -686,6 +687,7 @@
         });
     </script>
 
+    <!-- Chart.js Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Chart.js Initialization
@@ -1031,6 +1033,7 @@
         });
     </script>
 
+    <!-- General Styles -->
     <style>
         .period-btn {
             transition: all 0.2s ease;
@@ -1047,6 +1050,7 @@
         }
     </style>
 
+    <!-- Custom Styles -->
     <style>
         /* Simple scrollbar for modal */
         #modalContent::-webkit-scrollbar {

@@ -471,7 +471,7 @@
             </div>
         </div>
 
-        <!-- Time Analysis Section -->
+        <!-- Time-Based Analysis -->
         <div class="my-4">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-primary-300">Time Analysis</h2>
@@ -744,12 +744,28 @@
                                     @endphp
 
                                     <div class="relative group">
-                                        <div class="w-full h-8 {{ $bgColor }} rounded {{ $trades > 0 ? 'cursor-pointer hover:opacity-80' : '' }} transition-all"
+                                        <div class="w-11 h-8 {{ $bgColor }} rounded {{ $trades > 0 ? 'cursor-pointer hover:opacity-80' : '' }} transition-all"
                                             data-day="{{ $dayIndex }}" data-hour="{{ $hourStr }}"
                                             data-profit="{{ $profit }}" data-trades="{{ $trades }}">
                                             <div class="flex items-center justify-center h-full">
                                                 @if ($trades > 0)
-                                                    <span class="text-xs {{ $textColor }} font-medium">
+                                                    @php
+                                                        // Hitung jumlah digit (termasuk tanda minus)
+                                                        $profitLength = strlen((string) $profit);
+                                                        $fontSizeClass = match (true) {
+                                                            $profitLength >= 6
+                                                                => 'text-[9px]', // 100000+ (6 digit atau lebih)
+                                                            $profitLength == 5 => 'text-[10px]', // 10000-99999
+                                                            $profitLength == 4 => 'text-[11px]', // 1000-9999
+                                                            $profitLength == 3 => 'text-[12px]', // 100-999
+                                                            $profitLength == 2
+                                                                => 'text-xs', // 10-99 (termasuk minus 1 digit: -1)
+                                                            default => 'text-xs', // 0-9 atau minus 1 digit
+                                                        };
+                                                    @endphp
+
+                                                    <span
+                                                        class="{{ $fontSizeClass }} {{ $textColor }} font-medium leading-none">
                                                         {{ $profit >= 0 ? '+' : '' }}{{ number_format($profit, 0) }}
                                                     </span>
                                                 @endif
@@ -803,7 +819,7 @@
                 <h2 class="text-xl font-bold text-primary-300">Pair & Entry Type Analysis</h2>
                 <div class="text-sm text-gray-500">
                     <i class="fas fa-dollar mr-1"></i>
-                    Pair & Entry
+                    Pair & Entry Performance
                 </div>
             </div>
 
@@ -958,10 +974,25 @@
             </div>
         </div>
 
-        <!-- Session Analysis Section -->
-        <!-- Buat section baru untuk session analysis -->
+        <!-- Session-Time Heatmap Modal -->
+        <div id="sessionModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div
+                class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-2xl mx-auto max-h-[80vh] overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                    <h4 id="sessionModalTitle" class="text-lg font-bold text-primary-400">Session Time Details</h4>
+                    <button id="closeSessionModal" class="text-gray-400 hover:text-white transition-colors p-2">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
 
+                <div id="sessionModalContent" class="p-4 overflow-y-auto max-h-[60vh]">
+                    <!-- Content will be filled by JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Scripts Section -->
     <script>
         // Tambahkan di script section
         document.querySelectorAll('.stat-card').forEach(card => {
@@ -1041,6 +1072,7 @@
         });
     </script>
 
+    <!-- Charts Script -->
     <script>
         // Hourly Performance Chart
         const hourlyCtx = document.getElementById('hourlyChart');
@@ -1230,42 +1262,137 @@
         }
 
         // Heatmap Toggle
-        const toggleHeatmap = document.getElementById('toggleHeatmap');
-        const heatmapContainer = document.getElementById('heatmapContainer');
+        // Session Heatmap Modal Functionality
+        const sessionModal = document.getElementById('sessionModal');
+        const sessionModalTitle = document.getElementById('sessionModalTitle');
+        const sessionModalContent = document.getElementById('sessionModalContent');
+        const closeSessionModalBtn = document.getElementById('closeSessionModal');
 
-        if (toggleHeatmap && heatmapContainer) {
-            toggleHeatmap.addEventListener('click', function() {
-                heatmapContainer.classList.toggle('max-h-96');
-                heatmapContainer.classList.toggle('overflow-y-auto');
-
-                if (toggleHeatmap.querySelector('i').classList.contains('fa-expand')) {
-                    toggleHeatmap.querySelector('i').classList.remove('fa-expand');
-                    toggleHeatmap.querySelector('i').classList.add('fa-compress');
-                } else {
-                    toggleHeatmap.querySelector('i').classList.remove('fa-compress');
-                    toggleHeatmap.querySelector('i').classList.add('fa-expand');
-                }
-            });
+        // Function to get day name from index
+        function getDayName(dayIndex) {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            return days[dayIndex] || 'Unknown';
         }
 
-        // Heatmap Cell Click
+        // Function to format hour range
+        function getHourRange(hour) {
+            const startHour = hour.padStart(2, '0');
+            const endHour = String((parseInt(hour) + 1) % 24).padStart(2, '0');
+            return `${startHour}:00-${endHour}:00`;
+        }
+
+        // Heatmap Cell Click Handler
         document.querySelectorAll('#heatmapContainer [data-trades]').forEach(cell => {
             cell.addEventListener('click', function() {
                 const hour = this.getAttribute('data-hour');
-                const day = this.getAttribute('data-day');
+                const day = parseInt(this.getAttribute('data-day'));
                 const profit = parseFloat(this.getAttribute('data-profit'));
                 const trades = parseInt(this.getAttribute('data-trades'));
 
                 if (trades > 0) {
-                    // Bisa buka modal atau filter untuk trades pada waktu tertentu
-                    alert(
-                        `Hour: ${hour}:00\nDay: ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][day]}\nTrades: ${trades}\nProfit: $${profit.toFixed(2)}`
-                    );
+                    const dayName = getDayName(day);
+                    const hourRange = getHourRange(hour);
+
+                    // Set modal title
+                    sessionModalTitle.textContent = `${dayName}, ${hourRange}`;
+
+                    // Create modal content
+                    let content = `
+                <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <div class="text-sm text-gray-400">Total Performance</div>
+                            <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
+                                $${profit.toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-400">Total Trades</div>
+                            <div class="text-2xl font-bold text-gray-200">${trades}</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-gray-600">
+                        <div class="text-xs text-gray-400">Time Slot</div>
+                        <div class="text-sm text-gray-300">${hourRange} (GMT)</div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h5 class="text-sm font-medium text-gray-300 mb-2">Performance Insights</h5>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-gray-750 rounded-lg p-3">
+                            <div class="text-xs text-gray-400">Average P/L per Trade</div>
+                            <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                $${(profit/trades).toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="bg-gray-750 rounded-lg p-3">
+                            <div class="text-xs text-gray-400">Win/Loss Ratio</div>
+                            <div class="text-lg font-bold text-gray-200">
+                                ${profit > 0 ? 'Profitable' : 'Unprofitable'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 class="text-sm font-medium text-gray-300 mb-2">Recommendations</h5>
+                    <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
+                        <div class="flex items-start gap-2">
+                            <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
+                            <div>
+                                <p class="text-sm text-gray-300">
+                                    ${profit > 0 
+                                        ? 'This time slot shows consistent profitability. Consider focusing more trades during this period.'
+                                        : 'This time slot shows negative performance. Consider avoiding trades or reviewing your strategy for this period.'}
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Based on ${trades} trade${trades !== 1 ? 's' : ''} at this specific day/time combination.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <p class="text-xs text-gray-400 text-center">
+                        <i class="fas fa-lightbulb mr-1"></i>
+                        Click on other time slots to compare performance
+                    </p>
+                </div>
+            `;
+
+                    sessionModalContent.innerHTML = content;
+                    sessionModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
                 }
             });
         });
+
+        // Close Session Modal
+        closeSessionModalBtn.addEventListener('click', function() {
+            sessionModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        sessionModal.addEventListener('click', function(e) {
+            if (e.target === sessionModal) {
+                sessionModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !sessionModal.classList.contains('hidden')) {
+                sessionModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
     </script>
 
+    <!-- Pair & Entry Type Charts -->
     <script>
         // Pair Chart
         const pairCtx = document.getElementById('pairChart').getContext('2d');
@@ -1386,6 +1513,7 @@
         }
     </script>
 
+    <!-- General Styles -->
     <style>
         /* Simple scrollbar */
         .overflow-x-auto::-webkit-scrollbar {
@@ -1407,6 +1535,7 @@
         }
     </style>
 
+    <!-- Stats Card Styles -->
     <style>
         /* Tambahkan di style section */
         .gradient-border {
@@ -1472,6 +1601,7 @@
         }
     </style>
 
+    <!-- Heatmap Styles -->
     <style>
         /* Tambahkan di style section */
         .grid-cols-25 {
@@ -1524,6 +1654,55 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* Session Heatmap Modal Styles */
+        #sessionModalContent::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #sessionModalContent::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        #sessionModalContent::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        /* Smooth transition for modal */
+        #sessionModal {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        #sessionModal:not(.hidden) {
+            opacity: 1;
+        }
+
+        /* Heatmap cell hover effects */
+        #heatmapContainer [data-trades] {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        #heatmapContainer [data-trades]:hover {
+            transform: scale(1.05);
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #heatmapContainer [data-trades]:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid currentColor;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0.3;
         }
     </style>
 @endsection
