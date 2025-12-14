@@ -71,21 +71,24 @@
                     <div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-400">Entry Price</span>
-                            <span class="font-mono font-bold text-lg text-green-400">{{ $trade->entry }}</span>
+                            <span
+                                class="font-mono font-bold text-lg text-green-400">{{ format_price($trade->entry) }}</span>
                         </div>
                     </div>
 
                     <div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-400">Stop Loss</span>
-                            <span class="font-mono font-bold text-lg text-red-400">{{ $trade->stop_loss }}</span>
+                            <span
+                                class="font-mono font-bold text-lg text-red-400">{{ format_price($trade->stop_loss) }}</span>
                         </div>
                     </div>
 
                     <div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-400">Take Profit</span>
-                            <span class="font-mono font-bold text-lg text-green-400">{{ $trade->take_profit }}</span>
+                            <span
+                                class="font-mono font-bold text-lg text-green-400">{{ format_price($trade->take_profit) }}</span>
                         </div>
                     </div>
 
@@ -93,7 +96,8 @@
                         <div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-400">Exit Price</span>
-                                <span class="font-mono font-bold text-lg text-blue-400">{{ $trade->exit }}</span>
+                                <span
+                                    class="font-mono font-bold text-lg text-blue-400">{{ format_price($trade->exit) }}</span>
                             </div>
                         </div>
                     @endif

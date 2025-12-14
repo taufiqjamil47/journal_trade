@@ -93,7 +93,10 @@
                                 <select name="symbol_id"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                                     @foreach ($symbols as $symbol)
-                                        <option value="{{ $symbol->id }}" class="bg-gray-800">{{ $symbol->name }}</option>
+                                        <option value="{{ $symbol->id }}" data-pip_value="{{ $symbol->pip_value }}"
+                                            data-pip_worth="{{ $symbol->pip_worth ?? 10 }}"
+                                            data-pip_position="{{ $symbol->pip_position ?? '' }}" class="bg-gray-800">
+                                            {{ $symbol->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -314,12 +317,20 @@
     </div>
 
     <script>
-        // Basic Risk Calculator
+        // Basic Risk Calculator (per-symbol aware)
         function calculateRisk() {
             const entry = parseFloat(document.querySelector('input[name="entry"]').value) || 0;
             const stopLoss = parseFloat(document.querySelector('input[name="stop_loss"]').value) || 0;
             const takeProfit = parseFloat(document.querySelector('input[name="take_profit"]').value) || 0;
             const type = document.querySelector('select[name="type"]').value;
+
+            // Read pip settings from selected symbol option
+            const symbolSelect = document.querySelector('select[name="symbol_id"]');
+            const selectedOption = symbolSelect ? symbolSelect.options[symbolSelect.selectedIndex] : null;
+            const pipValue = selectedOption && selectedOption.dataset.pip_value ? parseFloat(selectedOption.dataset
+                .pip_value) : 0.00010;
+            const pipWorth = selectedOption && selectedOption.dataset.pip_worth ? parseFloat(selectedOption.dataset
+                .pip_worth) : 10;
 
             if (entry && stopLoss && takeProfit) {
                 let slDistance, tpDistance;
@@ -333,9 +344,8 @@
                     tpDistance = Math.abs(entry - takeProfit);
                 }
 
-                const pipValue = 0.00010;
-                const slPips = slDistance / pipValue;
-                const tpPips = tpDistance / pipValue;
+                const slPips = pipValue > 0 ? slDistance / pipValue : 0;
+                const tpPips = pipValue > 0 ? tpDistance / pipValue : 0;
 
                 // Update display
                 document.getElementById('slPips').textContent = `${slPips.toFixed(1)} pips`;
@@ -347,8 +357,8 @@
                 document.getElementById('riskRewardRatio').textContent = ratioDisplay;
                 document.getElementById('rr_ratio').value = ratio.toFixed(2);
 
-                // Calculate Position Size
-                calculatePositionSize(slPips);
+                // Calculate Position Size (use pipWorth per-symbol)
+                calculatePositionSize(slPips, pipWorth);
 
             } else {
                 resetRiskCalculator();
@@ -356,8 +366,8 @@
         }
 
         // Calculate Position Size
-        function calculatePositionSize(slPips) {
-            const pipWorth = 10;
+        function calculatePositionSize(slPips, pipWorth) {
+            pipWorth = typeof pipWorth !== 'undefined' ? pipWorth : 10;
             const currentEquity = parseFloat({{ $currentEquity }});
 
             // Get selected risk percent
@@ -388,6 +398,12 @@
         document.querySelector('input[name="stop_loss"]').addEventListener('input', calculateRisk);
         document.querySelector('input[name="take_profit"]').addEventListener('input', calculateRisk);
         document.querySelector('select[name="type"]').addEventListener('change', calculateRisk);
+
+        // Recalculate when symbol changes since pip settings differ per symbol
+        const symbolSelectEl = document.querySelector('select[name="symbol_id"]');
+        if (symbolSelectEl) {
+            symbolSelectEl.addEventListener('change', calculateRisk);
+        }
 
         // Risk percent change listener
         document.querySelectorAll('input[name="risk_percent"]').forEach(radio => {

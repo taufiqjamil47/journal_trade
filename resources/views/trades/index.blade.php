@@ -269,20 +269,20 @@
                                         {{ strtoupper($trade->type) }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 font-mono text-sm">{{ $trade->entry }}</td>
+                                <td class="py-3 px-4 font-mono text-sm">{{ format_price($trade->entry) }}</td>
                                 <td class="py-3 px-4 font-mono">
-                                    <div class="text-sm text-red-400">{{ $trade->stop_loss }}</div>
+                                    <div class="text-sm text-red-400">{{ format_price($trade->stop_loss) }}</div>
                                     <div class="text-xs text-red-400">({{ $trade->sl_pips }} pips)</div>
                                 </td>
                                 <td class="py-3 px-4 font-mono">
-                                    <div class="text-sm text-green-400">{{ $trade->take_profit }}</div>
+                                    <div class="text-sm text-green-400">{{ format_price($trade->take_profit) }}</div>
                                     <div class="text-xs text-green-400">({{ $trade->tp_pips }} pips)</div>
                                 </td>
                                 <td class="py-3 px-4 text-sm">
                                     {{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}</td>
                                 <td class="py-3 px-4 font-mono">
                                     @if ($trade->exit)
-                                        <div class="text-sm">{{ $trade->exit }}</div>
+                                        <div class="text-sm">{{ format_price($trade->exit) }}</div>
                                         <div class="text-xs">({{ $trade->exit_pips }} pips)</div>
                                     @else
                                         <span class="text-gray-500 italic">-</span>

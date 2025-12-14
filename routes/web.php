@@ -1,11 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradeController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\DashboardController;
@@ -22,9 +20,14 @@ use App\Http\Controllers\TradingRuleController;
 |
 */
 
+Route::resource('sessions', SessionController::class);
+Route::resource('trading-rules', TradingRuleController::class);
+Route::resource('symbols', SymbolController::class);
+
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
@@ -39,8 +42,7 @@ Route::get('/trades/{id}/detail', [TradeController::class, 'detail'])->name('tra
 Route::get('/trades/{id}/evaluate', [TradeController::class, 'evaluate'])->name('trades.evaluate');
 Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])->name('trades.saveEvaluation');
 
-Route::resource('sessions', SessionController::class);
-Route::resource('trading-rules', TradingRuleController::class);
+
 // Route::put('/trading-rules/{id}', [TradingRuleController::class, 'updateOrder'])
 //     ->name('trading-rules.update');
 Route::put('/trading-rules/{id}/order', [TradingRuleController::class, 'updateOrder'])

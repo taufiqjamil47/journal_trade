@@ -28,6 +28,10 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
+        ,
+        "files": [
+            "app/Helpers/format_helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

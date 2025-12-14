@@ -13,6 +13,7 @@ class Symbol extends Model
         'name',
         'pip_value',
         'pip_position',
+        'pip_worth',
         'active',
     ];
 

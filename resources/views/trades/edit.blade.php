@@ -94,7 +94,7 @@
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Entry Price</p>
-                            <p class="text-base font-bold font-mono">{{ $trade->entry }}</p>
+                            <p class="text-base font-bold font-mono">{{ format_price($trade->entry) }}</p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
@@ -107,12 +107,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Stop Loss</p>
-                            <p class="text-base font-semibold font-mono text-amber-400">{{ $trade->stop_loss }}</p>
+                            <p class="text-base font-semibold font-mono text-amber-400">
+                                {{ format_price($trade->stop_loss) }}</p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Take Profit</p>
-                            <p class="text-base font-semibold font-mono text-green-400">{{ $trade->take_profit }}</p>
+                            <p class="text-base font-semibold font-mono text-green-400">
+                                {{ format_price($trade->take_profit) }}</p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
@@ -216,7 +218,7 @@
                                         </label>
                                         <input type="number" step="0.00001" name="exit" id="exit"
                                             class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
-                                            value="{{ $trade->exit }}" placeholder="0.00000">
+                                            value="{{ format_price($trade->exit) }}" placeholder="0.00000">
                                     </div>
 
                                     <!-- Calculation Preview -->
@@ -252,14 +254,15 @@
                                 class="bg-gray-800 hover:bg-red-900/30 text-red-400 py-3 px-4 rounded-lg transition-colors border border-red-700/30 flex flex-col items-center">
                                 <i class="fas fa-times text-lg mb-1"></i>
                                 <span>Set to SL</span>
-                                <span class="text-xs text-red-400/70 mt-1">{{ $trade->stop_loss }}</span>
+                                <span class="text-xs text-red-400/70 mt-1">{{ format_price($trade->stop_loss) }}</span>
                             </button>
 
                             <button type="button" onclick="setExitPrice('{{ $trade->take_profit }}')"
                                 class="bg-gray-800 hover:bg-green-900/30 text-green-400 py-3 px-4 rounded-lg transition-colors border border-green-700/30 flex flex-col items-center">
                                 <i class="fas fa-trophy text-lg mb-1"></i>
                                 <span>Set to TP</span>
-                                <span class="text-xs text-green-400/70 mt-1">{{ $trade->take_profit }}</span>
+                                <span
+                                    class="text-xs text-green-400/70 mt-1">{{ format_price($trade->take_profit) }}</span>
                             </button>
 
                             <button type="button" onclick="calculateBreakEven()"
@@ -357,7 +360,7 @@
             const lotSize = parseFloat(document.getElementById('lot_size').value) || 0;
             const type = '{{ $trade->type }}';
             const pipValue = {{ $trade->symbol->pip_value ?? 0.0001 }};
-            const pipWorth = 10;
+            const pipWorth = {{ $trade->symbol->pip_worth ?? 10 }};
 
             if (entry && exit && lotSize > 0) {
                 let pips;
@@ -381,9 +384,27 @@
         }
 
         // Quick action functions
+        function formatPrice(price) {
+            if (price === null || price === undefined || price === '') return '';
+
+            // Normalize strings (remove commas) and convert to Number
+            const num = Number(typeof price === 'string' ? price.replace(/,/g, '') : price);
+            if (isNaN(num)) return String(price);
+
+            const abs = Math.abs(num);
+            const intPart = Math.floor(abs);
+
+            // If integer part has 2+ digits (>=10) -> 3 decimals, otherwise -> 5 decimals
+            const decimals = intPart >= 10 ? 3 : 5;
+
+            // Use toFixed to round to required decimals and preserve sign
+            return num.toFixed(decimals);
+        }
+
         function setExitPrice(price) {
             const exitInput = document.getElementById('exit');
-            exitInput.value = price;
+            const formatted = formatPrice(price);
+            exitInput.value = formatted;
             calculatePotentialPL();
         }
 

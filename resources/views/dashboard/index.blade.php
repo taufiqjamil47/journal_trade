@@ -40,6 +40,11 @@
                             <i class="fas fa-clock text-primary-500 mr-2"></i>
                             <span>Sessions</span>
                         </a>
+                        <a href="{{ route('symbols.index') }}"
+                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
+                            <i class="fas fa-money-bill-transfer text-primary-500 mr-2"></i>
+                            <span>Symbols</span>
+                        </a>
                         <a href="{{ route('trading-rules.index') }}"
                             class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                             <i class="fas fa-list text-primary-500 mr-2"></i>

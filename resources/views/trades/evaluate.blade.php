@@ -101,12 +101,13 @@
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Entry</p>
-                            <p class="text-base font-bold font-mono text-green-400">{{ $trade->entry }}</p>
+                            <p class="text-base font-bold font-mono text-green-400">{{ format_price($trade->entry) }}</p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Exit</p>
-                            <p class="text-base font-bold font-mono text-red-400">{{ $trade->exit ?? '-' }}</p>
+                            <p class="text-base font-bold font-mono text-red-400">{{ format_price($trade->exit) ?? '-' }}
+                            </p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
@@ -129,12 +130,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Stop Loss</p>
-                            <p class="text-base font-semibold font-mono text-red-400">{{ $trade->stop_loss }}</p>
+                            <p class="text-base font-semibold font-mono text-red-400">{{ format_price($trade->stop_loss) }}
+                            </p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">Take Profit</p>
-                            <p class="text-base font-semibold font-mono text-green-400">{{ $trade->take_profit }}</p>
+                            <p class="text-base font-semibold font-mono text-green-400">
+                                {{ format_price($trade->take_profit) }}</p>
                         </div>
 
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
