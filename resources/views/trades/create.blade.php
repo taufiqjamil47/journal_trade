@@ -17,11 +17,6 @@
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>Kembali</span>
                     </a>
-                    <a href="{{ route('dashboard') }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                        <i class="fas fa-chart-line text-primary-500 mr-2"></i>
-                        <span>Dashboard</span>
-                    </a>
                 </div>
             </div>
         </header>

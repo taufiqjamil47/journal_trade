@@ -177,13 +177,13 @@
 
 <body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
     <!-- Running Text Section -->
-    {{-- <div class="running-text-container py-2" id="runningTextContainer">
+    <div class="running-text-container py-2" id="runningTextContainer">
         <div class="running-text-wrapper">
             <div class="running-text" id="runningText">
                 <!-- Data pair akan di-generate oleh JavaScript -->
             </div>
         </div>
-    </div> --}}
+    </div>
 
     <!-- Content placeholder -->
     <div class="container mx-auto py-1">
@@ -406,6 +406,41 @@
                 confirmButtonColor: '#d33'
             });
         @endif
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('navToggle');
+            const navToggleIcon = document.getElementById('navToggleIcon');
+            const navItems = document.getElementById('navItems');
+
+            // Cek state dari localStorage
+            let isNavVisible = localStorage.getItem('navVisible') === 'true';
+
+            // Set initial state
+            updateNavVisibility(isNavVisible);
+
+            // Toggle event
+            navToggle.addEventListener('click', function() {
+                isNavVisible = !isNavVisible;
+                updateNavVisibility(isNavVisible);
+                localStorage.setItem('navVisible', isNavVisible);
+            });
+
+            function updateNavVisibility(visible) {
+                if (visible) {
+                    navItems.classList.remove('hidden');
+                    navItems.classList.add('flex');
+                    navToggleIcon.classList.remove('fa-chevron-left');
+                    navToggleIcon.classList.add('fa-chevron-right');
+                } else {
+                    navItems.classList.remove('flex');
+                    navItems.classList.add('hidden');
+                    navToggleIcon.classList.remove('fa-chevron-right');
+                    navToggleIcon.classList.add('fa-chevron-left');
+                }
+            }
+        });
     </script>
 </body>
 

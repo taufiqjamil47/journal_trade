@@ -11,6 +11,8 @@
                     </h1>
                     <p class="text-gray-500 mt-1">Pantau kinerja dan analitik perdagangan Anda</p>
                 </div>
+
+                <!-- Navigation and Trader Info -->
                 <div class="flex flex-wrap gap-3">
                     <!-- Toggle Button -->
                     <button id="navToggle"
@@ -19,37 +21,101 @@
                     </button>
 
                     <!-- Navigation Items (hidden by default) -->
-                    <div id="navItems" class="hidden flex-wrap gap-3">
-                        <a href="{{ route('reports.calendar') }}"
-                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                            <i class="fas fa-calendar text-primary-500 mr-2"></i>
-                            <span>Calendar</span>
-                        </a>
-                        <a href="{{ route('analysis.index') }}"
-                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                            <i class="fa-solid fa-magnifying-glass-chart text-primary-500 mr-2"></i>
-                            <span>Analysis</span>
-                        </a>
-                        <a href="{{ route('trades.index') }}"
-                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                            <i class="fas fa-chart-line text-primary-500 mr-2"></i>
-                            <span>Trades</span>
-                        </a>
-                        <a href="{{ route('sessions.index') }}"
-                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                            <i class="fas fa-clock text-primary-500 mr-2"></i>
-                            <span>Sessions</span>
-                        </a>
-                        <a href="{{ route('symbols.index') }}"
-                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                            <i class="fas fa-money-bill-transfer text-primary-500 mr-2"></i>
-                            <span>Symbols</span>
-                        </a>
-                        <a href="{{ route('trading-rules.index') }}"
-                            class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                            <i class="fas fa-list text-primary-500 mr-2"></i>
-                            <span>Rules</span>
-                        </a>
+                    <div id="navItems" class="hidden">
+                        <div class="flex items-center space-x-1 bg-gray-800 rounded-lg p-1 border border-gray-700">
+                            <!-- Dashboard Link -->
+                            @if (!request()->routeIs('dashboard'))
+                                <a href="{{ route('dashboard') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
+                                    title="Dashboard">
+                                    <i class="fas fa-home text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Dashboard
+                                    </span>
+                                </a>
+                            @endif
+
+                            <!-- Calendar Link - hanya tampil jika BUKAN di route calendar -->
+                            @if (!request()->routeIs('reports.calendar'))
+                                <a href="{{ route('reports.calendar') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
+                                    title="Calendar">
+                                    <i class="fas fa-calendar text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Calendar
+                                    </span>
+                                </a>
+                            @endif
+
+                            <!-- Analysis Link - hanya tampil jika BUKAN di route analysis -->
+                            @if (!request()->routeIs('analysis.*'))
+                                <a href="{{ route('analysis.index') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
+                                    title="Analysis">
+                                    <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Analysis
+                                    </span>
+                                </a>
+                            @endif
+
+                            <div class="h-6 w-px bg-gray-600"></div>
+
+                            <!-- Trades Link - hanya tampil jika BUKAN di route trades -->
+                            @if (!request()->routeIs('trades.*'))
+                                <a href="{{ route('trades.index') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
+                                    title="Trades">
+                                    <i class="fas fa-chart-line text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Trades
+                                    </span>
+                                </a>
+                            @endif
+
+                            <!-- Sessions Link - hanya tampil jika BUKAN di route sessions -->
+                            @if (!request()->routeIs('sessions.*'))
+                                <a href="{{ route('sessions.index') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
+                                    title="Sessions">
+                                    <i class="fas fa-clock text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Sessions
+                                    </span>
+                                </a>
+                            @endif
+
+                            <!-- Symbols Link - hanya tampil jika BUKAN di route symbols -->
+                            @if (!request()->routeIs('symbols.*'))
+                                <a href="{{ route('symbols.index') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
+                                    title="Symbols">
+                                    <i class="fas fa-money-bill-transfer text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Symbols
+                                    </span>
+                                </a>
+                            @endif
+
+                            <!-- Rules Link - hanya tampil jika BUKAN di route trading-rules -->
+                            @if (!request()->routeIs('trading-rules.*'))
+                                <a href="{{ route('trading-rules.index') }}"
+                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
+                                    title="Rules">
+                                    <i class="fas fa-list text-primary-500"></i>
+                                    <span
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        Rules
+                                    </span>
+                                </a>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Trader Item -->
@@ -173,7 +239,8 @@
                         <p class="text-gray-300 text-sm mt-1">
                             {{ $summary['trades'] }} trades ·
                             Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
-                            <span class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
+                            <span
+                                class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
                         </p>
@@ -205,41 +272,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navToggle = document.getElementById('navToggle');
-            const navToggleIcon = document.getElementById('navToggleIcon');
-            const navItems = document.getElementById('navItems');
-
-            // Cek state dari localStorage
-            let isNavVisible = localStorage.getItem('navVisible') === 'true';
-
-            // Set initial state
-            updateNavVisibility(isNavVisible);
-
-            // Toggle event
-            navToggle.addEventListener('click', function() {
-                isNavVisible = !isNavVisible;
-                updateNavVisibility(isNavVisible);
-                localStorage.setItem('navVisible', isNavVisible);
-            });
-
-            function updateNavVisibility(visible) {
-                if (visible) {
-                    navItems.classList.remove('hidden');
-                    navItems.classList.add('flex');
-                    navToggleIcon.classList.remove('fa-chevron-left');
-                    navToggleIcon.classList.add('fa-chevron-right');
-                } else {
-                    navItems.classList.remove('flex');
-                    navItems.classList.add('hidden');
-                    navToggleIcon.classList.remove('fa-chevron-right');
-                    navToggleIcon.classList.add('fa-chevron-left');
-                }
-            }
-        });
-    </script>
 
     <script>
         // Equity Chart
