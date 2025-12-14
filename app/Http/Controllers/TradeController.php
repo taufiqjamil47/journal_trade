@@ -24,7 +24,7 @@ class TradeController extends Controller
     {
         $perf = (new PerformanceMonitorService)->start('TradeController::index');
 
-        $sortBy = $request->get('sort_by', 'date');
+        $sortBy = $request->get('sort_by', 'id');
         $order  = $request->get('order', 'desc');
 
         // Eager load relationships untuk avoid N+1 queries
@@ -357,9 +357,9 @@ class TradeController extends Controller
         try {
             $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id);
 
-            // Generate image URLs dari TradingView links
-            $beforeChartImage = $this->generateTradingViewImage($trade->before_link);
-            $afterChartImage = $this->generateTradingViewImage($trade->after_link);
+            // Generate image URLs dari berbagai tipe link (TradingView, S3, direct images, etc)
+            $beforeChartImage = $this->processImageUrl($trade->before_link);
+            $afterChartImage = $this->processImageUrl($trade->after_link);
 
             return view('trades.show', compact('trade', 'beforeChartImage', 'afterChartImage'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -702,7 +702,41 @@ class TradeController extends Controller
         }
     }
 
-    private function generateTradingViewImage($tradingViewLink)
+    /**
+     * Detect image type dan return usable image URL
+     * Support: TradingView links, S3 URLs, direct image URLs
+     */
+    private function processImageUrl($url)
+    {
+        if (!$url) {
+            return null;
+        }
+
+        try {
+            // Check if it's a TradingView link
+            if (preg_match('/tradingview\.com\/x\/([a-zA-Z0-9_\-]+)/', $url)) {
+                return $this->extractTradingViewImage($url);
+            }
+
+            // Check if it's a direct image URL (S3, HTTP, etc)
+            if ($this->isDirectImageUrl($url)) {
+                return $url;
+            }
+
+            Log::warning("Unsupported image URL type: {$url}");
+            return null;
+        } catch (\Exception $e) {
+            Log::warning("Error processing image URL: {$url}", ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    /**
+     * Extract TradingView chart image
+     * Convert: https://www.tradingview.com/x/Ha0dhC5t/
+     * To: https://www.tradingview.com/x/Ha0dhC5t
+     */
+    private function extractTradingViewImage($tradingViewLink)
     {
         try {
             if (!$tradingViewLink) return null;
@@ -713,16 +747,56 @@ class TradeController extends Controller
 
             if (isset($matches[1])) {
                 $chartId = $matches[1];
-
-                // TradingView image snapshot URL
-                // Note: Ini adalah endpoint publik TradingView untuk snapshot chart
+                // Return TradingView link - browser akan otomatis load image
                 return "https://www.tradingview.com/x/{$chartId}";
             }
 
             return null;
         } catch (\Exception $e) {
-            Log::warning('Error generating TradingView image: ' . $e->getMessage());
+            Log::warning('Error extracting TradingView image: ' . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Check if URL is direct image (not TradingView embed)
+     * Support: S3, HTTP/HTTPS images, etc
+     */
+    private function isDirectImageUrl($url)
+    {
+        // Check common image extensions
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+
+        // Get URL path without query parameters
+        $urlPath = parse_url($url, PHP_URL_PATH);
+        $urlPath = strtolower($urlPath);
+
+        // Check if URL ends with image extension
+        foreach ($imageExtensions as $ext) {
+            if (str_ends_with($urlPath, '.' . $ext)) {
+                return true;
+            }
+        }
+
+        // Check if URL is from common image hosting (S3, CloudFront, etc)
+        $imageHosts = ['amazonaws.com', 's3', 'cloudfront', 'imgix', 'fastly', 'cdn'];
+        foreach ($imageHosts as $host) {
+            if (str_contains($url, $host)) {
+                return true;
+            }
+        }
+
+        // Check if URL has no extension but looks like direct image (query params dengan image format)
+        if (str_contains($url, '?') && preg_match('/\.(jpg|jpeg|png|gif|webp|bmp)$/i', $urlPath)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function generateTradingViewImage($tradingViewLink)
+    {
+        // DEPRECATED: Use processImageUrl() instead
+        return $this->processImageUrl($tradingViewLink);
     }
 }

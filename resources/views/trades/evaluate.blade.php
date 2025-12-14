@@ -461,24 +461,51 @@
                                 </h3>
 
                                 <div class="space-y-4">
+                                    <!-- Before Link -->
                                     <div class="space-y-2">
-                                        <label for="before_link" class="block text-sm font-semibold text-gray-300">
-                                            Before Screenshot (Link)
+                                        <label for="before_link"
+                                            class="block text-sm font-semibold text-gray-300 flex items-center">
+                                            <i class="fas fa-image mr-2 text-primary-400"></i>
+                                            Before Entry Screenshot
                                         </label>
                                         <input type="url" name="before_link" id="before_link"
                                             class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
                                             value="{{ $trade->before_link }}"
-                                            placeholder="https://screenshot-before-trade.com">
+                                            placeholder="https://www.tradingview.com/x/Ha0dhC5t/ atau https://s3.amazonaws.com/image.png">
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            Dukung TradingView link, S3 URL, atau direct image link (PNG, JPG, GIF, WebP)
+                                        </p>
                                     </div>
 
+                                    <!-- After Link -->
                                     <div class="space-y-2">
-                                        <label for="after_link" class="block text-sm font-semibold text-gray-300">
-                                            After Screenshot (Link)
+                                        <label for="after_link"
+                                            class="block text-sm font-semibold text-gray-300 flex items-center">
+                                            <i class="fas fa-image mr-2 text-primary-400"></i>
+                                            After Entry Screenshot
                                         </label>
                                         <input type="url" name="after_link" id="after_link"
                                             class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
                                             value="{{ $trade->after_link }}"
-                                            placeholder="https://screenshot-after-trade.com">
+                                            placeholder="https://www.tradingview.com/x/CHART_ID/ atau https://bucket-name.s3.amazonaws.com/image.png">
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            Dukung TradingView link, S3 URL, atau direct image link (PNG, JPG, GIF, WebP)
+                                        </p>
+                                    </div>
+
+                                    <!-- Info Box -->
+                                    <div class="bg-primary-900/20 border border-primary-600/30 rounded-lg p-3 mt-3">
+                                        <p class="text-xs text-primary-300 flex items-start">
+                                            <i class="fas fa-info-circle mr-2 mt-0.5 flex-shrink-0"></i>
+                                            <span>
+                                                <strong>Tipe link yang didukung:</strong>
+                                                <br>• TradingView: https://www.tradingview.com/x/CHART_ID/
+                                                <br>• S3/AWS: https://fxr-snapshots-asia.s3.amazonaws.com/file.png
+                                                <br>• Direct image: https://example.com/chart.png,
+                                                https://imgix.example.com/image.jpg
+                                                <br>• CDN images dengan berbagai format (PNG, JPG, GIF, WebP)
+                                            </span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

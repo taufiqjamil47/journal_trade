@@ -177,13 +177,13 @@
 
 <body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
     <!-- Running Text Section -->
-    <div class="running-text-container py-2" id="runningTextContainer">
+    {{-- <div class="running-text-container py-2" id="runningTextContainer">
         <div class="running-text-wrapper">
             <div class="running-text" id="runningText">
                 <!-- Data pair akan di-generate oleh JavaScript -->
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Content placeholder -->
     <div class="container mx-auto py-1">

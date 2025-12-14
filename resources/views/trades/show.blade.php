@@ -331,79 +331,133 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     @if ($trade->before_link)
                         <div class="space-y-3">
+                            <!-- Header dengan link -->
                             <div class="flex items-center justify-between">
                                 <label class="text-sm text-gray-400 flex items-center">
-                                    <i class="fas fa-chart-line mr-2"></i>
+                                    <i class="fas fa-image mr-2"></i>
                                     Before Entry
                                 </label>
-                                <a href="{{ $trade->before_link }}" target="_blank"
-                                    class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
-                                    <i class="fas fa-external-link-alt mr-1"></i>
-                                    Open in TradingView
-                                </a>
+                                <div class="flex gap-2">
+                                    @if ($beforeChartImage)
+                                        <button
+                                            onclick="openImageModal('{{ $beforeChartImage }}', 'Before Entry - {{ $trade->symbol->name }}')"
+                                            class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
+                                            <i class="fas fa-search-plus mr-1"></i>
+                                            Zoom
+                                        </button>
+                                    @endif
+                                    <a href="{{ $trade->before_link }}" target="_blank"
+                                        class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
+                                        <i class="fas fa-external-link-alt mr-1"></i>
+                                        Link
+                                    </a>
+                                </div>
                             </div>
 
+                            <!-- Image Display -->
                             @if ($beforeChartImage)
-                                <div class="relative group">
+                                <div
+                                    class="relative group overflow-hidden rounded-lg border border-gray-600 bg-gray-900 hover:border-primary-500/50 transition-all duration-300">
+                                    <!-- Image -->
                                     <img src="{{ $beforeChartImage }}"
                                         alt="Before Entry Chart - {{ $trade->symbol->name }}"
-                                        class="w-full h-auto rounded-lg border border-gray-600 chart-image cursor-zoom-in transition-all duration-300 group-hover:border-primary-500/50"
+                                        class="w-full h-auto chart-image cursor-zoom-in hover:opacity-90 transition-opacity duration-300 max-h-96 object-cover"
                                         loading="lazy"
                                         onclick="openImageModal('{{ $beforeChartImage }}', 'Before Entry - {{ $trade->symbol->name }}')">
+
+                                    <!-- Loading indicator fallback -->
+                                    {{-- <div
+                                        class="absolute inset-0 bg-gray-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span class="text-xs text-gray-400">Klik untuk zoom</span>
+                                    </div> --}}
                                 </div>
+                                <p class="text-xs text-gray-500 text-center">
+                                    Klik gambar untuk memperbesar
+                                </p>
                             @else
-                                <div class="bg-gray-750 border border-gray-600 rounded-lg p-6 text-center">
-                                    <i class="fas fa-chart-line text-2xl text-gray-500 mb-3"></i>
-                                    <p class="text-gray-400 text-sm">Gambar chart tidak tersedia</p>
+                                <div class="bg-gray-750 border border-gray-600 rounded-lg p-8 text-center">
+                                    <i class="fas fa-chart-line text-3xl text-gray-500 mb-3"></i>
+                                    <p class="text-gray-400 text-sm mb-3">Gambar chart tidak tersedia</p>
+                                    <p class="text-xs text-gray-500 mb-3">
+                                        @if (str_contains($trade->before_link, 'tradingview'))
+                                            Link TradingView tidak dapat ditampilkan sebagai gambar
+                                        @else
+                                            Gagal memuat gambar dari URL
+                                        @endif
+                                    </p>
                                     <a href="{{ $trade->before_link }}" target="_blank"
-                                        class="inline-block mt-2 text-primary-400 hover:text-primary-300 text-xs">
-                                        Buka di TradingView
+                                        class="inline-block mt-3 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold py-2 px-4 rounded transition-colors">
+                                        <i class="fas fa-external-link-alt mr-1"></i>
+                                        Buka Link Asli
                                     </a>
                                 </div>
                             @endif
-
-                            <p class="text-xs text-gray-500 text-center">
-                                Klik gambar untuk memperbesar
-                            </p>
                         </div>
                     @endif
 
                     @if ($trade->after_link)
                         <div class="space-y-3">
+                            <!-- Header dengan link -->
                             <div class="flex items-center justify-between">
                                 <label class="text-sm text-gray-400 flex items-center">
-                                    <i class="fas fa-chart-line mr-2"></i>
+                                    <i class="fas fa-image mr-2"></i>
                                     After Entry
                                 </label>
-                                <a href="{{ $trade->after_link }}" target="_blank"
-                                    class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
-                                    <i class="fas fa-external-link-alt mr-1"></i>
-                                    Open in TradingView
-                                </a>
+                                <div class="flex gap-2">
+                                    @if ($afterChartImage)
+                                        <button
+                                            onclick="openImageModal('{{ $afterChartImage }}', 'After Entry - {{ $trade->symbol->name }}')"
+                                            class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
+                                            <i class="fas fa-search-plus mr-1"></i>
+                                            Zoom
+                                        </button>
+                                    @endif
+                                    <a href="{{ $trade->after_link }}" target="_blank"
+                                        class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
+                                        <i class="fas fa-external-link-alt mr-1"></i>
+                                        Link
+                                    </a>
+                                </div>
                             </div>
 
+                            <!-- Image Display -->
                             @if ($afterChartImage)
-                                <div class="relative group">
+                                <div
+                                    class="relative group overflow-hidden rounded-lg border border-gray-600 bg-gray-900 hover:border-primary-500/50 transition-all duration-300">
+                                    <!-- Image -->
                                     <img src="{{ $afterChartImage }}"
                                         alt="After Entry Chart - {{ $trade->symbol->name }}"
-                                        class="w-full h-auto rounded-lg border border-gray-600 chart-image cursor-zoom-in transition-all duration-300 group-hover:border-primary-500/50"
+                                        class="w-full h-auto chart-image cursor-zoom-in hover:opacity-90 transition-opacity duration-300 max-h-96 object-cover"
                                         loading="lazy"
                                         onclick="openImageModal('{{ $afterChartImage }}', 'After Entry - {{ $trade->symbol->name }}')">
+
+                                    <!-- Loading indicator fallback -->
+                                    {{-- <div
+                                        class="absolute inset-0 bg-gray-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span class="text-xs text-gray-400">Klik untuk zoom</span>
+                                    </div> --}}
                                 </div>
+                                <p class="text-xs text-gray-500 text-center">
+                                    Klik gambar untuk memperbesar
+                                </p>
                             @else
-                                <div class="bg-gray-750 border border-gray-600 rounded-lg p-6 text-center">
-                                    <i class="fas fa-chart-line text-2xl text-gray-500 mb-3"></i>
-                                    <p class="text-gray-400 text-sm">Gambar chart tidak tersedia</p>
+                                <div class="bg-gray-750 border border-gray-600 rounded-lg p-8 text-center">
+                                    <i class="fas fa-chart-line text-3xl text-gray-500 mb-3"></i>
+                                    <p class="text-gray-400 text-sm mb-3">Gambar chart tidak tersedia</p>
+                                    <p class="text-xs text-gray-500 mb-3">
+                                        @if (str_contains($trade->after_link, 'tradingview'))
+                                            Link TradingView tidak dapat ditampilkan sebagai gambar
+                                        @else
+                                            Gagal memuat gambar dari URL
+                                        @endif
+                                    </p>
                                     <a href="{{ $trade->after_link }}" target="_blank"
-                                        class="inline-block mt-2 text-primary-400 hover:text-primary-300 text-xs">
-                                        Buka di TradingView
+                                        class="inline-block mt-3 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold py-2 px-4 rounded transition-colors">
+                                        <i class="fas fa-external-link-alt mr-1"></i>
+                                        Buka Link Asli
                                     </a>
                                 </div>
                             @endif
-
-                            <p class="text-xs text-gray-500 text-center">
-                                Klik gambar untuk memperbesar
-                            </p>
                         </div>
                     @endif
                 </div>
