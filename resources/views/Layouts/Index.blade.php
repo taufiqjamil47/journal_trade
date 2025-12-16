@@ -188,6 +188,8 @@
     <!-- Content placeholder -->
     <div class="container mx-auto py-1">
         @yield('content')
+
+        @include('components.floating-note-form')
     </div>
 
     <script>

@@ -1,11 +1,13 @@
 <?php
 
+use App\Models\DashNote;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\DashNoteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TradingRuleController;
 
@@ -23,6 +25,7 @@ use App\Http\Controllers\TradingRuleController;
 Route::resource('sessions', SessionController::class);
 Route::resource('trading-rules', TradingRuleController::class);
 Route::resource('symbols', SymbolController::class);
+Route::resource('notes', DashNoteController::class);
 
 Route::get('/', function () {
     return view('welcome');
