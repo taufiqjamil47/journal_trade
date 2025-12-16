@@ -54,10 +54,11 @@
         @endif
 
         <!-- Form Container -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
+        <div class="container bg-gray-800 rounded-xl border border-gray-700 p-6 w-[100%] md:w-3/4 lg:w-2/3 mx-auto mb-8">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold mb-2">Informasi Symbol</h2>
-                <p class="text-gray-500 text-sm">ID: <span class="font-mono text-gray-400">{{ $symbol->id }}</span></p>
+                <p class="text-gray-500 text-sm">ID: <span class="font-mono text-gray-400">{{ $symbol->id }}</span>
+                </p>
             </div>
 
             <form action="{{ route('symbols.update', $symbol->id) }}" method="POST">
@@ -153,28 +154,87 @@
 
                     <!-- Active Status -->
                     <div class="md:col-span-2">
-                        <div class="bg-gray-900/30 rounded-lg p-4 border border-gray-700">
+                        <div class="bg-gray-900/40 rounded-xl p-5 border border-gray-800 shadow-lg">
                             <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="font-medium text-gray-300">
-                                        <i class="fas fa-power-off text-primary-500 mr-2"></i>Status Symbol
-                                    </h3>
-                                    <p class="text-sm text-gray-500 mt-1">Tentukan apakah simbol ini aktif untuk trading</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="hidden" name="active" value="0">
-                                    <input type="checkbox" name="active" value="1" class="sr-only peer"
-                                        {{ old('active', $symbol->active) ? 'checked' : '' }}>
-                                    <div
-                                        class="w-12 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600">
+                                <div class="flex-1">
+                                    <div class="flex items-center mb-1">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-primary-500/10 flex items-center justify-center mr-3">
+                                            <i class="fas fa-power-off text-primary-400 text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-gray-100 text-lg">Status Trading</h3>
+                                            <p class="text-sm text-gray-400 mt-0.5">Aktifkan atau nonaktifkan simbol
+                                                untuk
+                                                trading</p>
+                                        </div>
                                     </div>
-                                    <span class="ml-3 text-sm font-medium text-gray-300">
+                                </div>
+
+                                <div class="flex items-center space-x-4">
+                                    <!-- Status Badge -->
+                                    <div class="hidden sm:block">
+                                        <span id="status_badge"
+                                            class="px-3 py-1.5 rounded-full text-sm font-medium {{ old('active', $symbol->active) ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }}">
+                                            <i
+                                                class="fas {{ old('active', $symbol->active) ? 'fa-check-circle' : 'fa-times-circle' }} mr-1.5"></i>
+                                            {{ old('active', $symbol->active) ? 'Aktif' : 'Nonaktif' }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Toggle Switch -->
+                                    <div class="relative">
+                                        <input type="hidden" name="active"
+                                            value="{{ old('active', $symbol->active) ? 1 : 0 }}" id="active_hidden">
+
+                                        <label class="relative inline-flex items-center cursor-pointer group">
+                                            <input type="checkbox" id="active_checkbox" class="sr-only peer"
+                                                {{ old('active', $symbol->active) ? 'checked' : '' }}>
+
+                                            <!-- Switch Track -->
+                                            <div
+                                                class="w-14 h-7 bg-gray-700 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-500/30 peer-checked:bg-primary-600 transition-all duration-300 group-hover:bg-gray-600 peer-checked:group-hover:bg-primary-500 shadow-inner">
+                                            </div>
+
+                                            <!-- Switch Thumb -->
+                                            <div
+                                                class="absolute left-0.5 top-0.5 bg-white w-6 h-6 rounded-full transition-all duration-300 peer-checked:translate-x-7 shadow-lg transform">
+                                            </div>
+
+                                            <!-- Switch Icons -->
+                                            <div
+                                                class="absolute left-1.5 top-1.5 text-gray-900 text-xs opacity-70 peer-checked:opacity-0 transition-opacity">
+                                                <i class="fas fa-times"></i>
+                                            </div>
+                                            <div
+                                                class="absolute right-1.5 top-1.5 text-gray-900 text-xs opacity-0 peer-checked:opacity-70 transition-opacity">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status Indicator (Mobile) -->
+                            <div class="sm:hidden mt-4 pt-4 border-t border-gray-800">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-400">Status saat ini:</span>
+                                    <span id="mobile_status_badge"
+                                        class="px-3 py-1.5 rounded-full text-sm font-medium {{ old('active', $symbol->active) ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }}">
+                                        <i
+                                            class="fas {{ old('active', $symbol->active) ? 'fa-check-circle' : 'fa-times-circle' }} mr-1.5"></i>
                                         {{ old('active', $symbol->active) ? 'Aktif' : 'Nonaktif' }}
                                     </span>
-                                </label>
+                                </div>
                             </div>
+
                             @error('active')
-                                <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                                <div class="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                                    <p class="text-sm text-red-400 flex items-center">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>
+                                        {{ $message }}
+                                    </p>
+                                </div>
                             @enderror
                         </div>
                     </div>
@@ -235,38 +295,85 @@
     </div>
 
     <script>
-        // Toggle switch text update
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleSwitch = document.querySelector('input[name="active"]');
-            const toggleText = toggleSwitch.nextElementSibling.nextElementSibling;
+        // Fungsi untuk memperbarui status toggle switch
+        function updateActiveStatus() {
+            const checkbox = document.getElementById('active_checkbox');
+            const hiddenInput = document.getElementById('active_hidden');
+            const statusBadge = document.getElementById('status_badge');
+            const mobileBadge = document.getElementById('mobile_status_badge');
 
-            toggleSwitch.addEventListener('change', function() {
-                toggleText.textContent = this.checked ? 'Aktif' : 'Nonaktif';
+            // Pastikan checkbox dalam keadaan yang benar
+            const isChecked = checkbox.checked;
+
+            // Update hidden input value sesuai dengan checkbox
+            hiddenInput.value = isChecked ? '1' : '0';
+
+            // Update badge appearance
+            if (isChecked) {
+                statusBadge.className = 'px-3 py-1.5 rounded-full text-sm font-medium bg-green-500/20 text-green-400';
+                statusBadge.innerHTML = '<i class="fas fa-check-circle mr-1.5"></i>Aktif';
+
+                mobileBadge.className = 'px-3 py-1.5 rounded-full text-sm font-medium bg-green-500/20 text-green-400';
+                mobileBadge.innerHTML = '<i class="fas fa-check-circle mr-1.5"></i>Aktif';
+            } else {
+                statusBadge.className = 'px-3 py-1.5 rounded-full text-sm font-medium bg-red-500/20 text-red-400';
+                statusBadge.innerHTML = '<i class="fas fa-times-circle mr-1.5"></i>Nonaktif';
+
+                mobileBadge.className = 'px-3 py-1.5 rounded-full text-sm font-medium bg-red-500/20 text-red-400';
+                mobileBadge.innerHTML = '<i class="fas fa-times-circle mr-1.5"></i>Nonaktif';
+            }
+
+            console.log('Status updated:', isChecked ? 'Active' : 'Inactive', 'Hidden value:', hiddenInput.value);
+        }
+
+        // Event listener untuk toggle switch
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('active_checkbox');
+            const hiddenInput = document.getElementById('active_hidden');
+
+            // Inisialisasi status awal
+            updateActiveStatus();
+
+            // Tambahkan event listener untuk perubahan checkbox
+            checkbox.addEventListener('change', function() {
+                updateActiveStatus();
+            });
+
+            // Pastikan hidden input selalu sinkron dengan checkbox
+            checkbox.addEventListener('click', function() {
+                // Ini memastikan bahwa ketika checkbox diklik, nilainya sudah diperbarui
+                setTimeout(() => {
+                    hiddenInput.value = this.checked ? '1' : '0';
+                    console.log('Checkbox clicked, value:', hiddenInput.value);
+                }, 10);
             });
         });
 
         // Input validation styling
-        document.querySelectorAll('input').forEach(input => {
+        document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
             input.addEventListener('blur', function() {
-                if (this.value.trim() === '' && this.required) {
+                if (this.value.trim() === '' && this.hasAttribute('required')) {
                     this.classList.add('border-red-500');
+                    this.classList.remove('border-gray-700');
                 } else {
                     this.classList.remove('border-red-500');
+                    this.classList.add('border-gray-700');
                 }
             });
         });
     </script>
 
     <style>
-        /* Custom checkbox toggle */
-        input[name="active"]:checked+div {
-            background-color: #2563eb;
+        /* Custom checkbox toggle styling */
+        .peer:checked+div {
+            background-color: #2563eb !important;
         }
 
         /* Smooth transitions */
         input,
         button,
-        a {
+        a,
+        .transition-all {
             transition: all 0.2s ease-in-out;
         }
 
@@ -275,6 +382,15 @@
         button:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Hover effects for toggle */
+        .group:hover .peer+div {
+            background-color: #4b5563;
+        }
+
+        .group:hover .peer:checked+div {
+            background-color: #1d4ed8 !important;
         }
     </style>
 @endsection
