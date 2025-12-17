@@ -360,7 +360,7 @@
                                 <td class="py-3 px-4">
                                     <span
                                         class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
-                                        {{ $trade->id }}
+                                        {{ ($trades->currentPage() - 1) * $trades->perPage() + $loop->iteration }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 font-medium text-xs">{{ $trade->symbol->name }}</td>

@@ -118,14 +118,15 @@ class TradeController extends Controller
 
         $trade->exit = $data['exit'];
 
-        // Hitung Exit Pips
+        // Hitung Exit Pips (keep higher precision here to avoid premature rounding)
         $pipValue = $trade->symbol->pip_value;
         if ($trade->type === 'buy') {
-            $exitPips = ($trade->exit - $trade->entry) / $pipValue;
+            $rawExitPips = ($trade->exit - $trade->entry) / $pipValue;
         } else {
-            $exitPips = ($trade->entry - $trade->exit) / $pipValue;
+            $rawExitPips = ($trade->entry - $trade->exit) / $pipValue;
         }
-        $trade->exit_pips = round($exitPips, 1);
+        // Store with more precision; rounding for display can be done in view
+        $trade->exit_pips = round($rawExitPips, 4);
 
         // PERBAIKAN: Hitung balance yang benar untuk perhitungan risk%
         $initialBalance = $trade->account->initial_balance;
@@ -140,7 +141,8 @@ class TradeController extends Controller
 
         // VARIABLE UNTUK MENYIMPAN risk_usd
         $calculatedRiskUSD = null;
-        $pipWorth = 10; // default: $10 per pip per 1 lot
+        // Use symbol configured pip worth when available to match server-side P/L
+        $pipWorth = $trade->symbol->pip_worth ?? 10; // default: $10 per pip per 1 lot
         $slPips = $trade->sl_pips ?? 0;
 
         // PRIORITASKAN RISK PERCENT JIKA DIISI
@@ -179,8 +181,8 @@ class TradeController extends Controller
             $trade->risk_usd = $data['risk_usd'];
         }
 
-        // Hitung Profit/Loss USD
-        $profitLoss = $trade->exit_pips * $trade->lot_size * $pipWorth;
+        // Hitung Profit/Loss USD using high-precision pips calculation
+        $profitLoss = ($rawExitPips ?? $trade->exit_pips) * $trade->lot_size * $pipWorth;
         $trade->profit_loss = round($profitLoss, 2);
 
         // Tentukan hasil trade

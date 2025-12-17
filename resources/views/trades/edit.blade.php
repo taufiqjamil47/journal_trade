@@ -296,68 +296,100 @@
     </div>
 
     <script>
-        // Basic calculation functionality
+        // Use raw JSON-encoded numeric values from server to avoid locale/format mismatch
+        const tradeData = {
+            entry: Number(@json($trade->entry)),
+            type: @json($trade->type),
+            balance: Number(@json($balance ?? 0)),
+            slPips: Number(@json($trade->sl_pips ?? 0)),
+            pipValue: Number(@json($trade->symbol->pip_value ?? 0.0001)),
+            pipWorth: Number(@json($trade->symbol->pip_worth ?? 10))
+        };
+
+        // Ensure the exit input contains raw numeric value (not formatted) so parseFloat works
+        // If the view previously displayed a formatted exit, replace it with raw value for calculations
         document.addEventListener('DOMContentLoaded', function() {
-            // Risk Percent calculation
-            document.getElementById('risk_percent').addEventListener('input', function() {
-                const riskPercent = parseFloat(this.value);
-                const slPips = {{ $trade->sl_pips ?? 0 }};
-                const balance = {{ $balance }}; // Ini sudah benar dari controller yang diperbaiki
-                const pipWorth = 10;
-
-                if (!isNaN(riskPercent) && riskPercent > 0 && slPips > 0) {
-                    const riskUSD = balance * (riskPercent / 100);
-                    const lotSize = riskUSD / (slPips * pipWorth);
-
-                    document.getElementById('lot_size').value = lotSize.toFixed(2);
-                    document.getElementById('risk_usd').value = riskUSD.toFixed(2);
-                    document.getElementById('riskAmount').textContent = `$${riskUSD.toFixed(2)}`;
-                    calculatePotentialPL();
+            const exitInput = document.getElementById('exit');
+            if (exitInput && exitInput.value !== undefined) {
+                // If value contains commas or non-numeric chars, normalize it
+                const rawExit = String(exitInput.value).replace(/,/g, '');
+                if (!isNaN(Number(rawExit))) {
+                    exitInput.value = Number(rawExit);
                 }
-            });
+            }
 
-            // Risk USD calculation
-            document.getElementById('risk_usd').addEventListener('input', function() {
-                const riskUSD = parseFloat(this.value);
-                const balance = {{ $balance }};
-                const slPips = {{ $trade->sl_pips ?? 0 }};
-                const pipWorth = 10;
+            // Wire up event handlers
+            const riskPercentEl = document.getElementById('risk_percent');
+            const riskUsdEl = document.getElementById('risk_usd');
+            const lotSizeEl = document.getElementById('lot_size');
 
-                if (!isNaN(riskUSD) && riskUSD > 0 && balance > 0) {
-                    const riskPercent = (riskUSD / balance) * 100;
-                    const lotSize = slPips > 0 ? riskUSD / (slPips * pipWorth) : 0;
+            if (riskPercentEl) {
+                riskPercentEl.addEventListener('input', function() {
+                    const riskPercent = parseFloat(this.value);
+                    const slPips = tradeData.slPips;
+                    const balance = tradeData.balance;
+                    const pipWorth = tradeData.pipWorth || 10;
 
-                    document.getElementById('risk_percent').value = riskPercent.toFixed(2);
-                    if (slPips > 0) {
-                        document.getElementById('lot_size').value = lotSize.toFixed(2);
+                    if (!isNaN(riskPercent) && riskPercent > 0 && slPips > 0) {
+                        const riskUSD = balance * (riskPercent / 100);
+                        const lotSize = riskUSD / (slPips * pipWorth);
+
+                        lotSizeEl.value = lotSize.toFixed(2);
+                        riskUsdEl.value = riskUSD.toFixed(2);
+                        document.getElementById('riskAmount').textContent = `$${riskUSD.toFixed(2)}`;
+                        calculatePotentialPL();
                     }
-                    document.getElementById('riskAmount').textContent = `$${riskUSD.toFixed(2)}`;
-                    calculatePotentialPL();
-                }
-            });
+                });
+            }
 
-            // Lot Size event listener
-            document.getElementById('lot_size').addEventListener('input', calculatePotentialPL);
+            if (riskUsdEl) {
+                riskUsdEl.addEventListener('input', function() {
+                    const riskUSD = parseFloat(this.value.replace(/,/g, ''));
+                    const balance = tradeData.balance;
+                    const slPips = tradeData.slPips;
+                    const pipWorth = tradeData.pipWorth || 10;
 
-            // Exit price event listener
-            document.getElementById('exit').addEventListener('input', calculatePotentialPL);
+                    if (!isNaN(riskUSD) && riskUSD > 0 && balance > 0) {
+                        const riskPercent = (riskUSD / balance) * 100;
+                        const lotSize = slPips > 0 ? riskUSD / (slPips * pipWorth) : 0;
 
-            // Initial calculation
-            if (document.getElementById('risk_percent').value) {
-                document.getElementById('risk_percent').dispatchEvent(new Event('input'));
+                        document.getElementById('risk_percent').value = riskPercent.toFixed(2);
+                        if (slPips > 0) {
+                            lotSizeEl.value = lotSize.toFixed(2);
+                        }
+                        document.getElementById('riskAmount').textContent = `$${riskUSD.toFixed(2)}`;
+                        calculatePotentialPL();
+                    }
+                });
+            }
+
+            if (lotSizeEl) {
+                lotSizeEl.addEventListener('input', calculatePotentialPL);
+            }
+
+            if (exitInput) {
+                exitInput.addEventListener('input', calculatePotentialPL);
+            }
+
+            // Trigger initial calculation if values exist
+            if (riskPercentEl && riskPercentEl.value) {
+                riskPercentEl.dispatchEvent(new Event('input'));
+            } else {
+                calculatePotentialPL();
             }
         });
 
-        // Calculate potential P/L
+        // Calculate potential P/L using the same logic as server
         function calculatePotentialPL() {
-            const entry = parseFloat({{ $trade->entry }});
-            const exit = parseFloat(document.getElementById('exit').value);
-            const lotSize = parseFloat(document.getElementById('lot_size').value) || 0;
-            const type = '{{ $trade->type }}';
-            const pipValue = {{ $trade->symbol->pip_value ?? 0.0001 }};
-            const pipWorth = {{ $trade->symbol->pip_worth ?? 10 }};
+            const entry = Number(tradeData.entry);
+            const exitRaw = document.getElementById('exit')?.value ?? '';
+            const exit = parseFloat(String(exitRaw).replace(/,/g, ''));
+            const lotSize = parseFloat(document.getElementById('lot_size')?.value) || 0;
+            const type = String(tradeData.type);
+            const pipValue = Number(tradeData.pipValue) || 0.0001;
+            const pipWorth = Number(tradeData.pipWorth) || 10;
 
-            if (entry && exit && lotSize > 0) {
+            if (!isNaN(entry) && !isNaN(exit) && lotSize > 0) {
                 let pips;
                 if (type === 'buy') {
                     pips = (exit - entry) / pipValue;
@@ -404,9 +436,9 @@
         }
 
         function calculateBreakEven() {
-            const entry = parseFloat({{ $trade->entry }});
-            const type = '{{ $trade->type }}';
-            const pipValue = {{ $trade->symbol->pip_value ?? 0.0001 }};
+            const entry = Number(tradeData.entry);
+            const type = String(tradeData.type);
+            const pipValue = Number(tradeData.pipValue) || 0.0001;
             const spreadInPips = 1.5;
             const spread = spreadInPips * pipValue;
 

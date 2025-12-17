@@ -101,7 +101,7 @@
                                 <label for="type" class="block text-sm font-semibold text-gray-300">
                                     Jenis Trade
                                 </label>
-                                <select name="type"
+                                <select name="type" id="tradeType"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                     required>
                                     <option value="buy" class="bg-gray-800">Buy / Long</option>
@@ -138,7 +138,7 @@
                                 <label for="entry" class="block text-sm font-semibold text-gray-300">
                                     Harga Entry
                                 </label>
-                                <input type="number" step="0.00001" name="entry"
+                                <input type="number" step="0.00001" name="entry" id="entryPrice"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                     placeholder="0.00000" required>
                             </div>
@@ -149,7 +149,7 @@
                                     <label for="stop_loss" class="block text-sm font-semibold text-gray-300">
                                         Stop Loss
                                     </label>
-                                    <input type="number" step="0.00001" name="stop_loss"
+                                    <input type="number" step="0.00001" name="stop_loss" id="stopLoss"
                                         class="w-full bg-gray-800 border border-red-700/40 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                                         placeholder="0.00000" required>
                                     <!-- HIDDEN INPUT UNTUK RR RATIO -->
@@ -327,6 +327,8 @@
             const pipWorth = selectedOption && selectedOption.dataset.pip_worth ? parseFloat(selectedOption.dataset
                 .pip_worth) : 10;
 
+            // autoDetermineTradeType();
+
             if (entry && stopLoss && takeProfit) {
                 let slDistance, tpDistance;
 
@@ -388,11 +390,43 @@
             document.getElementById('rr_ratio').value = '0';
         }
 
+        function autoDetermineTradeType() {
+            const entry = parseFloat(document.getElementById('entryPrice').value) || 0;
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
+            const tradeTypeSelect = document.getElementById('tradeType');
+
+            if (entry > 0 && stopLoss > 0) {
+                if (entry < stopLoss) {
+                    // Entry < SL → Sell/Short
+                    tradeTypeSelect.value = 'sell';
+                    tradeTypeSelect.classList.add('border-red-700/40');
+                    tradeTypeSelect.classList.remove('border-green-700/40', 'border-gray-600');
+                } else if (entry > stopLoss) {
+                    // Entry > SL → Buy/Long
+                    tradeTypeSelect.value = 'buy';
+                    tradeTypeSelect.classList.add('border-green-700/40');
+                    tradeTypeSelect.classList.remove('border-red-700/40', 'border-gray-600');
+                } else {
+                    // Entry == SL → Reset
+                    tradeTypeSelect.value = 'buy';
+                    tradeTypeSelect.classList.remove('border-red-700/40', 'border-green-700/40');
+                    tradeTypeSelect.classList.add('border-gray-600');
+                }
+
+                // Trigger recalculation after changing trade type
+                calculateRisk();
+            }
+        }
+
         // Add event listeners
         document.querySelector('input[name="entry"]').addEventListener('input', calculateRisk);
         document.querySelector('input[name="stop_loss"]').addEventListener('input', calculateRisk);
         document.querySelector('input[name="take_profit"]').addEventListener('input', calculateRisk);
         document.querySelector('select[name="type"]').addEventListener('change', calculateRisk);
+
+        // Add event listeners for auto trade type determination
+        document.getElementById('entryPrice').addEventListener('input', autoDetermineTradeType);
+        document.getElementById('stopLoss').addEventListener('input', autoDetermineTradeType);
 
         // Recalculate when symbol changes since pip settings differ per symbol
         const symbolSelectEl = document.querySelector('select[name="symbol_id"]');
