@@ -134,10 +134,21 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-400 text-sm">Balance</p>
-                        <h3 class="text-2xl font-bold mt-2">${{ number_format($balance, 2) }}</h3>
+                        <div class="flex items-center gap-2">
+                            <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
+                            <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
+                            </h3>
+                            <button id="toggleBalance"
+                                class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
+                                title="Show/Hide Balance & Equity">
+                                <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="bg-primary-500/20 p-3 rounded-lg">
-                        <i class="fas fa-wallet text-primary-500 text-lg"></i>
+                    <div class="flex items-center gap-2">
+                        <div class="bg-primary-500/20 p-3 rounded-lg">
+                            <i class="fas fa-wallet text-primary-500 text-lg"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
@@ -151,7 +162,8 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-400 text-sm">Equity</p>
-                        <h3 class="text-2xl font-bold mt-2">${{ number_format($equity, 2) }}</h3>
+                        <h3 id="equityText" class="text-2xl font-bold mt-2">******</h3>
+                        <h3 id="equityValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($equity, 2) }}</h3>
                     </div>
                     <div class="bg-blue-500/20 p-3 rounded-lg">
                         <i class="fas fa-chart-line text-blue-500 text-lg"></i>
@@ -398,5 +410,81 @@
                 </div>
             `;
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle Button (hanya di Balance)
+            const toggleBalanceBtn = document.getElementById('toggleBalance');
+            const balanceText = document.getElementById('balanceText');
+            const balanceValue = document.getElementById('balanceValue');
+            const balanceIcon = document.getElementById('balanceIcon');
+
+            // Equity elements
+            const equityText = document.getElementById('equityText');
+            const equityValue = document.getElementById('equityValue');
+
+            // Load state from localStorage
+            const isVisible = localStorage.getItem('balanceEquityVisible') === 'true';
+
+            // Apply saved state
+            if (isVisible) {
+                showValues();
+            }
+
+            // Toggle function untuk keduanya
+            toggleBalanceBtn.addEventListener('click', function() {
+                if (balanceText.classList.contains('hidden')) {
+                    hideValues();
+                } else {
+                    showValues();
+                }
+            });
+
+            // Helper functions
+            function showValues() {
+                // Show Balance
+                balanceText.classList.add('hidden');
+                balanceValue.classList.remove('hidden');
+                balanceIcon.classList.remove('fa-eye-slash');
+                balanceIcon.classList.add('fa-eye');
+
+                // Show Equity
+                equityText.classList.add('hidden');
+                equityValue.classList.remove('hidden');
+
+                // Save state
+                localStorage.setItem('balanceEquityVisible', 'true');
+
+                // Update tooltip
+                toggleBalanceBtn.title = "Hide Balance & Equity";
+            }
+
+            function hideValues() {
+                // Hide Balance
+                balanceText.classList.remove('hidden');
+                balanceValue.classList.add('hidden');
+                balanceIcon.classList.remove('fa-eye');
+                balanceIcon.classList.add('fa-eye-slash');
+
+                // Hide Equity
+                equityText.classList.remove('hidden');
+                equityValue.classList.add('hidden');
+
+                // Save state
+                localStorage.setItem('balanceEquityVisible', 'false');
+
+                // Update tooltip
+                toggleBalanceBtn.title = "Show Balance & Equity";
+            }
+
+            // Optional: Keyboard shortcut untuk toggle keduanya
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === 'b' || e.key === 'B' || e.key === 'h' || e.key === 'H')) {
+                    e.preventDefault();
+                    toggleBalanceBtn.click();
+                }
+            });
+        });
     </script>
 @endsection

@@ -183,9 +183,19 @@
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-base font-bold text-amber-400">$<span
-                                            id="currentEquity">{{ number_format($currentEquity, 2) }}</span></div>
-                                    <div class="text-xs text-gray-400">Current Equity</div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 id="currentEquityText" class="text-base font-bold text-amber-400 mt-2">******
+                                        </h3>
+                                        <h3 id="currentEquity" class="text-base font-bold text-amber-400 mt-2 hidden">
+                                            ${{ number_format($currentEquity, 2) }}
+                                        </h3>
+                                        <button id="toggleBalance"
+                                            class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
+                                            title="Show/Hide Balance & Equity">
+                                            <i id="currentEquityIcon" class="fas fa-eye-slash text-amber-400 text-md"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-gray-400 text-xs">Current Equity</p>
                                 </div>
                             </div>
 
@@ -470,6 +480,70 @@
 
             // Initial calculation
             calculateRisk();
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle Button (hanya di Balance)
+            const toggleBalanceBtn = document.getElementById('toggleBalance');
+            const currentEquityText = document.getElementById('currentEquityText');
+            const currentEquity = document.getElementById('currentEquity');
+            const currentEquityIcon = document.getElementById('currentEquityIcon');
+
+            // Load state from localStorage
+            const isVisible = localStorage.getItem('balanceVisible') === 'true';
+
+            // Apply saved state
+            if (isVisible) {
+                showValues();
+            }
+
+            // Toggle function untuk keduanya
+            toggleBalanceBtn.addEventListener('click', function() {
+                if (currentEquityText.classList.contains('hidden')) {
+                    hideValues();
+                } else {
+                    showValues();
+                }
+            });
+
+            // Helper functions
+            function showValues() {
+                // Show Balance
+                currentEquityText.classList.add('hidden');
+                currentEquity.classList.remove('hidden');
+                currentEquityIcon.classList.remove('fa-eye-slash');
+                currentEquityIcon.classList.add('fa-eye');
+
+                // Save state
+                localStorage.setItem('balanceVisible', 'true');
+
+                // Update tooltip
+                toggleBalanceBtn.title = "Hide Balance & Equity";
+            }
+
+            function hideValues() {
+                // Hide Balance
+                currentEquityText.classList.remove('hidden');
+                currentEquity.classList.add('hidden');
+                currentEquityIcon.classList.remove('fa-eye');
+                currentEquityIcon.classList.add('fa-eye-slash');
+
+                // Save state
+                localStorage.setItem('balanceVisible', 'false');
+
+                // Update tooltip
+                toggleBalanceBtn.title = "Show Balance & Equity";
+            }
+
+            // Optional: Keyboard shortcut untuk toggle keduanya
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === 'b' || e.key === 'B' || e.key === 'h' || e.key === 'H')) {
+                    e.preventDefault();
+                    toggleBalanceBtn.click();
+                }
+            });
         });
     </script>
 @endsection
