@@ -416,11 +416,23 @@
             const navToggleIcon = document.getElementById('navToggleIcon');
             const navItems = document.getElementById('navItems');
 
-            // Cek state dari localStorage
-            let isNavVisible = localStorage.getItem('navVisible') === 'true';
+            // RESET localStorage setiap kali pindah halaman
+            // localStorage.removeItem('navVisible');
+
+            // Atau lebih baik: Hapus hanya jika berpindah dari dashboard ke halaman lain
+            const currentPage = window.location.pathname;
+            if (!currentPage.includes('dashboard')) {
+                localStorage.removeItem('navVisible');
+            }
+
+            // Default state selalu hidden
+            let isNavVisible = true;
 
             // Set initial state
             updateNavVisibility(isNavVisible);
+
+            // Update localStorage dengan state default
+            localStorage.setItem('navVisible', isNavVisible);
 
             // Toggle event
             navToggle.addEventListener('click', function() {

@@ -31,7 +31,7 @@
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Dashboard
+                                        Trade Dashboard
                                     </span>
                                 </a>
                             @endif
@@ -44,7 +44,7 @@
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Calendar
+                                        PnL Calendar
                                     </span>
                                 </a>
                             @endif
@@ -57,7 +57,7 @@
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Analysis
+                                        Trade Analysis
                                     </span>
                                 </a>
                             @endif
@@ -72,7 +72,7 @@
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trades
+                                        Journal Trades
                                     </span>
                                 </a>
                             @endif
