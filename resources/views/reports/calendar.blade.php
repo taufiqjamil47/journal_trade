@@ -125,57 +125,66 @@
             </div>
         </header>
 
-        <!-- Month/Year Navigation -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex gap-2">
+        <!-- Month/Year Navigation - Responsive Version -->
+        <div class="bg-gray-800 rounded-xl border border-gray-700 p-4 md:p-5 mb-6">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
+                <!-- Navigation Buttons (Previous/Next) -->
+                <div class="flex gap-2 w-full md:w-auto justify-between md:justify-start">
                     <a href="{{ route('reports.calendar', ['month' => $month == 1 ? 12 : $month - 1, 'year' => $month == 1 ? $year - 1 : $year]) }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                        <i class="fas fa-chevron-left text-primary-500 mr-2"></i>
-                        <span>Previous Month</span>
+                        class="flex items-center justify-center bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-700 hover:border-primary-500 transition-colors flex-1 md:flex-none max-w-[48%] md:max-w-none">
+                        <i class="fas fa-chevron-left text-primary-500 mr-2 text-sm md:text-base"></i>
+                        <span class="text-sm md:text-base truncate">Previous Month</span>
                     </a>
                     <a href="{{ route('reports.calendar', ['month' => $month == 12 ? 1 : $month + 1, 'year' => $month == 12 ? $year + 1 : $year]) }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                        <span>Next Month</span>
-                        <i class="fas fa-chevron-right text-primary-500 ml-2"></i>
+                        class="flex items-center justify-center bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-700 hover:border-primary-500 transition-colors flex-1 md:flex-none max-w-[48%] md:max-w-none">
+                        <span class="text-sm md:text-base truncate">Next Month</span>
+                        <i class="fas fa-chevron-right text-primary-500 ml-2 text-sm md:text-base"></i>
                     </a>
                 </div>
 
                 <!-- Month/Year Selector -->
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2">
-                        <label for="monthSelect" class="text-sm text-gray-300">Month:</label>
-                        <select id="monthSelect"
-                            class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                            @for ($m = 1; $m <= 12; $m++)
-                                <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
-                                    {{ \Carbon\Carbon::create()->month($m)->format('F') }}
-                                </option>
-                            @endfor
-                        </select>
+                <div class="w-full md:w-auto">
+                    <div class="flex flex-col md:flex-row items-center gap-3">
+                        <!-- Month/Year Select Grid for Mobile -->
+                        <div class="grid grid-cols-2 gap-3 w-full md:w-auto md:flex md:items-center">
+                            <div class="flex items-center gap-2 w-full">
+                                <label for="monthSelect" class="text-sm text-gray-300 whitespace-nowrap">Month:</label>
+                                <select id="monthSelect"
+                                    class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
+                                    @for ($m = 1; $m <= 12; $m++)
+                                        <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div class="flex items-center gap-2 w-full">
+                                <label for="yearSelect" class="text-sm text-gray-300 whitespace-nowrap">Year:</label>
+                                <select id="yearSelect"
+                                    class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
+                                    @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
+                                        <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
+                                            {{ $y }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
+                            <button id="goToDate"
+                                class="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none">
+                                Go
+                            </button>
+
+                            <a href="{{ route('reports.calendar', ['month' => date('m'), 'year' => date('Y')]) }}"
+                                class="bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none text-center">
+                                Today
+                            </a>
+                        </div>
                     </div>
-
-                    <div class="flex items-center gap-2">
-                        <label for="yearSelect" class="text-sm text-gray-300">Year:</label>
-                        <select id="yearSelect"
-                            class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                            @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
-                                <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
-                                    {{ $y }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-
-                    <button id="goToDate"
-                        class="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 transition-colors">
-                        Go
-                    </button>
-
-                    <a href="{{ route('reports.calendar', ['month' => date('m'), 'year' => date('Y')]) }}"
-                        class="bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-4 py-2 transition-colors">
-                        Today
-                    </a>
                 </div>
             </div>
         </div>
@@ -184,208 +193,217 @@
         <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
             <h3 class="text-xl font-bold text-primary-300 mb-4">Day Calendar ({{ $year }})</h3>
 
-            <!-- Day headers + Weekly Summary Header -->
-            <div class="grid grid-cols-9 gap-1 mb-2">
-                @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Week Summary'] as $day)
-                    <div
-                        class="text-center font-medium text-gray-400 py-2 bg-gray-750 rounded-lg {{ $loop->last ? 'col-span-2' : '' }}">
-                        {{ $day }}
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Calendar days + Weekly Summary -->
-            <div class="grid grid-cols-9 gap-1 grid-flow-row-dense">
-                @php
-                    $weekNumber = null;
-                    $weekDays = [];
-                    $weekTotalProfit = 0;
-                    $weekTotalTrades = 0;
-                    $currentWeekStart = null;
-                @endphp
-
-                @foreach ($period as $index => $day)
-                    @php
-                        $date = $day->format('Y-m-d');
-                        $info = $daily[$date] ?? null;
-                        $profit = $info->total_profit ?? 0;
-                        $dayTrades = $trades[$date] ?? collect();
-                        $isCurrentMonth = $day->month == $month;
-                        $opacityClass = $isCurrentMonth ? 'opacity-100' : 'opacity-30';
-                        $isToday = $date == date('Y-m-d');
-                        $dayOfWeek = $day->dayOfWeek; // 0 = Sunday, 6 = Saturday
-                        $currentWeekNum = $day->weekOfYear;
-
-                        // Accumulate weekly data
-                        if ($weekNumber === null) {
-                            $weekNumber = $currentWeekNum;
-                            $currentWeekStart = $day->copy()->startOfWeek();
-                        }
-
-                        $weekTotalProfit += $profit;
-                        $weekTotalTrades += count($dayTrades);
-                        $weekDays[$dayOfWeek] = [
-                            'date' => $date,
-                            'profit' => $profit,
-                            'trades' => count($dayTrades),
-                            'day' => $day,
-                        ];
-
-                        // Determine colors based on profit
-                        if ($profit > 0) {
-                            $bgColor = 'bg-green-800/20';
-                            $borderColor = 'border-green-500/40';
-                            $textColor = 'text-green-400';
-                        } elseif ($profit < 0) {
-                            $bgColor = 'bg-red-500/20';
-                            $borderColor = 'border-red-500/40';
-                            $textColor = 'text-red-400';
-                        } else {
-                            $bgColor = 'bg-gray-750';
-                            $borderColor = 'border-gray-600';
-                            $textColor = 'text-gray-400';
-                        }
-
-                        if ($isToday) {
-                            $borderColor = 'border-primary-500';
-                            $bgColor = $bgColor . ' bg-primary-500/10';
-                        }
-                    @endphp
-
-                    <!-- Day Cell -->
-                    <div class="p-2 rounded-lg border {{ $borderColor }} {{ $bgColor }} {{ $opacityClass }} cursor-pointer day-cell transition-colors hover:bg-gray-700/50"
-                        data-date="{{ $date }}" data-trades='@json($dayTrades)'
-                        data-profit="{{ $profit }}">
-                        <div class="flex justify-between items-start">
-                            <strong
-                                class="text-sm {{ $isToday ? 'text-primary-400' : 'text-gray-200' }}">{{ $day->format('d') }}</strong>
-                            @if (count($dayTrades) > 0)
-                                <span class="text-xs bg-primary-500/30 text-primary-300 rounded-full px-1.5 py-0.5">
-                                    {{ count($dayTrades) }}
-                                </span>
-                            @endif
-                        </div>
-                        <div class="mt-1 text-xs lg:text-lg {{ $textColor }} font-medium">
-                            ${{ number_format($profit, 2) }}
-                        </div>
-                        <div class="pt-3 border-t border-gray-600/50 mt-1">
-                            <div class="flex justify-center items-center">
-                                @if ($profit != 0)
-                                    <div class="w-16 h-8">
-                                        <svg viewBox="0 0 100 40" class="w-full h-full">
-                                            @if ($profit > 0)
-                                                <!-- Green upward trend line -->
-                                                <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5" stroke="#10B981"
-                                                    stroke-width="2" fill="none" class="profit-line" />
-                                                <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5 L100,40 L0,40 Z"
-                                                    fill="rgba(16, 185, 129, 0.1)" class="profit-fill" />
-                                            @else
-                                                <!-- Red downward trend line -->
-                                                <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35" stroke="#EF4444"
-                                                    stroke-width="2" fill="none" class="loss-line" />
-                                                <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35 L100,40 L0,40 Z"
-                                                    fill="rgba(239, 68, 68, 0.1)" class="loss-fill" />
-                                            @endif
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm {{ $profit > 0 ? 'text-green-400' : 'text-red-400' }} ml-2">
-                                        {{ $profit > 0 ? 'Profit' : 'Loss' }}
-                                    </span>
-                                @endif
+            <!-- Container dengan scroll horizontal -->
+            <div class="overflow-x-auto pb-2 -mx-3 sm:mx-0">
+                <div class="min-w-[900px] sm:min-w-full">
+                    <!-- Day headers + Weekly Summary Header -->
+                    <div class="grid grid-cols-9 gap-1 mb-2">
+                        @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Week Summary'] as $day)
+                            <div
+                                class="text-center font-medium text-gray-400 py-2 bg-gray-750 rounded-lg {{ $loop->last ? 'col-span-2' : '' }}">
+                                {{ $day }}
                             </div>
-                        </div>
+                        @endforeach
                     </div>
 
-                    <!-- Weekly Summary Column (Every Saturday OR last day of month) -->
-                    @if ($dayOfWeek == 6 || $loop->last)
+                    <!-- Calendar days + Weekly Summary -->
+                    <div class="grid grid-cols-9 gap-1 grid-flow-row-dense">
                         @php
-                            // Calculate week stats
-                            $weekProfitColor =
-                                $weekTotalProfit > 0
-                                    ? 'text-green-400'
-                                    : ($weekTotalProfit < 0
-                                        ? 'text-red-400'
-                                        : 'text-gray-400');
-                            $weekBgColor =
-                                $weekTotalProfit > 0
-                                    ? 'bg-green-900/20'
-                                    : ($weekTotalProfit < 0
-                                        ? 'bg-red-900/20'
-                                        : 'bg-gray-750');
-                            $weekBorderColor =
-                                $weekTotalProfit > 0
-                                    ? 'border-green-500/40'
-                                    : ($weekTotalProfit < 0
-                                        ? 'border-red-500/40'
-                                        : 'border-gray-600');
-
-                            // Check if current week
-                            $isCurrentWeek =
-                                $currentWeekStart <= now() && now() <= $currentWeekStart->copy()->endOfWeek();
-                            if ($isCurrentWeek) {
-                                $weekBorderColor = 'border-primary-500';
-                                $weekBgColor .= ' bg-primary-500/10';
-                            }
-
-                            // Get week range
-                            $weekStartFormatted = $currentWeekStart->format('M d');
-                            $weekEndFormatted = $currentWeekStart->copy()->endOfWeek()->format('M d');
-                            $weekRange = "{$weekStartFormatted} - {$weekEndFormatted}";
-                        @endphp
-
-                        <!-- Weekly Summary Cell -->
-                        <div class="p-2 col-span-2 rounded-lg border {{ $weekBorderColor }} {{ $weekBgColor }} cursor-pointer weekly-cell transition-colors hover:bg-gray-700/50"
-                            data-week="{{ $weekNumber }}" data-week-start="{{ $currentWeekStart->format('Y-m-d') }}"
-                            data-week-end="{{ $currentWeekStart->copy()->endOfWeek()->format('Y-m-d') }}"
-                            data-week-profit="{{ $weekTotalProfit }}" data-week-trades="{{ $weekTotalTrades }}">
-                            <div class="flex justify-between items-start mb-1">
-                                <strong class="text-sm text-gray-200">
-                                    W{{ $weekNumber }}
-                                </strong>
-                                @if ($isCurrentWeek)
-                                    <span class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">Now</span>
-                                @endif
-                            </div>
-                            <div class="text-xs text-gray-400 mb-1">{{ $weekRange }}</div>
-                            <div class="space-y-1">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs text-gray-400">Trades:</span>
-                                    <span class="text-xs font-medium text-gray-300">{{ $weekTotalTrades }}</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs text-gray-400">P/L:</span>
-                                    <span class="text-xs font-bold {{ $weekProfitColor }}">
-                                        ${{ number_format($weekTotalProfit, 2) }}
-                                    </span>
-                                </div>
-                                @if ($weekTotalTrades > 0)
-                                    <div class="pt-1 border-t border-gray-600/50 mt-1">
-                                        <div class="flex justify-center">
-                                            @if ($weekTotalProfit > 0)
-                                                <i class="fas fa-arrow-up text-green-500 text-xs"></i>
-                                                <span class="text-xs text-green-400 ml-1">Profit</span>
-                                            @elseif ($weekTotalProfit < 0)
-                                                <i class="fas fa-arrow-down text-red-500 text-xs"></i>
-                                                <span class="text-xs text-red-400 ml-1">Loss</span>
-                                            @else
-                                                <span class="text-xs text-gray-400">Even</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        @php
-                            // Reset weekly counters for next week
-                            $weekNumber = $currentWeekNum;
+                            $weekNumber = null;
+                            $weekDays = [];
                             $weekTotalProfit = 0;
                             $weekTotalTrades = 0;
-                            $weekDays = [];
-                            $currentWeekStart = $day->copy()->addDay()->startOfWeek();
+                            $currentWeekStart = null;
                         @endphp
-                    @endif
-                @endforeach
+
+                        @foreach ($period as $index => $day)
+                            @php
+                                $date = $day->format('Y-m-d');
+                                $info = $daily[$date] ?? null;
+                                $profit = $info->total_profit ?? 0;
+                                $dayTrades = $trades[$date] ?? collect();
+                                $isCurrentMonth = $day->month == $month;
+                                $opacityClass = $isCurrentMonth ? 'opacity-100' : 'opacity-30';
+                                $isToday = $date == date('Y-m-d');
+                                $dayOfWeek = $day->dayOfWeek; // 0 = Sunday, 6 = Saturday
+                                $currentWeekNum = $day->weekOfYear;
+
+                                // Accumulate weekly data
+                                if ($weekNumber === null) {
+                                    $weekNumber = $currentWeekNum;
+                                    $currentWeekStart = $day->copy()->startOfWeek();
+                                }
+
+                                $weekTotalProfit += $profit;
+                                $weekTotalTrades += count($dayTrades);
+                                $weekDays[$dayOfWeek] = [
+                                    'date' => $date,
+                                    'profit' => $profit,
+                                    'trades' => count($dayTrades),
+                                    'day' => $day,
+                                ];
+
+                                // Determine colors based on profit
+                                if ($profit > 0) {
+                                    $bgColor = 'bg-green-800/20';
+                                    $borderColor = 'border-green-500/40';
+                                    $textColor = 'text-green-400';
+                                } elseif ($profit < 0) {
+                                    $bgColor = 'bg-red-500/20';
+                                    $borderColor = 'border-red-500/40';
+                                    $textColor = 'text-red-400';
+                                } else {
+                                    $bgColor = 'bg-gray-750';
+                                    $borderColor = 'border-gray-600';
+                                    $textColor = 'text-gray-400';
+                                }
+
+                                if ($isToday) {
+                                    $borderColor = 'border-primary-500';
+                                    $bgColor = $bgColor . ' bg-primary-500/10';
+                                }
+                            @endphp
+
+                            <!-- Day Cell -->
+                            <div class="p-2 rounded-lg border {{ $borderColor }} {{ $bgColor }} {{ $opacityClass }} cursor-pointer day-cell transition-colors hover:bg-gray-700/50"
+                                data-date="{{ $date }}" data-trades='@json($dayTrades)'
+                                data-profit="{{ $profit }}">
+                                <div class="flex justify-between items-start">
+                                    <strong
+                                        class="text-sm {{ $isToday ? 'text-primary-400' : 'text-gray-200' }}">{{ $day->format('d') }}</strong>
+                                    @if (count($dayTrades) > 0)
+                                        <span class="text-xs bg-primary-500/30 text-primary-300 rounded-full px-1.5 py-0.5">
+                                            {{ count($dayTrades) }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="mt-1 text-xs lg:text-lg {{ $textColor }} font-medium">
+                                    ${{ number_format($profit, 2) }}
+                                </div>
+                                <div class="pt-3 border-t border-gray-600/50 mt-1">
+                                    <div class="flex justify-center items-center">
+                                        @if ($profit != 0)
+                                            <div class="w-16 h-8">
+                                                <svg viewBox="0 0 100 40" class="w-full h-full">
+                                                    @if ($profit > 0)
+                                                        <!-- Green upward trend line -->
+                                                        <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5" stroke="#10B981"
+                                                            stroke-width="2" fill="none" class="profit-line" />
+                                                        <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5 L100,40 L0,40 Z"
+                                                            fill="rgba(16, 185, 129, 0.1)" class="profit-fill" />
+                                                    @else
+                                                        <!-- Red downward trend line -->
+                                                        <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35"
+                                                            stroke="#EF4444" stroke-width="2" fill="none"
+                                                            class="loss-line" />
+                                                        <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35 L100,40 L0,40 Z"
+                                                            fill="rgba(239, 68, 68, 0.1)" class="loss-fill" />
+                                                    @endif
+                                                </svg>
+                                            </div>
+                                            <span
+                                                class="text-sm {{ $profit > 0 ? 'text-green-400' : 'text-red-400' }} ml-2">
+                                                {{ $profit > 0 ? 'Profit' : 'Loss' }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weekly Summary Column (Every Saturday OR last day of month) -->
+                            @if ($dayOfWeek == 6 || $loop->last)
+                                @php
+                                    // Calculate week stats
+                                    $weekProfitColor =
+                                        $weekTotalProfit > 0
+                                            ? 'text-green-400'
+                                            : ($weekTotalProfit < 0
+                                                ? 'text-red-400'
+                                                : 'text-gray-400');
+                                    $weekBgColor =
+                                        $weekTotalProfit > 0
+                                            ? 'bg-green-900/20'
+                                            : ($weekTotalProfit < 0
+                                                ? 'bg-red-900/20'
+                                                : 'bg-gray-750');
+                                    $weekBorderColor =
+                                        $weekTotalProfit > 0
+                                            ? 'border-green-500/40'
+                                            : ($weekTotalProfit < 0
+                                                ? 'border-red-500/40'
+                                                : 'border-gray-600');
+
+                                    // Check if current week
+                                    $isCurrentWeek =
+                                        $currentWeekStart <= now() && now() <= $currentWeekStart->copy()->endOfWeek();
+                                    if ($isCurrentWeek) {
+                                        $weekBorderColor = 'border-primary-500';
+                                        $weekBgColor .= ' bg-primary-500/10';
+                                    }
+
+                                    // Get week range
+                                    $weekStartFormatted = $currentWeekStart->format('M d');
+                                    $weekEndFormatted = $currentWeekStart->copy()->endOfWeek()->format('M d');
+                                    $weekRange = "{$weekStartFormatted} - {$weekEndFormatted}";
+                                @endphp
+
+                                <!-- Weekly Summary Cell -->
+                                <div class="p-2 col-span-2 rounded-lg border {{ $weekBorderColor }} {{ $weekBgColor }} cursor-pointer weekly-cell transition-colors hover:bg-gray-700/50"
+                                    data-week="{{ $weekNumber }}"
+                                    data-week-start="{{ $currentWeekStart->format('Y-m-d') }}"
+                                    data-week-end="{{ $currentWeekStart->copy()->endOfWeek()->format('Y-m-d') }}"
+                                    data-week-profit="{{ $weekTotalProfit }}" data-week-trades="{{ $weekTotalTrades }}">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <strong class="text-sm text-gray-200">
+                                            W{{ $weekNumber }}
+                                        </strong>
+                                        @if ($isCurrentWeek)
+                                            <span
+                                                class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">Now</span>
+                                        @endif
+                                    </div>
+                                    <div class="text-xs text-gray-400 mb-1">{{ $weekRange }}</div>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs text-gray-400">Trades:</span>
+                                            <span class="text-xs font-medium text-gray-300">{{ $weekTotalTrades }}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs text-gray-400">P/L:</span>
+                                            <span class="text-xs font-bold {{ $weekProfitColor }}">
+                                                ${{ number_format($weekTotalProfit, 2) }}
+                                            </span>
+                                        </div>
+                                        @if ($weekTotalTrades > 0)
+                                            <div class="pt-1 border-t border-gray-600/50 mt-1">
+                                                <div class="flex justify-center">
+                                                    @if ($weekTotalProfit > 0)
+                                                        <i class="fas fa-arrow-up text-green-500 text-xs"></i>
+                                                        <span class="text-xs text-green-400 ml-1">Profit</span>
+                                                    @elseif ($weekTotalProfit < 0)
+                                                        <i class="fas fa-arrow-down text-red-500 text-xs"></i>
+                                                        <span class="text-xs text-red-400 ml-1">Loss</span>
+                                                    @else
+                                                        <span class="text-xs text-gray-400">Even</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                @php
+                                    // Reset weekly counters for next week
+                                    $weekNumber = $currentWeekNum;
+                                    $weekTotalProfit = 0;
+                                    $weekTotalTrades = 0;
+                                    $weekDays = [];
+                                    $currentWeekStart = $day->copy()->addDay()->startOfWeek();
+                                @endphp
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -417,7 +435,8 @@
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <div class="text-xs text-gray-400 hidden md:block" id="dataCountInfo">{{ $weekly->count() }}
+                            <div class="text-xs text-gray-400 hidden md:block" id="dataCountInfo">
+                                {{ $weekly->count() }}
                                 weeks</div>
                             <div class="bg-blue-500/20 p-1.5 rounded-lg">
                                 <i class="fas fa-chart-line text-blue-500 text-sm"></i>

@@ -480,11 +480,13 @@
                                             title="Evaluasi">
                                             <i class="fas fa-chart-bar text-sm"></i>
                                         </a>
-                                        <a href="{{ route('trades.destroy', $trade->id) }}"
+                                        <!-- Ganti dari link menjadi button dengan event handler -->
+                                        <button
+                                            onclick="confirmDeleteTrade(event, '{{ $trade->id }}', '{{ $trade->symbol->name }}', '{{ $trade->type }}')"
                                             class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
                                             title="Delete Trade">
                                             <i class="fas fa-trash text-sm"></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -788,6 +790,198 @@
                     }
                 });
             }
+        });
+    </script>
+
+    <script>
+        function confirmDeleteTrade(event, tradeId, symbol, type) {
+            // Hentikan event bubbling
+            event.stopPropagation();
+            event.preventDefault();
+
+            const tradeType = type === 'buy' ? 'BUY' : 'SELL';
+
+            Swal.fire({
+                title: 'Hapus Trade?',
+                html: `
+            <div class="text-left text-sm">
+                <p class="text-red-400 mb-3 font-bold">Tindakan ini tidak dapat dibatalkan!</p>
+                <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
+                    <p class="font-bold mb-2 text-red-300">Trade yang akan dihapus:</p>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-center">
+                            <i class="fas fa-hashtag text-red-500 mr-2 text-xs"></i>
+                            <span>ID: <strong>${tradeId}</strong></span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-chart-simple text-red-500 mr-2 text-xs"></i>
+                            <span>Symbol: <strong>${symbol}</strong></span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-exchange-alt text-red-500 mr-2 text-xs"></i>
+                            <span>Type: <span class="font-bold ${type === 'buy' ? 'text-green-400' : 'text-red-400'}">${tradeType}</span></span>
+                        </li>
+                    </ul>
+                </div>
+                <p class="text-gray-300 mb-2">Untuk mengonfirmasi, ketik:</p>
+                <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                    <code class="text-red-400 font-mono font-bold">DELETE_TRADE_${tradeId}</code>
+                </div>
+                <input type="text" 
+                       id="deleteConfirm_${tradeId}" 
+                       class="swal2-input w-full" 
+                       placeholder="Ketik teks konfirmasi..."
+                       autocomplete="off">
+            </div>
+        `,
+                icon: 'warning',
+                iconColor: '#ef4444',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Delete Trade',
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>Cancel',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !Swal.isLoading(),
+                reverseButtons: true,
+                customClass: {
+                    popup: 'bg-gray-800 border border-red-700/30',
+                    title: 'text-red-300',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'hover:bg-red-700',
+                    cancelButton: 'hover:bg-gray-700'
+                },
+                preConfirm: () => {
+                    const confirmInput = document.getElementById(`deleteConfirm_${tradeId}`);
+                    const typedValue = confirmInput.value.trim();
+                    const expectedText = `DELETE_TRADE_${tradeId}`;
+
+                    if (typedValue !== expectedText) {
+                        Swal.showValidationMessage(
+                            `<div class="text-red-400 text-sm">
+                        <i class="fas fa-exclamation-circle mr-1"></i>
+                        Silakan ketik <code class="bg-red-900/30 px-1 py-0.5 rounded">${expectedText}</code> tepat
+                    </div>`
+                        );
+                        return false;
+                    }
+                    return {
+                        trade_id: tradeId,
+                        confirmation: typedValue
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Menghapus Trade...',
+                        html: `
+                    <div class="text-center">
+                        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+                        <p class="text-gray-400">Menghapus trade ${symbol}...</p>
+                    </div>
+                `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+                    // AJAX request to delete
+                    fetch(`/trades/${tradeId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(result.value)
+                        })
+                        .then(async response => {
+                            const contentType = response.headers.get('content-type');
+                            if (contentType && contentType.includes('application/json')) {
+                                return response.json();
+                            }
+                            return response.text();
+                        })
+                        .then(data => {
+                            if (data && data.success) {
+                                // SUCCESS
+                                Swal.fire({
+                                    icon: 'success',
+                                    iconColor: '#10b981',
+                                    title: 'Success!',
+                                    html: `
+                            <div class="text-center">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                                    <i class="fas fa-check text-green-500 text-2xl"></i>
+                                </div>
+                                <p class="text-green-400 font-bold text-lg mb-2">Trade berhasil dihapus!</p>
+                                <p class="text-gray-400 text-sm">Halaman akan dimuat ulang...</p>
+                            </div>
+                        `,
+                                    showConfirmButton: true,
+                                    confirmButtonText: '<i class="fas fa-sync-alt mr-2"></i>Reload Now',
+                                    confirmButtonColor: '#10b981',
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    willClose: () => {
+                                        location.reload();
+                                    }
+                                }).then((reloadResult) => {
+                                    if (reloadResult.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                // ERROR
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: `
+                            <div class="text-left">
+                                <p class="text-red-400 mb-3">${data.message || 'Gagal menghapus trade'}</p>
+                                <p class="text-gray-400 text-sm mt-3">Silakan coba lagi.</p>
+                            </div>
+                        `,
+                                    confirmButtonColor: '#d33'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Delete Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Connection Error',
+                                html: `
+                        <div class="text-left">
+                            <p class="text-red-400 mb-3">Failed to connect to server.</p>
+                            <p class="text-gray-400 text-sm mt-3">Silakan periksa koneksi Anda dan coba lagi.</p>
+                        </div>
+                    `,
+                                confirmButtonColor: '#d33'
+                            });
+                        });
+                }
+            });
+        }
+
+        // Real-time validation for delete confirmation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('input', function(e) {
+                if (e.target.id && e.target.id.startsWith('deleteConfirm_')) {
+                    const tradeId = e.target.id.replace('deleteConfirm_', '');
+                    const expectedText = `DELETE_TRADE_${tradeId}`;
+
+                    if (e.target.value.trim() === expectedText) {
+                        e.target.style.borderColor = '#10b981';
+                        e.target.style.boxShadow = '0 0 0 1px rgba(16, 185, 129, 0.2)';
+                    } else {
+                        e.target.style.borderColor = '#ef4444';
+                        e.target.style.boxShadow = '0 0 0 1px rgba(239, 68, 68, 0.2)';
+                    }
+                }
+            });
         });
     </script>
 

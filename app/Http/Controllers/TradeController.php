@@ -424,20 +424,42 @@ class TradeController extends Controller
     }
 
     // destroy method
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $trade = Trade::findOrFail($id);
+
+            // Simpan info untuk response
+            $tradeInfo = [
+                'id' => $trade->id,
+                'symbol' => $trade->symbol->name,
+                'type' => $trade->type
+            ];
+
+            // Hapus trade
             $trade->delete();
 
-            Log::info('Trade deleted', ['trade_id' => $id]);
-            return redirect()->route('trades.index')->with('success', 'Trade berhasil dihapus');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::warning("Trade not found for deletion: ID {$id}");
-            return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Trade berhasil dihapus',
+                    'data' => $tradeInfo
+                ]);
+            }
+
+            return redirect()->route('trades.index')
+                ->with('success', 'Trade berhasil dihapus');
         } catch (\Exception $e) {
-            Log::error('Error deleting trade: ' . $e->getMessage());
-            return back()->with('error', 'Gagal menghapus trade: ' . $e->getMessage());
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus trade',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->route('trades.index')
+                ->with('error', 'Gagal menghapus trade: ' . $e->getMessage());
         }
     }
 
