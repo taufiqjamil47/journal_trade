@@ -262,9 +262,9 @@
                             <!-- Dropdown ke samping kanan -->
                             <div
                                 class="absolute left-0 top-full mt-1 w-64 bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div class="p-3">
+                                <div class="p-3 space-y-4">
                                     <!-- Import Section -->
-                                    <div class="mb-3">
+                                    <div>
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
                                             <i class="fas fa-file-import mr-2 text-purple-400"></i>
                                             Import Data
@@ -283,16 +283,70 @@
                                     </div>
 
                                     <!-- Export Section -->
-                                    <div>
+                                    <div class="pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
                                             <i class="fas fa-file-export mr-2 text-green-400"></i>
                                             Export Data
                                         </div>
-                                        <a href="{{ route('trades.export.excel') }}"
-                                            class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
-                                            <i class="fas fa-file-excel mr-2"></i>
-                                            Export to Excel
-                                        </a>
+                                        <div class="space-y-2">
+                                            <a href="{{ route('trades.export.excel') }}"
+                                                class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                <i class="fas fa-file-excel mr-2"></i>
+                                                Export to Excel
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- PDF Reports Section -->
+                                    <div class="pt-3 border-t border-gray-700">
+                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                            <i class="fas fa-file-pdf mr-2 text-red-400"></i>
+                                            PDF Reports
+                                        </div>
+                                        <div class="space-y-2">
+                                            <a href="{{ route('trades.generate.pdf', ['type' => 'cover']) }}"
+                                                class="block w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                <i class="fas fa-file-alt mr-2"></i>
+                                                Cover Report Only
+                                            </a>
+                                            <a href="{{ route('trades.generate.pdf', ['type' => 'complete']) }}"
+                                                class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                <i class="fas fa-book mr-2"></i>
+                                                Complete Report
+                                            </a>
+                                            <a href="{{ route('trades.preview.pdf') }}" target="_blank"
+                                                class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                <i class="fas fa-eye mr-2"></i>
+                                                Preview Report
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Date Range Report Section -->
+                                    <div class="pt-3 border-t border-gray-700">
+                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                            <i class="fas fa-calendar-alt mr-2 text-green-400"></i>
+                                            Date Range Report
+                                        </div>
+                                        <form action="{{ route('trades.generate.pdf') }}" method="GET"
+                                            class="space-y-3">
+                                            <input type="hidden" name="type" value="range">
+                                            <div class="space-y-1">
+                                                <label class="block text-xs text-gray-400">Start Date</label>
+                                                <input type="date" name="start_date" required
+                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                            </div>
+                                            <div class="space-y-1">
+                                                <label class="block text-xs text-gray-400">End Date</label>
+                                                <input type="date" name="end_date" required
+                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                            </div>
+                                            <button type="submit"
+                                                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                <i class="fas fa-file-pdf mr-2"></i>
+                                                Generate Range Report
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -425,6 +479,11 @@
                                             class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 p-2 rounded-lg"
                                             title="Evaluasi">
                                             <i class="fas fa-chart-bar text-sm"></i>
+                                        </a>
+                                        <a href="{{ route('trades.destroy', $trade->id) }}"
+                                            class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
+                                            title="Delete Trade">
+                                            <i class="fas fa-trash text-sm"></i>
                                         </a>
                                     </div>
                                 </td>

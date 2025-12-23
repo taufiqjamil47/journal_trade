@@ -58,6 +58,30 @@ class DashboardController extends Controller
                     $trades = $query ? $query->get() : collect();
 
                     $basicMetrics = $this->analysisService->calculateBasicMetrics($trades, $initialBalance);
+
+                    // TAMBAHKAN PERHITUNGAN EQUITY CHANGE PERCENTAGE DI SINI
+                    $equity = $basicMetrics['equity'] ?? $initialBalance;
+                    $balance = $basicMetrics['balance'] ?? $initialBalance;
+
+                    // Hitung persentase perubahan equity dari balance
+                    if ($initialBalance > 0) {
+                        $equityChangePercentage = (($equity - $initialBalance) / $initialBalance) * 100;
+                    } else {
+                        $equityChangePercentage = 0;
+                    }
+
+                    // Hitung persentase perubahan equity dari balance saat ini
+                    if ($balance > 0) {
+                        $equityVsBalancePercentage = (($equity - $balance) / $balance) * 100;
+                    } else {
+                        $equityVsBalancePercentage = 0;
+                    }
+
+                    // Tambahkan ke basicMetrics
+                    $basicMetrics['equity_change_percentage'] = round($equityChangePercentage, 2);
+                    $basicMetrics['equity_vs_balance_percentage'] = round($equityVsBalancePercentage, 2);
+                    $basicMetrics['initial_balance'] = $initialBalance; // Simpan untuk referensi
+
                     $summary = $this->analysisService->calculateSummary($trades, $entryFilter, $sessionFilter);
                     $availableSessions = $this->analysisService->getAvailableSessions();
                     $availableEntryTypes = $this->analysisService->getAvailableEntryTypes();
@@ -117,6 +141,9 @@ class DashboardController extends Controller
         return [
             'balance' => $initialBalance,
             'equity' => $initialBalance,
+            'equity_change_percentage' => 0, // TAMBAHKAN
+            'equity_vs_balance_percentage' => 0, // TAMBAHKAN
+            'initial_balance' => $initialBalance, // TAMBAHKAN
             'winrate' => 0,
             'totalProfit' => 0,
             'totalLoss' => 0,

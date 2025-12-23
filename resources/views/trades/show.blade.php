@@ -477,6 +477,11 @@
                     <i class="fas fa-chart-bar mr-2"></i>
                     Evaluasi Trade
                 </a>
+                <a href="{{ route('trades.single.pdf', $trade->id) }}"
+                    class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg">
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Download PDF Report
+                </a>
             </div>
             <a href="{{ route('trades.index') }}"
                 class="flex items-center text-gray-400 hover:text-gray-300 transition-colors">

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Trade;
 use App\Models\Symbol;
 use App\Models\Account;
+use App\Models\TradingRule;
 use Illuminate\Http\Request;
 use App\Exports\TradesExport;
 use App\Imports\TradesImport;
+use App\Services\PdfReportService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\TradingRule;
-use Carbon\Carbon;
 use App\Exceptions\DataNotFoundException;
 use App\Services\PerformanceMonitorService;
 
@@ -422,6 +423,24 @@ class TradeController extends Controller
         }
     }
 
+    // destroy method
+    public function destroy($id)
+    {
+        try {
+            $trade = Trade::findOrFail($id);
+            $trade->delete();
+
+            Log::info('Trade deleted', ['trade_id' => $id]);
+            return redirect()->route('trades.index')->with('success', 'Trade berhasil dihapus');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::warning("Trade not found for deletion: ID {$id}");
+            return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
+        } catch (\Exception $e) {
+            Log::error('Error deleting trade: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus trade: ' . $e->getMessage());
+        }
+    }
+
     // app/Http/Controllers/TradeController.php
     public function clearAll(Request $request)
     {
@@ -624,6 +643,7 @@ class TradeController extends Controller
             ->with('success', 'Evaluasi trade berhasil disimpan');
     }
 
+    // exportExcel dan importExcel methods
     public function exportExcel()
     {
         $perf = (new PerformanceMonitorService)->start('TradeController::exportExcel');
@@ -644,6 +664,7 @@ class TradeController extends Controller
         }
     }
 
+    // importExcel method
     public function importExcel(Request $request)
     {
         $perf = (new PerformanceMonitorService)->start('TradeController::importExcel');
@@ -678,6 +699,108 @@ class TradeController extends Controller
         }
     }
 
+    public function generatePdfReport(Request $request)
+    {
+        $service = new PdfReportService();
+
+        $type = $request->get('type', 'complete');
+        $tradeId = $request->get('trade_id');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        try {
+            switch ($type) {
+                case 'cover':
+                    $pdf = $service->generateCoverReport();
+                    $filename = 'trading_report_cover_' . now()->format('Y-m-d') . '.pdf';
+                    break;
+
+                case 'single':
+                    if (!$tradeId) {
+                        return back()->with('error', 'Trade ID diperlukan untuk laporan single');
+                    }
+                    $trade = Trade::findOrFail($tradeId);
+                    $pdf = $service->generateTradeReport($trade);
+                    $filename = 'trade_' . $trade->id . '_' . now()->format('Y-m-d') . '.pdf';
+                    break;
+
+                case 'range':
+                    if (!$startDate || !$endDate) {
+                        return back()->with('error', 'Start date dan end date diperlukan');
+                    }
+                    $pdf = $service->generateDateRangeReport($startDate, $endDate);
+                    $filename = 'trading_report_' . $startDate . '_to_' . $endDate . '.pdf';
+                    break;
+
+                case 'complete':
+                default:
+                    $pdf = $service->generateCompleteReport();
+                    $filename = 'complete_trading_report_' . now()->format('Y-m-d') . '.pdf';
+                    break;
+            }
+
+            // ⚠️ PERBAIKAN: setPaper() HARUS dipanggil sebelum download()/stream()
+            $pdf->setPaper('A4', 'portrait');
+
+            // Return download
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            Log::error('Error generating PDF report: ' . $e->getMessage());
+            return back()->with('error', 'Gagal generate PDF: ' . $e->getMessage());
+        }
+    }
+
+    public function previewPdfReport(Request $request)
+    {
+        $service = new PdfReportService();
+        $type = $request->get('type', 'cover');
+
+        Log::info("Generating PDF type: {$type}");
+
+        try {
+            if ($type === 'cover') {
+                $pdf = $service->generateCoverReport();
+                Log::info("Cover PDF generated, class: " . get_class($pdf));
+            } else {
+                $pdf = $service->generateCompleteReport();
+                Log::info("Complete PDF generated, class: " . get_class($pdf));
+            }
+
+            // Debug: cek apakah $pdf adalah instance DomPDF
+            if (!$pdf instanceof \Barryvdh\DomPDF\PDF) {
+                Log::error("PDF is not DomPDF instance: " . get_class($pdf));
+                dd(get_class($pdf), $pdf); // Tampilkan debug
+            }
+
+            // ⚠️ PERBAIKAN: setPaper() dulu baru stream()
+            $pdf->setPaper('A4', 'portrait');
+
+            return $pdf->stream('preview_trading_report.pdf');
+        } catch (\Exception $e) {
+            Log::error('Error previewing PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal preview PDF');
+        }
+    }
+
+    public function generateSingleTradePdf($id)
+    {
+        try {
+            $trade = Trade::with(['symbol', 'account', 'tradingRules'])->findOrFail($id);
+            $service = new PdfReportService();
+
+            $pdf = $service->generateTradeReport($trade);
+            $pdf->setPaper('A4', 'portrait');
+
+            $filename = 'trade_' . $trade->id . '_' . $trade->symbol->name . '_' . now()->format('Y-m-d') . '.pdf';
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            Log::error('Error generating single trade PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal generate PDF trade');
+        }
+    }
+
+    // Hitung current equity dari initial balance + total profit/loss semua trade selesai
     private function getCurrentEquity()
     {
         try {
@@ -794,6 +917,7 @@ class TradeController extends Controller
         return false;
     }
 
+    // DEPRECATED: Gunakan processImageUrl() saja
     private function generateTradingViewImage($tradingViewLink)
     {
         // DEPRECATED: Use processImageUrl() instead

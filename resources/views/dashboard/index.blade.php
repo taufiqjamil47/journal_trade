@@ -144,6 +144,9 @@
                                 <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
                             </button>
                         </div>
+                        <div class="text-sm mt-1 text-gray-400">
+                            Initial: ${{ number_format($initial_balance ?? $balance, 2) }}
+                        </div>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="bg-primary-500/20 p-3 rounded-lg">
@@ -162,16 +165,64 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-gray-400 text-sm">Equity</p>
-                        <h3 id="equityText" class="text-2xl font-bold mt-2">******</h3>
-                        <h3 id="equityValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($equity, 2) }}</h3>
+                        <div class="flex items-center gap-2">
+                            <h3 id="equityText" class="text-2xl font-bold mt-2">******</h3>
+                            <h3 id="equityValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($equity, 2) }}
+                            </h3>
+                        </div>
+                        <!-- TAMBAHKAN DISPLAY PERSENTASE DI SINI -->
+                        <div class="text-sm mt-1">
+                            @php
+                                $equityChange = $equity_change_percentage ?? 0;
+                                $vsBalanceChange = $equity_vs_balance_percentage ?? 0;
+                            @endphp
+
+                            <!-- Persentase dari initial balance -->
+                            <div class="flex items-center">
+                                @if ($equityChange > 0)
+                                    <i class="fas fa-arrow-up text-green-500 text-xs mr-1"></i>
+                                    <span class="text-green-400">+{{ number_format($equityChange, 2) }}% from
+                                        initial</span>
+                                @elseif($equityChange < 0)
+                                    <i class="fas fa-arrow-down text-red-500 text-xs mr-1"></i>
+                                    <span class="text-red-400">{{ number_format($equityChange, 2) }}% from initial</span>
+                                @else
+                                    <i class="fas fa-minus text-gray-500 text-xs mr-1"></i>
+                                    <span class="text-gray-400">0% change</span>
+                                @endif
+                            </div>
+
+                            <!-- Persentase dari balance saat ini (opsional) -->
+                            @if ($vsBalanceChange != 0)
+                                <div class="flex items-center mt-1">
+                                    @if ($vsBalanceChange > 0)
+                                        <i class="fas fa-arrow-up text-blue-400 text-xs mr-1"></i>
+                                        <span class="text-blue-300">+{{ number_format($vsBalanceChange, 2) }}% vs
+                                            balance</span>
+                                    @else
+                                        <i class="fas fa-arrow-down text-yellow-500 text-xs mr-1"></i>
+                                        <span class="text-yellow-400">{{ number_format($vsBalanceChange, 2) }}% vs
+                                            balance</span>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
                     </div>
                     <div class="bg-blue-500/20 p-3 rounded-lg">
                         <i class="fas fa-chart-line text-blue-500 text-lg"></i>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                    <span class="text-green-400">Growing</span>
+                    @if ($equity_change_percentage > 0)
+                        <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
+                        <span class="text-green-400">Growing</span>
+                    @elseif($equity_change_percentage < 0)
+                        <i class="fas fa-arrow-trend-down text-red-500 mr-1"></i>
+                        <span class="text-red-400">Declining</span>
+                    @else
+                        <i class="fas fa-minus text-gray-500 mr-1"></i>
+                        <span class="text-gray-400">Stable</span>
+                    @endif
                 </div>
             </div>
 

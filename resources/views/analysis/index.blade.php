@@ -127,6 +127,30 @@
             </div>
         </header>
 
+        <!-- Summary Alert -->
+        @if ($summary)
+            <!-- Summary Alert -->
+            <div class="bg-primary-900/30 rounded-xl p-4 border border-primary-700/30 mb-6">
+                <div class="flex items-center">
+                    <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
+                        <i class="fas fa-chart-pie text-primary-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-primary-300">{{ $summary['entry_type'] }}
+                            <span class="text-gray-400 font-normal">({{ $summary['session'] }})</span>
+                        </h3>
+                        <p class="text-gray-300 text-sm mt-1">
+                            {{ $summary['trades'] }} trades ·
+                            Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
+                            <span class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
+                                ${{ number_format($summary['profit_loss'], 2) }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Basic Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-3">
             <!-- Balance -->
@@ -196,7 +220,7 @@
                     </div>
                     <div class="mt-4 md:mt-0">
                         <div class="bg-gray-700/50 rounded-lg p-4">
-                            <div class="grid grid-cols-3 gap-8 text-center">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-8 text-center">
                                 <div>
                                     <p class="text-xs text-gray-500">Total Profit</p>
                                     <p class="text-lg font-bold text-green-400">${{ number_format($totalProfit, 2) }}</p>
@@ -207,7 +231,8 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500">Net Profit</p>
-                                    <p class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                    <p
+                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
                                         ${{ number_format($netProfit, 2) }}
                                     </p>
                                 </div>
@@ -216,6 +241,50 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+            <form method="GET" action="{{ route('analysis.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Period Filter -->
+                <div>
+                    <label for="period" class="block text-sm font-medium text-gray-300 mb-1">Period</label>
+                    <select name="period" onchange="this.form.submit()"
+                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
+                        <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
+                        <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
+                    </select>
+                </div>
+
+                <!-- Session Filter -->
+                <div>
+                    <label for="session" class="block text-sm font-medium text-gray-300 mb-1">Session</label>
+                    <select name="session" onchange="this.form.submit()"
+                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>All Sessions</option>
+                        @foreach ($availableSessions as $sessionName)
+                            <option value="{{ $sessionName }}" {{ $sessionFilter === $sessionName ? 'selected' : '' }}>
+                                {{ $sessionName }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Entry Type Filter -->
+                <div>
+                    <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry Type</label>
+                    <select name="entry_type" onchange="this.form.submit()"
+                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types</option>
+                        @foreach ($availableEntryTypes as $entryType)
+                            <option value="{{ $entryType }}" {{ $entryFilter === $entryType ? 'selected' : '' }}>
+                                {{ $entryType }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
         </div>
 
         <!-- Risk Management Metrics -->
@@ -585,6 +654,7 @@
 
         <!-- Time-Based Analysis -->
         <div class="my-4">
+            <!-- Section Header -->
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-primary-300">Time Analysis</h2>
                 <div class="text-sm text-gray-500">
@@ -677,7 +747,7 @@
                 </div>
             </div>
 
-            <!-- Hourly Performance Chart -->
+            <!-- Hourly Performance Chart dengan Loading -->
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                     <div>
@@ -690,100 +760,25 @@
                     </div>
                 </div>
 
-                @if ($hourlyPerformance->isNotEmpty() && $hourlyPerformance->keys()->filter(fn($h) => $h !== 'Unknown')->isNotEmpty())
-                    <div class="h-64">
-                        <canvas id="hourlyChart"></canvas>
+                <!-- Chart Container dengan Loading State -->
+                <div id="hourlyChartContainer" class="h-64 relative">
+                    <div id="hourlyChartLoading" class="chart-loading">
+                        <div class="chart-loading-spinner"></div>
+                        <p class="chart-loading-text">Loading Hourly Performance...</p>
                     </div>
-                @else
-                    <div class="flex flex-col items-center justify-center h-64 text-gray-500">
-                        <i class="fas fa-clock text-3xl mb-3"></i>
-                        <p class="text-base">No hourly data available</p>
-                        <p class="text-sm">Start trading to see time-based analysis</p>
+                    <div id="hourlyChartNoData" class="chart-no-data" style="display: none;">
+                        <div class="flex flex-col items-center justify-center h-full text-gray-500">
+                            <i class="fas fa-clock text-3xl mb-3"></i>
+                            <p class="text-base">No hourly data available</p>
+                            <p class="text-sm">Start trading to see time-based analysis</p>
+                        </div>
                     </div>
-                @endif
-            </div>
-
-            <!-- Day of Week & Monthly Performance -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Day of Week Performance -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                    <h3 class="text-lg font-bold text-primary-300 mb-4">Day of Week Performance</h3>
-                    <div class="h-56 mb-4">
-                        <canvas id="dayOfWeekChart"></canvas>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Day</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ $day['short_name'] }}</td>
-                                        <td class="py-2 text-center text-sm">{{ $day['trades'] }}</td>
-                                        <td class="py-2 text-center text-sm">
-                                            <span class="{{ $day['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
-                                                {{ $day['winrate'] }}%
-                                            </span>
-                                        </td>
-                                        <td
-                                            class="py-2 text-right font-medium {{ $day['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
-                                            ${{ number_format($day['profit'], 2) }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Monthly Trends -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                    <h3 class="text-lg font-bold text-primary-300 mb-4">Monthly Trends</h3>
-                    <div class="h-56 mb-4">
-                        <canvas id="monthlyChart"></canvas>
-                    </div>
-                    <div class="overflow-y-auto h-64">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Month</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @foreach ($monthlyPerformance->take(6)->sortDesc() as $month) --}}
-                                @foreach ($monthlyPerformance->sortDesc() as $month)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ $month['month_name'] }}</td>
-                                        <td class="py-2 text-center text-sm">{{ $month['trades'] }}</td>
-                                        <td class="py-2 text-center text-sm">
-                                            <span
-                                                class="{{ $month['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
-                                                {{ $month['winrate'] }}%
-                                            </span>
-                                        </td>
-                                        <td
-                                            class="py-2 text-right font-medium {{ $month['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
-                                            ${{ number_format($month['profit'], 2) }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                    <canvas id="hourlyChart" class="chart-canvas" style="display: none;"></canvas>
                 </div>
             </div>
 
             <!-- Session-Time Heatmap (Collapsible) -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h3 class="text-lg font-bold text-primary-300">Session-Time Heatmap</h3>
@@ -794,7 +789,8 @@
                     </button>
                 </div>
 
-                <div id="heatmapContainer" class="verflow-visible relative z-0">
+                {{-- <div id="heatmapContainer" class="verflow-visible relative z-0"> --}}
+                <div id="heatmapContainer" class="overflow-x-auto lg:overflow-visible relative z-0">
                     <div class="min-w-max">
                         <!-- Header row with times (columns) -->
                         <div class="grid grid-cols-25 gap-1 mb-1">
@@ -923,6 +919,99 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Day of Week & Monthly Performance -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Day of Week Performance dengan Loading -->
+                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                    <h3 class="text-lg font-bold text-primary-300 mb-4">Day of Week Performance</h3>
+
+                    <!-- Chart Container dengan Loading State -->
+                    <div id="dayOfWeekChartContainer" class="h-56 mb-4 relative">
+                        <div id="dayOfWeekChartLoading" class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p class="chart-loading-text">Loading Day of Week Chart...</p>
+                        </div>
+                        <canvas id="dayOfWeekChart" class="chart-canvas" style="display: none;"></canvas>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-600">
+                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Day</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
+                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                        <td class="py-2 text-sm">{{ $day['short_name'] }}</td>
+                                        <td class="py-2 text-center text-sm">{{ $day['trades'] }}</td>
+                                        <td class="py-2 text-center text-sm">
+                                            <span
+                                                class="{{ $day['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                {{ $day['winrate'] }}%
+                                            </span>
+                                        </td>
+                                        <td
+                                            class="py-2 text-right font-medium {{ $day['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                            ${{ number_format($day['profit'], 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Monthly Trends dengan Loading -->
+                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                    <h3 class="text-lg font-bold text-primary-300 mb-4">Monthly Trends</h3>
+
+                    <!-- Chart Container dengan Loading State -->
+                    <div id="monthlyChartContainer" class="h-56 mb-4 relative">
+                        <div id="monthlyChartLoading" class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p class="chart-loading-text">Loading Monthly Trends...</p>
+                        </div>
+                        <canvas id="monthlyChart" class="chart-canvas" style="display: none;"></canvas>
+                    </div>
+
+                    <div class="overflow-y-auto h-64">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-600">
+                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Month</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
+                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($monthlyPerformance->sortDesc() as $month)
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                        <td class="py-2 text-sm">{{ $month['month_name'] }}</td>
+                                        <td class="py-2 text-center text-sm">{{ $month['trades'] }}</td>
+                                        <td class="py-2 text-center text-sm">
+                                            <span
+                                                class="{{ $month['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                {{ $month['winrate'] }}%
+                                            </span>
+                                        </td>
+                                        <td
+                                            class="py-2 text-right font-medium {{ $month['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                            ${{ number_format($month['profit'], 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Two Column Charts -->
@@ -935,79 +1024,8 @@
                 </div>
             </div>
 
-            <!-- Filters -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
-                <form method="GET" action="{{ route('analysis.index') }}"
-                    class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Period Filter -->
-                    <div>
-                        <label for="period" class="block text-sm font-medium text-gray-300 mb-1">Period</label>
-                        <select name="period" onchange="this.form.submit()"
-                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                            <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
-                            <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
-                            <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
-                        </select>
-                    </div>
-
-                    <!-- Session Filter -->
-                    <div>
-                        <label for="session" class="block text-sm font-medium text-gray-300 mb-1">Session</label>
-                        <select name="session" onchange="this.form.submit()"
-                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                            <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>All Sessions</option>
-                            @foreach ($availableSessions as $sessionName)
-                                <option value="{{ $sessionName }}"
-                                    {{ $sessionFilter === $sessionName ? 'selected' : '' }}>
-                                    {{ $sessionName }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Entry Type Filter -->
-                    <div>
-                        <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry Type</label>
-                        <select name="entry_type" onchange="this.form.submit()"
-                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                            <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types</option>
-                            @foreach ($availableEntryTypes as $entryType)
-                                <option value="{{ $entryType }}"
-                                    {{ $entryFilter === $entryType ? 'selected' : '' }}>
-                                    {{ $entryType }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </form>
-            </div>
-
-            @if ($summary)
-                <!-- Summary Alert -->
-                <div class="bg-primary-900/30 rounded-xl p-4 border border-primary-700/30 mb-6">
-                    <div class="flex items-center">
-                        <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-chart-pie text-primary-500"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-primary-300">{{ $summary['entry_type'] }}
-                                <span class="text-gray-400 font-normal">({{ $summary['session'] }})</span>
-                            </h3>
-                            <p class="text-gray-300 text-sm mt-1">
-                                {{ $summary['trades'] }} trades ·
-                                Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
-                                <span
-                                    class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
-                                    ${{ number_format($summary['profit_loss'], 2) }}
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Profit/Loss per Symbol -->
+                <!-- Profit/Loss per Symbol dengan Loading -->
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
@@ -1018,9 +1036,16 @@
                             <i class="fas fa-coins text-blue-500"></i>
                         </div>
                     </div>
-                    <div class="h-56 mb-4">
-                        <canvas id="pairChart"></canvas>
+
+                    <!-- Chart Container dengan Loading State -->
+                    <div id="pairChartContainer" class="h-56 mb-4 relative">
+                        <div id="pairChartLoading" class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p class="chart-loading-text">Loading Pair Chart...</p>
+                        </div>
+                        <canvas id="pairChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
+
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
@@ -1044,7 +1069,7 @@
                     </div>
                 </div>
 
-                <!-- Performance per Entry Type -->
+                <!-- Performance per Entry Type dengan Loading -->
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
@@ -1055,9 +1080,16 @@
                             <i class="fas fa-chart-bar text-green-500"></i>
                         </div>
                     </div>
-                    <div class="h-56 mb-4">
-                        <canvas id="entryTypeChart"></canvas>
+
+                    <!-- Chart Container dengan Loading State -->
+                    <div id="entryTypeChartContainer" class="h-56 mb-4 relative">
+                        <div id="entryTypeChartLoading" class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p class="chart-loading-text">Loading Entry Type Chart...</p>
+                        </div>
+                        <canvas id="entryTypeChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
+
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
@@ -1107,74 +1139,595 @@
 
     <!-- Scripts Section -->
     <script>
-        // Tambahkan di script section
-        document.querySelectorAll('.stat-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // Toggle detail view atau tooltip
-                const tooltip = this.querySelector('.stat-tooltip');
-                if (tooltip) {
-                    tooltip.classList.toggle('hidden');
-                }
-            });
-        });
+        // Chart Lazy Loading Manager
+        class ChartLoader {
+            constructor() {
+                this.charts = [];
+                this.loadedCharts = new Set();
+                this.isLoading = false;
+                this.loadDelay = 300; // ms delay between chart loads
+                this.currentIndex = 0;
+                this.maxChartsToLoad = 1; // Load one chart at a time
 
-        // Animate number counters
-        function animateCounter(element, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const value = Math.floor(progress * (end - start) + start);
-                element.textContent = formatNumber(value);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        // Tambahkan di script section (setelah animasi counter)
-        // Risk Metrics Toggle
-        const toggleRiskDetails = document.getElementById('toggleRiskDetails');
-        const riskDetails = document.getElementById('riskDetails');
-        const toggleRiskIcon = toggleRiskDetails?.querySelector('i');
-
-        if (toggleRiskDetails && riskDetails) {
-            toggleRiskDetails.addEventListener('click', function() {
-                riskDetails.classList.toggle('hidden');
-                if (toggleRiskIcon) {
-                    if (riskDetails.classList.contains('hidden')) {
-                        toggleRiskIcon.classList.remove('fa-chevron-up');
-                        toggleRiskIcon.classList.add('fa-chevron-down');
-                        toggleRiskDetails.querySelector('span').textContent = 'Tampilkan Risk Metrik Terperinci';
-                    } else {
-                        toggleRiskIcon.classList.remove('fa-chevron-down');
-                        toggleRiskIcon.classList.add('fa-chevron-up');
-                        toggleRiskDetails.querySelector('span').textContent =
-                            'Sembunyikan Risk Metrik Terperinci';
-                    }
-                }
-            });
-        }
-
-        // Drawdown Gauge Chart (jika mau lebih fancy)
-        function createDrawdownGauge(currentDD, maxDD) {
-            const ctx = document.createElement('canvas');
-            ctx.width = 100;
-            ctx.height = 100;
-
-            // ... kode untuk gauge chart ...
-        }
-
-        function formatNumber(num) {
-            if (num >= 1000) {
-                return '$' + (num / 1000).toFixed(1) + 'k';
+                // Chart loading order priority
+                this.chartPriority = [
+                    'hourlyChart',
+                    'pairChart',
+                    'entryTypeChart',
+                    'dayOfWeekChart',
+                    'monthlyChart'
+                ];
             }
-            return '$' + num.toFixed(2);
+
+            init() {
+                // Collect all chart containers
+                const chartIds = this.chartPriority.filter(id => document.getElementById(id));
+
+                chartIds.forEach(chartId => {
+                    this.charts.push({
+                        id: chartId,
+                        loadingId: `${chartId}Loading`,
+                        containerId: `${chartId}Container`,
+                        chartData: null
+                    });
+                });
+
+                // Start loading charts
+                this.startLazyLoading();
+
+                // Also load charts when scrolling into view
+                this.setupIntersectionObserver();
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const chartId = entry.target.id.replace('Container', '');
+                            if (!this.loadedCharts.has(chartId) && !this.isChartLoading(chartId)) {
+                                this.loadChart(chartId);
+                            }
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '50px'
+                });
+
+                // Observe each chart container
+                this.charts.forEach(chart => {
+                    const container = document.getElementById(chart.containerId);
+                    if (container) {
+                        observer.observe(container);
+                    }
+                });
+            }
+
+            isChartLoading(chartId) {
+                return Array.from(this.charts).some(chart =>
+                    chart.id === chartId && chart.loading === true
+                );
+            }
+
+            startLazyLoading() {
+                // Load first chart immediately
+                if (this.charts.length > 0) {
+                    this.loadChart(this.charts[0].id);
+                }
+
+                // Setup scroll-based loading for the rest
+                window.addEventListener('scroll', () => this.handleScroll());
+            }
+
+            handleScroll() {
+                if (this.isLoading || this.currentIndex >= this.charts.length) return;
+
+                // Check if next chart container is in viewport
+                const nextChart = this.charts[this.currentIndex];
+                const container = document.getElementById(nextChart.containerId);
+
+                if (container && this.isElementInViewport(container)) {
+                    this.loadChart(nextChart.id);
+                }
+            }
+
+            isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+                    rect.bottom >= 0
+                );
+            }
+
+            async loadChart(chartId) {
+                if (this.loadedCharts.has(chartId)) return;
+
+                const chartInfo = this.charts.find(c => c.id === chartId);
+                if (!chartInfo) return;
+
+                this.isLoading = true;
+
+                // Show loading state
+                const loadingEl = document.getElementById(chartInfo.loadingId);
+                const canvasEl = document.getElementById(chartId);
+                const containerEl = document.getElementById(chartInfo.containerId);
+
+                if (loadingEl) loadingEl.style.display = 'block';
+                if (canvasEl) canvasEl.style.display = 'none';
+
+                try {
+                    // Simulate loading delay for better UX
+                    await new Promise(resolve => setTimeout(resolve, this.loadDelay));
+
+                    // Render the chart
+                    this.renderChart(chartId);
+
+                    // Mark as loaded
+                    this.loadedCharts.add(chartId);
+
+                    // Hide loading, show chart
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    if (canvasEl) canvasEl.style.display = 'block';
+
+                    // Load next chart after delay
+                    this.currentIndex++;
+                    if (this.currentIndex < this.charts.length) {
+                        setTimeout(() => {
+                            const nextChartId = this.charts[this.currentIndex].id;
+                            if (!this.loadedCharts.has(nextChartId)) {
+                                this.loadChart(nextChartId);
+                            }
+                        }, this.loadDelay);
+                    }
+
+                } catch (error) {
+                    console.error(`Error loading chart ${chartId}:`, error);
+                    // Show error state
+                    if (loadingEl) {
+                        loadingEl.innerHTML = `
+                            <div class="text-red-400 text-center">
+                                <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                                <p>Failed to load chart</p>
+                            </div>
+                        `;
+                    }
+                } finally {
+                    this.isLoading = false;
+                }
+            }
+
+            renderChart(chartId) {
+                switch (chartId) {
+                    case 'hourlyChart':
+                        this.renderHourlyChart();
+                        break;
+                    case 'pairChart':
+                        this.renderPairChart();
+                        break;
+                    case 'entryTypeChart':
+                        this.renderEntryTypeChart();
+                        break;
+                    case 'dayOfWeekChart':
+                        this.renderDayOfWeekChart();
+                        break;
+                    case 'monthlyChart':
+                        this.renderMonthlyChart();
+                        break;
+                }
+            }
+
+            renderHourlyChart() {
+                const hourlyCtx = document.getElementById('hourlyChart');
+                if (!hourlyCtx) return;
+
+                const hourlyData = @json($hourlyPerformance->sortKeys());
+                const hourlyLabels = Object.keys(hourlyData).map(hour => {
+                    const nextHour = (parseInt(hour) + 1) % 24;
+                    return hour.padStart(2, '0') + ':00-' + nextHour.toString().padStart(2, '0') + ':00';
+                });
+                const hourlyProfits = Object.values(hourlyData).map(data => data.profit);
+                const hourlyTrades = Object.values(hourlyData).map(data => data.trades);
+
+                // Check if there's data to show
+                if (hourlyProfits.length === 0 || hourlyProfits.every(p => p === 0)) {
+                    document.getElementById('hourlyChartNoData').style.display = 'block';
+                    document.getElementById('hourlyChartLoading').style.display = 'none';
+                    return;
+                }
+
+                new Chart(hourlyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: hourlyLabels,
+                        datasets: [{
+                            label: 'Profit ($)',
+                            data: hourlyProfits,
+                            backgroundColor: hourlyProfits.map(p =>
+                                p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
+                            ),
+                            borderColor: hourlyProfits.map(p =>
+                                p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                            ),
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            yAxisID: 'y',
+                        }, {
+                            label: 'Trades',
+                            data: hourlyTrades,
+                            type: 'line',
+                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: 'rgba(75, 85, 99, 0.3)'
+                                },
+                                ticks: {
+                                    color: '#9ca3af',
+                                    maxRotation: 45
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                grid: {
+                                    color: 'rgba(75, 85, 99, 0.3)'
+                                },
+                                ticks: {
+                                    color: '#9ca3af',
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                                ticks: {
+                                    color: '#9ca3af'
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                                titleColor: '#f3f4f6',
+                                bodyColor: '#f3f4f6',
+                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.datasetIndex === 0) {
+                                            label += '$' + context.parsed.y.toFixed(2);
+                                        } else {
+                                            label += context.parsed.y + ' trades';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderPairChart() {
+                const pairCtx = document.getElementById('pairChart').getContext('2d');
+                const pairLabels = @json($pairData->keys());
+                const pairValues = @json($pairData->values());
+
+                if (pairLabels.length === 0) return;
+
+                new Chart(pairCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: pairLabels,
+                        datasets: [{
+                            label: 'Profit/Loss ($)',
+                            data: pairValues,
+                            backgroundColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
+                                'rgba(239, 68, 68, 0.7)'),
+                            borderColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
+                                'rgba(239, 68, 68, 1)'),
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                                titleColor: '#f3f4f6',
+                                bodyColor: '#f3f4f6',
+                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#9ca3af'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: 'rgba(75, 85, 99, 0.3)'
+                                },
+                                ticks: {
+                                    color: '#9ca3af'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderEntryTypeChart() {
+                const etx = document.getElementById('entryTypeChart').getContext('2d');
+                const entryLabels = @json($entryTypeData->keys());
+                const entryValues = @json($entryTypeData->map(fn($d) => $d['profit_loss'])->values());
+
+                if (entryLabels.length === 0) return;
+
+                new Chart(etx, {
+                    type: 'bar',
+                    data: {
+                        labels: entryLabels,
+                        datasets: [{
+                            label: 'Profit/Loss ($)',
+                            data: entryValues,
+                            backgroundColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
+                                'rgba(239, 68, 68, 0.7)'),
+                            borderColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
+                                'rgba(239, 68, 68, 1)'),
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                                titleColor: '#f3f4f6',
+                                bodyColor: '#f3f4f6',
+                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#9ca3af'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: 'rgba(75, 85, 99, 0.3)'
+                                },
+                                ticks: {
+                                    color: '#9ca3af'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderDayOfWeekChart() {
+                const dowCtx = document.getElementById('dayOfWeekChart');
+                if (!dowCtx) return;
+
+                const dowData = @json($dayOfWeekPerformance->sortBy('day_number'));
+                const dowLabels = Object.values(dowData).map(d => d.short_name);
+                const dowProfits = Object.values(dowData).map(d => d.profit);
+                const dowWinrates = Object.values(dowData).map(d => d.winrate);
+
+                new Chart(dowCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: dowLabels,
+                        datasets: [{
+                            label: 'Profit ($)',
+                            data: dowProfits,
+                            backgroundColor: dowProfits.map(p =>
+                                p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
+                            ),
+                            borderColor: dowProfits.map(p =>
+                                p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                            ),
+                            borderWidth: 1,
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const dataIndex = context.dataIndex;
+                                        const winrate = dowWinrates[dataIndex];
+                                        return `Winrate: ${winrate}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderMonthlyChart() {
+                const monthlyCtx = document.getElementById('monthlyChart');
+                if (!monthlyCtx) return;
+
+                const monthlyData = @json($monthlyPerformance->sortKeys()->take(12));
+                const monthlyLabels = Object.values(monthlyData).map(m => m.month_name);
+                const monthlyProfits = Object.values(monthlyData).map(m => m.profit);
+
+                new Chart(monthlyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthlyLabels,
+                        datasets: [{
+                            label: 'Monthly Profit ($)',
+                            data: monthlyProfits,
+                            borderColor: 'rgba(139, 92, 246, 0.8)',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                                titleColor: '#f3f4f6',
+                                bodyColor: '#f3f4f6'
+                            }
+                        }
+                    }
+                });
+            }
         }
 
-        // Jalankan animasi saat halaman load
+        // Initialize chart loader when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize chart loader
+            const chartLoader = new ChartLoader();
+            chartLoader.init();
+
+            // Tambahkan di script section
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // Toggle detail view atau tooltip
+                    const tooltip = this.querySelector('.stat-tooltip');
+                    if (tooltip) {
+                        tooltip.classList.toggle('hidden');
+                    }
+                });
+            });
+
+            // Animate number counters
+            function animateCounter(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const value = Math.floor(progress * (end - start) + start);
+                    element.textContent = formatNumber(value);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // Tambahkan di script section (setelah animasi counter)
+            // Risk Metrics Toggle
+            const toggleRiskDetails = document.getElementById('toggleRiskDetails');
+            const riskDetails = document.getElementById('riskDetails');
+            const toggleRiskIcon = toggleRiskDetails?.querySelector('i');
+
+            if (toggleRiskDetails && riskDetails) {
+                toggleRiskDetails.addEventListener('click', function() {
+                    riskDetails.classList.toggle('hidden');
+                    if (toggleRiskIcon) {
+                        if (riskDetails.classList.contains('hidden')) {
+                            toggleRiskIcon.classList.remove('fa-chevron-up');
+                            toggleRiskIcon.classList.add('fa-chevron-down');
+                            toggleRiskDetails.querySelector('span').textContent =
+                                'Tampilkan Risk Metrik Terperinci';
+                        } else {
+                            toggleRiskIcon.classList.remove('fa-chevron-down');
+                            toggleRiskIcon.classList.add('fa-chevron-up');
+                            toggleRiskDetails.querySelector('span').textContent =
+                                'Sembunyikan Risk Metrik Terperinci';
+                        }
+                    }
+                });
+            }
+
+            // Drawdown Gauge Chart (jika mau lebih fancy)
+            function createDrawdownGauge(currentDD, maxDD) {
+                const ctx = document.createElement('canvas');
+                ctx.width = 100;
+                ctx.height = 100;
+
+                // ... kode untuk gauge chart ...
+            }
+
+            function formatNumber(num) {
+                if (num >= 1000) {
+                    return '$' + (num / 1000).toFixed(1) + 'k';
+                }
+                return '$' + num.toFixed(2);
+            }
+
+            // Jalankan animasi saat halaman load
             const stats = document.querySelectorAll('.stat-number');
             stats.forEach(stat => {
                 const value = parseFloat(stat.textContent.replace(/[^0-9.-]+/g, ""));
@@ -1182,454 +1735,137 @@
                     animateCounter(stat, 0, value, 1000);
                 }
             });
-        });
-    </script>
 
-    <!-- Charts Script -->
-    <script>
-        // Hourly Performance Chart
-        const hourlyCtx = document.getElementById('hourlyChart');
-        if (hourlyCtx) {
-            const hourlyData = @json($hourlyPerformance->sortKeys());
-            const hourlyLabels = Object.keys(hourlyData).map(hour => {
-                const nextHour = (parseInt(hour) + 1) % 24;
-                return hour.padStart(2, '0') + ':00-' + nextHour.toString().padStart(2, '0') + ':00';
-            });
-            const hourlyProfits = Object.values(hourlyData).map(data => data.profit);
-            const hourlyTrades = Object.values(hourlyData).map(data => data.trades);
+            // Session Heatmap Modal Functionality
+            const sessionModal = document.getElementById('sessionModal');
+            const sessionModalTitle = document.getElementById('sessionModalTitle');
+            const sessionModalContent = document.getElementById('sessionModalContent');
+            const closeSessionModalBtn = document.getElementById('closeSessionModal');
 
-            new Chart(hourlyCtx, {
-                type: 'bar',
-                data: {
-                    labels: hourlyLabels,
-                    datasets: [{
-                        label: 'Profit ($)',
-                        data: hourlyProfits,
-                        backgroundColor: hourlyProfits.map(p =>
-                            p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
-                        ),
-                        borderColor: hourlyProfits.map(p =>
-                            p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
-                        ),
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        yAxisID: 'y',
-                    }, {
-                        label: 'Trades',
-                        data: hourlyTrades,
-                        type: 'line',
-                        borderColor: 'rgba(59, 130, 246, 0.8)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        yAxisID: 'y1',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                color: 'rgba(75, 85, 99, 0.3)'
-                            },
-                            ticks: {
-                                color: '#9ca3af',
-                                maxRotation: 45
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            grid: {
-                                color: 'rgba(75, 85, 99, 0.3)'
-                            },
-                            ticks: {
-                                color: '#9ca3af',
-                                callback: function(value) {
-                                    return '$' + value;
-                                }
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            grid: {
-                                drawOnChartArea: false,
-                            },
-                            ticks: {
-                                color: '#9ca3af'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                            titleColor: '#f3f4f6',
-                            bodyColor: '#f3f4f6',
-                            borderColor: 'rgba(75, 85, 99, 0.5)',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.datasetIndex === 0) {
-                                        label += '$' + context.parsed.y.toFixed(2);
-                                    } else {
-                                        label += context.parsed.y + ' trades';
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+            // Function to get day name from index
+            function getDayName(dayIndex) {
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                return days[dayIndex] || 'Unknown';
+            }
 
-        // Day of Week Chart
-        const dowCtx = document.getElementById('dayOfWeekChart');
-        if (dowCtx) {
-            const dowData = @json($dayOfWeekPerformance->sortBy('day_number'));
-            const dowLabels = Object.values(dowData).map(d => d.short_name);
-            const dowProfits = Object.values(dowData).map(d => d.profit);
-            const dowWinrates = Object.values(dowData).map(d => d.winrate);
+            // Function to format hour range
+            function getHourRange(hour) {
+                const startHour = hour.padStart(2, '0');
+                const endHour = String((parseInt(hour) + 1) % 24).padStart(2, '0');
+                return `${startHour}:00-${endHour}:00`;
+            }
 
-            new Chart(dowCtx, {
-                type: 'bar',
-                data: {
-                    labels: dowLabels,
-                    datasets: [{
-                        label: 'Profit ($)',
-                        data: dowProfits,
-                        backgroundColor: dowProfits.map(p =>
-                            p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
-                        ),
-                        borderColor: dowProfits.map(p =>
-                            p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
-                        ),
-                        borderWidth: 1,
-                        borderRadius: 4,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(context) {
-                                    const dataIndex = context.dataIndex;
-                                    const winrate = dowWinrates[dataIndex];
-                                    return `Winrate: ${winrate}%`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+            // Heatmap Cell Click Handler
+            document.querySelectorAll('#heatmapContainer [data-trades]').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const hour = this.getAttribute('data-hour');
+                    const day = parseInt(this.getAttribute('data-day'));
+                    const profit = parseFloat(this.getAttribute('data-profit'));
+                    const trades = parseInt(this.getAttribute('data-trades'));
 
-        // Monthly Chart
-        const monthlyCtx = document.getElementById('monthlyChart');
-        if (monthlyCtx) {
-            const monthlyData = @json($monthlyPerformance->sortKeys()->take(12));
-            const monthlyLabels = Object.values(monthlyData).map(m => m.month_name);
-            const monthlyProfits = Object.values(monthlyData).map(m => m.profit);
+                    if (trades > 0) {
+                        const dayName = getDayName(day);
+                        const hourRange = getHourRange(hour);
 
-            new Chart(monthlyCtx, {
-                type: 'line',
-                data: {
-                    labels: monthlyLabels,
-                    datasets: [{
-                        label: 'Monthly Profit ($)',
-                        data: monthlyProfits,
-                        borderColor: 'rgba(139, 92, 246, 0.8)',
-                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                            titleColor: '#f3f4f6',
-                            bodyColor: '#f3f4f6'
-                        }
-                    }
-                }
-            });
-        }
+                        // Set modal title
+                        sessionModalTitle.textContent = `${dayName}, ${hourRange}`;
 
-        // Heatmap Toggle
-        // Session Heatmap Modal Functionality
-        const sessionModal = document.getElementById('sessionModal');
-        const sessionModalTitle = document.getElementById('sessionModalTitle');
-        const sessionModalContent = document.getElementById('sessionModalContent');
-        const closeSessionModalBtn = document.getElementById('closeSessionModal');
-
-        // Function to get day name from index
-        function getDayName(dayIndex) {
-            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            return days[dayIndex] || 'Unknown';
-        }
-
-        // Function to format hour range
-        function getHourRange(hour) {
-            const startHour = hour.padStart(2, '0');
-            const endHour = String((parseInt(hour) + 1) % 24).padStart(2, '0');
-            return `${startHour}:00-${endHour}:00`;
-        }
-
-        // Heatmap Cell Click Handler
-        document.querySelectorAll('#heatmapContainer [data-trades]').forEach(cell => {
-            cell.addEventListener('click', function() {
-                const hour = this.getAttribute('data-hour');
-                const day = parseInt(this.getAttribute('data-day'));
-                const profit = parseFloat(this.getAttribute('data-profit'));
-                const trades = parseInt(this.getAttribute('data-trades'));
-
-                if (trades > 0) {
-                    const dayName = getDayName(day);
-                    const hourRange = getHourRange(hour);
-
-                    // Set modal title
-                    sessionModalTitle.textContent = `${dayName}, ${hourRange}`;
-
-                    // Create modal content
-                    let content = `
-                <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
-                    <div class="flex justify-between items-center mb-2">
-                        <div>
-                            <div class="text-sm text-gray-400">Total Performance</div>
-                            <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
-                                $${profit.toFixed(2)}
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-sm text-gray-400">Total Trades</div>
-                            <div class="text-2xl font-bold text-gray-200">${trades}</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 pt-2 border-t border-gray-600">
-                        <div class="text-xs text-gray-400">Time Slot</div>
-                        <div class="text-sm text-gray-300">${hourRange} (GMT)</div>
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <h5 class="text-sm font-medium text-gray-300 mb-2">Performance Insights</h5>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-gray-750 rounded-lg p-3">
-                            <div class="text-xs text-gray-400">Average P/L per Trade</div>
-                            <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
-                                $${(profit/trades).toFixed(2)}
-                            </div>
-                        </div>
-                        <div class="bg-gray-750 rounded-lg p-3">
-                            <div class="text-xs text-gray-400">Win/Loss Ratio</div>
-                            <div class="text-lg font-bold text-gray-200">
-                                ${profit > 0 ? 'Profitable' : 'Unprofitable'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div>
-                    <h5 class="text-sm font-medium text-gray-300 mb-2">Recommendations</h5>
-                    <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
-                        <div class="flex items-start gap-2">
-                            <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
+                        // Create modal content
+                        let content = `
+                    <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
+                        <div class="flex justify-between items-center mb-2">
                             <div>
-                                <p class="text-sm text-gray-300">
-                                    ${profit > 0 
-                                        ? 'This time slot shows consistent profitability. Consider focusing more trades during this period.'
-                                        : 'This time slot shows negative performance. Consider avoiding trades or reviewing your strategy for this period.'}
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    Based on ${trades} trade${trades !== 1 ? 's' : ''} at this specific day/time combination.
-                                </p>
+                                <div class="text-sm text-gray-400">Total Performance</div>
+                                <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
+                                    $${profit.toFixed(2)}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-400">Total Trades</div>
+                                <div class="text-2xl font-bold text-gray-200">${trades}</div>
+                            </div>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-gray-600">
+                            <div class="text-xs text-gray-400">Time Slot</div>
+                            <div class="text-sm text-gray-300">${hourRange} (GMT)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="text-sm font-medium text-gray-300 mb-2">Performance Insights</h5>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-gray-750 rounded-lg p-3">
+                                <div class="text-xs text-gray-400">Average P/L per Trade</div>
+                                <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                    $${(profit/trades).toFixed(2)}
+                                </div>
+                            </div>
+                            <div class="bg-gray-750 rounded-lg p-3">
+                                <div class="text-xs text-gray-400">Win/Loss Ratio</div>
+                                <div class="text-lg font-bold text-gray-200">
+                                    ${profit > 0 ? 'Profitable' : 'Unprofitable'}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="mt-4 pt-4 border-t border-gray-700">
-                    <p class="text-xs text-gray-400 text-center">
-                        <i class="fas fa-lightbulb mr-1"></i>
-                        Click on other time slots to compare performance
-                    </p>
-                </div>
-            `;
+                    
+                    <div>
+                        <h5 class="text-sm font-medium text-gray-300 mb-2">Recommendations</h5>
+                        <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
+                            <div class="flex items-start gap-2">
+                                <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
+                                <div>
+                                    <p class="text-sm text-gray-300">
+                                        ${profit > 0 
+                                            ? 'This time slot shows consistent profitability. Consider focusing more trades during this period.'
+                                            : 'This time slot shows negative performance. Consider avoiding trades or reviewing your strategy for this period.'}
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        Based on ${trades} trade${trades !== 1 ? 's' : ''} at this specific day/time combination.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-700">
+                        <p class="text-xs text-gray-400 text-center">
+                            <i class="fas fa-lightbulb mr-1"></i>
+                            Click on other time slots to compare performance
+                        </p>
+                    </div>
+                `;
 
-                    sessionModalContent.innerHTML = content;
-                    sessionModal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-                }
+                        sessionModalContent.innerHTML = content;
+                        sessionModal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
             });
-        });
 
-        // Close Session Modal
-        closeSessionModalBtn.addEventListener('click', function() {
-            sessionModal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        });
-
-        // Close modal when clicking outside
-        sessionModal.addEventListener('click', function(e) {
-            if (e.target === sessionModal) {
+            // Close Session Modal
+            closeSessionModalBtn.addEventListener('click', function() {
                 sessionModal.classList.add('hidden');
                 document.body.style.overflow = 'auto';
-            }
-        });
+            });
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !sessionModal.classList.contains('hidden')) {
-                sessionModal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
-        });
-    </script>
-
-    <!-- Pair & Entry Type Charts -->
-    <script>
-        // Pair Chart
-        const pairCtx = document.getElementById('pairChart').getContext('2d');
-        const pairLabels = @json($pairData->keys());
-        const pairValues = @json($pairData->values());
-
-        if (pairLabels.length > 0) {
-            new Chart(pairCtx, {
-                type: 'bar',
-                data: {
-                    labels: pairLabels,
-                    datasets: [{
-                        label: 'Profit/Loss ($)',
-                        data: pairValues,
-                        backgroundColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
-                            'rgba(239, 68, 68, 0.7)'),
-                        borderColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
-                            'rgba(239, 68, 68, 1)'),
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                            titleColor: '#f3f4f6',
-                            bodyColor: '#f3f4f6',
-                            borderColor: 'rgba(75, 85, 99, 0.5)',
-                            borderWidth: 1
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#9ca3af'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                color: 'rgba(75, 85, 99, 0.3)'
-                            },
-                            ticks: {
-                                color: '#9ca3af'
-                            }
-                        }
-                    }
+            // Close modal when clicking outside
+            sessionModal.addEventListener('click', function(e) {
+                if (e.target === sessionModal) {
+                    sessionModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
                 }
             });
-        }
 
-        // Entry Type Chart
-        const etx = document.getElementById('entryTypeChart').getContext('2d');
-        const entryLabels = @json($entryTypeData->keys());
-        const entryValues = @json($entryTypeData->map(fn($d) => $d['profit_loss'])->values());
-
-        if (entryLabels.length > 0) {
-            new Chart(etx, {
-                type: 'bar',
-                data: {
-                    labels: entryLabels,
-                    datasets: [{
-                        label: 'Profit/Loss ($)',
-                        data: entryValues,
-                        backgroundColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
-                            'rgba(239, 68, 68, 0.7)'),
-                        borderColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
-                            'rgba(239, 68, 68, 1)'),
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                            titleColor: '#f3f4f6',
-                            bodyColor: '#f3f4f6',
-                            borderColor: 'rgba(75, 85, 99, 0.5)',
-                            borderWidth: 1
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#9ca3af'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                color: 'rgba(75, 85, 99, 0.3)'
-                            },
-                            ticks: {
-                                color: '#9ca3af'
-                            }
-                        }
-                    }
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !sessionModal.classList.contains('hidden')) {
+                    sessionModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
                 }
             });
-        }
-    </script>
 
-    <!-- Balance & Equity Toggle Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle Button (hanya di Balance)
+            // Balance & Equity Toggle Script
             const toggleBalanceBtn = document.getElementById('toggleBalance');
             const balanceText = document.getElementById('balanceText');
             const balanceValue = document.getElementById('balanceValue');
@@ -1710,6 +1946,115 @@
         /* Hover effects for tables */
         tr:hover {
             background-color: rgba(55, 65, 81, 0.3);
+        }
+    </style>
+
+    <!-- Chart Loading Styles -->
+    <style>
+        /* Loading animation for charts */
+        .chart-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+            border-radius: 0.5rem;
+        }
+
+        .chart-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: chart-spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        .chart-loading-text {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .chart-canvas {
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-no-data {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes chart-spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Fade in animation for charts */
+        .chart-canvas {
+            animation: chart-fade-in 0.5s ease-out;
+        }
+
+        @keyframes chart-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading progress indicator */
+        .chart-loading-progress {
+            width: 100%;
+            height: 3px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .chart-loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            animation: chart-progress 2s ease-in-out infinite;
+        }
+
+        @keyframes chart-progress {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
     </style>
 
