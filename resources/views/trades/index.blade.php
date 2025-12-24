@@ -201,47 +201,50 @@
                         <p class="text-gray-500 text-sm mt-1">Total: {{ $trades->total() }} trades</p>
                     </div>
 
-                    <div class="grid lg:flex grid-cols-3 lg:flex-wrap items-center gap-3">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
                         <!-- Sorting Dropdown -->
-                        <div class="relative group">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px]">
                             <button
-                                class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
-                                <i class="fas fa-sort mr-2"></i>
-                                <span class="hidden lg:block">Sort By</span>
-                                <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                                class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
+                                <i class="fas fa-sort mr-1 sm:mr-2"></i>
+                                <span>Sort</span>
+                                <i
+                                    class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
-                            <!-- Dropdown ke samping kanan -->
+                            <!-- Dropdown -->
                             <div
-                                class="absolute left-0 top-full mt-1 w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                 <div class="py-2">
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'desc']) }}"
-                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
-                                        <i class="fas fa-calendar-alt mr-3 text-primary-400 w-5 text-center"></i>
-                                        <div>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        <i
+                                            class="fas fa-calendar-alt mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        <div class="flex-1">
                                             <div class="font-medium">Date</div>
                                             <div class="text-xs text-gray-400">Newest First</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'asc']) }}"
-                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
-                                        <i class="fas fa-calendar mr-3 text-primary-400 w-5 text-center"></i>
-                                        <div>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        <i
+                                            class="fas fa-calendar mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        <div class="flex-1">
                                             <div class="font-medium">Date</div>
                                             <div class="text-xs text-gray-400">Oldest First</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'desc']) }}"
-                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
-                                        <i class="fas fa-hashtag mr-3 text-primary-400 w-5 text-center"></i>
-                                        <div>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        <div class="flex-1">
                                             <div class="font-medium">ID</div>
                                             <div class="text-xs text-gray-400">Highest First</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'asc']) }}"
-                                        class="block px-4 py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
-                                        <i class="fas fa-hashtag mr-3 text-primary-400 w-5 text-center"></i>
-                                        <div>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
+                                        <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        <div class="flex-1">
                                             <div class="font-medium">ID</div>
                                             <div class="text-xs text-gray-400">Lowest First</div>
                                         </div>
@@ -251,31 +254,31 @@
                         </div>
 
                         <!-- Import/Export Group -->
-                        <div class="relative group">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px]">
                             <button
-                                class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
-                                <i class="fas fa-exchange-alt mr-2"></i>
-                                <span class="hidden lg:block">Data</span>
+                                class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
+                                <i class="fas fa-exchange-alt mr-1 sm:mr-2"></i>
+                                <span>Data</span>
                                 <i
-                                    class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                                    class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
-                            <!-- Dropdown ke samping kanan -->
+                            <!-- Dropdown -->
                             <div
-                                class="absolute left-0 top-full mt-1 w-64 bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div class="p-3 space-y-4">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-64 bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[80vh]">
+                                <div class="p-2 sm:p-3 space-y-3 sm:space-y-4">
                                     <!-- Import Section -->
                                     <div>
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
-                                            <i class="fas fa-file-import mr-2 text-purple-400"></i>
+                                            <i class="fas fa-file-import mr-2 text-purple-400 text-sm"></i>
                                             Import Data
                                         </div>
                                         <form action="{{ route('trades.import.excel') }}" method="POST"
                                             enctype="multipart/form-data" class="space-y-2">
                                             @csrf
                                             <input type="file" name="file" accept=".xlsx,.xls,.csv" required
-                                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-purple-600 file:border-0 file:text-white file:rounded file:px-3 file:py-1 file:text-sm file:hover:bg-purple-700">
+                                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-purple-600 file:border-0 file:text-white file:rounded file:px-2 sm:file:px-3 file:py-1 file:text-xs sm:file:text-sm file:hover:bg-purple-700">
                                             <button type="submit"
-                                                class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-upload mr-2"></i>
                                                 Upload File
                                             </button>
@@ -283,14 +286,14 @@
                                     </div>
 
                                     <!-- Export Section -->
-                                    <div class="pt-3 border-t border-gray-700">
+                                    <div class="pt-2 sm:pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
-                                            <i class="fas fa-file-export mr-2 text-green-400"></i>
+                                            <i class="fas fa-file-export mr-2 text-green-400 text-sm"></i>
                                             Export Data
                                         </div>
                                         <div class="space-y-2">
                                             <a href="{{ route('trades.export.excel') }}"
-                                                class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-file-excel mr-2"></i>
                                                 Export to Excel
                                             </a>
@@ -298,24 +301,24 @@
                                     </div>
 
                                     <!-- PDF Reports Section -->
-                                    <div class="pt-3 border-t border-gray-700">
+                                    <div class="pt-2 sm:pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
-                                            <i class="fas fa-file-pdf mr-2 text-red-400"></i>
+                                            <i class="fas fa-file-pdf mr-2 text-red-400 text-sm"></i>
                                             PDF Reports
                                         </div>
                                         <div class="space-y-2">
                                             <a href="{{ route('trades.generate.pdf', ['type' => 'cover']) }}"
-                                                class="block w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                class="block w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-file-alt mr-2"></i>
-                                                Cover Report Only
+                                                Cover Report
                                             </a>
                                             <a href="{{ route('trades.generate.pdf', ['type' => 'complete']) }}"
-                                                class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-book mr-2"></i>
                                                 Complete Report
                                             </a>
                                             <a href="{{ route('trades.preview.pdf') }}" target="_blank"
-                                                class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-eye mr-2"></i>
                                                 Preview Report
                                             </a>
@@ -323,28 +326,28 @@
                                     </div>
 
                                     <!-- Date Range Report Section -->
-                                    <div class="pt-3 border-t border-gray-700">
+                                    <div class="pt-2 sm:pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
-                                            <i class="fas fa-calendar-alt mr-2 text-green-400"></i>
+                                            <i class="fas fa-calendar-alt mr-2 text-green-400 text-sm"></i>
                                             Date Range Report
                                         </div>
                                         <form action="{{ route('trades.generate.pdf') }}" method="GET"
-                                            class="space-y-3">
+                                            class="space-y-2 sm:space-y-3">
                                             <input type="hidden" name="type" value="range">
                                             <div class="space-y-1">
                                                 <label class="block text-xs text-gray-400">Start Date</label>
                                                 <input type="date" name="start_date" required
-                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
                                             </div>
                                             <div class="space-y-1">
                                                 <label class="block text-xs text-gray-400">End Date</label>
                                                 <input type="date" name="end_date" required
-                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
                                             </div>
                                             <button type="submit"
-                                                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-colors">
+                                                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-file-pdf mr-2"></i>
-                                                Generate Range Report
+                                                Generate Report
                                             </button>
                                         </form>
                                     </div>
@@ -353,30 +356,31 @@
                         </div>
 
                         <!-- Management Actions -->
-                        <div class="relative group">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px]">
                             <button
-                                class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
-                                <i class="fas fa-tools mr-2"></i>
-                                <span class="hidden lg:block">Manage</span>
+                                class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
+                                <i class="fas fa-tools mr-1 sm:mr-2"></i>
+                                <span>Manage</span>
                                 <i
-                                    class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                                    class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
-                            <!-- Dropdown ke samping kanan -->
+                            <!-- Dropdown -->
                             <div
-                                class="absolute left-0 top-full mt-1 w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                 <div class="py-2">
                                     <a href="{{ route('trades.create') }}"
-                                        class="block px-4 py-3 text-sm hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
-                                        <i class="fas fa-plus-circle mr-3 text-blue-400 w-5 text-center"></i>
-                                        <div>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
+                                        <i
+                                            class="fas fa-plus-circle mr-2 sm:mr-3 text-blue-400 w-4 sm:w-5 text-center"></i>
+                                        <div class="flex-1">
                                             <div class="font-medium">Add New Trade</div>
                                             <div class="text-xs text-gray-400">Create new entry</div>
                                         </div>
                                     </a>
                                     <button onclick="quickClearAll()"
-                                        class="w-full text-left px-4 py-3 text-sm hover:bg-red-500/20 hover:text-red-300 flex items-center">
-                                        <i class="fas fa-trash-alt mr-3 text-red-400 w-5 text-center"></i>
-                                        <div>
+                                        class="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-red-500/20 hover:text-red-300 flex items-center">
+                                        <i class="fas fa-trash-alt mr-2 sm:mr-3 text-red-400 w-4 sm:w-5 text-center"></i>
+                                        <div class="flex-1">
                                             <div class="font-medium">Clear All Trades</div>
                                             <div class="text-xs text-gray-400">Remove all data</div>
                                         </div>

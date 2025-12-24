@@ -205,7 +205,7 @@
                                         <h3 id="currentEquity" class="text-base font-bold text-amber-400 mt-2 hidden">
                                             ${{ number_format($currentEquity, 2) }}
                                         </h3>
-                                        <button id="toggleBalance"
+                                        <button id="toggleBalance" type="button"
                                             class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
                                             title="Show/Hide Balance & Equity">
                                             <i id="currentEquityIcon" class="fas fa-eye-slash text-amber-400 text-md"></i>

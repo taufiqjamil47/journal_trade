@@ -173,19 +173,19 @@
 
                                 <div class="flex items-center space-x-4">
                                     <!-- Status Badge -->
-                                    <div class="hidden sm:block">
+                                    {{-- <div class="hidden sm:block">
                                         <span id="status_badge"
                                             class="px-3 py-1.5 rounded-full text-sm font-medium {{ old('active', $symbol->active) ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }}">
                                             <i
                                                 class="fas {{ old('active', $symbol->active) ? 'fa-check-circle' : 'fa-times-circle' }} mr-1.5"></i>
                                             {{ old('active', $symbol->active) ? 'Aktif' : 'Nonaktif' }}
                                         </span>
-                                    </div>
+                                    </div> --}}
 
                                     <!-- Toggle Switch -->
                                     <div class="relative">
-                                        <input type="hidden" name="active"
-                                            value="{{ old('active', $symbol->active) ? 1 : 0 }}" id="active_hidden">
+                                        {{-- <input type="hidden" name="active"
+                                            value="{{ old('active', $symbol->active) ? 1 : 0 }}" id="active_hidden"> --}}
 
                                         <label class="relative inline-flex items-center cursor-pointer group">
                                             <input type="checkbox" id="active_checkbox" class="sr-only peer"
