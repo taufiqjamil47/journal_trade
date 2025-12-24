@@ -21,4 +21,16 @@ class Symbol extends Model
     {
         return $this->hasMany(Trade::class);
     }
+
+    // Symbol.php - tambahkan di class
+    public function getPipValueAttribute($value)
+    {
+        // Pastikan format konsisten
+        return (float) $value;
+    }
+
+    public function getPipWorthAttribute($value)
+    {
+        return (float) ($value ?? 10.00);
+    }
 }

@@ -53,8 +53,8 @@ Route::get('/trades/{id}', [TradeController::class, 'show'])->name('trades.show'
 Route::get('/trades/{id}/pdf', [TradeController::class, 'generateTradePdf'])->name('trades.single.pdf');
 Route::get('/trades/{id}/edit', [TradeController::class, 'edit'])->name('trades.edit');
 Route::get('/trades/{id}/detail', [TradeController::class, 'detail'])->name('trades.detail');
-Route::get('/trades/{id}/delete', [TradeController::class, 'destroy'])->name('trades.destroy');
 Route::get('/trades/{id}/evaluate', [TradeController::class, 'evaluate'])->name('trades.evaluate');
+Route::post('/trades/{id}/delete', [TradeController::class, 'destroy'])->name('trades.destroy');
 Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])->name('trades.saveEvaluation');
 
 Route::delete('/trades/clear-all', [TradeController::class, 'clearAll'])->name('trades.clear-all');

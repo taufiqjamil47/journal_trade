@@ -5,7 +5,7 @@
 
     <!-- Floating Button untuk Toggle -->
     <button id="toggleNoteForm"
-        class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-l-xl shadow-lg transition-all duration-300">
+        class="absolute origin-right left-0 top-1/2 transform -translate-y-1/2 -translate-x-full bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-l-xl shadow-lg transition-all duration-300">
         <i id="toggleIcon"
             class="fas {{ session('note_form_hidden', true) ? 'fa-chevron-left' : 'fa-chevron-right' }} mr-3"></i>
     </button>
@@ -16,9 +16,9 @@
             <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
                 <h2 class="text-xl font-bold text-white">
                     <i class="fas fa-clipboard-check text-primary-500 mr-2"></i>
-                    FORM KALIBRASI DIRI TRADER
+                    Formulir kalibrasi diri
                 </h2>
-                <span class="text-xs bg-primary-900 text-primary-200 px-2 py-1 rounded">VERSI ANTI-SOMBONG</span>
+                <span class="text-xs bg-primary-900 text-primary-200 px-2 py-1 rounded">TRADER</span>
             </div>
 
             <!-- Form -->
@@ -29,7 +29,7 @@
                 <div class="mb-6 p-4 bg-primary-900/20 rounded-lg border border-primary-700/30">
                     <h3 class="font-bold text-primary-300 mb-2 flex items-center">
                         <i class="fas fa-exclamation-triangle mr-2"></i>
-                        BAGIAN 0 — ATURAN META
+                        — ATURAN META —
                     </h3>
                     <p class="text-sm text-gray-300 italic mb-3">(WAJIB DIBACA SETIAP HARI)</p>
                     <ul class="text-sm text-gray-300 space-y-2">
@@ -358,15 +358,17 @@
                 // Hide form
                 container.style.right = '-400px';
                 toggleIcon.classList.remove('fa-chevron-right');
-                toggleIcon.classList.add('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-left', 'mr-3');
+                toggleBtn.classList.remove('-scale-x-100');
 
                 // Save state to localStorage
                 localStorage.setItem('noteFormHidden', 'true');
             } else {
                 // Show form
                 container.style.right = '0';
-                toggleIcon.classList.remove('fa-chevron-left');
-                toggleIcon.classList.add('fa-chevron-right');
+                toggleIcon.classList.remove('fa-chevron-left', 'mr-3');
+                toggleIcon.classList.add('fa-chevron-right', 'lg:mr-3');
+                toggleBtn.classList.add('-scale-x-100', 'lg:scale-x-100');
 
                 // Save state to localStorage
                 localStorage.setItem('noteFormHidden', 'false');

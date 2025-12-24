@@ -147,8 +147,9 @@
                     <div class="flex flex-col md:flex-row items-center gap-3">
                         <!-- Month/Year Select Grid for Mobile -->
                         <div class="grid grid-cols-2 gap-3 w-full md:w-auto md:flex md:items-center">
-                            <div class="flex items-center gap-2 w-full">
-                                <label for="monthSelect" class="text-sm text-gray-300 whitespace-nowrap">Month:</label>
+                            <div class="grid lg:flex items-center gap-2 w-full">
+                                <label for="monthSelect"
+                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">Month:</label>
                                 <select id="monthSelect"
                                     class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
                                     @for ($m = 1; $m <= 12; $m++)
@@ -159,8 +160,9 @@
                                 </select>
                             </div>
 
-                            <div class="flex items-center gap-2 w-full">
-                                <label for="yearSelect" class="text-sm text-gray-300 whitespace-nowrap">Year:</label>
+                            <div class="grid lg:flex items-center gap-2 w-full">
+                                <label for="yearSelect"
+                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">Year:</label>
                                 <select id="yearSelect"
                                     class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
                                     @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)

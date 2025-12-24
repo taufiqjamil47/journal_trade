@@ -53,7 +53,13 @@ class TradeController extends Controller
     public function create()
     {
         try {
-            $symbols = Symbol::where('active', true)->get();
+            $symbols = Symbol::where('active', true)
+                ->get()
+                ->map(function ($symbol) {
+                    $symbol->formatted_pip_value = (float) $symbol->pip_value;
+                    $symbol->formatted_pip_worth = (float) ($symbol->pip_worth ?? 10);
+                    return $symbol;
+                });
             if ($symbols->isEmpty()) {
                 Log::warning('No active symbols available');
             }
@@ -272,6 +278,7 @@ class TradeController extends Controller
                 'entry'       => 'required|numeric',
                 'stop_loss'   => 'required|numeric',
                 'take_profit' => 'required|numeric',
+                'before_link' => 'nullable|url', // ⬅️ TAMBAHKAN INI
                 'rules'       => 'nullable|array',
                 'rules.*'     => 'exists:trading_rules,id'
             ]);
@@ -602,7 +609,7 @@ class TradeController extends Controller
             'close_emotion'   => 'nullable|string',
             'note'            => 'nullable|string',
             'before_link'     => 'nullable|url',
-            'after_link'      => 'nullable|url',
+            // 'after_link'      => 'nullable|url',
             // Exit timestamp inputs (evaluate view)
             'exit_date'       => 'nullable|date_format:Y-m-d',
             'exit_time'       => 'nullable|date_format:H:i',

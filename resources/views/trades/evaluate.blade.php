@@ -307,6 +307,14 @@
 
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="space-y-2">
+                                        <label for="exit_time" class="block text-sm font-semibold text-gray-300">Jam
+                                            Keluar</label>
+                                        <input type="time" name="exit_time" id="exit_time"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
+                                            value="{{ optional($trade->exit_timestamp)->format('H:i') }}">
+                                    </div>
+
+                                    <div class="space-y-2">
                                         <label for="exit_date" class="block text-sm font-semibold text-gray-300">Tanggal
                                             Keluar</label>
                                         <input type="date" name="exit_date" id="exit_date"
@@ -314,13 +322,6 @@
                                             value="{{ optional($trade->exit_timestamp)->format('Y-m-d') }}">
                                     </div>
 
-                                    <div class="space-y-2">
-                                        <label for="exit_time" class="block text-sm font-semibold text-gray-300">Jam
-                                            Keluar</label>
-                                        <input type="time" name="exit_time" id="exit_time"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
-                                            value="{{ optional($trade->exit_timestamp)->format('H:i') }}">
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -459,7 +460,7 @@
                                 </h3>
 
                                 <div class="space-y-4">
-                                    <!-- Before Link -->
+                                    {{-- <!-- Before Link -->
                                     <div class="space-y-2">
                                         <label for="before_link"
                                             class="block text-sm font-semibold text-gray-300 flex items-center">
@@ -473,7 +474,7 @@
                                         <p class="text-xs text-gray-500 mt-1">
                                             Dukung TradingView link, S3 URL, atau direct image link (PNG, JPG, GIF, WebP)
                                         </p>
-                                    </div>
+                                    </div> --}}
 
                                     <!-- After Link -->
                                     <div class="space-y-2">

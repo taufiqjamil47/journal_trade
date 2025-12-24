@@ -201,13 +201,13 @@
                         <p class="text-gray-500 text-sm mt-1">Total: {{ $trades->total() }} trades</p>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-3">
+                    <div class="grid lg:flex grid-cols-3 lg:flex-wrap items-center gap-3">
                         <!-- Sorting Dropdown -->
                         <div class="relative group">
                             <button
                                 class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
                                 <i class="fas fa-sort mr-2"></i>
-                                Sort By
+                                <span class="hidden lg:block">Sort By</span>
                                 <i class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
                             <!-- Dropdown ke samping kanan -->
@@ -255,7 +255,7 @@
                             <button
                                 class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
                                 <i class="fas fa-exchange-alt mr-2"></i>
-                                Data
+                                <span class="hidden lg:block">Data</span>
                                 <i
                                     class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
@@ -357,7 +357,7 @@
                             <button
                                 class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex items-center group">
                                 <i class="fas fa-tools mr-2"></i>
-                                Manage
+                                <span class="hidden lg:block">Manage</span>
                                 <i
                                     class="fas fa-chevron-down ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
@@ -887,8 +887,8 @@
                     });
 
                     // AJAX request to delete
-                    fetch(`/trades/${tradeId}`, {
-                            method: 'DELETE',
+                    fetch(`/trades/${tradeId}/delete`, {
+                            method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Content-Type': 'application/json',

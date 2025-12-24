@@ -88,10 +88,12 @@
                                 <select name="symbol_id"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                                     @foreach ($symbols as $symbol)
-                                        <option value="{{ $symbol->id }}" data-pip_value="{{ $symbol->pip_value }}"
-                                            data-pip_worth="{{ $symbol->pip_worth ?? 10 }}"
-                                            data-pip_position="{{ $symbol->pip_position ?? '' }}" class="bg-gray-800">
-                                            {{ $symbol->name }}</option>
+                                        <option value="{{ $symbol->id }}"
+                                            data-pip-value="{{ $symbol->formatted_pip_value }}"
+                                            data-pip-worth="{{ $symbol->formatted_pip_worth }}"
+                                            data-pip-position="{{ $symbol->pip_position ?? '' }}">
+                                            {{ $symbol->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -164,6 +166,20 @@
                                         class="w-full bg-gray-800 border border-green-700/40 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
                                         placeholder="0.00000" required>
                                 </div>
+                            </div>
+                            <!-- Before Link -->
+                            <div class="space-y-2">
+                                <label for="before_link"
+                                    class="block text-sm font-semibold text-gray-300 flex items-center">
+                                    <i class="fas fa-image mr-2 text-primary-400"></i>
+                                    Before Entry Screenshot
+                                </label>
+                                <input type="url" name="before_link" id="before_link"
+                                    class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
+                                    placeholder="https://www.tradingview.com/x/Ha0dhC5t/ atau https://s3.amazonaws.com/image.png">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Dukung TradingView link, S3 URL, atau direct image link (PNG, JPG, GIF, WebP)
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -329,30 +345,34 @@
             const takeProfit = parseFloat(document.querySelector('input[name="take_profit"]').value) || 0;
             const type = document.querySelector('select[name="type"]').value;
 
-            // Read pip settings from selected symbol option
             const symbolSelect = document.querySelector('select[name="symbol_id"]');
             const selectedOption = symbolSelect ? symbolSelect.options[symbolSelect.selectedIndex] : null;
-            const pipValue = selectedOption && selectedOption.dataset.pip_value ? parseFloat(selectedOption.dataset
-                .pip_value) : 0.00010;
-            const pipWorth = selectedOption && selectedOption.dataset.pip_worth ? parseFloat(selectedOption.dataset
-                .pip_worth) : 10;
 
-            // autoDetermineTradeType();
+            // Read data attributes using kebab-case -> dataset camelCase mapping
+            const pipValue = selectedOption && (selectedOption.dataset.pipValue || selectedOption.dataset.pip_value) ?
+                parseFloat(selectedOption.dataset.pipValue || selectedOption.dataset.pip_value) : 0.0001;
+            const pipWorth = selectedOption && (selectedOption.dataset.pipWorth || selectedOption.dataset.pip_worth) ?
+                parseFloat(selectedOption.dataset.pipWorth || selectedOption.dataset.pip_worth) : 10;
 
             if (entry && stopLoss && takeProfit) {
+                // FIX: Hindari floating point error dengan pembulatan
                 let slDistance, tpDistance;
 
-                // Hitung distance
                 if (type === 'buy') {
-                    slDistance = Math.abs(entry - stopLoss);
-                    tpDistance = Math.abs(takeProfit - entry);
+                    slDistance = Math.abs(parseFloat((entry - stopLoss).toFixed(5)));
+                    tpDistance = Math.abs(parseFloat((takeProfit - entry).toFixed(5)));
                 } else {
-                    slDistance = Math.abs(stopLoss - entry);
-                    tpDistance = Math.abs(entry - takeProfit);
+                    slDistance = Math.abs(parseFloat((stopLoss - entry).toFixed(5)));
+                    tpDistance = Math.abs(parseFloat((entry - takeProfit).toFixed(5)));
                 }
 
-                const slPips = pipValue > 0 ? slDistance / pipValue : 0;
-                const tpPips = pipValue > 0 ? tpDistance / pipValue : 0;
+                // FIX: Pembulatan SAMA dengan PHP (1 desimal)
+                const slPipsRaw = pipValue > 0 ? slDistance / pipValue : 0;
+                const tpPipsRaw = pipValue > 0 ? tpDistance / pipValue : 0;
+
+                // Pembulatan ke 1 desimal seperti di PHP
+                const slPips = Math.round(slPipsRaw * 10) / 10;
+                const tpPips = Math.round(tpPipsRaw * 10) / 10;
 
                 // Update display
                 document.getElementById('slPips').textContent = `${slPips.toFixed(1)} pips`;
@@ -364,8 +384,18 @@
                 document.getElementById('riskRewardRatio').textContent = ratioDisplay;
                 document.getElementById('rr_ratio').value = ratio.toFixed(2);
 
-                // Calculate Position Size (use pipWorth per-symbol)
+                // Calculate Position Size
                 calculatePositionSize(slPips, pipWorth);
+
+                // DEBUG: Tampilkan nilai aktual
+                console.log('FIXED CALCULATION:', {
+                    slDistance: slDistance,
+                    tpDistance: tpDistance,
+                    slPipsRaw: slPipsRaw,
+                    slPipsRounded: slPips,
+                    pipValue: pipValue,
+                    pipWorth: pipWorth
+                });
 
             } else {
                 resetRiskCalculator();
@@ -374,20 +404,43 @@
 
         // Calculate Position Size
         function calculatePositionSize(slPips, pipWorth) {
-            pipWorth = typeof pipWorth !== 'undefined' ? pipWorth : 10;
+            pipWorth = pipWorth || 10;
             const currentEquity = parseFloat({{ $currentEquity }});
-
-            // Get selected risk percent
             const selectedRisk = document.querySelector('input[name="risk_percent"]:checked');
             const riskPercent = selectedRisk ? parseFloat(selectedRisk.value) : 2;
 
-            if (slPips > 0 && currentEquity > 0) {
+            console.log('POSITION SIZE INPUT:', {
+                slPips: slPips,
+                pipWorth: pipWorth,
+                currentEquity: currentEquity,
+                riskPercent: riskPercent
+            });
+
+            if (slPips > 0 && currentEquity > 0 && pipWorth > 0) {
                 const riskUSD = currentEquity * (riskPercent / 100);
                 const lotSize = riskUSD / (slPips * pipWorth);
-                const finalLotSize = Math.max(lotSize, 0.01).toFixed(2);
-                document.getElementById('positionSize').textContent = `${finalLotSize} lots`;
+
+                console.log('LOT SIZE CALCULATION:', {
+                    riskUSD: riskUSD,
+                    denominator: slPips * pipWorth,
+                    rawLotSize: lotSize
+                });
+
+                // Minimum lot size 0.01, bulatkan 2 desimal
+                const finalLotSize = Math.max(lotSize, 0.01);
+
+                // Tampilkan dengan detail formula
+                const positionSizeElement = document.getElementById('positionSize');
+                positionSizeElement.textContent = `${finalLotSize.toFixed(2)} lots`;
+                positionSizeElement.title =
+                    `$${riskUSD.toFixed(2)} / (${slPips.toFixed(1)} × $${pipWorth}) = ${finalLotSize.toFixed(2)} lots`;
+
+                // DEBUG: Tampilkan di console
+                console.log('FINAL LOT SIZE:', finalLotSize);
+
             } else {
                 document.getElementById('positionSize').textContent = '-';
+                console.log('Position size calculation skipped - missing data');
             }
         }
 
@@ -460,9 +513,16 @@
                         slDistance = Math.abs(stopLoss - entry);
                     }
 
-                    const pipValue = 0.00010;
-                    const slPips = slDistance / pipValue;
-                    calculatePositionSize(slPips);
+                    // Use currently selected symbol pip value / pip worth instead of hardcoded 0.00010
+                    const symbolSelect = document.querySelector('select[name="symbol_id"]');
+                    const selOpt = symbolSelect ? symbolSelect.options[symbolSelect.selectedIndex] : null;
+                    const pipValueRp = selOpt && (selOpt.dataset.pipValue || selOpt.dataset.pip_value) ?
+                        parseFloat(selOpt.dataset.pipValue || selOpt.dataset.pip_value) : 0.0001;
+                    const pipWorthRp = selOpt && (selOpt.dataset.pipWorth || selOpt.dataset.pip_worth) ?
+                        parseFloat(selOpt.dataset.pipWorth || selOpt.dataset.pip_worth) : 10;
+
+                    const slPips = pipValueRp > 0 ? (slDistance / pipValueRp) : 0;
+                    calculatePositionSize(slPips, pipWorthRp);
                 }
             });
         });
@@ -480,6 +540,25 @@
 
             // Initial calculation
             calculateRisk();
+        });
+
+        // Di bagian akhir script create.blade.php, tambahkan:
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validasi bahwa pipWorth tidak 0
+            const symbolSelect = document.querySelector('select[name="symbol_id"]');
+            if (symbolSelect) {
+                symbolSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const pipWorth = parseFloat(selectedOption.dataset.pipWorth || selectedOption.dataset
+                        .pip_worth || 10);
+
+                    if (pipWorth <= 0) {
+                        console.warn('Warning: pip_worth is 0 or negative for symbol:', selectedOption
+                            .text);
+                        // Optionally show user warning
+                    }
+                });
+            }
         });
     </script>
 

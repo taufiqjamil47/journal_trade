@@ -426,7 +426,7 @@
             }
 
             // Default state selalu hidden
-            let isNavVisible = true;
+            let isNavVisible = false;
 
             // Set initial state
             updateNavVisibility(isNavVisible);
