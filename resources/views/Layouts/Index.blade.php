@@ -190,6 +190,7 @@
         @yield('content')
 
         @include('components.floating-note-form')
+        @include('components.language-switcher')
     </div>
 
     <script>

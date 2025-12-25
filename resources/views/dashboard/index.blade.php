@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Dashboard')
+@section('title', __('dashboard.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trading Dashboard
+                        {{ __('dashboard.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Pantau kinerja dan analitik perdagangan Anda</p>
+                    <p class="text-gray-500 mt-1">{{ __('dashboard.subtitle') }}</p>
                 </div>
 
                 <!-- Navigation and Trader Info -->
@@ -31,7 +31,7 @@
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Dashboard
+                                        {{ __('dashboard.trade_dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -44,7 +44,7 @@
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        PnL Calendar
+                                        {{ __('dashboard.pnl_calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -57,7 +57,7 @@
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Analysis
+                                        {{ __('dashboard.trade_analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -72,7 +72,7 @@
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Journal Trades
+                                        {{ __('dashboard.journal_trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -85,7 +85,7 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Sessions
+                                        {{ __('dashboard.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -98,7 +98,7 @@
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Symbols
+                                        {{ __('dashboard.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -111,7 +111,7 @@
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Rules
+                                        {{ __('dashboard.rules') }}
                                     </span>
                                 </a>
                             @endif
@@ -133,7 +133,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">Balance</p>
+                        <p class="text-gray-400 text-sm">{{ __('dashboard.balance') }}</p>
                         <div class="flex items-center gap-2">
                             <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
                             <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
@@ -145,7 +145,7 @@
                             </button>
                         </div>
                         <div class="text-sm mt-1 text-gray-400">
-                            Initial: ${{ number_format($initial_balance ?? $balance, 2) }}
+                            {{ __('dashboard.initial') }}: ${{ number_format($initial_balance ?? $balance, 2) }}
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -156,7 +156,7 @@
                 </div>
                 <div class="mt-4 flex items-center text-sm">
                     <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                    <span class="text-green-400">Active</span>
+                    <span class="text-green-400">{{ __('dashboard.active') }}</span>
                 </div>
             </div>
 
@@ -164,7 +164,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">Equity</p>
+                        <p class="text-gray-400 text-sm">{{ __('dashboard.equity') }}</p>
                         <div class="flex items-center gap-2">
                             <h3 id="equityText" class="text-2xl font-bold mt-2">******</h3>
                             <h3 id="equityValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($equity, 2) }}
@@ -181,14 +181,15 @@
                             <div class="flex items-center">
                                 @if ($equityChange > 0)
                                     <i class="fas fa-arrow-up text-green-500 text-xs mr-1"></i>
-                                    <span class="text-green-400">+{{ number_format($equityChange, 2) }}% from
-                                        initial</span>
+                                    <span class="text-green-400">+{{ number_format($equityChange, 2) }}%
+                                        {{ __('dashboard.from_initial') }}</span>
                                 @elseif($equityChange < 0)
                                     <i class="fas fa-arrow-down text-red-500 text-xs mr-1"></i>
-                                    <span class="text-red-400">{{ number_format($equityChange, 2) }}% from initial</span>
+                                    <span class="text-red-400">{{ number_format($equityChange, 2) }}%
+                                        {{ __('dashboard.from_initial') }}</span>
                                 @else
                                     <i class="fas fa-minus text-gray-500 text-xs mr-1"></i>
-                                    <span class="text-gray-400">0% change</span>
+                                    <span class="text-gray-400">0% {{ __('dashboard.change') }}</span>
                                 @endif
                             </div>
 
@@ -215,13 +216,13 @@
                 <div class="mt-4 flex items-center text-sm">
                     @if ($equity_change_percentage > 0)
                         <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                        <span class="text-green-400">Growing</span>
+                        <span class="text-green-400">{{ __('dashboard.growing') }}</span>
                     @elseif($equity_change_percentage < 0)
                         <i class="fas fa-arrow-trend-down text-red-500 mr-1"></i>
-                        <span class="text-red-400">Declining</span>
+                        <span class="text-red-400">{{ __('dashboard.declining') }}</span>
                     @else
                         <i class="fas fa-minus text-gray-500 mr-1"></i>
-                        <span class="text-gray-400">Stable</span>
+                        <span class="text-gray-400">{{ __('dashboard.stable') }}</span>
                     @endif
                 </div>
             </div>
@@ -230,7 +231,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">Win Rate</p>
+                        <p class="text-gray-400 text-sm">{{ __('dashboard.win_rate') }}</p>
                         <h3 class="text-2xl font-bold mt-2">{{ $winrate }}%</h3>
                     </div>
                     <div class="bg-green-500/20 p-3 rounded-lg">
@@ -239,7 +240,7 @@
                 </div>
                 <div class="mt-4 flex items-center text-sm">
                     <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                    <span class="text-green-400">Profitable</span>
+                    <span class="text-green-400">{{ __('dashboard.profitable') }}</span>
                 </div>
             </div>
         </div>
@@ -249,21 +250,27 @@
             <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Period Filter -->
                 <div>
-                    <label for="period" class="block text-sm font-medium text-gray-300 mb-1">Period</label>
+                    <label for="period"
+                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('dashboard.period') }}</label>
                     <select name="period" onchange="this.form.submit()"
                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                        <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
-                        <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
-                        <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
+                        <option value="all" {{ $period === 'all' ? 'selected' : '' }}>{{ __('dashboard.all_time') }}
+                        </option>
+                        <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
+                            {{ __('dashboard.last_7_days') }}</option>
+                        <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>
+                            {{ __('dashboard.last_30_days') }}</option>
                     </select>
                 </div>
 
                 <!-- Session Filter -->
                 <div>
-                    <label for="session" class="block text-sm font-medium text-gray-300 mb-1">Session</label>
+                    <label for="session"
+                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('dashboard.session') }}</label>
                     <select name="session" onchange="this.form.submit()"
                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                        <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>All Sessions</option>
+                        <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>
+                            {{ __('dashboard.all_sessions') }}</option>
                         @foreach ($availableSessions as $sessionName)
                             <option value="{{ $sessionName }}" {{ $sessionFilter === $sessionName ? 'selected' : '' }}>
                                 {{ $sessionName }}
@@ -274,10 +281,12 @@
 
                 <!-- Entry Type Filter -->
                 <div>
-                    <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry Type</label>
+                    <label for="entry_type"
+                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('dashboard.entry_type') }}</label>
                     <select name="entry_type" onchange="this.form.submit()"
                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                        <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types</option>
+                        <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>
+                            {{ __('dashboard.all_types') }}</option>
                         @foreach ($availableEntryTypes as $entryType)
                             <option value="{{ $entryType }}" {{ $entryFilter === $entryType ? 'selected' : '' }}>
                                 {{ $entryType }}
@@ -316,16 +325,19 @@
         <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
-                    <h2 class="text-xl font-bold text-primary-300">Equity Curve per Session</h2>
-                    <p class="text-gray-500 text-sm mt-1">Performa di berbagai sesi perdagangan</p>
+                    <h2 class="text-xl font-bold text-primary-300">{{ __('dashboard.equity_curve') }}</h2>
+                    <p class="text-gray-500 text-sm mt-1">{{ __('dashboard.equity_subtitle') }}</p>
                 </div>
                 <div class="mt-2 md:mt-0">
                     <form method="GET" action="{{ route('dashboard') }}">
                         <select name="period" onchange="this.form.submit()"
                             class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                            <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
-                            <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
-                            <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
+                            <option value="all" {{ $period === 'all' ? 'selected' : '' }}>
+                                {{ __('dashboard.all_time') }}</option>
+                            <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
+                                {{ __('dashboard.last_7_days') }}</option>
+                            <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>
+                                {{ __('dashboard.last_30_days') }}</option>
                         </select>
                     </form>
                 </div>

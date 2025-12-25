@@ -61,6 +61,48 @@ class TradeReportController extends Controller
         $end   = Carbon::create($year, $month, 1)->endOfMonth()->endOfWeek(Carbon::SATURDAY);
         $period = CarbonPeriod::create($start, $end);
 
-        return view('reports.calendar', compact('period', 'daily', 'trades', 'weekly', 'monthly', 'month', 'year'));
+        // Kirim translation data ke view
+        $monthNames = [
+            1 => __('month_names.january'),
+            2 => __('month_names.february'),
+            3 => __('month_names.march'),
+            4 => __('month_names.april'),
+            5 => __('month_names.may'),
+            6 => __('month_names.june'),
+            7 => __('month_names.july'),
+            8 => __('month_names.august'),
+            9 => __('month_names.september'),
+            10 => __('month_names.october'),
+            11 => __('month_names.november'),
+            12 => __('month_names.december'),
+        ];
+
+        $shortMonthNames = [
+            1 => __('month_names.jan'),
+            2 => __('month_names.feb'),
+            3 => __('month_names.mar'),
+            4 => __('month_names.apr'),
+            5 => __('month_names.may_short'),
+            6 => __('month_names.jun'),
+            7 => __('month_names.jul'),
+            8 => __('month_names.aug'),
+            9 => __('month_names.sep'),
+            10 => __('month_names.oct'),
+            11 => __('month_names.nov'),
+            12 => __('month_names.dec'),
+        ];
+
+        // return view('reports.calendar', compact('period', 'daily', 'trades', 'weekly', 'monthly', 'month', 'year'));
+        return view('reports.calendar', [
+            'period' => $period,
+            'daily' => $daily,
+            'trades' => $trades,
+            'weekly' => $weekly,
+            'monthly' => $monthly,
+            'month' => $month,
+            'year' => $year,
+            'monthNames' => $monthNames,
+            'shortMonthNames' => $shortMonthNames
+        ]);
     }
 }

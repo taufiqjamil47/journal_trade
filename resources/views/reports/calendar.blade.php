@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'PnL Calendar')
+@section('title', __('calendar.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,14 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Calendar Report
+                        {{ __('calendar.header_title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ \Carbon\Carbon::create($year, $month)->format('F Y') }}</p>
+                    <p class="text-gray-500 mt-1">
+                        {{ __('calendar.header_subtitle', [
+                            'month' => \Carbon\Carbon::create($year, $month)->format('F'),
+                            'year' => $year,
+                        ]) }}
+                    </p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <!-- Toggle Button -->
@@ -25,11 +30,11 @@
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
-                                    title="Dashboard">
+                                    title="{{ __('calendar.trade_dashboard') }}">
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Dashboard
+                                        {{ __('calendar.trade_dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -38,11 +43,11 @@
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Calendar">
+                                    title="{{ __('calendar.pnl_calendar') }}">
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        PnL Calendar
+                                        {{ __('calendar.pnl_calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -51,11 +56,11 @@
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Analysis">
+                                    title="{{ __('calendar.trade_analysis') }}">
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Analysis
+                                        {{ __('calendar.trade_analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -66,11 +71,11 @@
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Trades">
+                                    title="{{ __('calendar.journal_trades') }}">
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Journal Trades
+                                        {{ __('calendar.journal_trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -79,11 +84,11 @@
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Sessions">
+                                    title="{{ __('calendar.sessions') }}">
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Sessions
+                                        {{ __('calendar.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -92,11 +97,11 @@
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Symbols">
+                                    title="{{ __('calendar.symbols') }}">
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Symbols
+                                        {{ __('calendar.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -105,11 +110,11 @@
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Rules">
+                                    title="{{ __('calendar.rules') }}">
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Rules
+                                        {{ __('calendar.rules') }}
                                     </span>
                                 </a>
                             @endif
@@ -119,7 +124,7 @@
                     <!-- Trader Item -->
                     <div class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700">
                         <i class="fas fa-user text-primary-500 mr-2"></i>
-                        <span>Trader</span>
+                        <span>{{ __('calendar.trader') }}</span>
                     </div>
                 </div>
             </div>
@@ -133,11 +138,11 @@
                     <a href="{{ route('reports.calendar', ['month' => $month == 1 ? 12 : $month - 1, 'year' => $month == 1 ? $year - 1 : $year]) }}"
                         class="flex items-center justify-center bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-700 hover:border-primary-500 transition-colors flex-1 md:flex-none max-w-[48%] md:max-w-none">
                         <i class="fas fa-chevron-left text-primary-500 mr-2 text-sm md:text-base"></i>
-                        <span class="text-sm md:text-base truncate">Previous Month</span>
+                        <span class="text-sm md:text-base truncate">{{ __('calendar.previous_month') }}</span>
                     </a>
                     <a href="{{ route('reports.calendar', ['month' => $month == 12 ? 1 : $month + 1, 'year' => $month == 12 ? $year + 1 : $year]) }}"
                         class="flex items-center justify-center bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-700 hover:border-primary-500 transition-colors flex-1 md:flex-none max-w-[48%] md:max-w-none">
-                        <span class="text-sm md:text-base truncate">Next Month</span>
+                        <span class="text-sm md:text-base truncate">{{ __('calendar.next_month') }}</span>
                         <i class="fas fa-chevron-right text-primary-500 ml-2 text-sm md:text-base"></i>
                     </a>
                 </div>
@@ -149,12 +154,12 @@
                         <div class="grid grid-cols-2 gap-3 w-full md:w-auto md:flex md:items-center">
                             <div class="grid lg:flex items-center gap-2 w-full">
                                 <label for="monthSelect"
-                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">Month:</label>
+                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.month') }}:</label>
                                 <select id="monthSelect"
                                     class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
                                     @for ($m = 1; $m <= 12; $m++)
                                         <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
-                                            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                            {{ $monthNames[$m] ?? \Carbon\Carbon::create()->month($m)->format('F') }}
                                         </option>
                                     @endfor
                                 </select>
@@ -162,7 +167,7 @@
 
                             <div class="grid lg:flex items-center gap-2 w-full">
                                 <label for="yearSelect"
-                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">Year:</label>
+                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.year') }}:</label>
                                 <select id="yearSelect"
                                     class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
                                     @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
@@ -178,12 +183,12 @@
                         <div class="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
                             <button id="goToDate"
                                 class="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none">
-                                Go
+                                {{ __('calendar.go') }}
                             </button>
 
                             <a href="{{ route('reports.calendar', ['month' => date('m'), 'year' => date('Y')]) }}"
                                 class="bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none text-center">
-                                Today
+                                {{ __('calendar.today') }}
                             </a>
                         </div>
                     </div>
@@ -193,14 +198,16 @@
 
         <!-- Calendar -->
         <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
-            <h3 class="text-xl font-bold text-primary-300 mb-4">Day Calendar ({{ $year }})</h3>
+            <h3 class="text-xl font-bold text-primary-300 mb-4">
+                {{ __('calendar.day_calendar', ['year' => $year]) }}
+            </h3>
 
             <!-- Container dengan scroll horizontal -->
             <div class="overflow-x-auto pb-2 -mx-3 sm:mx-0">
                 <div class="min-w-[900px] sm:min-w-full">
                     <!-- Day headers + Weekly Summary Header -->
                     <div class="grid grid-cols-9 gap-1 mb-2">
-                        @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Week Summary'] as $day)
+                        @foreach ([__('calendar.sun'), __('calendar.mon'), __('calendar.tue'), __('calendar.wed'), __('calendar.thu'), __('calendar.fri'), __('calendar.sat'), __('calendar.week_summary')] as $day)
                             <div
                                 class="text-center font-medium text-gray-400 py-2 bg-gray-750 rounded-lg {{ $loop->last ? 'col-span-2' : '' }}">
                                 {{ $day }}
@@ -227,10 +234,9 @@
                                 $isCurrentMonth = $day->month == $month;
                                 $opacityClass = $isCurrentMonth ? 'opacity-100' : 'opacity-30';
                                 $isToday = $date == date('Y-m-d');
-                                $dayOfWeek = $day->dayOfWeek; // 0 = Sunday, 6 = Saturday
+                                $dayOfWeek = $day->dayOfWeek;
                                 $currentWeekNum = $day->weekOfYear;
 
-                                // Accumulate weekly data
                                 if ($weekNumber === null) {
                                     $weekNumber = $currentWeekNum;
                                     $currentWeekStart = $day->copy()->startOfWeek();
@@ -245,7 +251,6 @@
                                     'day' => $day,
                                 ];
 
-                                // Determine colors based on profit
                                 if ($profit > 0) {
                                     $bgColor = 'bg-green-800/20';
                                     $borderColor = 'border-green-500/40';
@@ -288,13 +293,11 @@
                                             <div class="w-16 h-8">
                                                 <svg viewBox="0 0 100 40" class="w-full h-full">
                                                     @if ($profit > 0)
-                                                        <!-- Green upward trend line -->
                                                         <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5" stroke="#10B981"
                                                             stroke-width="2" fill="none" class="profit-line" />
                                                         <path d="M0,30 L20,20 L40,25 L60,15 L80,10 L100,5 L100,40 L0,40 Z"
                                                             fill="rgba(16, 185, 129, 0.1)" class="profit-fill" />
                                                     @else
-                                                        <!-- Red downward trend line -->
                                                         <path d="M0,10 L20,15 L40,20 L60,25 L80,30 L100,35"
                                                             stroke="#EF4444" stroke-width="2" fill="none"
                                                             class="loss-line" />
@@ -305,7 +308,7 @@
                                             </div>
                                             <span
                                                 class="text-sm {{ $profit > 0 ? 'text-green-400' : 'text-red-400' }} ml-2">
-                                                {{ $profit > 0 ? 'Profit' : 'Loss' }}
+                                                {{ $profit > 0 ? __('calendar.profit') : __('calendar.loss') }}
                                             </span>
                                         @endif
                                     </div>
@@ -315,7 +318,6 @@
                             <!-- Weekly Summary Column (Every Saturday OR last day of month) -->
                             @if ($dayOfWeek == 6 || $loop->last)
                                 @php
-                                    // Calculate week stats
                                     $weekProfitColor =
                                         $weekTotalProfit > 0
                                             ? 'text-green-400'
@@ -335,7 +337,6 @@
                                                 ? 'border-red-500/40'
                                                 : 'border-gray-600');
 
-                                    // Check if current week
                                     $isCurrentWeek =
                                         $currentWeekStart <= now() && now() <= $currentWeekStart->copy()->endOfWeek();
                                     if ($isCurrentWeek) {
@@ -343,7 +344,6 @@
                                         $weekBgColor .= ' bg-primary-500/10';
                                     }
 
-                                    // Get week range
                                     $weekStartFormatted = $currentWeekStart->format('M d');
                                     $weekEndFormatted = $currentWeekStart->copy()->endOfWeek()->format('M d');
                                     $weekRange = "{$weekStartFormatted} - {$weekEndFormatted}";
@@ -357,21 +357,21 @@
                                     data-week-profit="{{ $weekTotalProfit }}" data-week-trades="{{ $weekTotalTrades }}">
                                     <div class="flex justify-between items-start mb-1">
                                         <strong class="text-sm text-gray-200">
-                                            W{{ $weekNumber }}
+                                            {{ __('calendar.week_label', ['week' => $weekNumber]) }}
                                         </strong>
                                         @if ($isCurrentWeek)
                                             <span
-                                                class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">Now</span>
+                                                class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">{{ __('calendar.now') }}</span>
                                         @endif
                                     </div>
                                     <div class="text-xs text-gray-400 mb-1">{{ $weekRange }}</div>
                                     <div class="space-y-1">
                                         <div class="flex justify-between items-center">
-                                            <span class="text-xs text-gray-400">Trades:</span>
+                                            <span class="text-xs text-gray-400">{{ __('calendar.trades') }}:</span>
                                             <span class="text-xs font-medium text-gray-300">{{ $weekTotalTrades }}</span>
                                         </div>
                                         <div class="flex justify-between items-center">
-                                            <span class="text-xs text-gray-400">P/L:</span>
+                                            <span class="text-xs text-gray-400">{{ __('calendar.pl') }}:</span>
                                             <span class="text-xs font-bold {{ $weekProfitColor }}">
                                                 ${{ number_format($weekTotalProfit, 2) }}
                                             </span>
@@ -381,12 +381,15 @@
                                                 <div class="flex justify-center">
                                                     @if ($weekTotalProfit > 0)
                                                         <i class="fas fa-arrow-up text-green-500 text-xs"></i>
-                                                        <span class="text-xs text-green-400 ml-1">Profit</span>
+                                                        <span
+                                                            class="text-xs text-green-400 ml-1">{{ __('calendar.profit') }}</span>
                                                     @elseif ($weekTotalProfit < 0)
                                                         <i class="fas fa-arrow-down text-red-500 text-xs"></i>
-                                                        <span class="text-xs text-red-400 ml-1">Loss</span>
+                                                        <span
+                                                            class="text-xs text-red-400 ml-1">{{ __('calendar.loss') }}</span>
                                                     @else
-                                                        <span class="text-xs text-gray-400">Even</span>
+                                                        <span
+                                                            class="text-xs text-gray-400">{{ __('calendar.even') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -395,7 +398,6 @@
                                 </div>
 
                                 @php
-                                    // Reset weekly counters for next week
                                     $weekNumber = $currentWeekNum;
                                     $weekTotalProfit = 0;
                                     $weekTotalTrades = 0;
@@ -415,7 +417,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-primary-300">Profit/Loss Trend</h3>
+                        <h3 class="text-lg font-bold text-primary-300">{{ __('calendar.profit_loss_trend') }}</h3>
                         <p id="chartPeriodInfo" class="text-sm text-gray-400 mt-1">
                             {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}</p>
                     </div>
@@ -424,22 +426,22 @@
                         <div class="flex bg-gray-750 rounded-lg p-1 border border-gray-600">
                             <button type="button" data-period="weekly"
                                 class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-primary-600 text-white">
-                                Weekly
+                                {{ __('calendar.weekly') }}
                             </button>
                             <button type="button" data-period="monthly"
                                 class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-700">
-                                Monthly
+                                {{ __('calendar.monthly') }}
                             </button>
                             <button type="button" data-period="yearly"
                                 class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-700">
-                                Yearly
+                                {{ __('calendar.yearly') }}
                             </button>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <div class="text-xs text-gray-400 hidden md:block" id="dataCountInfo">
                                 {{ $weekly->count() }}
-                                weeks</div>
+                                {{ __('calendar.weeks') }}</div>
                             <div class="bg-blue-500/20 p-1.5 rounded-lg">
                                 <i class="fas fa-chart-line text-blue-500 text-sm"></i>
                             </div>
@@ -455,7 +457,7 @@
                         <div class="flex flex-col items-center">
                             <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500 mb-2">
                             </div>
-                            <p class="text-sm text-gray-400">Loading chart...</p>
+                            <p class="text-sm text-gray-400">{{ __('calendar.loading_chart') }}</p>
                         </div>
                     </div>
 
@@ -467,8 +469,8 @@
                     <!-- No Data State -->
                     <div id="noDataMessage" class="hidden flex flex-col items-center justify-center py-12 text-gray-400">
                         <i class="fas fa-chart-bar text-3xl mb-3 opacity-50"></i>
-                        <p class="text-base text-gray-300">No data available for selected period</p>
-                        <p class="text-sm mt-1">Start trading to see your performance trend</p>
+                        <p class="text-base text-gray-300">{{ __('calendar.no_data_available') }}</p>
+                        <p class="text-sm mt-1">{{ __('calendar.start_trading_see_performance') }}</p>
                     </div>
                 </div>
 
@@ -476,19 +478,19 @@
                 <div class="mt-4 flex flex-wrap gap-4 justify-center">
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">Profit/Loss ($)</span>
+                        <span class="text-sm text-gray-300">{{ __('calendar.profit_loss_currency') }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">Trades Count</span>
+                        <span class="text-sm text-gray-300">{{ __('calendar.trades_count') }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-primary-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">Profit</span>
+                        <span class="text-sm text-gray-300">{{ __('calendar.profit_legend') }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">Loss</span>
+                        <span class="text-sm text-gray-300">{{ __('calendar.loss_legend') }}</span>
                     </div>
                 </div>
             </div>
@@ -496,9 +498,12 @@
             <!-- Monthly Summary -->
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-primary-300">Monthly Calendar ({{ $year }})</h3>
+                    <h3 class="text-lg font-bold text-primary-300">
+                        {{ __('calendar.monthly_calendar', ['year' => $year]) }}
+                    </h3>
                     <div class="flex items-center gap-2">
-                        <div class="text-xs text-gray-400">{{ $monthly->count() }} months with trades</div>
+                        <div class="text-xs text-gray-400">{{ $monthly->count() }}
+                            {{ __('calendar.months_with_trades') }}</div>
                         <div class="bg-green-500/20 p-1.5 rounded-lg">
                             <i class="fas fa-calendar-alt text-green-500 text-sm"></i>
                         </div>
@@ -514,11 +519,12 @@
 
                         @foreach ($monthly as $m)
                             @php
-                                $monthName = \Carbon\Carbon::create()->month($m->month)->format('M');
+                                $monthName =
+                                    $shortMonthNames[$m->month] ??
+                                    \Carbon\Carbon::create()->month($m->month)->format('M');
                                 $totalProfit = $m->total_profit ?? 0;
                                 $totalTrades = $m->total_trades ?? 0;
 
-                                // Determine colors
                                 $profitColor = 'text-gray-400';
                                 $profitBg = '';
 
@@ -542,7 +548,7 @@
                                         <h4 class="font-semibold text-gray-200 text-sm">{{ $monthName }}</h4>
                                         @if ($isCurrentMonth)
                                             <span
-                                                class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">Now</span>
+                                                class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">{{ __('calendar.now') }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -551,7 +557,7 @@
                                 <div class="space-y-1 flex items-center justify-between">
                                     <!-- Trades -->
                                     <div>
-                                        <div class="text-xs text-gray-400 mb-0.5">Trades</div>
+                                        <div class="text-xs text-gray-400 mb-0.5">{{ __('calendar.trades') }}</div>
                                         <div class="font-bold text-gray-200 text-base">
                                             {{ $totalTrades }}
                                         </div>
@@ -559,7 +565,7 @@
 
                                     <!-- P/L -->
                                     <div>
-                                        <div class="text-xs text-gray-400 mb-0.5">P/L</div>
+                                        <div class="text-xs text-gray-400 mb-0.5">{{ __('calendar.pl') }}</div>
                                         <div class="font-bold {{ $profitColor }} text-lg flex items-center gap-2">
                                             ${{ number_format($totalProfit, 0) }}
                                             @if ($totalProfit != 0)
@@ -591,7 +597,7 @@
     <div id="tradeModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
         <div class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-md mx-auto" id="modalContentContainer">
             <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h4 id="modalTitle" class="text-lg font-bold text-primary-400">Trade Details</h4>
+                <h4 id="modalTitle" class="text-lg font-bold text-primary-400">{{ __('calendar.trade_details') }}</h4>
                 <button id="closeModal" class="text-gray-400 hover:text-white transition-colors p-2">
                     <i class="fas fa-times text-lg"></i>
                 </button>
@@ -613,6 +619,23 @@
             const monthSelect = document.getElementById('monthSelect');
             const yearSelect = document.getElementById('yearSelect');
             const goToDateBtn = document.getElementById('goToDate');
+
+            // Get translation strings from Blade
+            const translations = {
+                profit: "{{ __('calendar.profit') }}",
+                loss: "{{ __('calendar.loss') }}",
+                winning: "{{ __('calendar.winning') }}",
+                losing: "{{ __('calendar.losing') }}",
+                total: "{{ __('calendar.total') }}",
+                symbol: "{{ __('calendar.symbol') }}",
+                type: "{{ __('calendar.type') }}",
+                no_trades_day: "{{ __('calendar.no_trades_day') }}",
+                start_trading_see_performance_day: "{{ __('calendar.start_trading_see_performance_day') }}",
+                click_days_detail: "{{ __('calendar.click_days_detail') }}",
+                week_range: "{{ __('calendar.week_range') }}",
+                to: "{{ __('calendar.to') }}",
+                total_pl: "{{ __('calendar.total_pl') }}"
+            };
 
             // Navigate to selected month/year
             goToDateBtn.addEventListener('click', function() {
@@ -657,21 +680,21 @@
                         content += `
                         <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}">
                             <div class="flex justify-between items-center mb-1">
-                                <p class="font-medium text-gray-300">Total P/L:</p>
+                                <p class="font-medium text-gray-300">${translations.total_pl}:</p>
                                 <span class="${profit > 0 ? 'text-green-400' : 'text-red-400'} font-bold">$${profit.toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-400">
-                                <span>Winning: <span class="text-green-400">${winningTrades}</span></span>
-                                <span>Losing: <span class="text-red-400">${losingTrades}</span></span>
-                                <span>Total: <span class="text-gray-300">${trades.length}</span></span>
+                                <span>${translations.winning}: <span class="text-green-400">${winningTrades}</span></span>
+                                <span>${translations.losing}: <span class="text-red-400">${losingTrades}</span></span>
+                                <span>${translations.total}: <span class="text-gray-300">${trades.length}</span></span>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm">
                                 <thead>
                                     <tr class="border-b border-gray-600">
-                                        <th class="text-left py-2 text-gray-400 font-medium">Symbol</th>
-                                        <th class="text-left py-2 text-gray-400 font-medium">Type</th>
+                                        <th class="text-left py-2 text-gray-400 font-medium">${translations.symbol}</th>
+                                        <th class="text-left py-2 text-gray-400 font-medium">${translations.type}</th>
                                         <th class="text-right py-2 text-gray-400 font-medium">P/L ($)</th>
                                     </tr>
                                 </thead>
@@ -703,8 +726,8 @@
                         content = `
                         <div class="flex flex-col items-center justify-center py-6 text-gray-400">
                             <i class="fas fa-chart-bar text-3xl mb-3 opacity-50"></i>
-                            <p class="text-base text-gray-300">No trades for this day</p>
-                            <p class="text-sm mt-1">Start trading to see your performance</p>
+                            <p class="text-base text-gray-300">${translations.no_trades_day}</p>
+                            <p class="text-sm mt-1">${translations.start_trading_see_performance_day}</p>
                         </div>
                     `;
                     }
@@ -736,39 +759,37 @@
 
                     // Set modal title
                     modalTitle.textContent =
-                        `Week ${weekNumber} (${formattedStart} - ${formattedEnd})`;
+                        `{{ __('calendar.week') }} ${weekNumber} (${formattedStart} - ${formattedEnd})`;
 
                     // Create modal content for weekly summary
                     let content = `
                         <div class="mb-4 p-3 rounded-lg ${weekProfit > 0 ? 'bg-green-500/10 border border-green-500/30' : weekProfit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <div class="text-sm text-gray-400 mb-1">Total Trades</div>
+                                    <div class="text-sm text-gray-400 mb-1">${translations.total} ${translations.trades}</div>
                                     <div class="text-2xl font-bold text-gray-200">${weekTrades}</div>
                                 </div>
                                 <div>
-                                    <div class="text-sm text-gray-400 mb-1">Total P/L</div>
+                                    <div class="text-sm text-gray-400 mb-1">${translations.total_pl}</div>
                                     <div class="text-2xl font-bold ${weekProfit > 0 ? 'text-green-400' : weekProfit < 0 ? 'text-red-400' : 'text-gray-400'}">
                                         $${weekProfit.toFixed(2)}
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 pt-3 border-t border-gray-600">
-                                <div class="text-sm text-gray-400">Week Range</div>
+                                <div class="text-sm text-gray-400">${translations.week_range}</div>
                                 <div class="text-gray-300">
                                     ${startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} 
-                                    to 
+                                    ${translations.to} 
                                     ${endDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                 </div>
                             </div>
                         </div>
                     `;
 
-                    // Note: Untuk menampilkan detail trades per hari dalam minggu tersebut,
-                    // Anda perlu fetch data via AJAX atau mengirim data yang sudah ada
                     content += `
                         <div class="text-center py-4">
-                            <p class="text-gray-400">Click on individual days to see detailed trades</p>
+                            <p class="text-gray-400">${translations.click_days_detail}</p>
                         </div>
                     `;
 
@@ -814,7 +835,19 @@
             const chartPeriodInfo = document.getElementById('chartPeriodInfo');
             const dataCountInfo = document.getElementById('dataCountInfo');
 
-            // Data dari backend - format ulang agar lebih mudah digunakan
+            // Get translation strings
+            const translations = {
+                profit_loss_currency: "{{ __('calendar.profit_loss_currency') }}",
+                pl: "{{ __('calendar.pl') }}",
+                weeks: "{{ __('calendar.week') }}",
+                days: "{{ __('calendar.day') }}",
+                months: "{{ __('calendar.month') }}",
+                weekly: "{{ __('calendar.weekly') }}",
+                monthly: "{{ __('calendar.monthly') }}",
+                yearly: "{{ __('calendar.yearly') }}"
+            };
+
+            // Data dari backend
             const backendData = {
                 daily: @json($daily),
                 trades: @json($trades),
@@ -823,8 +856,6 @@
                 currentMonth: {{ $month }},
                 currentYear: {{ $year }}
             };
-
-            console.log('Backend Data:', backendData); // Debug
 
             let performanceChart = null;
             let currentPeriod = 'weekly';
@@ -844,7 +875,7 @@
                     data: {
                         labels: [],
                         datasets: [{
-                            label: 'Profit/Loss ($)',
+                            label: translations.profit_loss_currency,
                             data: [],
                             borderColor: '#3b82f6',
                             backgroundColor: gradient,
@@ -884,7 +915,7 @@
                                 callbacks: {
                                     label: function(context) {
                                         const value = context.parsed.y;
-                                        return `P/L: $${value.toFixed(2)}`;
+                                        return `${translations.pl}: $${value.toFixed(2)}`;
                                     }
                                 }
                             }
@@ -916,7 +947,7 @@
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Profit/Loss ($)',
+                                    text: translations.profit_loss_currency,
                                     color: '#9ca3af'
                                 }
                             }
@@ -930,49 +961,38 @@
 
             // Get weekly data
             function getWeeklyData() {
-                console.log('Getting weekly data...');
-
                 if (!backendData.weekly || backendData.weekly.length === 0) {
-                    console.log('No weekly data available');
                     return [];
                 }
 
-                // Sort by year, month, week
                 const sortedWeekly = [...backendData.weekly].sort((a, b) => {
                     if (a.year !== b.year) return a.year - b.year;
                     if (a.month !== b.month) return a.month - b.month;
                     return a.week - b.week;
                 });
 
-                const data = sortedWeekly.map(week => {
+                return sortedWeekly.map(week => {
                     const weekStart = new Date(week.year, week.month - 1, 1);
-                    // Adjust week start based on week number
                     const weekStartDate = new Date(weekStart);
                     weekStartDate.setDate((week.week - 1) * 7 + 1);
 
                     return {
-                        label: `W${week.week}`,
+                        label: `{{ __('calendar.week_label', ['week' => '']) }}${week.week}`,
                         profit: parseFloat(week.total_profit || 0),
                         trades: week.total_trades || 0,
                         weekNumber: week.week,
                         month: week.month,
                         year: week.year,
-                        weekRange: `W${week.week} (${weekStartDate.getDate()}/${week.month})`
+                        weekRange: `{{ __('calendar.week_label', ['week' => '']) }}${week.week} (${weekStartDate.getDate()}/${week.month})`
                     };
                 });
-
-                console.log('Weekly data prepared:', data);
-                return data;
             }
 
-            // Get monthly data (daily view for current month)
+            // Get monthly data
             function getMonthlyData() {
-                console.log('Getting monthly data...');
-
                 const monthData = [];
                 const daysInMonth = new Date(backendData.currentYear, backendData.currentMonth, 0).getDate();
 
-                // Get data for each day of the current month
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dateStr =
                         `${backendData.currentYear}-${String(backendData.currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -987,24 +1007,21 @@
                     });
                 }
 
-                console.log('Monthly data prepared:', monthData);
                 return monthData;
             }
 
             // Get yearly data
             function getYearlyData() {
-                console.log('Getting yearly data...');
-
                 if (!backendData.monthly || backendData.monthly.length === 0) {
-                    console.log('No monthly data available');
                     return [];
                 }
 
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov',
-                    'Dec'
+                const monthNames = [
+                    @foreach (range(1, 12) as $m)
+                        "{{ $shortMonthNames[$m] ?? \Carbon\Carbon::create()->month($m)->format('M') }}",
+                    @endforeach
                 ];
 
-                // Filter data for current year
                 const yearData = backendData.monthly
                     .filter(month => month.year === backendData.currentYear)
                     .sort((a, b) => a.month - b.month)
@@ -1015,42 +1032,42 @@
                         month: month.month
                     }));
 
-                console.log('Yearly data prepared:', yearData);
                 return yearData;
             }
 
             // Load Chart Data
             function loadChartData(period) {
-                console.log(`Loading chart data for period: ${period}`);
-
                 chartLoading.classList.remove('hidden');
                 chartCanvas.classList.add('opacity-50');
                 noDataMessage.classList.add('hidden');
 
                 let data = [];
                 let periodInfo = '';
+                let periodType = '';
 
                 switch (period) {
                     case 'weekly':
                         data = getWeeklyData();
                         periodInfo =
-                            `Weekly View - ${new Date(backendData.currentYear, backendData.currentMonth - 1).toLocaleString('default', { month: 'long' })} ${backendData.currentYear}`;
+                            `${translations.weekly} - ${new Date(backendData.currentYear, backendData.currentMonth - 1).toLocaleString('default', { month: 'long' })} ${backendData.currentYear}`;
+                        periodType = translations.weeks;
                         break;
                     case 'monthly':
                         data = getMonthlyData();
                         periodInfo =
-                            `Daily View - ${new Date(backendData.currentYear, backendData.currentMonth - 1).toLocaleString('default', { month: 'long' })} ${backendData.currentYear}`;
+                            `${translations.monthly} - ${new Date(backendData.currentYear, backendData.currentMonth - 1).toLocaleString('default', { month: 'long' })} ${backendData.currentYear}`;
+                        periodType = translations.days;
                         break;
                     case 'yearly':
                         data = getYearlyData();
-                        periodInfo = `Monthly View - ${backendData.currentYear}`;
+                        periodInfo = `${translations.yearly} - ${backendData.currentYear}`;
+                        periodType = translations.months;
                         break;
                 }
 
                 // Update UI
                 chartPeriodInfo.textContent = periodInfo;
-                dataCountInfo.textContent =
-                    `${data.length} ${period === 'weekly' ? 'weeks' : period === 'monthly' ? 'days' : 'months'}`;
+                dataCountInfo.textContent = `${data.length} ${periodType}`;
 
                 // Update chart
                 updateChartWithData(data, period);
@@ -1064,12 +1081,9 @@
 
             // Update Chart with Data
             function updateChartWithData(data, period) {
-                console.log(`Updating chart with ${data.length} data points for ${period} period`);
-
                 if (!data || data.length === 0) {
                     chartCanvas.classList.add('hidden');
                     noDataMessage.classList.remove('hidden');
-                    console.log('No data available, showing no data message');
                     return;
                 }
 
@@ -1079,9 +1093,6 @@
                 // Extract labels and data
                 const labels = data.map(item => item.label);
                 const profits = data.map(item => item.profit);
-
-                console.log('Chart labels:', labels);
-                console.log('Chart profits:', profits);
 
                 // Update chart data
                 performanceChart.data.labels = labels;

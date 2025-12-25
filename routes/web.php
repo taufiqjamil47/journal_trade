@@ -9,7 +9,9 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\DashNoteController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TradeReportController;
 use App\Http\Controllers\TradingRuleController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +34,16 @@ Route::get('/', function () {
 });
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+], function () {
+    // Semua route yang sudah ada
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
+    Route::get('/reports/calendar', [TradeReportController::class, 'calendar'])->name('reports.calendar');
+    // ... route lainnya
+});
 
 Route::get('/trades', [TradeController::class, 'index'])->name('trades.index');
 Route::post('/trades', [TradeController::class, 'store'])->name('trades.store');
@@ -68,5 +78,3 @@ Route::post('/trading-rules/reorder', [TradingRuleController::class, 'reorder'])
 
 Route::get('/reports/weekly', [ReportController::class, 'weeklyReport'])->name('reports.weekly');
 Route::get('/reports/weekly/pdf', [ReportController::class, 'weeklyReportPdf'])->name('reports.weekly.pdf');
-
-Route::get('/reports/calendar', [App\Http\Controllers\TradeReportController::class, 'calendar'])->name('reports.calendar');

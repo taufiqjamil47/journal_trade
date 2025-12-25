@@ -112,6 +112,15 @@ class DashboardController extends Controller
                 $entryTypeData = collect();
             }
 
+            $sessionNames = [
+                'Asia' => __('dashboard.asia'),
+                'London' => __('dashboard.london'),
+                'New York' => __('dashboard.new_york'),
+                'Sydney' => __('dashboard.sydney'),
+                'Non-Session' => __('dashboard.non_session'),
+                'Other' => __('dashboard.other'),
+            ];
+
             // Combine all data
             return view('dashboard.index', array_merge($basicMetrics, [
                 'period' => $period,
@@ -123,6 +132,7 @@ class DashboardController extends Controller
                 'equityData' => $equityData,
                 'pairData' => $pairData,
                 'entryTypeData' => $entryTypeData,
+                'sessionNames' => $sessionNames,
             ]));
         } catch (\Exception $e) {
             Log::error('Critical error in dashboard: ' . $e->getMessage(), [
