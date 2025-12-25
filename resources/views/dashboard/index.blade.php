@@ -31,7 +31,7 @@
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.trade_dashboard') }}
+                                        {{ __('nav_header.nav.dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -44,7 +44,7 @@
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.pnl_calendar') }}
+                                        {{ __('nav_header.nav.calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -57,7 +57,7 @@
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.trade_analysis') }}
+                                        {{ __('nav_header.nav.analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -72,7 +72,7 @@
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.journal_trades') }}
+                                        {{ __('nav_header.nav.trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -85,7 +85,7 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.sessions') }}
+                                        {{ __('nav_header.nav.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -98,7 +98,7 @@
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.symbols') }}
+                                        {{ __('nav_header.nav.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -111,7 +111,7 @@
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        {{ __('dashboard.rules') }}
+                                        {{ __('nav_header.nav.rules') }}
                                     </span>
                                 </a>
                             @endif

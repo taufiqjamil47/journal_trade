@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'New Trade')
+@section('title', __('trades.new_trade'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,15 +7,15 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Tambah Trade Baru
+                        {{ __('trades.add_new_trade') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Step 1 - Masukkan detail entry trading Anda</p>
+                    <p class="text-gray-500 mt-1">{{ __('trades.step1_description') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('trades.index') }}"
                         class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
-                        <span>Kembali</span>
+                        <span>{{ __('trades.back_to_list') }}</span>
                     </a>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
                         1
                     </div>
-                    <span class="text-sm font-medium mt-2 text-primary-400">Entry Trade</span>
+                    <span class="text-sm font-medium mt-2 text-primary-400">{{ __('trades.step_entry') }}</span>
                 </div>
 
                 <!-- Step 2 -->
@@ -39,7 +39,7 @@
                         class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
                         2
                     </div>
-                    <span class="text-sm font-medium mt-2 text-gray-500">Update Exit</span>
+                    <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_exit') }}</span>
                 </div>
 
                 <!-- Step 3 -->
@@ -48,7 +48,7 @@
                         class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
                         3
                     </div>
-                    <span class="text-sm font-medium mt-2 text-gray-500">Evaluasi</span>
+                    <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_evaluation') }}</span>
                 </div>
             </div>
         </div>
@@ -64,10 +64,10 @@
                         </div>
                         <div>
                             <h2 class="text-xl font-bold text-primary-300">
-                                Detail Entry Trade
+                                {{ __('trades.trade_details') }}
                             </h2>
                             <p class="text-gray-500 text-sm mt-1">
-                                Isi informasi trading dengan benar
+                                {{ __('trades.fill_info_correctly') }}
                             </p>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                             <!-- Symbol Selection -->
                             <div class="space-y-2">
                                 <label for="symbol_id" class="block text-sm font-semibold text-gray-300">
-                                    Symbol / Pair Trading
+                                    {{ __('trades.symbol_pair') }}
                                 </label>
                                 <select name="symbol_id"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
@@ -101,13 +101,13 @@
                             <!-- Trade Type -->
                             <div class="space-y-2">
                                 <label for="type" class="block text-sm font-semibold text-gray-300">
-                                    Jenis Trade
+                                    {{ __('trades.trade_type') }}
                                 </label>
                                 <select name="type" id="tradeType"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                     required>
-                                    <option value="buy" class="bg-gray-800">Buy / Long</option>
-                                    <option value="sell" class="bg-gray-800">Sell / Short</option>
+                                    <option value="buy" class="bg-gray-800">{{ __('trades.type_buy') }}</option>
+                                    <option value="sell" class="bg-gray-800">{{ __('trades.type_sell') }}</option>
                                 </select>
                             </div>
 
@@ -115,7 +115,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label for="timestamp" class="block text-sm font-semibold text-gray-300">
-                                        Waktu Entry
+                                        {{ __('trades.entry_time') }}
                                     </label>
                                     <input type="time" name="timestamp"
                                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
@@ -124,7 +124,7 @@
 
                                 <div class="space-y-2">
                                     <label for="date" class="block text-sm font-semibold text-gray-300">
-                                        Tanggal Trade
+                                        {{ __('trades.trade_date') }}
                                     </label>
                                     <input type="date" name="date"
                                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
@@ -138,7 +138,7 @@
                             <!-- Entry Price -->
                             <div class="space-y-2">
                                 <label for="entry" class="block text-sm font-semibold text-gray-300">
-                                    Harga Entry
+                                    {{ __('trades.entry_price') }}
                                 </label>
                                 <input type="number" step="0.00001" name="entry" id="entryPrice"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
@@ -149,7 +149,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label for="stop_loss" class="block text-sm font-semibold text-gray-300">
-                                        Stop Loss
+                                        {{ __('trades.stop_loss') }}
                                     </label>
                                     <input type="number" step="0.00001" name="stop_loss" id="stopLoss"
                                         class="w-full bg-gray-800 border border-red-700/40 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
@@ -160,7 +160,7 @@
 
                                 <div class="space-y-2">
                                     <label for="take_profit" class="block text-sm font-semibold text-gray-300">
-                                        Take Profit
+                                        {{ __('trades.take_profit') }}
                                     </label>
                                     <input type="number" step="0.00001" name="take_profit"
                                         class="w-full bg-gray-800 border border-green-700/40 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
@@ -172,13 +172,13 @@
                                 <label for="before_link"
                                     class="block text-sm font-semibold text-gray-300 flex items-center">
                                     <i class="fas fa-image mr-2 text-primary-400"></i>
-                                    Before Entry Screenshot
+                                    {{ __('trades.before_screenshot') }}
                                 </label>
                                 <input type="url" name="before_link" id="before_link"
                                     class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
-                                    placeholder="https://www.tradingview.com/x/Ha0dhC5t/ atau https://s3.amazonaws.com/image.png">
+                                    placeholder="{{ __('trades.screenshot_placeholder') }}">
                                 <p class="text-xs text-gray-500 mt-1">
-                                    Dukung TradingView link, S3 URL, atau direct image link (PNG, JPG, GIF, WebP)
+                                    {{ __('trades.screenshot_info') }}
                                 </p>
                             </div>
                         </div>
@@ -194,8 +194,9 @@
                                         <i class="fas fa-calculator text-amber-400"></i>
                                     </div>
                                     <div>
-                                        <h3 class="text-lg font-bold text-amber-300">Risk Calculator</h3>
-                                        <p class="text-gray-400 text-sm">Live calculation based on current equity</p>
+                                        <h3 class="text-lg font-bold text-amber-300">{{ __('trades.risk_calculator') }}
+                                        </h3>
+                                        <p class="text-gray-400 text-sm">{{ __('trades.live_calculation') }}</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -207,11 +208,11 @@
                                         </h3>
                                         <button id="toggleBalance" type="button"
                                             class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
-                                            title="Show/Hide Balance & Equity">
+                                            title="{{ __('trades.show_hide_balance') }}">
                                             <i id="currentEquityIcon" class="fas fa-eye-slash text-amber-400 text-md"></i>
                                         </button>
                                     </div>
-                                    <p class="text-gray-400 text-xs">Current Equity</p>
+                                    <p class="text-gray-400 text-xs">{{ __('trades.current_equity') }}</p>
                                 </div>
                             </div>
 
@@ -219,25 +220,25 @@
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
                                 <!-- Risk/Reward Card -->
                                 <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">Risk/Reward Ratio</p>
+                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
                                     <p class="text-base font-bold text-amber-300" id="riskRewardRatio">-</p>
                                 </div>
 
                                 <!-- SL Distance Card -->
                                 <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">Stop Loss Distance</p>
+                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.sl_distance') }}</p>
                                     <p class="text-base font-bold text-red-300" id="slPips">-</p>
                                 </div>
 
                                 <!-- TP Distance Card -->
                                 <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">Take Profit Distance</p>
+                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.tp_distance') }}</p>
                                     <p class="text-base font-bold text-green-300" id="tpPips">-</p>
                                 </div>
 
                                 <!-- Lot Size Card -->
                                 <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">Recommended Lot Size</p>
+                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.recommended_lot') }}</p>
                                     <p class="text-base font-bold text-cyan-300" id="positionSize">-</p>
                                 </div>
                             </div>
@@ -245,7 +246,7 @@
                             <!-- Risk Level Selector -->
                             <div class="bg-gray-800 rounded-lg p-3 border border-gray-600 mb-3">
                                 <h4 class="text-sm font-semibold text-amber-300 mb-3">
-                                    Risk Management Level
+                                    {{ __('trades.risk_management_level') }}
                                 </h4>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     <!-- Conservative -->
@@ -254,7 +255,7 @@
                                         <div
                                             class="border-2 border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-green-500">
                                             <div class="text-green-400 text-base font-bold">1%</div>
-                                            <div class="text-green-300 text-xs">Conservative</div>
+                                            <div class="text-green-300 text-xs">{{ __('trades.risk_conservative') }}</div>
                                         </div>
                                     </label>
 
@@ -264,7 +265,7 @@
                                         <div
                                             class="border-2 border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-blue-500">
                                             <div class="text-blue-400 text-base font-bold">2%</div>
-                                            <div class="text-blue-300 text-xs">Moderate</div>
+                                            <div class="text-blue-300 text-xs">{{ __('trades.risk_moderate') }}</div>
                                         </div>
                                     </label>
 
@@ -274,7 +275,7 @@
                                         <div
                                             class="border-2 border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-orange-500">
                                             <div class="text-orange-400 text-base font-bold">3%</div>
-                                            <div class="text-orange-300 text-xs">Aggressive</div>
+                                            <div class="text-orange-300 text-xs">{{ __('trades.risk_aggressive') }}</div>
                                         </div>
                                     </label>
 
@@ -284,7 +285,7 @@
                                         <div
                                             class="border-2 border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-red-500">
                                             <div class="text-red-400 text-base font-bold">5%</div>
-                                            <div class="text-red-300 text-xs">High Risk</div>
+                                            <div class="text-red-300 text-xs">{{ __('trades.risk_high') }}</div>
                                         </div>
                                     </label>
                                 </div>
@@ -298,12 +299,12 @@
                         <a href="{{ route('trades.index') }}"
                             class="flex items-center text-gray-400 hover:text-gray-300 transition-colors">
                             <i class="fas fa-arrow-left mr-2"></i>
-                            Kembali ke Daftar Trade
+                            {{ __('trades.back_to_list') }}
                         </a>
                         <button type="submit"
                             class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 px-8 rounded-lg transition-colors flex items-center">
                             <i class="fas fa-save mr-2"></i>
-                            Simpan Trade
+                            {{ __('trades.save_trade') }}
                         </button>
                     </div>
                 </form>
@@ -316,19 +317,19 @@
                         <i class="fas fa-lightbulb text-amber-400"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-amber-300">Risk Management Tips</h3>
+                        <h3 class="text-base font-semibold text-amber-300">{{ __('trades.risk_tips_title') }}</h3>
                         <ul class="mt-2 space-y-1 text-gray-400 text-sm">
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
-                                Equity Aktual: ${{ number_format($currentEquity, 2) }} - Lot size disesuaikan otomatis
+                                {{ __('trades.tip_equity', ['equity' => number_format($currentEquity, 2)]) }}
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
-                                Risk 1-2% untuk konservatif, 3-5% untuk agresif
+                                {{ __('trades.tip_risk_levels') }}
                             </li>
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
-                                Risk/Reward ratio minimal 1:1.5 untuk trading profitable
+                                {{ __('trades.tip_rr_ratio') }}
                             </li>
                         </ul>
                     </div>
@@ -599,7 +600,7 @@
                 localStorage.setItem('balanceVisible', 'true');
 
                 // Update tooltip
-                toggleBalanceBtn.title = "Hide Balance & Equity";
+                toggleBalanceBtn.title = "{{ __('trades.hide_balance') }}";
             }
 
             function hideValues() {
@@ -613,7 +614,7 @@
                 localStorage.setItem('balanceVisible', 'false');
 
                 // Update tooltip
-                toggleBalanceBtn.title = "Show Balance & Equity";
+                toggleBalanceBtn.title = "{{ __('trades.show_balance') }}";
             }
 
             // Optional: Keyboard shortcut untuk toggle keduanya

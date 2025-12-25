@@ -4,15 +4,6 @@ return [
     'title' => 'Dashboard Trading',
     'subtitle' => 'Pantau kinerja dan analitik perdagangan Anda',
 
-    // Navigation
-    'trade_dashboard' => 'Dashboard Trading',
-    'pnl_calendar' => 'Kalender PnL',
-    'trade_analysis' => 'Analisis Trading',
-    'journal_trades' => 'Jurnal Trades',
-    'sessions' => 'Sesi',
-    'symbols' => 'Simbol',
-    'rules' => 'Aturan',
-
     // Stats Cards
     'balance' => 'Saldo',
     'equity' => 'Ekuitas',
