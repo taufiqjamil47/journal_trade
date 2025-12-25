@@ -586,7 +586,7 @@
                         <div class="text-gray-400 mb-2">
                             <i class="fas fa-calendar-times text-3xl"></i>
                         </div>
-                        <p class="text-gray-400">No trades recorded for {{ $year }}</p>
+                        <p class="text-gray-400">{{ __('calendar.no_trades_recorded') }} {{ $year }}</p>
                     </div>
                 @endif
             </div>
@@ -612,6 +612,21 @@
     <!-- Scripts Section -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // === HELPER FUNCTION UNTUK FORMAT TANGGAL ===
+            function getDateLocale() {
+                const laravelLocale = '{{ app()->getLocale() }}';
+                const localeMap = {
+                    'en': 'en-US',
+                    'id': 'id-ID',
+                };
+                return localeMap[laravelLocale] || 'en-US';
+            }
+
+            function formatDate(date, options = {}) {
+                return new Date(date).toLocaleDateString(getDateLocale(), options);
+            }
+            // === END HELPER FUNCTION ===
+
             const modal = document.getElementById('tradeModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalContent = document.getElementById('modalContent');
@@ -658,7 +673,11 @@
                         month: 'long',
                         year: 'numeric'
                     };
-                    const formattedDate = dateObj.toLocaleDateString('en-US', options);
+                    const formattedDate = formatDate(date, {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
 
                     // Set modal title
                     modalTitle.textContent = `${formattedDate}`;
@@ -754,8 +773,14 @@
                         month: 'short',
                         day: 'numeric'
                     };
-                    const formattedStart = startDate.toLocaleDateString('en-US', options);
-                    const formattedEnd = endDate.toLocaleDateString('en-US', options);
+                    const formattedStart = formatDate(weekStart, {
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    const formattedEnd = formatDate(weekEnd, {
+                        month: 'short',
+                        day: 'numeric'
+                    });
 
                     // Set modal title
                     modalTitle.textContent =
@@ -779,9 +804,9 @@
                             <div class="mt-3 pt-3 border-t border-gray-600">
                                 <div class="text-sm text-gray-400">${translations.week_range}</div>
                                 <div class="text-gray-300">
-                                    ${startDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} 
+                                    ${formatDate(weekStart, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} 
                                     ${translations.to} 
-                                    ${endDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                    ${formatDate(weekEnd, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                 </div>
                             </div>
                         </div>
@@ -826,6 +851,20 @@
     <!-- Chart.js Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // === HELPER FUNCTION UNTUK FORMAT TANGGAL ===
+            function getDateLocale() {
+                const laravelLocale = '{{ app()->getLocale() }}';
+                const localeMap = {
+                    'en': 'en-US',
+                    'id': 'id-ID',
+                };
+                return localeMap[laravelLocale] || 'en-US';
+            }
+
+            function formatDate(date, options = {}) {
+                return new Date(date).toLocaleDateString(getDateLocale(), options);
+            }
+            // === END HELPER FUNCTION ===
             // Chart.js Initialization
             const chartCanvas = document.getElementById('performanceChart');
             const ctx = chartCanvas.getContext('2d');
@@ -1106,15 +1145,14 @@
                     if (period === 'weekly' && item.weekRange) {
                         return item.weekRange;
                     } else if (period === 'monthly' && item.date) {
-                        const date = new Date(item.date);
-                        return date.toLocaleDateString('en-US', {
+                        return formatDate(item.date, {
                             weekday: 'short',
                             month: 'short',
                             day: 'numeric'
                         });
                     } else if (period === 'yearly' && item.month) {
                         const monthName = new Date(backendData.currentYear, item.month - 1)
-                            .toLocaleString('default', {
+                            .toLocaleDateString(getDateLocale(), {
                                 month: 'long'
                             });
                         return `${monthName} ${backendData.currentYear}`;

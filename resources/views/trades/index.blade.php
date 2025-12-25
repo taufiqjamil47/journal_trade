@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Trades')
+@section('title', __('trades.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trading Journal
+                        {{ __('trades.header_title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Pantau kinerja dan analitik perdagangan Anda</p>
+                    <p class="text-gray-500 mt-1">{{ __('trades.header_subtitle') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <!-- Toggle Button -->
@@ -146,7 +146,7 @@
                             <i class="fas fa-trophy text-green-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Win Rate</p>
+                            <p class="text-sm text-gray-400">{{ __('trades.win_rate') }}</p>
                             <p class="text-base font-semibold">{{ $winrate }}%</p>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                             <i class="fas fa-chart-line text-primary-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Total Trades</p>
+                            <p class="text-sm text-gray-400">{{ __('trades.total_trades') }}</p>
                             <p class="text-base font-semibold">{{ $trades->total() }}</p>
                         </div>
                     </div>
@@ -170,7 +170,7 @@
                             <i class="fas fa-coins text-blue-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Active</p>
+                            <p class="text-sm text-gray-400">{{ __('trades.active_trades') }}</p>
                             <p class="text-base font-semibold">{{ $trades->where('exit', null)->count() }}</p>
                         </div>
                     </div>
@@ -182,7 +182,7 @@
                             <i class="fas fa-clock text-amber-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Pending</p>
+                            <p class="text-sm text-gray-400">{{ __('trades.pending_trades') }}</p>
                             <p class="text-lg font-semibold">
                                 {{ $trades->where('hasil', null)->where('exit', '==', null)->count() }}</p>
                         </div>
@@ -197,8 +197,9 @@
             <div class="px-6 py-4 border-b border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold">Daftar Trade</h2>
-                        <p class="text-gray-500 text-sm mt-1">Total: {{ $trades->total() }} trades</p>
+                        <h2 class="text-xl font-semibold">{{ __('trades.trade_list') }}</h2>
+                        <p class="text-gray-500 text-sm mt-1">
+                            {{ __('trades.total_trades_count', ['count' => $trades->total()]) }}</p>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -207,7 +208,7 @@
                             <button
                                 class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
                                 <i class="fas fa-sort mr-1 sm:mr-2"></i>
-                                <span>Sort</span>
+                                <span>{{ __('trades.sort') }}</span>
                                 <i
                                     class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
@@ -220,8 +221,8 @@
                                         <i
                                             class="fas fa-calendar-alt mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">Date</div>
-                                            <div class="text-xs text-gray-400">Newest First</div>
+                                            <div class="font-medium">{{ __('trades.date') }}</div>
+                                            <div class="text-xs text-gray-400">{{ __('trades.newest_first') }}</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'asc']) }}"
@@ -229,24 +230,24 @@
                                         <i
                                             class="fas fa-calendar mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">Date</div>
-                                            <div class="text-xs text-gray-400">Oldest First</div>
+                                            <div class="font-medium">{{ __('trades.date') }}</div>
+                                            <div class="text-xs text-gray-400">{{ __('trades.lowest_first') }}</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'desc']) }}"
                                         class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
                                         <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">ID</div>
-                                            <div class="text-xs text-gray-400">Highest First</div>
+                                            <div class="font-medium">{{ __('trades.id') }}</div>
+                                            <div class="text-xs text-gray-400">{{ __('trades.highest_first') }}</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'asc']) }}"
                                         class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
                                         <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">ID</div>
-                                            <div class="text-xs text-gray-400">Lowest First</div>
+                                            <div class="font-medium">{{ __('trades.id') }}</div>
+                                            <div class="text-xs text-gray-400">{{ __('trades.lowest_first') }}</div>
                                         </div>
                                     </a>
                                 </div>
@@ -258,7 +259,7 @@
                             <button
                                 class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
                                 <i class="fas fa-exchange-alt mr-1 sm:mr-2"></i>
-                                <span>Data</span>
+                                <span>{{ __('trades.data') }}</span>
                                 <i
                                     class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
@@ -270,7 +271,7 @@
                                     <div>
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
                                             <i class="fas fa-file-import mr-2 text-purple-400 text-sm"></i>
-                                            Import Data
+                                            {{ __('trades.import_data') }}
                                         </div>
                                         <form action="{{ route('trades.import.excel') }}" method="POST"
                                             enctype="multipart/form-data" class="space-y-2">
@@ -280,7 +281,7 @@
                                             <button type="submit"
                                                 class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-upload mr-2"></i>
-                                                Upload File
+                                                {{ __('trades.upload_file') }}
                                             </button>
                                         </form>
                                     </div>
@@ -289,13 +290,13 @@
                                     <div class="pt-2 sm:pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
                                             <i class="fas fa-file-export mr-2 text-green-400 text-sm"></i>
-                                            Export Data
+                                            {{ __('trades.export_data') }}
                                         </div>
                                         <div class="space-y-2">
                                             <a href="{{ route('trades.export.excel') }}"
                                                 class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-file-excel mr-2"></i>
-                                                Export to Excel
+                                                {{ __('trades.export_to_excel') }}
                                             </a>
                                         </div>
                                     </div>
@@ -304,23 +305,23 @@
                                     <div class="pt-2 sm:pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
                                             <i class="fas fa-file-pdf mr-2 text-red-400 text-sm"></i>
-                                            PDF Reports
+                                            {{ __('trades.pdf_reports') }}
                                         </div>
                                         <div class="space-y-2">
                                             <a href="{{ route('trades.generate.pdf', ['type' => 'cover']) }}"
                                                 class="block w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-file-alt mr-2"></i>
-                                                Cover Report
+                                                {{ __('trades.cover_report') }}
                                             </a>
                                             <a href="{{ route('trades.generate.pdf', ['type' => 'complete']) }}"
                                                 class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-book mr-2"></i>
-                                                Complete Report
+                                                {{ __('trades.complete_report') }}
                                             </a>
                                             <a href="{{ route('trades.preview.pdf') }}" target="_blank"
                                                 class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-eye mr-2"></i>
-                                                Preview Report
+                                                {{ __('trades.preview_report') }}
                                             </a>
                                         </div>
                                     </div>
@@ -329,25 +330,27 @@
                                     <div class="pt-2 sm:pt-3 border-t border-gray-700">
                                         <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
                                             <i class="fas fa-calendar-alt mr-2 text-green-400 text-sm"></i>
-                                            Date Range Report
+                                            {{ __('trades.date_range_report') }}
                                         </div>
                                         <form action="{{ route('trades.generate.pdf') }}" method="GET"
                                             class="space-y-2 sm:space-y-3">
                                             <input type="hidden" name="type" value="range">
                                             <div class="space-y-1">
-                                                <label class="block text-xs text-gray-400">Start Date</label>
+                                                <label
+                                                    class="block text-xs text-gray-400">{{ __('trades.start_date') }}</label>
                                                 <input type="date" name="start_date" required
                                                     class="w-full bg-gray-700 border border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
                                             </div>
                                             <div class="space-y-1">
-                                                <label class="block text-xs text-gray-400">End Date</label>
+                                                <label
+                                                    class="block text-xs text-gray-400">{{ __('trades.end_date') }}</label>
                                                 <input type="date" name="end_date" required
                                                     class="w-full bg-gray-700 border border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
                                             </div>
                                             <button type="submit"
                                                 class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-file-pdf mr-2"></i>
-                                                Generate Report
+                                                {{ __('trades.generate_report') }}
                                             </button>
                                         </form>
                                     </div>
@@ -360,7 +363,7 @@
                             <button
                                 class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
                                 <i class="fas fa-tools mr-1 sm:mr-2"></i>
-                                <span>Manage</span>
+                                <span>{{ __('trades.manage') }}</span>
                                 <i
                                     class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
                             </button>
@@ -373,16 +376,16 @@
                                         <i
                                             class="fas fa-plus-circle mr-2 sm:mr-3 text-blue-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">Add New Trade</div>
-                                            <div class="text-xs text-gray-400">Create new entry</div>
+                                            <div class="font-medium">{{ __('trades.add_new_trade') }}</div>
+                                            <div class="text-xs text-gray-400">{{ __('trades.create_new_entry') }}</div>
                                         </div>
                                     </a>
                                     <button onclick="quickClearAll()"
                                         class="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-red-500/20 hover:text-red-300 flex items-center">
                                         <i class="fas fa-trash-alt mr-2 sm:mr-3 text-red-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">Clear All Trades</div>
-                                            <div class="text-xs text-gray-400">Remove all data</div>
+                                            <div class="font-medium">{{ __('trades.clear_all_trades') }}</div>
+                                            <div class="text-xs text-gray-400">{{ __('trades.remove_all_data') }}</div>
                                         </div>
                                     </button>
                                 </div>
@@ -398,17 +401,23 @@
                     <thead>
                         <tr class="bg-gray-750 border-b border-gray-600">
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">#</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Symbol</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Type</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Entry</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.symbol') }}
+                            </th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.type') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.entry') }}
+                            </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">SL</th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">TP</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Timestamp</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Exit</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.timestamp') }}
+                            </th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.exit') }}</th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">P/L ($)</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Session</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Hasil</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Actions</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.session') }}
+                            </th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.result') }}
+                            </th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.actions') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700/50">
@@ -468,7 +477,7 @@
                                     @else
                                         <span
                                             class="px-2 py-1 rounded-lg text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                                            PENDING
+                                            {{ __('trades.pending') }}
                                         </span>
                                     @endif
                                 </td>
@@ -476,19 +485,19 @@
                                     <div class="flex space-x-2">
                                         <a href="{{ route('trades.edit', $trade->id) }}"
                                             class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-2 rounded-lg"
-                                            title="Update Exit">
+                                            title="{{ __('trades.update_exit') }}">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                         <a href="{{ route('trades.evaluate', $trade->id) }}"
                                             class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 p-2 rounded-lg"
-                                            title="Evaluasi">
+                                            title="{{ __('trades.evaluate') }}">
                                             <i class="fas fa-chart-bar text-sm"></i>
                                         </a>
                                         <!-- Ganti dari link menjadi button dengan event handler -->
                                         <button
                                             onclick="confirmDeleteTrade(event, '{{ $trade->id }}', '{{ $trade->symbol->name }}', '{{ $trade->type }}')"
                                             class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
-                                            title="Delete Trade">
+                                            title="{{ __('trades.delete_trade') }}">
                                             <i class="fas fa-trash text-sm"></i>
                                         </button>
                                     </div>
@@ -502,13 +511,13 @@
                                             <i class="fas fa-chart-line text-2xl opacity-50"></i>
                                         </div>
                                         <div class="space-y-1">
-                                            <p class="text-base font-medium">Belum ada trade</p>
-                                            <p class="text-sm">Mulai dengan menambahkan trade pertama Anda</p>
+                                            <p class="text-base font-medium">{{ __('trades.no_trades_yet') }}</p>
+                                            <p class="text-sm">{{ __('trades.start_by_adding_first_trade') }}</p>
                                         </div>
                                         <a href="{{ route('trades.create') }}"
                                             class="mt-2 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg flex items-center">
                                             <i class="fas fa-plus mr-2"></i>
-                                            Tambah Trade Pertama
+                                            {{ __('trades.add_first_trade') }}
                                         </a>
                                     </div>
                                 </td>
@@ -526,6 +535,49 @@
             @endif
         </div>
     </div>
+
+    <!-- Translations for JavaScript -->
+    <script>
+        const translations = {
+            clear_all_trades: "{{ __('trades.clear_all_trades') }}",
+            clear_all_warning: "{{ __('trades.clear_all_warning') }}",
+            cannot_be_undone: "{{ __('trades.cannot_be_undone') }}",
+            will_be_deleted: "{{ __('trades.will_be_deleted') }}",
+            trading_records: "{{ __('trades.trading_records') }}",
+            all_performance_stats: "{{ __('trades.all_performance_stats') }}",
+            all_rule_associations: "{{ __('trades.all_rule_associations') }}",
+            complete_trading_history: "{{ __('trades.complete_trading_history') }}",
+            to_confirm_type: "{{ __('trades.to_confirm_type') }}",
+            please_type_confirmation: "{{ __('trades.please_type_confirmation') }}",
+            clear_all_trades_btn: "{{ __('trades.clear_all_trades_btn') }}",
+            cancel_btn: "{{ __('trades.cancel_btn') }}",
+            cleaning_trades: "{{ __('trades.cleaning_trades') }}",
+            deleting_records: "{{ __('trades.deleting_records') }}",
+            please_dont_close: "{{ __('trades.please_dont_close') }}",
+            success: "{{ __('trades.success') }}",
+            all_trades_deleted: "{{ __('trades.all_trades_deleted') }}",
+            page_will_reload: "{{ __('trades.page_will_reload') }}",
+            reload_now: "{{ __('trades.reload_now') }}",
+            no_data: "{{ __('trades.no_data') }}",
+            no_trades_to_clear: "{{ __('trades.no_trades_to_clear') }}",
+            connection_error: "{{ __('trades.connection_error') }}",
+            please_check_connection: "{{ __('trades.please_check_connection') }}"
+        };
+
+        const deleteTranslations = {
+            delete_trade: "{{ __('trades.delete_trade') }}",
+            action_cannot_undone: "{{ __('trades.action_cannot_undone') }}",
+            trade_to_be_deleted: "{{ __('trades.trade_to_be_deleted') }}",
+            to_confirm_type_exact: "{{ __('trades.to_confirm_type_exact') }}",
+            please_type_confirmation_exact: "{{ __('trades.please_type_confirmation_exact') }}",
+            delete_trade_btn: "{{ __('trades.delete_trade_btn') }}",
+            deleting_trade: "{{ __('trades.deleting_trade') }}",
+            trade_deleted_success: "{{ __('trades.trade_deleted_success') }}",
+            page_will_reload_shortly: "{{ __('trades.page_will_reload_shortly') }}",
+            failed_delete_trade: "{{ __('trades.failed_delete_trade') }}",
+            please_try_again: "{{ __('trades.please_try_again') }}"
+        };
+    </script>
 
     <script>
         // Basic Dropdown functionality
@@ -581,57 +633,57 @@
             if (tradeCount === 0) {
                 Swal.fire({
                     icon: 'info',
-                    title: 'No Data',
-                    text: 'There are no trades to clear.',
+                    title: translations.no_data,
+                    text: translations.no_trades_to_clear,
                     confirmButtonColor: '#3085d6'
                 });
                 return;
             }
 
             Swal.fire({
-                title: '🚨 Clear All Trades?',
+                title: '🚨 ' + translations.clear_all_trades + '?',
                 html: `
-            <div class="text-left text-sm">
-                <p class="text-red-400 mb-3 font-bold">Tindakan ini tidak dapat dibatalkan!</p>
-                <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                    <p class="font-bold mb-2 text-red-300">Akan dihapus secara permanen:</p>
-                    <ul class="space-y-1 text-gray-300">
-                        <li class="flex items-center">
-                            <i class="fas fa-trash text-red-500 mr-2 text-xs"></i>
-                            <span><strong>${tradeCount}</strong> catatan trading</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-chart-bar text-red-500 mr-2 text-xs"></i>
-                            <span>Semua statistik kinerja</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-link text-red-500 mr-2 text-xs"></i>
-                            <span>Semua aturan asosiasi</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-history text-red-500 mr-2 text-xs"></i>
-                            <span>Riwayat trading lengkap</span>
-                        </li>
-                    </ul>
-                </div>
-                <p class="text-gray-300 mb-2">Untuk mengonfirmasi, ketik:</p>
-                <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
-                    <code class="text-red-400 font-mono font-bold">DELETE_ALL_TRADES</code>
-                </div>
-                <input type="text" 
-                       id="quickConfirm" 
-                       class="swal2-input w-full" 
-                       placeholder="Ketik teks konfirmasi..."
-                       autocomplete="off">
+        <div class="text-left text-sm">
+            <p class="text-red-400 mb-3 font-bold">${translations.cannot_be_undone}!</p>
+            <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
+                <p class="font-bold mb-2 text-red-300">${translations.will_be_deleted}:</p>
+                <ul class="space-y-1 text-gray-300">
+                    <li class="flex items-center">
+                        <i class="fas fa-trash text-red-500 mr-2 text-xs"></i>
+                        <span><strong>${tradeCount}</strong> ${translations.trading_records}</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-chart-bar text-red-500 mr-2 text-xs"></i>
+                        <span>${translations.all_performance_stats}</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-link text-red-500 mr-2 text-xs"></i>
+                        <span>${translations.all_rule_associations}</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-history text-red-500 mr-2 text-xs"></i>
+                        <span>${translations.complete_trading_history}</span>
+                    </li>
+                </ul>
             </div>
-        `,
+            <p class="text-gray-300 mb-2">${translations.to_confirm_type}:</p>
+            <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                <code class="text-red-400 font-mono font-bold">DELETE_ALL_TRADES</code>
+            </div>
+            <input type="text" 
+                   id="quickConfirm" 
+                   class="swal2-input w-full" 
+                   placeholder="${translations.please_type_confirmation}..."
+                   autocomplete="off">
+        </div>
+    `,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-broom mr-2"></i>Clear All Trades',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Cancel',
+                confirmButtonText: '<i class="fas fa-broom mr-2"></i>' + translations.clear_all_trades_btn,
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>' + translations.cancel_btn,
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -649,9 +701,9 @@
                     if (typedValue !== 'DELETE_ALL_TRADES') {
                         Swal.showValidationMessage(
                             `<div class="text-red-400 text-sm">
-                        <i class="fas fa-exclamation-circle mr-1"></i>
-                        Silakan ketik <code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_ALL_TRADES</code> tepat
-                    </div>`
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    ${translations.please_type_confirmation} <code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_ALL_TRADES</code>
+                </div>`
                         );
                         return false;
                     }
@@ -663,14 +715,14 @@
                 if (result.isConfirmed && result.value) {
                     // Show loading with custom message
                     Swal.fire({
-                        title: 'Membersihkan Perdagangan...',
+                        title: translations.cleaning_trades + '...',
                         html: `
-                    <div class="text-center">
-                        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
-                        <p class="text-gray-400">Menghapus ${tradeCount} catatan perdagangan...</p>
-                        <p class="text-xs text-gray-500 mt-2">Tolong jangan tutup jendela ini</p>
-                    </div>
-                `,
+                <div class="text-center">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+                    <p class="text-gray-400">${translations.deleting_records.replace(':count', tradeCount)}</p>
+                    <p class="text-xs text-gray-500 mt-2">${translations.please_dont_close}</p>
+                </div>
+            `,
                         showConfirmButton: false,
                         allowOutsideClick: false,
                         allowEscapeKey: false
@@ -702,19 +754,20 @@
                                 Swal.fire({
                                     icon: 'success',
                                     iconColor: '#10b981',
-                                    title: 'Success!',
+                                    title: translations.success + '!',
                                     html: `
-                            <div class="text-center">
-                                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
-                                    <i class="fas fa-check text-green-500 text-2xl"></i>
-                                </div>
-                                <p class="text-green-400 font-bold text-lg mb-2">${data.message}</p>
-                                <p class="text-gray-400 text-sm">Semua data perdagangan telah dihapus.</p>
-                                <p class="text-gray-500 text-xs mt-2">Halaman akan dimuat ulang dalam beberapa detik...</p>
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                                <i class="fas fa-check text-green-500 text-2xl"></i>
                             </div>
-                        `,
+                            <p class="text-green-400 font-bold text-lg mb-2">${data.message}</p>
+                            <p class="text-gray-400 text-sm">${translations.all_trades_deleted}</p>
+                            <p class="text-gray-500 text-xs mt-2">${translations.page_will_reload}</p>
+                        </div>
+                    `,
                                     showConfirmButton: true,
-                                    confirmButtonText: '<i class="fas fa-sync-alt mr-2"></i>Reload Now',
+                                    confirmButtonText: '<i class="fas fa-sync-alt mr-2"></i>' +
+                                        translations.reload_now,
                                     confirmButtonColor: '#10b981',
                                     timer: 5000,
                                     timerProgressBar: true,
@@ -732,12 +785,12 @@
                                     icon: 'error',
                                     title: 'Error!',
                                     html: `
-                            <div class="text-left">
-                                <p class="text-red-400 mb-3">${data.message}</p>
-                                ${data.error ? `<p class="text-gray-500 text-xs mb-2">${data.error}</p>` : ''}
-                                <p class="text-gray-400 text-sm mt-3">Silakan coba lagi atau hubungi dukungan.</p>
-                            </div>
-                        `,
+                        <div class="text-left">
+                            <p class="text-red-400 mb-3">${data.message}</p>
+                            ${data.error ? `<p class="text-gray-500 text-xs mb-2">${data.error}</p>` : ''}
+                            <p class="text-gray-400 text-sm mt-3">${translations.please_check_connection}</p>
+                        </div>
+                    `,
                                     confirmButtonColor: '#d33'
                                 });
                             }
@@ -747,14 +800,14 @@
 
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Connection Error',
+                                title: translations.connection_error,
                                 html: `
-                        <div class="text-left">
-                            <p class="text-red-400 mb-3">Failed to connect to server.</p>
-                            <p class="text-gray-500 text-xs mb-2">${error.message}</p>
-                            <p class="text-gray-400 text-sm mt-3">Silakan periksa koneksi Anda dan coba lagi.</p>
-                        </div>
-                    `,
+                    <div class="text-left">
+                        <p class="text-red-400 mb-3">${translations.connection_error}</p>
+                        <p class="text-gray-500 text-xs mb-2">${error.message}</p>
+                        <p class="text-gray-400 text-sm mt-3">${translations.please_check_connection}</p>
+                    </div>
+                `,
                                 confirmButtonColor: '#d33'
                             });
                         });
@@ -806,45 +859,45 @@
             const tradeType = type === 'buy' ? 'BUY' : 'SELL';
 
             Swal.fire({
-                title: 'Hapus Trade?',
+                title: deleteTranslations.delete_trade + '?',
                 html: `
-            <div class="text-left text-sm">
-                <p class="text-red-400 mb-3 font-bold">Tindakan ini tidak dapat dibatalkan!</p>
-                <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                    <p class="font-bold mb-2 text-red-300">Trade yang akan dihapus:</p>
-                    <ul class="space-y-2 text-gray-300">
-                        <li class="flex items-center">
-                            <i class="fas fa-hashtag text-red-500 mr-2 text-xs"></i>
-                            <span>ID: <strong>${tradeId}</strong></span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-chart-simple text-red-500 mr-2 text-xs"></i>
-                            <span>Symbol: <strong>${symbol}</strong></span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-exchange-alt text-red-500 mr-2 text-xs"></i>
-                            <span>Type: <span class="font-bold ${type === 'buy' ? 'text-green-400' : 'text-red-400'}">${tradeType}</span></span>
-                        </li>
-                    </ul>
-                </div>
-                <p class="text-gray-300 mb-2">Untuk mengonfirmasi, ketik:</p>
-                <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
-                    <code class="text-red-400 font-mono font-bold">DELETE_TRADE_${tradeId}</code>
-                </div>
-                <input type="text" 
-                       id="deleteConfirm_${tradeId}" 
-                       class="swal2-input w-full" 
-                       placeholder="Ketik teks konfirmasi..."
-                       autocomplete="off">
+        <div class="text-left text-sm">
+            <p class="text-red-400 mb-3 font-bold">${deleteTranslations.action_cannot_undone}!</p>
+            <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
+                <p class="font-bold mb-2 text-red-300">${deleteTranslations.trade_to_be_deleted}:</p>
+                <ul class="space-y-2 text-gray-300">
+                    <li class="flex items-center">
+                        <i class="fas fa-hashtag text-red-500 mr-2 text-xs"></i>
+                        <span>ID: <strong>${tradeId}</strong></span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-chart-simple text-red-500 mr-2 text-xs"></i>
+                        <span>Symbol: <strong>${symbol}</strong></span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-exchange-alt text-red-500 mr-2 text-xs"></i>
+                        <span>Type: <span class="font-bold ${type === 'buy' ? 'text-green-400' : 'text-red-400'}">${tradeType}</span></span>
+                    </li>
+                </ul>
             </div>
-        `,
+            <p class="text-gray-300 mb-2">${deleteTranslations.to_confirm_type_exact}:</p>
+            <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                <code class="text-red-400 font-mono font-bold">DELETE_TRADE_${tradeId}</code>
+            </div>
+            <input type="text" 
+                   id="deleteConfirm_${tradeId}" 
+                   class="swal2-input w-full" 
+                   placeholder="${deleteTranslations.please_type_confirmation_exact}..."
+                   autocomplete="off">
+        </div>
+    `,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Delete Trade',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Cancel',
+                confirmButtonText: '<i class="fas fa-trash mr-2"></i>' + deleteTranslations.delete_trade_btn,
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>' + translations.cancel_btn,
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -863,9 +916,9 @@
                     if (typedValue !== expectedText) {
                         Swal.showValidationMessage(
                             `<div class="text-red-400 text-sm">
-                        <i class="fas fa-exclamation-circle mr-1"></i>
-                        Silakan ketik <code class="bg-red-900/30 px-1 py-0.5 rounded">${expectedText}</code> tepat
-                    </div>`
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    ${deleteTranslations.please_type_confirmation_exact} <code class="bg-red-900/30 px-1 py-0.5 rounded">${expectedText}</code>
+                </div>`
                         );
                         return false;
                     }
@@ -878,13 +931,13 @@
                 if (result.isConfirmed && result.value) {
                     // Show loading
                     Swal.fire({
-                        title: 'Menghapus Trade...',
+                        title: deleteTranslations.deleting_trade + '...',
                         html: `
-                    <div class="text-center">
-                        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
-                        <p class="text-gray-400">Menghapus trade ${symbol}...</p>
-                    </div>
-                `,
+                <div class="text-center">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+                    <p class="text-gray-400">${deleteTranslations.deleting_trade.replace(':symbol', symbol)}</p>
+                </div>
+            `,
                         showConfirmButton: false,
                         allowOutsideClick: false,
                         allowEscapeKey: false
@@ -914,18 +967,19 @@
                                 Swal.fire({
                                     icon: 'success',
                                     iconColor: '#10b981',
-                                    title: 'Success!',
+                                    title: deleteTranslations.success + '!',
                                     html: `
-                            <div class="text-center">
-                                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
-                                    <i class="fas fa-check text-green-500 text-2xl"></i>
-                                </div>
-                                <p class="text-green-400 font-bold text-lg mb-2">Trade berhasil dihapus!</p>
-                                <p class="text-gray-400 text-sm">Halaman akan dimuat ulang...</p>
+                        <div class="text-center">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                                <i class="fas fa-check text-green-500 text-2xl"></i>
                             </div>
-                        `,
+                            <p class="text-green-400 font-bold text-lg mb-2">${deleteTranslations.trade_deleted_success}</p>
+                            <p class="text-gray-400 text-sm">${deleteTranslations.page_will_reload_shortly}</p>
+                        </div>
+                    `,
                                     showConfirmButton: true,
-                                    confirmButtonText: '<i class="fas fa-sync-alt mr-2"></i>Reload Now',
+                                    confirmButtonText: '<i class="fas fa-sync-alt mr-2"></i>' +
+                                        translations.reload_now,
                                     confirmButtonColor: '#10b981',
                                     timer: 3000,
                                     timerProgressBar: true,
@@ -943,11 +997,11 @@
                                     icon: 'error',
                                     title: 'Error!',
                                     html: `
-                            <div class="text-left">
-                                <p class="text-red-400 mb-3">${data.message || 'Gagal menghapus trade'}</p>
-                                <p class="text-gray-400 text-sm mt-3">Silakan coba lagi.</p>
-                            </div>
-                        `,
+                        <div class="text-left">
+                            <p class="text-red-400 mb-3">${data.message || deleteTranslations.failed_delete_trade}</p>
+                            <p class="text-gray-400 text-sm mt-3">${deleteTranslations.please_try_again}</p>
+                        </div>
+                    `,
                                     confirmButtonColor: '#d33'
                                 });
                             }
@@ -956,13 +1010,13 @@
                             console.error('Delete Error:', error);
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Connection Error',
+                                title: translations.connection_error,
                                 html: `
-                        <div class="text-left">
-                            <p class="text-red-400 mb-3">Failed to connect to server.</p>
-                            <p class="text-gray-400 text-sm mt-3">Silakan periksa koneksi Anda dan coba lagi.</p>
-                        </div>
-                    `,
+                    <div class="text-left">
+                        <p class="text-red-400 mb-3">${translations.connection_error}</p>
+                        <p class="text-gray-400 text-sm mt-3">${translations.please_check_connection}</p>
+                    </div>
+                `,
                                 confirmButtonColor: '#d33'
                             });
                         });

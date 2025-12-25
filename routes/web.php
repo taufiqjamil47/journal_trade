@@ -43,9 +43,9 @@ Route::group([
     Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
     Route::get('/reports/calendar', [TradeReportController::class, 'calendar'])->name('reports.calendar');
     // ... route lainnya
+    Route::get('/trades', [TradeController::class, 'index'])->name('trades.index');
 });
 
-Route::get('/trades', [TradeController::class, 'index'])->name('trades.index');
 Route::post('/trades', [TradeController::class, 'store'])->name('trades.store');
 Route::get('/trades/create', [TradeController::class, 'create'])->name('trades.create');
 Route::post('/trades/import', [TradeController::class, 'importExcel'])->name('trades.import.excel');

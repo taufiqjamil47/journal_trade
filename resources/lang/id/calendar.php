@@ -73,6 +73,7 @@ return [
     'symbol' => 'Simbol',
     'type' => 'Tipe',
     'no_trades_day' => 'Tidak ada trades hari ini',
+    'no_trades_recorded' => 'Tidak ada transaksi yang tercatat untuk tahun ',
     'start_trading_see_performance_day' => 'Mulai trading untuk melihat performa',
 
     // Chart Legends

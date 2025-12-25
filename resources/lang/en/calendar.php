@@ -73,6 +73,7 @@ return [
     'symbol' => 'Symbol',
     'type' => 'Type',
     'no_trades_day' => 'No trades for this day',
+    'no_trades_recorded' => 'No trades recorded for ',
     'start_trading_see_performance_day' => 'Start trading to see your performance',
 
     // Chart Legends
