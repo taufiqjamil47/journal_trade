@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Trading Analysis')
+@section('title', __('analysis.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trading Analysis
+                        {{ __('analysis.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Analisis tingkat lanjut dan wawasan kinerja</p>
+                    <p class="text-gray-500 mt-1">{{ __('analysis.subtitle') }}</p>
                 </div>
 
                 <!-- Navigation -->
@@ -27,11 +27,11 @@
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
-                                    title="Dashboard">
+                                    title="{{ __('analysis.nav.dashboard') }}">
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Dashboard
+                                        {{ __('nav_header.nav.dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -40,11 +40,11 @@
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Calendar">
+                                    title="{{ __('analysis.nav.calendar') }}">
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        PnL Calendar
+                                        {{ __('nav_header.nav.calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -53,11 +53,11 @@
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Analysis">
+                                    title="{{ __('analysis.nav.analysis') }}">
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Analysis
+                                        {{ __('nav_header.nav.analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -68,11 +68,11 @@
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Trades">
+                                    title="{{ __('analysis.nav.trades') }}">
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Journal Trades
+                                        {{ __('nav_header.nav.trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -81,11 +81,11 @@
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Sessions">
+                                    title="{{ __('analysis.nav.sessions') }}">
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Sessions
+                                        {{ __('nav_header.nav.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -94,11 +94,11 @@
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Symbols">
+                                    title="{{ __('analysis.nav.symbols') }}">
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Symbols
+                                        {{ __('nav_header.nav.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -107,11 +107,11 @@
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
                                     class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Rules">
+                                    title="{{ __('analysis.nav.rules') }}">
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Rules
+                                        {{ __('nav_header.nav.rules') }}
                                     </span>
                                 </a>
                             @endif
@@ -140,8 +140,9 @@
                             <span class="text-gray-400 font-normal">({{ $summary['session'] }})</span>
                         </h3>
                         <p class="text-gray-300 text-sm mt-1">
-                            {{ $summary['trades'] }} trades ·
-                            Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
+                            {{ $summary['trades'] }} {{ __('analysis.stats.trades') }} ·
+                            {{ __('analysis.stats.winrate') }}: <span
+                                class="font-semibold">{{ $summary['winrate'] }}%</span> ·
                             <span class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
@@ -157,14 +158,14 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">Balance</p>
+                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.balance') }}</p>
                         <div class="flex items-center gap-2">
                             <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
                             <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
                             </h3>
                             <button id="toggleBalance" type="button"
                                 class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
-                                title="Show/Hide Balance & Equity">
+                                title="{{ __('analysis.stats.toggle_balance') }}">
                                 <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
                             </button>
                         </div>
@@ -179,7 +180,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">Win Rate</p>
+                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.win_rate') }}</p>
                         <h3 class="text-xl font-bold mt-1">{{ $winrate }}%</h3>
                     </div>
                     <div class="bg-green-500/20 p-2 rounded-lg">
@@ -192,7 +193,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">Net Profit</p>
+                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.net_profit') }}</p>
                         <h3 class="text-xl font-bold mt-1 {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
                             ${{ number_format($netProfit, 2) }}
                         </h3>
@@ -209,28 +210,28 @@
             <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <p class="text-gray-400 text-sm">Harapan Sistem</p>
+                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.expectancy') }}</p>
                         <h3 class="text-2xl font-bold mt-1">
                             ${{ number_format($expectancy, 2) }}
-                            <span class="text-lg text-gray-400">per trade</span>
+                            <span class="text-lg text-gray-400">{{ __('analysis.stats.per_trade') }}</span>
                         </h3>
                         <p class="text-gray-500 text-sm mt-2">
-                            Rata-rata keuntungan yang diharapkan per perdagangan berdasarkan statistik saat ini
+                            {{ __('analysis.stats.expectancy_description') }}
                         </p>
                     </div>
                     <div class="mt-4 md:mt-0">
                         <div class="bg-gray-700/50 rounded-lg p-4">
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-8 text-center">
                                 <div>
-                                    <p class="text-xs text-gray-500">Total Profit</p>
+                                    <p class="text-xs text-gray-500">{{ __('analysis.stats.total_profit') }}</p>
                                     <p class="text-lg font-bold text-green-400">${{ number_format($totalProfit, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Total Loss</p>
+                                    <p class="text-xs text-gray-500">{{ __('analysis.stats.total_loss') }}</p>
                                     <p class="text-lg font-bold text-red-400">${{ number_format($totalLoss, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Net Profit</p>
+                                    <p class="text-xs text-gray-500">{{ __('analysis.stats.net_profit') }}</p>
                                     <p
                                         class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
                                         ${{ number_format($netProfit, 2) }}
@@ -248,21 +249,27 @@
             <form method="GET" action="{{ route('analysis.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Period Filter -->
                 <div>
-                    <label for="period" class="block text-sm font-medium text-gray-300 mb-1">Period</label>
+                    <label for="period"
+                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('analysis.filters.period') }}</label>
                     <select name="period" onchange="this.form.submit()"
                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                        <option value="all" {{ $period === 'all' ? 'selected' : '' }}>All Time</option>
-                        <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>Last 7 Days</option>
-                        <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>Last 30 Days</option>
+                        <option value="all" {{ $period === 'all' ? 'selected' : '' }}>
+                            {{ __('analysis.filters.all_time') }}</option>
+                        <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
+                            {{ __('analysis.filters.weekly') }}</option>
+                        <option value="monthly" {{ $period === 'monthly' ? 'selected' : '' }}>
+                            {{ __('analysis.filters.monthly') }}</option>
                     </select>
                 </div>
 
                 <!-- Session Filter -->
                 <div>
-                    <label for="session" class="block text-sm font-medium text-gray-300 mb-1">Session</label>
+                    <label for="session"
+                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('analysis.filters.session') }}</label>
                     <select name="session" onchange="this.form.submit()"
                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                        <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>All Sessions</option>
+                        <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>
+                            {{ __('analysis.filters.all_sessions') }}</option>
                         @foreach ($availableSessions as $sessionName)
                             <option value="{{ $sessionName }}" {{ $sessionFilter === $sessionName ? 'selected' : '' }}>
                                 {{ $sessionName }}
@@ -273,10 +280,12 @@
 
                 <!-- Entry Type Filter -->
                 <div>
-                    <label for="entry_type" class="block text-sm font-medium text-gray-300 mb-1">Entry Type</label>
+                    <label for="entry_type"
+                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('analysis.filters.entry_type') }}</label>
                     <select name="entry_type" onchange="this.form.submit()"
                         class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
-                        <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>All Types</option>
+                        <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>
+                            {{ __('analysis.filters.all_types') }}</option>
                         @foreach ($availableEntryTypes as $entryType)
                             <option value="{{ $entryType }}" {{ $entryFilter === $entryType ? 'selected' : '' }}>
                                 {{ $entryType }}
@@ -290,10 +299,10 @@
         <!-- Risk Management Metrics -->
         <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-primary-300">Risk Management</h2>
+                <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.risk_management.title') }}</h2>
                 <div class="text-sm text-gray-500">
                     <i class="fas fa-shield mr-1"></i>
-                    Risk Assessment
+                    {{ __('analysis.risk_management.subtitle') }}
                 </div>
             </div>
 
@@ -303,7 +312,7 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Profit Factor</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.profit_factor') }}</p>
                             <h3 class="text-xl font-bold mt-1">
                                 @if (is_numeric($profitFactor))
                                     {{ number_format($profitFactor, 2) }}
@@ -320,13 +329,13 @@
                         <div class="text-xs text-gray-500">
                             @if (is_numeric($profitFactor))
                                 @if ($profitFactor > 2)
-                                    <span class="text-green-400">Excellent</span>
+                                    <span class="text-green-400">{{ __('analysis.risk_management.excellent') }}</span>
                                 @elseif($profitFactor > 1.5)
-                                    <span class="text-yellow-400">Good</span>
+                                    <span class="text-yellow-400">{{ __('analysis.risk_management.good') }}</span>
                                 @elseif($profitFactor > 1)
-                                    <span class="text-orange-400">Marginal</span>
+                                    <span class="text-orange-400">{{ __('analysis.risk_management.marginal') }}</span>
                                 @else
-                                    <span class="text-red-400">Unprofitable</span>
+                                    <span class="text-red-400">{{ __('analysis.risk_management.unprofitable') }}</span>
                                 @endif
                             @endif
                         </div>
@@ -337,7 +346,7 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Avg Win/Loss</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.avg_win_loss') }}</p>
                             <h3 class="text-xl font-bold mt-1">{{ number_format($averageRR, 2) }}:1</h3>
                         </div>
                         <div class="bg-blue-500/20 p-2 rounded-lg">
@@ -346,11 +355,11 @@
                     </div>
                     <div class="mt-3 grid grid-cols-2 gap-2">
                         <div class="text-center">
-                            <p class="text-xs text-gray-500">Avg Win</p>
+                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.avg_win') }}</p>
                             <p class="text-sm font-medium text-green-400">${{ number_format($averageWin, 2) }}</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-xs text-gray-500">Avg Loss</p>
+                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.avg_loss') }}</p>
                             <p class="text-sm font-medium text-red-400">${{ number_format($averageLoss, 2) }}</p>
                         </div>
                     </div>
@@ -360,7 +369,7 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Perdagangan Terbesar</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.largest_trades') }}</p>
                             <h3 class="text-xl font-bold mt-1">
                                 ${{ number_format(abs($largestWin) + abs($largestLoss), 2) }}
                             </h3>
@@ -371,11 +380,11 @@
                     </div>
                     <div class="mt-3 grid grid-cols-2 gap-2">
                         <div class="text-center">
-                            <p class="text-xs text-gray-500">Kemenangan Terbesar</p>
+                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.largest_win') }}</p>
                             <p class="text-sm font-medium text-green-400">${{ number_format($largestWin, 2) }}</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-xs text-gray-500">Kerugian Terbesar</p>
+                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.largest_loss') }}</p>
                             <p class="text-sm font-medium text-red-400">${{ number_format($largestLoss, 2) }}</p>
                         </div>
                     </div>
@@ -385,7 +394,7 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Win/Loss Streaks</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.win_loss_streaks') }}</p>
                             <h3 class="text-xl font-bold mt-1">
                                 @if ($currentStreakType == 'win')
                                     <span class="text-green-400">{{ $currentStreak }}W</span>
@@ -402,11 +411,11 @@
                     </div>
                     <div class="mt-3 grid grid-cols-2 gap-2">
                         <div class="text-center">
-                            <p class="text-xs text-gray-500">Best Win Streak</p>
+                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.best_win_streak') }}</p>
                             <p class="text-sm font-medium text-green-400">{{ $longestWinStreak }}</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-xs text-gray-500">Worst Loss Streak</p>
+                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.worst_loss_streak') }}</p>
                             <p class="text-sm font-medium text-red-400">{{ $longestLossStreak }}</p>
                         </div>
                     </div>
@@ -422,7 +431,7 @@
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <p class="text-gray-400 text-sm">Max Drawdown</p>
+                                <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.max_drawdown') }}</p>
                                 <h3 class="text-2xl font-bold mt-1 text-red-400">
                                     {{ number_format($maxDrawdownPercentage, 1) }}%
                                 </h3>
@@ -434,8 +443,9 @@
                         </div>
                         <div class="mt-4">
                             <div class="flex justify-between text-xs text-gray-500 mb-1">
-                                <span>Current DD: {{ number_format($currentDrawdownPercentage, 1) }}%</span>
-                                <span>{{ $currentDrawdownPercentage <= 10 ? 'Low' : ($currentDrawdownPercentage <= 20 ? 'Medium' : 'High') }}</span>
+                                <span>{{ __('analysis.risk_management.current_dd') }}:
+                                    {{ number_format($currentDrawdownPercentage, 1) }}%</span>
+                                <span>{{ $currentDrawdownPercentage <= 10 ? __('analysis.risk_management.low') : ($currentDrawdownPercentage <= 20 ? __('analysis.risk_management.medium') : __('analysis.risk_management.high')) }}</span>
                             </div>
                             <div class="w-full bg-gray-700 rounded-full h-2">
                                 <div class="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full"
@@ -449,7 +459,7 @@
                 <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-400 text-sm">Recovery Factor</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.recovery_factor') }}</p>
                             <h3 class="text-2xl font-bold mt-1">
                                 @if (is_numeric($recoveryFactor))
                                     {{ number_format($recoveryFactor, 2) }}
@@ -457,7 +467,8 @@
                                     {{ $recoveryFactor }}
                                 @endif
                             </h3>
-                            <p class="text-gray-500 text-sm">Profit per $1 drawdown</p>
+                            <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.recovery_factor_desc') }}
+                            </p>
                         </div>
                         <div class="bg-green-500/20 p-3 rounded-lg">
                             <i class="fas fa-arrow-up-from-bracket text-green-500 text-lg"></i>
@@ -468,20 +479,23 @@
                             @if (is_numeric($recoveryFactor))
                                 @if ($recoveryFactor > 2)
                                     <span class="text-green-400">
-                                        <i class="fas fa-check-circle mr-1"></i> Excellent Recovery
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        {{ __('analysis.risk_management.excellent_recovery') }}
                                     </span>
                                 @elseif($recoveryFactor > 1)
                                     <span class="text-yellow-400">
-                                        <i class="fas fa-exclamation-circle mr-1"></i> Moderate Recovery
+                                        <i class="fas fa-exclamation-circle mr-1"></i>
+                                        {{ __('analysis.risk_management.moderate_recovery') }}
                                     </span>
                                 @else
                                     <span class="text-red-400">
-                                        <i class="fas fa-times-circle mr-1"></i> Poor Recovery
+                                        <i class="fas fa-times-circle mr-1"></i>
+                                        {{ __('analysis.risk_management.poor_recovery') }}
                                     </span>
                                 @endif
                             @else
                                 <span class="text-green-400">
-                                    <i class="fas fa-infinity mr-1"></i> No Drawdown
+                                    <i class="fas fa-infinity mr-1"></i> {{ __('analysis.risk_management.no_drawdown') }}
                                 </span>
                             @endif
                         </div>
@@ -492,11 +506,11 @@
                 <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-400 text-sm">Sharpe Ratio</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.sharpe_ratio') }}</p>
                             <h3 class="text-2xl font-bold mt-1">
                                 {{ number_format($sharpeRatio, 2) }}
                             </h3>
-                            <p class="text-gray-500 text-sm">Risk-adjusted returns</p>
+                            <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.sharpe_ratio_desc') }}</p>
                         </div>
                         <div class="bg-blue-500/20 p-3 rounded-lg">
                             <i class="fas fa-chart-line text-blue-500 text-lg"></i>
@@ -506,19 +520,21 @@
                         <div class="flex items-center text-sm">
                             @if ($sharpeRatio > 1.5)
                                 <span class="text-green-400">
-                                    <i class="fas fa-star mr-1"></i> Excellent
+                                    <i class="fas fa-star mr-1"></i> {{ __('analysis.risk_management.excellent') }}
                                 </span>
                             @elseif($sharpeRatio > 1)
                                 <span class="text-yellow-400">
-                                    <i class="fas fa-star-half-alt mr-1"></i> Good
+                                    <i class="fas fa-star-half-alt mr-1"></i> {{ __('analysis.risk_management.good') }}
                                 </span>
                             @elseif($sharpeRatio > 0)
                                 <span class="text-orange-400">
-                                    <i class="fas fa-chart-line mr-1"></i> Acceptable
+                                    <i class="fas fa-chart-line mr-1"></i>
+                                    {{ __('analysis.risk_management.acceptable') }}
                                 </span>
                             @else
                                 <span class="text-red-400">
-                                    <i class="fas fa-exclamation-triangle mr-1"></i> Risky
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    {{ __('analysis.risk_management.risky') }}
                                 </span>
                             @endif
                         </div>
@@ -529,11 +545,11 @@
                 <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-400 text-sm">Consistency Score</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.consistency_score') }}</p>
                             <h3 class="text-2xl font-bold mt-1">
                                 {{ $consistencyScore }}%
                             </h3>
-                            <p class="text-gray-500 text-sm">Bulan Menguntungkan</p>
+                            <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.profitable_months') }}</p>
                         </div>
                         <div class="bg-purple-500/20 p-3 rounded-lg">
                             <i class="fas fa-chart-pie text-purple-500 text-lg"></i>
@@ -545,8 +561,10 @@
                                 style="width: {{ $consistencyScore }}%"></div>
                         </div>
                         <div class="flex justify-between text-xs text-gray-500">
-                            <span>{{ $monthlyReturns->filter(fn($m) => $m['profit'] > 0)->count() }} profitable</span>
-                            <span>{{ $monthlyReturns->count() }} total months</span>
+                            <span>{{ $monthlyReturns->filter(fn($m) => $m['profit'] > 0)->count() }}
+                                {{ __('analysis.risk_management.profitable') }}</span>
+                            <span>{{ $monthlyReturns->count() }}
+                                {{ __('analysis.risk_management.total_months') }}</span>
                         </div>
                     </div>
                 </div>
@@ -557,18 +575,20 @@
                 <button id="toggleRiskDetails"
                     class="flex items-center justify-center w-full py-2 text-gray-400 hover:text-white transition-colors">
                     <i class="fas fa-chevron-down mr-2"></i>
-                    <span class="text-sm">Tampilkan Risk Metrik Terperinci</span>
+                    <span class="text-sm">{{ __('analysis.risk_management.show_details') }}</span>
                 </button>
 
                 <div id="riskDetails" class="hidden mt-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Risk per Trade -->
                         <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-300 mb-3">Risk Per Trade</h4>
+                            <h4 class="font-medium text-gray-300 mb-3">
+                                {{ __('analysis.risk_management.risk_per_trade') }}</h4>
                             <div class="space-y-3">
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-400">Average Risk</span>
+                                        <span
+                                            class="text-gray-400">{{ __('analysis.risk_management.average_risk') }}</span>
                                         <span
                                             class="{{ $averageRiskPerTrade <= 2 ? 'text-green-400' : ($averageRiskPerTrade <= 5 ? 'text-yellow-400' : 'text-red-400') }}">
                                             {{ $averageRiskPerTrade }}%
@@ -581,7 +601,7 @@
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-400">Max Risk</span>
+                                        <span class="text-gray-400">{{ __('analysis.risk_management.max_risk') }}</span>
                                         <span class="text-red-400">{{ $maxRiskPerTrade }}%</span>
                                     </div>
                                     <div class="w-full bg-gray-700 rounded-full h-1.5">
@@ -591,17 +611,18 @@
                                 </div>
                                 <div class="text-xs text-gray-500 mt-2">
                                     <i class="fas fa-info-circle mr-1"></i>
-                                    Recommended: 1-2% risk per trade
+                                    {{ __('analysis.risk_management.recommended_risk') }}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Risk/Reward Distribution -->
                         <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-300 mb-3">Risk/Reward Profile</h4>
+                            <h4 class="font-medium text-gray-300 mb-3">
+                                {{ __('analysis.risk_management.risk_reward_profile') }}</h4>
                             <div class="space-y-2">
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-400">Avg R:R Ratio</span>
+                                    <span class="text-gray-400">{{ __('analysis.risk_management.avg_rr_ratio') }}</span>
                                     <span
                                         class="{{ $averageRiskReward >= 2 ? 'text-green-400' : ($averageRiskReward >= 1 ? 'text-yellow-400' : 'text-red-400') }}">
                                         {{ $averageRiskReward }}:1
@@ -610,13 +631,13 @@
                                 <div class="text-xs text-gray-500">
                                     @if ($averageRiskReward >= 2)
                                         <i class="fas fa-check-circle text-green-400 mr-1"></i>
-                                        Good risk management - seeking 2:1 or better
+                                        {{ __('analysis.risk_management.good_rr_management') }}
                                     @elseif($averageRiskReward >= 1)
                                         <i class="fas fa-exclamation-circle text-yellow-400 mr-1"></i>
-                                        Risk equals reward - consider improving
+                                        {{ __('analysis.risk_management.equal_rr') }}
                                     @else
                                         <i class="fas fa-times-circle text-red-400 mr-1"></i>
-                                        Risk exceeds reward - needs improvement
+                                        {{ __('analysis.risk_management.poor_rr') }}
                                     @endif
                                 </div>
                             </div>
@@ -624,7 +645,8 @@
 
                         <!-- Position Size Analysis -->
                         <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-300 mb-3">Position Size Performance</h4>
+                            <h4 class="font-medium text-gray-300 mb-3">
+                                {{ __('analysis.risk_management.position_size_performance') }}</h4>
                             @if ($positionSizes->count() > 0)
                                 <div class="space-y-2 max-h-32 overflow-y-auto pr-2">
                                     @foreach ($positionSizes as $size => $data)
@@ -644,7 +666,8 @@
                                     @endforeach
                                 </div>
                             @else
-                                <p class="text-gray-500 text-sm">No position size data available</p>
+                                <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.no_position_data') }}
+                                </p>
                             @endif
                         </div>
                     </div>
@@ -656,10 +679,10 @@
         <div class="my-4">
             <!-- Section Header -->
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-primary-300">Time Analysis</h2>
+                <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.time_analysis.title') }}</h2>
                 <div class="text-sm text-gray-500">
                     <i class="fas fa-clock mr-1"></i>
-                    Trading Time Patterns
+                    {{ __('analysis.time_analysis.subtitle') }}
                 </div>
             </div>
 
@@ -669,7 +692,7 @@
                 <div class="bg-gradient-to-br from-green-900/20 to-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Jam Terbaik untuk Trading</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.time_analysis.best_hour') }}</p>
                             <h3 class="text-2xl font-bold mt-1 text-green-400">
                                 @if ($bestHour && $bestHour['hour'] !== 'Unknown')
                                     {{ str_pad($bestHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $bestHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
@@ -680,9 +703,9 @@
                             <p class="text-gray-500 text-sm mt-2">
                                 @if ($bestHour && $bestHour['hour'] !== 'Unknown')
                                     ${{ number_format($bestHour['profit'] ?? 0, 2) }} · {{ $bestHour['winrate'] ?? 0 }}%
-                                    WR
+                                    {{ __('analysis.stats.winrate_short') }}
                                 @else
-                                    No data available
+                                    {{ __('analysis.time_analysis.no_data') }}
                                 @endif
                             </p>
                         </div>
@@ -696,7 +719,7 @@
                 <div class="bg-gradient-to-br from-red-900/20 to-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Jam Terburuk untuk Trading</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.time_analysis.worst_hour') }}</p>
                             <h3 class="text-2xl font-bold mt-1 text-red-400">
                                 @if ($worstHour && $worstHour['hour'] !== 'Unknown')
                                     {{ str_pad($worstHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $worstHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
@@ -706,10 +729,11 @@
                             </h3>
                             <p class="text-gray-500 text-sm mt-2">
                                 @if ($worstHour && $worstHour['hour'] !== 'Unknown')
-                                    ${{ number_format($worstHour['profit'] ?? 0, 2) }} · {{ $worstHour['winrate'] ?? 0 }}%
-                                    WR
+                                    ${{ number_format($worstHour['profit'] ?? 0, 2) }} ·
+                                    {{ $worstHour['winrate'] ?? 0 }}%
+                                    {{ __('analysis.stats.winrate_short') }}
                                 @else
-                                    No data available
+                                    {{ __('analysis.time_analysis.no_data') }}
                                 @endif
                             </p>
                         </div>
@@ -723,7 +747,7 @@
                 <div class="bg-gradient-to-br from-blue-900/20 to-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">Jam Paling Aktif</p>
+                            <p class="text-gray-400 text-sm">{{ __('analysis.time_analysis.busiest_hour') }}</p>
                             <h3 class="text-2xl font-bold mt-1 text-blue-400">
                                 @if ($busiestHour && $busiestHour['hour'] !== 'Unknown')
                                     {{ str_pad($busiestHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $busiestHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
@@ -733,10 +757,10 @@
                             </h3>
                             <p class="text-gray-500 text-sm mt-2">
                                 @if ($busiestHour && $busiestHour['hour'] !== 'Unknown')
-                                    {{ $busiestHour['trades'] ?? 0 }} trades ·
+                                    {{ $busiestHour['trades'] ?? 0 }} {{ __('analysis.stats.trades') }} ·
                                     ${{ number_format($busiestHour['profit'] ?? 0, 2) }}
                                 @else
-                                    No data available
+                                    {{ __('analysis.time_analysis.no_data') }}
                                 @endif
                             </p>
                         </div>
@@ -751,12 +775,14 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-primary-300">Hourly Performance</h3>
-                        <p class="text-gray-500 text-sm mt-1">Profit by hour of day (GMT)</p>
+                        <h3 class="text-lg font-bold text-primary-300">
+                            {{ __('analysis.time_analysis.hourly_performance') }}</h3>
+                        <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.hourly_description') }}</p>
                     </div>
                     <div class="text-sm text-gray-400">
                         <i class="fas fa-chart-bar mr-1"></i>
-                        {{ $tradingTimeStats['trading_frequency'] ?? 'Low' }} Frequency
+                        {{ $tradingTimeStats['trading_frequency'] ?? __('analysis.time_analysis.low') }}
+                        {{ __('analysis.time_analysis.frequency') }}
                     </div>
                 </div>
 
@@ -764,13 +790,13 @@
                 <div id="hourlyChartContainer" class="h-64 relative">
                     <div id="hourlyChartLoading" class="chart-loading">
                         <div class="chart-loading-spinner"></div>
-                        <p class="chart-loading-text">Loading Hourly Performance...</p>
+                        <p class="chart-loading-text">{{ __('analysis.loading.hourly_performance') }}</p>
                     </div>
                     <div id="hourlyChartNoData" class="chart-no-data" style="display: none;">
                         <div class="flex flex-col items-center justify-center h-full text-gray-500">
                             <i class="fas fa-clock text-3xl mb-3"></i>
-                            <p class="text-base">No hourly data available</p>
-                            <p class="text-sm">Start trading to see time-based analysis</p>
+                            <p class="text-base">{{ __('analysis.time_analysis.no_hourly_data') }}</p>
+                            <p class="text-sm">{{ __('analysis.time_analysis.start_trading') }}</p>
                         </div>
                     </div>
                     <canvas id="hourlyChart" class="chart-canvas" style="display: none;"></canvas>
@@ -781,8 +807,9 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-primary-300">Session-Time Heatmap</h3>
-                        <p class="text-gray-500 text-sm mt-1">Best session-time combinations</p>
+                        <h3 class="text-lg font-bold text-primary-300">{{ __('analysis.time_analysis.heatmap_title') }}
+                        </h3>
+                        <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.heatmap_description') }}</p>
                     </div>
                     <button id="toggleHeatmap" class="text-gray-400 hover:text-white transition-colors">
                         <i class="fas fa-expand"></i>
@@ -794,7 +821,8 @@
                     <div class="min-w-max">
                         <!-- Header row with times (columns) -->
                         <div class="grid grid-cols-25 gap-1 mb-1">
-                            <div class="text-xs text-gray-500 text-center py-1">Day</div>
+                            <div class="text-xs text-gray-500 text-center py-1">{{ __('analysis.time_analysis.day') }}
+                            </div>
                             @for ($hour = 0; $hour < 24; $hour++)
                                 @php
                                     $hourStr = str_pad($hour, 2, '0', STR_PAD_LEFT);
@@ -808,7 +836,7 @@
                             <div class="grid grid-cols-25 gap-1 mb-1">
                                 <!-- Day label -->
                                 <div class="text-xs text-gray-400 text-center py-1 font-medium">
-                                    {{ $dayName }}
+                                    {{ __("analysis.days_short.$dayName") }}
                                 </div>
 
                                 <!-- Hourly data for this day -->
@@ -886,10 +914,11 @@
                                                     {{ $hourStr }}:00-{{ $nextHour }}:00
                                                 </div>
                                                 <div class="text-gray-400 mt-1">
-                                                    Day: {{ $dayName }}
+                                                    {{ __('analysis.time_analysis.day_label') }}:
+                                                    {{ __("analysis.days.$dayName") }}
                                                 </div>
                                                 <div class="text-gray-400">
-                                                    Trades: {{ $trades }}
+                                                    {{ __('analysis.stats.trades') }}: {{ $trades }}
                                                 </div>
                                                 <div class="{{ $textColor }} font-medium mt-1">
                                                     P/L: ${{ number_format($profit, 2) }}
@@ -907,15 +936,15 @@
                 <div class="flex justify-center items-center mt-4 text-xs text-gray-500">
                     <div class="flex items-center mr-4">
                         <div class="w-4 h-4 bg-green-900 rounded mr-1"></div>
-                        <span>Profitable</span>
+                        <span>{{ __('analysis.time_analysis.profitable') }}</span>
                     </div>
                     <div class="flex items-center mr-4">
                         <div class="w-4 h-4 bg-red-900 rounded mr-1"></div>
-                        <span>Unprofitable</span>
+                        <span>{{ __('analysis.time_analysis.unprofitable') }}</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-4 h-4 bg-gray-900 rounded mr-1"></div>
-                        <span>No Trades</span>
+                        <span>{{ __('analysis.time_analysis.no_trades') }}</span>
                     </div>
                 </div>
             </div>
@@ -924,13 +953,14 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Day of Week Performance dengan Loading -->
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                    <h3 class="text-lg font-bold text-primary-300 mb-4">Day of Week Performance</h3>
+                    <h3 class="text-lg font-bold text-primary-300 mb-4">
+                        {{ __('analysis.time_analysis.day_of_week_performance') }}</h3>
 
                     <!-- Chart Container dengan Loading State -->
                     <div id="dayOfWeekChartContainer" class="h-56 mb-4 relative">
                         <div id="dayOfWeekChartLoading" class="chart-loading">
                             <div class="chart-loading-spinner"></div>
-                            <p class="chart-loading-text">Loading Day of Week Chart...</p>
+                            <p class="chart-loading-text">{{ __('analysis.loading.day_of_week_chart') }}</p>
                         </div>
                         <canvas id="dayOfWeekChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
@@ -939,16 +969,21 @@
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Day</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
+                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.time_analysis.day') }}</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.stats.trades') }}</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.stats.winrate') }}</th>
+                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.time_analysis.pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
                                     <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ $day['short_name'] }}</td>
+                                        <td class="py-2 text-sm">{{ __("analysis.days_short.{$day['short_name']}") }}
+                                        </td>
                                         <td class="py-2 text-center text-sm">{{ $day['trades'] }}</td>
                                         <td class="py-2 text-center text-sm">
                                             <span
@@ -969,13 +1004,14 @@
 
                 <!-- Monthly Trends dengan Loading -->
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                    <h3 class="text-lg font-bold text-primary-300 mb-4">Monthly Trends</h3>
+                    <h3 class="text-lg font-bold text-primary-300 mb-4">{{ __('analysis.time_analysis.monthly_trends') }}
+                    </h3>
 
                     <!-- Chart Container dengan Loading State -->
                     <div id="monthlyChartContainer" class="h-56 mb-4 relative">
                         <div id="monthlyChartLoading" class="chart-loading">
                             <div class="chart-loading-spinner"></div>
-                            <p class="chart-loading-text">Loading Monthly Trends...</p>
+                            <p class="chart-loading-text">{{ __('analysis.loading.monthly_trends') }}</p>
                         </div>
                         <canvas id="monthlyChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
@@ -984,10 +1020,14 @@
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Month</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
+                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.time_analysis.month') }}</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.stats.trades') }}</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.stats.winrate') }}</th>
+                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.time_analysis.pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1017,10 +1057,10 @@
         <!-- Two Column Charts -->
         <div class="my-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-primary-300">Pair & Entry Type Analysis</h2>
+                <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.pair_analysis.title') }}</h2>
                 <div class="text-sm text-gray-500">
                     <i class="fas fa-dollar mr-1"></i>
-                    Pair & Entry Performance
+                    {{ __('analysis.pair_analysis.subtitle') }}
                 </div>
             </div>
 
@@ -1029,8 +1069,10 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h2 class="text-xl font-bold text-primary-300">Profit/Loss per Symbol</h2>
-                            <p class="text-gray-500 text-sm mt-1">Kinerja berdasarkan pasangan perdagangan</p>
+                            <h2 class="text-xl font-bold text-primary-300">
+                                {{ __('analysis.pair_analysis.profit_loss_symbol') }}</h2>
+                            <p class="text-gray-500 text-sm mt-1">
+                                {{ __('analysis.pair_analysis.profit_loss_description') }}</p>
                         </div>
                         <div class="bg-blue-500/20 p-2 rounded-lg">
                             <i class="fas fa-coins text-blue-500"></i>
@@ -1041,7 +1083,7 @@
                     <div id="pairChartContainer" class="h-56 mb-4 relative">
                         <div id="pairChartLoading" class="chart-loading">
                             <div class="chart-loading-spinner"></div>
-                            <p class="chart-loading-text">Loading Pair Chart...</p>
+                            <p class="chart-loading-text">{{ __('analysis.loading.pair_chart') }}</p>
                         </div>
                         <canvas id="pairChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
@@ -1050,8 +1092,10 @@
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Symbol</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">Total P/L ($)</th>
+                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.pair_analysis.symbol') }}</th>
+                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.pair_analysis.total_pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1073,8 +1117,10 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h2 class="text-xl font-bold text-primary-300">Performance per Entry Type</h2>
-                            <p class="text-gray-500 text-sm mt-1">Analisis efektivitas strategi</p>
+                            <h2 class="text-xl font-bold text-primary-300">
+                                {{ __('analysis.pair_analysis.performance_entry_type') }}</h2>
+                            <p class="text-gray-500 text-sm mt-1">
+                                {{ __('analysis.pair_analysis.performance_description') }}</p>
                         </div>
                         <div class="bg-green-500/20 p-2 rounded-lg">
                             <i class="fas fa-chart-bar text-green-500"></i>
@@ -1085,7 +1131,7 @@
                     <div id="entryTypeChartContainer" class="h-56 mb-4 relative">
                         <div id="entryTypeChartLoading" class="chart-loading">
                             <div class="chart-loading-spinner"></div>
-                            <p class="chart-loading-text">Loading Entry Type Chart...</p>
+                            <p class="chart-loading-text">{{ __('analysis.loading.entry_type_chart') }}</p>
                         </div>
                         <canvas id="entryTypeChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
@@ -1094,10 +1140,14 @@
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">Entry Type</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Trades</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">Winrate</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">P/L ($)</th>
+                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.pair_analysis.entry_type') }}</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.stats.trades') }}</th>
+                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.stats.winrate') }}</th>
+                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
+                                        {{ __('analysis.pair_analysis.pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1124,7 +1174,8 @@
             <div
                 class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-2xl mx-auto max-h-[80vh] overflow-hidden">
                 <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                    <h4 id="sessionModalTitle" class="text-lg font-bold text-primary-400">Session Time Details</h4>
+                    <h4 id="sessionModalTitle" class="text-lg font-bold text-primary-400">
+                        {{ __('analysis.modal.session_details') }}</h4>
                     <button id="closeSessionModal" class="text-gray-400 hover:text-white transition-colors p-2">
                         <i class="fas fa-times text-lg"></i>
                     </button>
@@ -1287,7 +1338,7 @@
                         loadingEl.innerHTML = `
                             <div class="text-red-400 text-center">
                                 <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
-                                <p>Failed to load chart</p>
+                                <p>{{ __('analysis.loading.chart_error') }}</p>
                             </div>
                         `;
                     }
@@ -1340,7 +1391,7 @@
                     data: {
                         labels: hourlyLabels,
                         datasets: [{
-                            label: 'Profit ($)',
+                            label: '{{ __('analysis.charts.profit') }}',
                             data: hourlyProfits,
                             backgroundColor: hourlyProfits.map(p =>
                                 p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
@@ -1352,7 +1403,7 @@
                             borderRadius: 4,
                             yAxisID: 'y',
                         }, {
-                            label: 'Trades',
+                            label: '{{ __('analysis.charts.trades') }}',
                             data: hourlyTrades,
                             type: 'line',
                             borderColor: 'rgba(59, 130, 246, 0.8)',
@@ -1426,7 +1477,8 @@
                                         if (context.datasetIndex === 0) {
                                             label += '$' + context.parsed.y.toFixed(2);
                                         } else {
-                                            label += context.parsed.y + ' trades';
+                                            label += context.parsed.y +
+                                                ' {{ __('analysis.stats.trades') }}';
                                         }
                                         return label;
                                     }
@@ -1449,7 +1501,7 @@
                     data: {
                         labels: pairLabels,
                         datasets: [{
-                            label: 'Profit/Loss ($)',
+                            label: '{{ __('analysis.charts.profit_loss') }}',
                             data: pairValues,
                             backgroundColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
                                 'rgba(239, 68, 68, 0.7)'),
@@ -1513,7 +1565,7 @@
                     data: {
                         labels: entryLabels,
                         datasets: [{
-                            label: 'Profit/Loss ($)',
+                            label: '{{ __('analysis.charts.profit_loss') }}',
                             data: entryValues,
                             backgroundColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
                                 'rgba(239, 68, 68, 0.7)'),
@@ -1579,7 +1631,7 @@
                     data: {
                         labels: dowLabels,
                         datasets: [{
-                            label: 'Profit ($)',
+                            label: '{{ __('analysis.charts.profit') }}',
                             data: dowProfits,
                             backgroundColor: dowProfits.map(p =>
                                 p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
@@ -1604,7 +1656,7 @@
                                     afterLabel: function(context) {
                                         const dataIndex = context.dataIndex;
                                         const winrate = dowWinrates[dataIndex];
-                                        return `Winrate: ${winrate}%`;
+                                        return `{{ __('analysis.stats.winrate') }}: ${winrate}%`;
                                     }
                                 }
                             }
@@ -1626,7 +1678,7 @@
                     data: {
                         labels: monthlyLabels,
                         datasets: [{
-                            label: 'Monthly Profit ($)',
+                            label: '{{ __('analysis.charts.monthly_profit') }}',
                             data: monthlyProfits,
                             borderColor: 'rgba(139, 92, 246, 0.8)',
                             backgroundColor: 'rgba(139, 92, 246, 0.1)',
@@ -1700,12 +1752,12 @@
                             toggleRiskIcon.classList.remove('fa-chevron-up');
                             toggleRiskIcon.classList.add('fa-chevron-down');
                             toggleRiskDetails.querySelector('span').textContent =
-                                'Tampilkan Risk Metrik Terperinci';
+                                '{{ __('analysis.risk_management.show_details') }}';
                         } else {
                             toggleRiskIcon.classList.remove('fa-chevron-down');
                             toggleRiskIcon.classList.add('fa-chevron-up');
                             toggleRiskDetails.querySelector('span').textContent =
-                                'Sembunyikan Risk Metrik Terperinci';
+                                '{{ __('analysis.risk_management.hide_details') }}';
                         }
                     }
                 });
@@ -1744,8 +1796,12 @@
 
             // Function to get day name from index
             function getDayName(dayIndex) {
-                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-                return days[dayIndex] || 'Unknown';
+                const days = ['{{ __('analysis.days.Mon') }}', '{{ __('analysis.days.Tue') }}',
+                    '{{ __('analysis.days.Wed') }}', '{{ __('analysis.days.Thu') }}',
+                    '{{ __('analysis.days.Fri') }}', '{{ __('analysis.days.Sat') }}',
+                    '{{ __('analysis.days.Sun') }}'
+                ];
+                return days[dayIndex] || '{{ __('analysis.unknown') }}';
             }
 
             // Function to format hour range
@@ -1772,69 +1828,69 @@
 
                         // Create modal content
                         let content = `
-                    <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
-                        <div class="flex justify-between items-center mb-2">
+                            <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div>
+                                        <div class="text-sm text-gray-400">${'{{ __('analysis.modal.total_performance') }}'}</div>
+                                        <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
+                                            $${profit.toFixed(2)}
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm text-gray-400">${'{{ __('analysis.modal.total_trades') }}'}</div>
+                                        <div class="text-2xl font-bold text-gray-200">${trades}</div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-gray-600">
+                                    <div class="text-xs text-gray-400">${'{{ __('analysis.modal.time_slot') }}'}</div>
+                                    <div class="text-sm text-gray-300">${hourRange} (GMT)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5 class="text-sm font-medium text-gray-300 mb-2">${'{{ __('analysis.modal.performance_insights') }}'}</h5>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-750 rounded-lg p-3">
+                                        <div class="text-xs text-gray-400">${'{{ __('analysis.modal.avg_pl_per_trade') }}'}</div>
+                                        <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                            $${(profit/trades).toFixed(2)}
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-750 rounded-lg p-3">
+                                        <div class="text-xs text-gray-400">${'{{ __('analysis.modal.win_loss_ratio') }}'}</div>
+                                        <div class="text-lg font-bold text-gray-200">
+                                            ${profit > 0 ? '{{ __('analysis.modal.profitable') }}' : '{{ __('analysis.modal.unprofitable') }}'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div>
-                                <div class="text-sm text-gray-400">Total Performance</div>
-                                <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
-                                    $${profit.toFixed(2)}
+                                <h5 class="text-sm font-medium text-gray-300 mb-2">${'{{ __('analysis.modal.recommendations') }}'}</h5>
+                                <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
+                                        <div>
+                                            <p class="text-sm text-gray-300">
+                                                ${profit > 0 
+                                                    ? '{{ __('analysis.modal.positive_recommendation') }}'
+                                                    : '{{ __('analysis.modal.negative_recommendation') }}'}
+                                            </p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                ${'{{ __('analysis.modal.based_on') }}'} ${trades} ${'{{ __('analysis.stats.trades') }}'}${trades !== 1 ? '' : ''} ${'{{ __('analysis.modal.at_this_time') }}'}.
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-sm text-gray-400">Total Trades</div>
-                                <div class="text-2xl font-bold text-gray-200">${trades}</div>
+                            
+                            <div class="mt-4 pt-4 border-t border-gray-700">
+                                <p class="text-xs text-gray-400 text-center">
+                                    <i class="fas fa-lightbulb mr-1"></i>
+                                    ${'{{ __('analysis.modal.click_other_slots') }}'}
+                                </p>
                             </div>
-                        </div>
-                        <div class="mt-2 pt-2 border-t border-gray-600">
-                            <div class="text-xs text-gray-400">Time Slot</div>
-                            <div class="text-sm text-gray-300">${hourRange} (GMT)</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h5 class="text-sm font-medium text-gray-300 mb-2">Performance Insights</h5>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-gray-750 rounded-lg p-3">
-                                <div class="text-xs text-gray-400">Average P/L per Trade</div>
-                                <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
-                                    $${(profit/trades).toFixed(2)}
-                                </div>
-                            </div>
-                            <div class="bg-gray-750 rounded-lg p-3">
-                                <div class="text-xs text-gray-400">Win/Loss Ratio</div>
-                                <div class="text-lg font-bold text-gray-200">
-                                    ${profit > 0 ? 'Profitable' : 'Unprofitable'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h5 class="text-sm font-medium text-gray-300 mb-2">Recommendations</h5>
-                        <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
-                            <div class="flex items-start gap-2">
-                                <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
-                                <div>
-                                    <p class="text-sm text-gray-300">
-                                        ${profit > 0 
-                                            ? 'This time slot shows consistent profitability. Consider focusing more trades during this period.'
-                                            : 'This time slot shows negative performance. Consider avoiding trades or reviewing your strategy for this period.'}
-                                    </p>
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        Based on ${trades} trade${trades !== 1 ? 's' : ''} at this specific day/time combination.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 pt-4 border-t border-gray-700">
-                        <p class="text-xs text-gray-400 text-center">
-                            <i class="fas fa-lightbulb mr-1"></i>
-                            Click on other time slots to compare performance
-                        </p>
-                    </div>
-                `;
+                        `;
 
                         sessionModalContent.innerHTML = content;
                         sessionModal.classList.remove('hidden');
@@ -1842,6 +1898,7 @@
                     }
                 });
             });
+
 
             // Close Session Modal
             closeSessionModalBtn.addEventListener('click', function() {
@@ -1900,7 +1957,7 @@
                 localStorage.setItem('balanceVisible', 'true');
 
                 // Update tooltip
-                toggleBalanceBtn.title = "Hide Balance & Equity";
+                toggleBalanceBtn.title = "{{ __('analysis.stats.hide_balance') }}";
             }
 
             function hideValues() {
@@ -1914,7 +1971,7 @@
                 localStorage.setItem('balanceVisible', 'false');
 
                 // Update tooltip
-                toggleBalanceBtn.title = "Show Balance & Equity";
+                toggleBalanceBtn.title = "{{ __('analysis.stats.show_balance') }}";
             }
 
             // Optional: Keyboard shortcut untuk toggle keduanya
