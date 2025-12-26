@@ -457,6 +457,12 @@
             }
         });
     </script>
+
+    <!-- Page Specific Scripts -->
+    @stack('scripts')
+
+    <!-- Include Analysis Scripts -->
+    @yield('scripts')
 </body>
 
 </html>

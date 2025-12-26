@@ -1,0 +1,121 @@
+/* General Analysis Page Styles */
+
+/* Simple scrollbar */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Hover effects for tables */
+tr:hover {
+    background-color: rgba(55, 65, 81, 0.3);
+}
+
+/* Stats Card Styles */
+.gradient-border {
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #1f2937, #374151) padding-box,
+        linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+}
+
+.stat-card {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Risk Management Cards */
+.risk-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.risk-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.1);
+}
+
+.risk-card:nth-child(1):hover {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.risk-card:nth-child(2):hover {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.risk-card:nth-child(3):hover {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.risk-card:nth-child(4):hover {
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Progress bar animation */
+.progress-bar {
+    transition: width 1.5s ease-in-out;
+}
+
+/* Scrollbar untuk position size */
+.max-h-32::-webkit-scrollbar {
+    width: 4px;
+}
+
+.max-h-32::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.max-h-32::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+/* Grid utilities */
+.grid-cols-25 {
+    grid-template-columns: repeat(25, minmax(0, 1fr));
+}
+
+/* Pastikan styles di-load */
+.analysis-container * {
+    box-sizing: border-box;
+}
+
+/* Override untuk memastikan styles bekerja */
+.hidden {
+    display: none !important;
+}
+
+.flex {
+    display: flex;
+}
+
+/* Chart container defaults */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

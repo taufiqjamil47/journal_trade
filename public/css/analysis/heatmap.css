@@ -1,0 +1,101 @@
+/* Tambahkan di style section */
+.grid-cols-25 {
+    grid-template-columns: repeat(25, minmax(0, 1fr));
+}
+
+/* Heatmap cell styles */
+.heatmap-cell {
+    transition: all 0.2s ease;
+    min-width: 2rem;
+    min-height: 2rem;
+}
+
+.heatmap-cell:hover {
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+/* Scrollbar untuk heatmap */
+#heatmapContainer.max-h-96 {
+    max-height: 24rem;
+}
+
+#heatmapContainer::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#heatmapContainer::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#heatmapContainer::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+/* Tooltip styles */
+.group:hover .group-hover\:block {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Session Heatmap Modal Styles */
+#sessionModalContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sessionModalContent::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#sessionModalContent::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Smooth transition for modal */
+#sessionModal {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#sessionModal:not(.hidden) {
+    opacity: 1;
+}
+
+/* Heatmap cell hover effects */
+#heatmapContainer [data-trades] {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+#heatmapContainer [data-trades]:hover {
+    transform: scale(1.05);
+    z-index: 20;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#heatmapContainer [data-trades]:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid currentColor;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0.3;
+}
