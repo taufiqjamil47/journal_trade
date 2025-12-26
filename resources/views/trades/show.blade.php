@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Trade Detail #' . $trade->id)
+@section('title', __('trades.trade_detail_title', ['id' => $trade->id]))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,15 +7,15 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trade Detail
+                        {{ __('trades.trade_detail') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Detail lengkap untuk trade #{{ $trade->id }}</p>
+                    <p class="text-gray-500 mt-1">{{ __('trades.detail_for_trade', ['id' => $trade->id]) }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('trades.index') }}"
                         class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
-                        <span>Kembali</span>
+                        <span>{{ __('trades.back_to_list') }}</span>
                     </a>
                 </div>
             </div>
@@ -27,30 +27,30 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
                 <h3 class="text-lg font-semibold text-primary-400 mb-4 flex items-center">
                     <i class="fas fa-info-circle mr-2"></i>
-                    Informasi Dasar
+                    {{ __('trades.basic_information') }}
                 </h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-400">ID Trade</span>
+                        <span class="text-gray-400">{{ __('trades.trade_id') }}</span>
                         <span class="font-bold text-primary-300">#{{ $trade->id }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-400">Symbol</span>
+                        <span class="text-gray-400">{{ __('trades.symbol') }}</span>
                         <span class="font-bold">{{ $trade->symbol->name }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-400">Type</span>
+                        <span class="text-gray-400">{{ __('trades.type') }}</span>
                         <span
                             class="px-3 py-1 rounded-full text-xs font-semibold {{ $trade->type == 'buy' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
                             {{ strtoupper($trade->type) }}
                         </span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-400">Session</span>
+                        <span class="text-gray-400">{{ __('trades.session') }}</span>
                         <span class="font-bold">{{ $trade->session }}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-400">Timestamp</span>
+                        <span class="text-gray-400">{{ __('trades.timestamp') }}</span>
                         <span class="font-bold">{{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}</span>
                     </div>
                 </div>
@@ -60,12 +60,12 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
                 <h3 class="text-lg font-semibold text-primary-400 mb-4 flex items-center">
                     <i class="fas fa-chart-line mr-2"></i>
-                    Level Harga
+                    {{ __('trades.price_levels') }}
                 </h3>
                 <div class="space-y-4">
                     <div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Entry Price</span>
+                            <span class="text-gray-400">{{ __('trades.entry_price') }}</span>
                             <span
                                 class="font-mono font-bold text-lg text-green-400">{{ format_price($trade->entry) }}</span>
                         </div>
@@ -73,7 +73,7 @@
 
                     <div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Stop Loss</span>
+                            <span class="text-gray-400">{{ __('trades.stop_loss') }}</span>
                             <span
                                 class="font-mono font-bold text-lg text-red-400">{{ format_price($trade->stop_loss) }}</span>
                         </div>
@@ -81,7 +81,7 @@
 
                     <div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Take Profit</span>
+                            <span class="text-gray-400">{{ __('trades.take_profit') }}</span>
                             <span
                                 class="font-mono font-bold text-lg text-green-400">{{ format_price($trade->take_profit) }}</span>
                         </div>
@@ -90,7 +90,7 @@
                     @if ($trade->exit)
                         <div>
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-400">Exit Price</span>
+                                <span class="text-gray-400">{{ __('trades.exit_price') }}</span>
                                 <span
                                     class="font-mono font-bold text-lg text-blue-400">{{ format_price($trade->exit) }}</span>
                             </div>
@@ -103,11 +103,11 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
                 <h3 class="text-lg font-semibold text-primary-400 mb-4 flex items-center">
                     <i class="fas fa-trophy mr-2"></i>
-                    Hasil Trade
+                    {{ __('trades.trade_result') }}
                 </h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-400 text-lg">Status</span>
+                        <span class="text-gray-400 text-lg">{{ __('trades.status') }}</span>
                         @if ($trade->hasil)
                             <span
                                 class="px-3 py-1 rounded-full text-lg font-semibold {{ $trade->hasil == 'win' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
@@ -116,13 +116,13 @@
                         @else
                             <span
                                 class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                                PENDING
+                                {{ __('trades.pending') }}
                             </span>
                         @endif
                     </div>
 
                     <div class="text-center">
-                        <span class="text-sm text-gray-400 block mb-2">Profit/Loss</span>
+                        <span class="text-sm text-gray-400 block mb-2">{{ __('trades.profit_loss') }}</span>
                         <p class="text-2xl font-bold {{ $trade->profit_loss >= 0 ? 'text-green-400' : 'text-red-400' }}">
                             ${{ number_format($trade->profit_loss ?? 0, 2) }}
                         </p>
@@ -130,7 +130,7 @@
 
                     @if ($trade->rr)
                         <div class="text-center">
-                            <span class="text-sm text-gray-400 block mb-1">Risk/Reward Ratio</span>
+                            <span class="text-sm text-gray-400 block mb-1">{{ __('trades.rr_ratio') }}</span>
                             <p class="text-xl font-bold text-amber-400">{{ $trade->rr }}</p>
                         </div>
                     @endif
@@ -144,7 +144,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
                 <h3 class="text-lg font-semibold text-primary-400 mb-6 flex items-center">
                     <i class="fas fa-shield-alt mr-2"></i>
-                    Manajemen Risiko
+                    {{ __('trades.risk_management') }}
                 </h3>
 
                 <div class="space-y-6">
@@ -152,18 +152,18 @@
                     <div>
                         <h4 class="text-md font-medium text-gray-300 mb-3 flex items-center">
                             <i class="fas fa-chart-line mr-2 text-sm"></i>
-                            Risk Parameters
+                            {{ __('trades.risk_parameters') }}
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <!-- Lot Size -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-2">Lot Size</span>
+                                <span class="text-sm text-gray-400 block mb-2">{{ __('trades.lot_size') }}</span>
                                 <span class="font-bold text-xl text-white">{{ $trade->lot_size ?? '-' }}</span>
                             </div>
 
                             <!-- Risk % -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-2">Risk %</span>
+                                <span class="text-sm text-gray-400 block mb-2">{{ __('trades.risk_percent') }}</span>
                                 <span class="font-bold text-xl text-white">
                                     {{ $trade->risk_percent ? $trade->risk_percent . '%' : '-' }}
                                 </span>
@@ -171,7 +171,7 @@
 
                             <!-- Risk USD -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-2">Risk USD</span>
+                                <span class="text-sm text-gray-400 block mb-2">{{ __('trades.risk_amount_usd') }}</span>
                                 <span class="font-bold text-xl text-white">
                                     {{ $trade->risk_usd ? '$' . number_format($trade->risk_usd, 2) : '-' }}
                                 </span>
@@ -183,24 +183,24 @@
                     <div>
                         <h4 class="text-md font-medium text-gray-300 mb-3 flex items-center">
                             <i class="fas fa-ruler-combined mr-2 text-sm"></i>
-                            Trade Levels
+                            {{ __('trades.trade_levels') }}
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Pips -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-3">Pips</span>
+                                <span class="text-sm text-gray-400 block mb-3">{{ __('trades.pips') }}</span>
                                 <div class="space-y-3">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <i class="fas fa-arrow-up text-green-400 mr-2 text-sm"></i>
-                                            <span class="text-gray-400">Take Profit:</span>
+                                            <span class="text-gray-400">{{ __('trades.take_profit_colon') }}</span>
                                         </div>
                                         <span class="font-semibold text-green-400">{{ $trade->tp_pips ?? '0' }} pips</span>
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <i class="fas fa-arrow-down text-red-400 mr-2 text-sm"></i>
-                                            <span class="text-gray-400">Stop Loss:</span>
+                                            <span class="text-gray-400">{{ __('trades.stop_loss_colon') }}</span>
                                         </div>
                                         <span class="font-semibold text-red-400">{{ $trade->sl_pips ?? '0' }} pips</span>
                                     </div>
@@ -209,7 +209,7 @@
 
                             <!-- Risk-Reward Ratio -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-3">Risk-Reward Ratio</span>
+                                <span class="text-sm text-gray-400 block mb-3">{{ __('trades.risk_reward_ratio') }}</span>
                                 <div class="flex items-center justify-center">
                                     <span
                                         class="font-bold text-2xl {{ $trade->rr >= 1 ? 'text-green-400' : 'text-yellow-400' }}">
@@ -224,7 +224,7 @@
                     <div>
                         <h4 class="text-md font-medium text-gray-300 mb-3 flex items-center">
                             <i class="fas fa-clock mr-2 text-sm"></i>
-                            Time Management
+                            {{ __('trades.time_management') }}
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             @php
@@ -246,7 +246,7 @@
 
                             <!-- Entry Time -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-2">Entry Time</span>
+                                <span class="text-sm text-gray-400 block mb-2">{{ __('trades.entry_time') }}</span>
                                 <div class="flex flex-col items-center">
                                     <span class="font-bold text-lg text-white">
                                         {{ $entryDt ? $entryDt->format('d/m/Y') : '-' }}
@@ -259,7 +259,7 @@
 
                             <!-- Exit Time -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-2">Exit Time</span>
+                                <span class="text-sm text-gray-400 block mb-2">{{ __('trades.exit_time') }}</span>
                                 <div class="flex flex-col items-center">
                                     <span class="font-bold text-lg text-white">
                                         {{ $exitDt ? $exitDt->format('d/m/Y') : '-' }}
@@ -272,12 +272,12 @@
 
                             <!-- Duration -->
                             <div class="text-center bg-gray-750/50 rounded-xl p-4 border border-gray-700">
-                                <span class="text-sm text-gray-400 block mb-2">Duration</span>
+                                <span class="text-sm text-gray-400 block mb-2">{{ __('trades.duration') }}</span>
                                 <div class="flex flex-col items-center">
                                     <span class="font-bold text-lg text-white">{{ $duration ?? '-' }}</span>
                                     @if ($entryDt && !$exitDt)
                                         <span class="text-xs text-yellow-400 mt-1 bg-yellow-400/10 px-2 py-1 rounded-full">
-                                            <i class="fas fa-sync-alt mr-1"></i> Ongoing
+                                            <i class="fas fa-sync-alt mr-1"></i> {{ __('trades.ongoing') }}
                                         </span>
                                     @endif
                                 </div>
@@ -292,26 +292,26 @@
                 <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
                     <h3 class="text-lg font-semibold text-primary-400 mb-4 flex items-center">
                         <i class="fas fa-sticky-note mr-2"></i>
-                        Catatan Evaluasi
+                        {{ __('trades.evaluation_notes') }}
                     </h3>
                     <div class="space-y-4">
                         @if ($trade->market_condition)
                             <div class="bg-gray-750 rounded-lg p-3">
-                                <span class="text-sm text-gray-400 block mb-1">Kondisi Market</span>
+                                <span class="text-sm text-gray-400 block mb-1">{{ __('trades.market_condition') }}</span>
                                 <p class="font-medium">{{ $trade->market_condition }}</p>
                             </div>
                         @endif
 
                         @if ($trade->entry_reason)
                             <div class="bg-gray-750 rounded-lg p-3">
-                                <span class="text-sm text-gray-400 block mb-1">Alasan Entry</span>
+                                <span class="text-sm text-gray-400 block mb-1">{{ __('trades.entry_reason') }}</span>
                                 <p class="font-medium">{{ $trade->entry_reason }}</p>
                             </div>
                         @endif
 
                         @if ($trade->note)
                             <div class="bg-gray-750 rounded-lg p-3">
-                                <span class="text-sm text-gray-400 block mb-1">Catatan Tambahan</span>
+                                <span class="text-sm text-gray-400 block mb-1">{{ __('trades.additional_notes') }}</span>
                                 <p class="font-medium whitespace-pre-line">{{ $trade->note }}</p>
                             </div>
                         @endif
@@ -325,7 +325,7 @@
             <div class="bg-gray-800 rounded-xl border border-gray-700 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary-400 mb-4 flex items-center">
                     <i class="fas fa-chart-line mr-2"></i>
-                    Trading Charts
+                    {{ __('trades.trading_charts') }}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     @if ($trade->before_link)
@@ -334,21 +334,21 @@
                             <div class="flex items-center justify-between">
                                 <label class="text-sm text-gray-400 flex items-center">
                                     <i class="fas fa-image mr-2"></i>
-                                    Before Entry
+                                    {{ __('trades.before_entry') }}
                                 </label>
                                 <div class="flex gap-2">
                                     @if ($beforeChartImage)
                                         <button
-                                            onclick="openImageModal('{{ $beforeChartImage }}', 'Before Entry - {{ $trade->symbol->name }}')"
+                                            onclick="openImageModal('{{ $beforeChartImage }}', '{{ __('trades.before_entry_title', ['symbol' => $trade->symbol->name]) }}')"
                                             class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
                                             <i class="fas fa-search-plus mr-1"></i>
-                                            Zoom
+                                            {{ __('trades.zoom') }}
                                         </button>
                                     @endif
                                     <a href="{{ $trade->before_link }}" target="_blank"
                                         class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
                                         <i class="fas fa-external-link-alt mr-1"></i>
-                                        Link
+                                        {{ __('trades.link') }}
                                     </a>
                                 </div>
                             </div>
@@ -359,35 +359,35 @@
                                     class="relative group overflow-hidden rounded-lg border border-gray-600 bg-gray-900 hover:border-primary-500/50 transition-all duration-300">
                                     <!-- Image -->
                                     <img src="{{ $beforeChartImage }}"
-                                        alt="Before Entry Chart - {{ $trade->symbol->name }}"
+                                        alt="{{ __('trades.before_chart_alt', ['symbol' => $trade->symbol->name]) }}"
                                         class="w-full h-auto chart-image cursor-zoom-in hover:opacity-90 transition-opacity duration-300 max-h-96 object-cover"
                                         loading="lazy"
-                                        onclick="openImageModal('{{ $beforeChartImage }}', 'Before Entry - {{ $trade->symbol->name }}')">
+                                        onclick="openImageModal('{{ $beforeChartImage }}', '{{ __('trades.before_entry_title', ['symbol' => $trade->symbol->name]) }}')">
 
                                     <!-- Loading indicator fallback -->
                                     {{-- <div
                                         class="absolute inset-0 bg-gray-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <span class="text-xs text-gray-400">Klik untuk zoom</span>
+                                        <span class="text-xs text-gray-400">{{ __('trades.click_to_zoom') }}</span>
                                     </div> --}}
                                 </div>
                                 <p class="text-xs text-gray-500 text-center">
-                                    Klik gambar untuk memperbesar
+                                    {{ __('trades.click_image_to_zoom') }}
                                 </p>
                             @else
                                 <div class="bg-gray-750 border border-gray-600 rounded-lg p-8 text-center">
                                     <i class="fas fa-chart-line text-3xl text-gray-500 mb-3"></i>
-                                    <p class="text-gray-400 text-sm mb-3">Gambar chart tidak tersedia</p>
+                                    <p class="text-gray-400 text-sm mb-3">{{ __('trades.chart_image_unavailable') }}</p>
                                     <p class="text-xs text-gray-500 mb-3">
                                         @if (str_contains($trade->before_link, 'tradingview'))
-                                            Link TradingView tidak dapat ditampilkan sebagai gambar
+                                            {{ __('trades.tradingview_link_not_image') }}
                                         @else
-                                            Gagal memuat gambar dari URL
+                                            {{ __('trades.failed_load_image') }}
                                         @endif
                                     </p>
                                     <a href="{{ $trade->before_link }}" target="_blank"
                                         class="inline-block mt-3 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold py-2 px-4 rounded transition-colors">
                                         <i class="fas fa-external-link-alt mr-1"></i>
-                                        Buka Link Asli
+                                        {{ __('trades.open_original_link') }}
                                     </a>
                                 </div>
                             @endif
@@ -400,21 +400,21 @@
                             <div class="flex items-center justify-between">
                                 <label class="text-sm text-gray-400 flex items-center">
                                     <i class="fas fa-image mr-2"></i>
-                                    After Entry
+                                    {{ __('trades.after_entry') }}
                                 </label>
                                 <div class="flex gap-2">
                                     @if ($afterChartImage)
                                         <button
-                                            onclick="openImageModal('{{ $afterChartImage }}', 'After Entry - {{ $trade->symbol->name }}')"
+                                            onclick="openImageModal('{{ $afterChartImage }}', '{{ __('trades.after_entry_title', ['symbol' => $trade->symbol->name]) }}')"
                                             class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
                                             <i class="fas fa-search-plus mr-1"></i>
-                                            Zoom
+                                            {{ __('trades.zoom') }}
                                         </button>
                                     @endif
                                     <a href="{{ $trade->after_link }}" target="_blank"
                                         class="text-xs text-primary-400 hover:text-primary-300 transition-colors flex items-center">
                                         <i class="fas fa-external-link-alt mr-1"></i>
-                                        Link
+                                        {{ __('trades.link') }}
                                     </a>
                                 </div>
                             </div>
@@ -425,35 +425,35 @@
                                     class="relative group overflow-hidden rounded-lg border border-gray-600 bg-gray-900 hover:border-primary-500/50 transition-all duration-300">
                                     <!-- Image -->
                                     <img src="{{ $afterChartImage }}"
-                                        alt="After Entry Chart - {{ $trade->symbol->name }}"
+                                        alt="{{ __('trades.after_chart_alt', ['symbol' => $trade->symbol->name]) }}"
                                         class="w-full h-auto chart-image cursor-zoom-in hover:opacity-90 transition-opacity duration-300 max-h-96 object-cover"
                                         loading="lazy"
-                                        onclick="openImageModal('{{ $afterChartImage }}', 'After Entry - {{ $trade->symbol->name }}')">
+                                        onclick="openImageModal('{{ $afterChartImage }}', '{{ __('trades.after_entry_title', ['symbol' => $trade->symbol->name]) }}')">
 
                                     <!-- Loading indicator fallback -->
                                     {{-- <div
                                         class="absolute inset-0 bg-gray-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <span class="text-xs text-gray-400">Klik untuk zoom</span>
+                                        <span class="text-xs text-gray-400">{{ __('trades.click_to_zoom') }}</span>
                                     </div> --}}
                                 </div>
                                 <p class="text-xs text-gray-500 text-center">
-                                    Klik gambar untuk memperbesar
+                                    {{ __('trades.click_image_to_zoom') }}
                                 </p>
                             @else
                                 <div class="bg-gray-750 border border-gray-600 rounded-lg p-8 text-center">
                                     <i class="fas fa-chart-line text-3xl text-gray-500 mb-3"></i>
-                                    <p class="text-gray-400 text-sm mb-3">Gambar chart tidak tersedia</p>
+                                    <p class="text-gray-400 text-sm mb-3">{{ __('trades.chart_image_unavailable') }}</p>
                                     <p class="text-xs text-gray-500 mb-3">
                                         @if (str_contains($trade->after_link, 'tradingview'))
-                                            Link TradingView tidak dapat ditampilkan sebagai gambar
+                                            {{ __('trades.tradingview_link_not_image') }}
                                         @else
-                                            Gagal memuat gambar dari URL
+                                            {{ __('trades.failed_load_image') }}
                                         @endif
                                     </p>
                                     <a href="{{ $trade->after_link }}" target="_blank"
                                         class="inline-block mt-3 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold py-2 px-4 rounded transition-colors">
                                         <i class="fas fa-external-link-alt mr-1"></i>
-                                        Buka Link Asli
+                                        {{ __('trades.open_original_link') }}
                                     </a>
                                 </div>
                             @endif
@@ -470,23 +470,23 @@
                 <a href="{{ route('trades.edit', $trade->id) }}"
                     class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors flex items-center">
                     <i class="fas fa-edit mr-2"></i>
-                    Update Exit
+                    {{ __('trades.update_exit') }}
                 </a>
                 <a href="{{ route('trades.evaluate', $trade->id) }}"
                     class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors flex items-center">
                     <i class="fas fa-chart-bar mr-2"></i>
-                    Evaluasi Trade
+                    {{ __('trades.evaluate_trade') }}
                 </a>
                 <a href="{{ route('trades.single.pdf', $trade->id) }}"
                     class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg">
                     <i class="fas fa-file-pdf mr-2"></i>
-                    Download PDF Report
+                    {{ __('trades.download_pdf_report') }}
                 </a>
             </div>
             <a href="{{ route('trades.index') }}"
                 class="flex items-center text-gray-400 hover:text-gray-300 transition-colors">
                 <i class="fas fa-arrow-left mr-2"></i>
-                Kembali ke Daftar Trade
+                {{ __('trades.back_to_list') }}
             </a>
         </div>
     </div>
@@ -510,8 +510,7 @@
                     </div>
                 </div>
                 <div class="p-4 border-t border-gray-700 text-center">
-                    <p class="text-sm text-gray-400">Gunakan scroll untuk zoom in/out • Klik di luar gambar untuk menutup
-                    </p>
+                    <p class="text-sm text-gray-400">{{ __('trades.zoom_instructions') }}</p>
                 </div>
             </div>
         </div>
