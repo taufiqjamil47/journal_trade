@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Edit Session')
+@section('title', __('session.edit_session'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,15 +7,15 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Edit Session
+                        {{ __('session.edit_session') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Perbarui detail sesi perdagangan</p>
+                    <p class="text-gray-500 mt-1">{{ __('session.update_session_details') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('sessions.index') }}"
                         class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
-                        <span>Kembali ke Sessions</span>
+                        <span>{{ __('session.back_to_sessions') }}</span>
                     </a>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                             <i class="fas fa-edit text-amber-500"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-semibold">Edit Session</h2>
-                            <p class="text-gray-500 text-sm mt-1">Update jam session dalam NY Time</p>
+                            <h2 class="text-xl font-semibold">{{ __('session.edit_session') }}</h2>
+                            <p class="text-gray-500 text-sm mt-1">{{ __('session.update_time_in_ny') }}</p>
                         </div>
                     </div>
                 </div>
@@ -43,11 +43,11 @@
                     <div class="space-y-6">
                         <div class="space-y-2">
                             <label for="name" class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-tag mr-2 text-primary-500"></i>Nama Session
+                                <i class="fas fa-tag mr-2 text-primary-500"></i>{{ __('session.session_name') }}
                             </label>
                             <input type="text" name="name" value="{{ $session->name }}"
                                 class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
-                                placeholder="Contoh: London Session, NY Session" required>
+                                placeholder="{{ __('session.name_placeholder') }}" required>
                             @error('name')
                                 <p class="text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
@@ -59,7 +59,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label for="start_hour" class="block text-sm font-medium text-gray-300">
-                                    <i class="fas fa-play-circle mr-2 text-green-500"></i>Jam Mulai (0-23, NY Time)
+                                    <i class="fas fa-play-circle mr-2 text-green-500"></i>{{ __('session.start_hour') }}
                                 </label>
                                 <input type="number" name="start_hour" value="{{ $session->start_hour }}" min="0"
                                     max="23"
@@ -75,7 +75,7 @@
 
                             <div class="space-y-2">
                                 <label for="end_hour" class="block text-sm font-medium text-gray-300">
-                                    <i class="fas fa-stop-circle mr-2 text-red-500"></i>Jam Selesai (0-23, NY Time)
+                                    <i class="fas fa-stop-circle mr-2 text-red-500"></i>{{ __('session.end_hour') }}
                                 </label>
                                 <input type="number" name="end_hour" value="{{ $session->end_hour }}" min="0"
                                     max="23"
@@ -103,8 +103,9 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">Durasi Session</p>
-                                    <p class="text-base font-semibold">{{ $duration }} jam</p>
+                                    <p class="text-sm text-gray-400">{{ __('session.session_duration') }}</p>
+                                    <p class="text-base font-semibold">{{ $duration }} {{ __('session.hours') }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -116,18 +117,18 @@
                         <a href="{{ route('sessions.index') }}"
                             class="flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200 w-full sm:w-auto justify-center sm:justify-start">
                             <i class="fas fa-arrow-left mr-2"></i>
-                            Kembali ke Sessions
+                            {{ __('session.back_to_sessions') }}
                         </a>
                         <div class="flex gap-3 w-full sm:w-auto">
                             <button type="button" onclick="cancelEdit()"
                                 class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
                                 <i class="fas fa-times mr-2"></i>
-                                Batal
+                                {{ __('session.cancel') }}
                             </button>
                             <button type="submit"
                                 class="bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
                                 <i class="fas fa-save mr-2"></i>
-                                Update Session
+                                {{ __('session.update_session') }}
                             </button>
                         </div>
                     </div>
@@ -139,15 +140,15 @@
     <script>
         function cancelEdit() {
             Swal.fire({
-                title: 'Batalkan Perubahan?',
+                title: '{{ __('session.cancel_changes') }}',
                 html: `
                     <div class="text-left text-sm">
                         <div class="bg-amber-900/20 p-4 rounded-lg mb-4 border border-amber-700/30">
-                            <p class="font-bold mb-2 text-amber-300">Perubahan yang belum disimpan akan hilang</p>
+                            <p class="font-bold mb-2 text-amber-300">{{ __('session.unsaved_changes_warning') }}</p>
                             <ul class="space-y-1 text-gray-300">
                                 <li class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-amber-500 mr-2 text-xs"></i>
-                                    <span>Semua perubahan pada session akan dibatalkan</span>
+                                    <span>{{ __('session.changes_will_be_lost') }}</span>
                                 </li>
                             </ul>
                         </div>
@@ -158,8 +159,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-times mr-2"></i>Ya, Batalkan',
-                cancelButtonText: '<i class="fas fa-arrow-left mr-2"></i>Kembali Edit',
+                confirmButtonText: '<i class="fas fa-times mr-2"></i>{{ __('session.yes_cancel') }}',
+                cancelButtonText: '<i class="fas fa-arrow-left mr-2"></i>{{ __('session.back_to_edit') }}',
                 reverseButtons: true,
                 customClass: {
                     popup: 'bg-gray-800 border border-amber-700/30',
@@ -189,7 +190,7 @@
                 // Update duration display
                 const durationText = durationDiv.querySelector('.text-base');
                 if (durationText) {
-                    durationText.textContent = `${duration} jam`;
+                    durationText.textContent = `${duration} {{ __('session.hours') }}`;
                 }
 
                 // Add visual feedback

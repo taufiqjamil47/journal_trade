@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Sessions')
+@section('title', __('session.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trading Sessions
+                        {{ __('session.header.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Kelola jam sesi perdagangan Anda</p>
+                    <p class="text-gray-500 mt-1">{{ __('session.header.subtitle') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <!-- Toggle Button -->
@@ -29,7 +29,7 @@
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Dashboard
+                                        {{ __('nav_header.nav.dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -42,7 +42,7 @@
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        PnL Calendar
+                                        {{ __('nav_header.nav.calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -55,7 +55,7 @@
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Analysis
+                                        {{ __('nav_header.nav.analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -70,7 +70,7 @@
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Journal Trades
+                                        {{ __('nav_header.nav.trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -83,7 +83,7 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Sessions
+                                        {{ __('nav_header.nav.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -96,7 +96,7 @@
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Symbols
+                                        {{ __('nav_header.nav.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -109,7 +109,7 @@
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Rules
+                                        {{ __('nav_header.nav.rules') }}
                                     </span>
                                 </a>
                             @endif
@@ -154,13 +154,14 @@
             <div class="px-6 py-4 border-b border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold">Daftar Session</h2>
-                        <p class="text-gray-500 text-sm mt-1">Total: {{ $sessions->total() }} sessions</p>
+                        <h2 class="text-xl font-semibold">{{ __('session.table.title') }}</h2>
+                        <p class="text-gray-500 text-sm mt-1">
+                            {{ __('session.table.total', ['total' => $sessions->total()]) }}</p>
                     </div>
                     <a href="{{ route('sessions.create') }}"
                         class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                         <i class="fas fa-plus mr-2"></i>
-                        Tambah Session
+                        {{ __('session.table.add_button') }}
                     </a>
                 </div>
             </div>
@@ -171,22 +172,22 @@
                     <thead>
                         <tr class="bg-gray-750 border-b border-gray-600">
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-hashtag mr-2"></i>ID
+                                <i class="fas fa-hashtag mr-2"></i>{{ __('session.table.columns.id') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-tag mr-2"></i>Name
+                                <i class="fas fa-tag mr-2"></i>{{ __('session.table.columns.name') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-play-circle mr-2"></i>Start Hour (NY)
+                                <i class="fas fa-play-circle mr-2"></i>{{ __('session.table.columns.start_hour') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-stop-circle mr-2"></i>End Hour (NY)
+                                <i class="fas fa-stop-circle mr-2"></i>{{ __('session.table.columns.end_hour') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-clock mr-2"></i>Duration
+                                <i class="fas fa-clock mr-2"></i>{{ __('session.table.columns.duration') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-cogs mr-2"></i>Actions
+                                <i class="fas fa-cogs mr-2"></i>{{ __('session.table.columns.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -223,19 +224,19 @@
                                     @endphp
                                     <span
                                         class="bg-primary-500/20 text-primary-300 border border-primary-500/30 py-1 px-3 rounded-lg text-xs font-medium">
-                                        {{ $duration }} jam
+                                        {{ __('session.duration', ['hours' => $duration]) }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
                                     <div class="flex space-x-2">
                                         <a href="{{ route('sessions.edit', $s) }}"
                                             class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-2 rounded-lg"
-                                            title="Edit Session">
+                                            title="{{ __('session.actions.edit') }}">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                         <button onclick="deleteSession({{ $s->id }}, '{{ $s->name }}')"
                                             class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
-                                            title="Delete Session">
+                                            title="{{ __('session.actions.delete') }}">
                                             <i class="fas fa-trash text-sm"></i>
                                         </button>
                                     </div>
@@ -249,13 +250,13 @@
                                             <i class="fas fa-clock text-2xl opacity-50"></i>
                                         </div>
                                         <div class="space-y-1">
-                                            <p class="text-base font-medium">Belum ada session</p>
-                                            <p class="text-sm">Mulai dengan menambahkan session pertama Anda</p>
+                                            <p class="text-base font-medium">{{ __('session.empty.title') }}</p>
+                                            <p class="text-sm">{{ __('session.empty.description') }}</p>
                                         </div>
                                         <a href="{{ route('sessions.create') }}"
                                             class="mt-2 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg flex items-center">
                                             <i class="fas fa-plus mr-2"></i>
-                                            Tambah Session Pertama
+                                            {{ __('session.empty.button') }}
                                         </a>
                                     </div>
                                 </td>
@@ -275,42 +276,66 @@
     </div>
 
     <script>
+        // Simpan terjemahan di JavaScript object
+        const sessionTranslations = {
+            delete_title: '{{ __('session.delete.title') }}',
+            delete_to_delete: '{{ __('session.delete.to_delete') }}',
+            delete_warning: '{{ __('session.delete.warning') }}',
+            delete_confirm_text: '{{ __('session.delete.confirm_text') }}',
+            delete_placeholder: '{{ __('session.delete.placeholder') }}',
+            delete_confirm_button: '{{ __('session.delete.confirm_button') }}',
+            delete_cancel_button: '{{ __('session.delete.cancel_button') }}',
+            delete_validation_template: '{{ __('session.delete.validation') }}',
+            delete_deleting: '{{ __('session.delete.deleting') }}',
+            delete_deleting_message_template: '{{ __('session.delete.deleting_message') }}',
+        };
+
         function deleteSession(id, name) {
+            const requiredCode = `DELETE_${id}`;
+
+            // Buat pesan validation dengan kode yang benar
+            const validationMessage = sessionTranslations.delete_validation_template
+                .replace(':code', `<code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_${id}</code>`);
+
+            // Buat pesan deleting dengan nama session
+            const deletingMessage = sessionTranslations.delete_deleting_message_template
+                .replace(':name', `"${name}"`);
+
             Swal.fire({
-                title: 'Hapus Session?',
+                title: sessionTranslations.delete_title,
                 html: `
-                    <div class="text-left text-sm">
-                        <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                            <p class="font-bold mb-2 text-red-300">Session yang akan dihapus:</p>
-                            <ul class="space-y-1 text-gray-300">
-                                <li class="flex items-center">
-                                    <i class="fas fa-tag text-red-500 mr-2 text-xs"></i>
-                                    <span><strong>${name}</strong></span>
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-exclamation-triangle text-amber-500 mr-2 text-xs"></i>
-                                    <span class="text-amber-300">Trade yang menggunakan session ini akan tetap ada</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <p class="text-gray-300 mb-2">Ketik konfirmasi:</p>
-                        <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
-                            <code class="text-red-400 font-mono font-bold">DELETE_${id}</code>
-                        </div>
-                        <input type="text" 
-                               id="confirmDelete" 
-                               class="swal2-input w-full" 
-                               placeholder="Ketik kode konfirmasi..."
-                               autocomplete="off">
+                <div class="text-left text-sm">
+                    <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
+                        <p class="font-bold mb-2 text-red-300">${sessionTranslations.delete_to_delete}</p>
+                        <ul class="space-y-1 text-gray-300">
+                            <li class="flex items-center">
+                                <i class="fas fa-tag text-red-500 mr-2 text-xs"></i>
+                                <span><strong>${name}</strong></span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-exclamation-triangle text-amber-500 mr-2 text-xs"></i>
+                                <span class="text-amber-300">${sessionTranslations.delete_warning}</span>
+                            </li>
+                        </ul>
                     </div>
-                `,
+                    <p class="text-gray-300 mb-2">${sessionTranslations.delete_confirm_text}</p>
+                    <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                        <code class="text-red-400 font-mono font-bold">${requiredCode}</code>
+                    </div>
+                    <input type="text" 
+                           id="confirmDelete" 
+                           class="swal2-input w-full" 
+                           placeholder="${sessionTranslations.delete_placeholder}"
+                           autocomplete="off">
+                </div>
+            `,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Hapus Session',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Batal',
+                confirmButtonText: `<i class="fas fa-trash mr-2"></i>${sessionTranslations.delete_confirm_button}`,
+                cancelButtonText: `<i class="fas fa-times mr-2"></i>${sessionTranslations.delete_cancel_button}`,
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -325,12 +350,12 @@
                     const confirmInput = document.getElementById('confirmDelete');
                     const typedValue = confirmInput.value.trim();
 
-                    if (typedValue !== `DELETE_${id}`) {
+                    if (typedValue !== requiredCode) {
                         Swal.showValidationMessage(
                             `<div class="text-red-400 text-sm">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                Silakan ketik <code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_${id}</code>
-                            </div>`
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            ${validationMessage}
+                        </div>`
                         );
                         return false;
                     }
@@ -340,13 +365,13 @@
                 if (result.isConfirmed) {
                     // Show loading
                     Swal.fire({
-                        title: 'Menghapus...',
+                        title: sessionTranslations.delete_deleting,
                         html: `
-                            <div class="text-center">
-                                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
-                                <p class="text-gray-400">Menghapus session "${name}"...</p>
-                            </div>
-                        `,
+                        <div class="text-center">
+                            <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+                            <p class="text-gray-400">${deletingMessage}</p>
+                        </div>
+                    `,
                         showConfirmButton: false,
                         allowOutsideClick: false,
                         allowEscapeKey: false

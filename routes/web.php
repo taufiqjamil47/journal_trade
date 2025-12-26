@@ -24,20 +24,19 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
 */
 
-Route::resource('sessions', SessionController::class);
-Route::resource('trading-rules', TradingRuleController::class);
-Route::resource('symbols', SymbolController::class);
-Route::resource('notes', DashNoteController::class);
-
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
 ], function () {
+    Route::resource('sessions', SessionController::class);
+    Route::resource('trading-rules', TradingRuleController::class);
+    Route::resource('symbols', SymbolController::class);
+    Route::resource('notes', DashNoteController::class);
+
     // Semua route yang sudah ada
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');

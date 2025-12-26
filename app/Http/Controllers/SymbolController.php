@@ -14,7 +14,7 @@ class SymbolController extends Controller
     public function index()
     {
         try {
-            $symbols = Symbol::orderBy('name')->get();
+            $symbols = Symbol::orderBy('id')->get();
             return view('symbols.index', compact('symbols'));
         } catch (\Exception $e) {
             Log::error('Error loading symbols: ' . $e->getMessage());
@@ -46,10 +46,8 @@ class SymbolController extends Controller
                 'pip_value' => 'required|numeric',
                 'pip_worth' => 'nullable|numeric',
                 'pip_position' => 'nullable|string',
-                'active' => 'nullable|in:0,1',
+                'active' => 'required|in:0,1', // ubah dari nullable ke required
             ]);
-
-            $validated['active'] = $request->has('active') ? 1 : 0;
 
             Symbol::create($validated);
 
@@ -99,10 +97,8 @@ class SymbolController extends Controller
                 'pip_value' => 'required|numeric',
                 'pip_worth' => 'nullable|numeric',
                 'pip_position' => 'nullable|string',
-                'active' => 'nullable|in:0,1',
+                'active' => 'required|in:0,1', // ubah dari nullable ke required
             ]);
-
-            $validated['active'] = $request->has('active') ? 1 : 0;
 
             $symbol->update($validated);
 

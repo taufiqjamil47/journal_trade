@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Create Session')
+@section('title', __('session.create_session'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,15 +7,15 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Tambah Session
+                        {{ __('session.add_session') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Buat sesi perdagangan baru</p>
+                    <p class="text-gray-500 mt-1">{{ __('session.create_new_trading_session') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('sessions.index') }}"
                         class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
-                        <span>Kembali ke Sessions</span>
+                        <span>{{ __('session.back_to_sessions') }}</span>
                     </a>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                             <i class="fas fa-plus text-primary-500"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-semibold">Buat Session Baru</h2>
-                            <p class="text-gray-500 text-sm mt-1">Tentukan jam session dalam NY Time</p>
+                            <h2 class="text-xl font-semibold">{{ __('session.create_new_session') }}</h2>
+                            <p class="text-gray-500 text-sm mt-1">{{ __('session.set_time_in_ny') }}</p>
                         </div>
                     </div>
                 </div>
@@ -43,11 +43,11 @@
                     <div class="space-y-6">
                         <div class="space-y-2">
                             <label for="name" class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-tag mr-2 text-primary-500"></i>Nama Session
+                                <i class="fas fa-tag mr-2 text-primary-500"></i>{{ __('session.session_name') }}
                             </label>
                             <input type="text" name="name" value="{{ old('name') }}"
                                 class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
-                                placeholder="Contoh: London Session, NY Session" required>
+                                placeholder="{{ __('session.name_placeholder') }}" required>
                             @error('name')
                                 <p class="text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
@@ -59,7 +59,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label for="start_hour" class="block text-sm font-medium text-gray-300">
-                                    <i class="fas fa-play-circle mr-2 text-green-500"></i>Jam Mulai (0-23, NY Time)
+                                    <i class="fas fa-play-circle mr-2 text-green-500"></i>{{ __('session.start_hour') }}
                                 </label>
                                 <input type="number" name="start_hour" value="{{ old('start_hour') }}" min="0"
                                     max="23"
@@ -75,7 +75,7 @@
 
                             <div class="space-y-2">
                                 <label for="end_hour" class="block text-sm font-medium text-gray-300">
-                                    <i class="fas fa-stop-circle mr-2 text-red-500"></i>Jam Selesai (0-23, NY Time)
+                                    <i class="fas fa-stop-circle mr-2 text-red-500"></i>{{ __('session.end_hour') }}
                                 </label>
                                 <input type="number" name="end_hour" value="{{ old('end_hour') }}" min="0"
                                     max="23"
@@ -97,8 +97,9 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">Durasi Session</p>
-                                    <p id="durationPreview" class="text-base font-semibold">0 jam</p>
+                                    <p class="text-sm text-gray-400">{{ __('session.session_duration') }}</p>
+                                    <p id="durationPreview" class="text-base font-semibold">0
+                                        {{ __('session.hours') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -110,18 +111,18 @@
                         <a href="{{ route('sessions.index') }}"
                             class="flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200 w-full sm:w-auto justify-center sm:justify-start">
                             <i class="fas fa-arrow-left mr-2"></i>
-                            Kembali ke Sessions
+                            {{ __('session.back_to_sessions') }}
                         </a>
                         <div class="flex gap-3 w-full sm:w-auto">
                             <button type="button" onclick="cancelCreate()"
                                 class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
                                 <i class="fas fa-times mr-2"></i>
-                                Batal
+                                {{ __('session.cancel') }}
                             </button>
                             <button type="submit"
                                 class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
                                 <i class="fas fa-save mr-2"></i>
-                                Simpan Session
+                                {{ __('session.save_session') }}
                             </button>
                         </div>
                     </div>
@@ -133,15 +134,15 @@
     <script>
         function cancelCreate() {
             Swal.fire({
-                title: 'Batalkan Pembuatan?',
+                title: '{{ __('session.cancel_creation') }}',
                 html: `
                     <div class="text-left text-sm">
                         <div class="bg-amber-900/20 p-4 rounded-lg mb-4 border border-amber-700/30">
-                            <p class="font-bold mb-2 text-amber-300">Data yang sudah diisi akan hilang</p>
+                            <p class="font-bold mb-2 text-amber-300">{{ __('session.filled_data_warning') }}</p>
                             <ul class="space-y-1 text-gray-300">
                                 <li class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-amber-500 mr-2 text-xs"></i>
-                                    <span>Semua input akan dikosongkan</span>
+                                    <span>{{ __('session.all_inputs_will_be_cleared') }}</span>
                                 </li>
                             </ul>
                         </div>
@@ -152,8 +153,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-times mr-2"></i>Ya, Batalkan',
-                cancelButtonText: '<i class="fas fa-arrow-left mr-2"></i>Kembali Isi',
+                confirmButtonText: '<i class="fas fa-times mr-2"></i>{{ __('session.yes_cancel') }}',
+                cancelButtonText: '<i class="fas fa-arrow-left mr-2"></i>{{ __('session.back_to_fill') }}',
                 reverseButtons: true,
                 customClass: {
                     popup: 'bg-gray-800 border border-amber-700/30',
@@ -182,7 +183,7 @@
                 if (duration < 0) duration += 24;
 
                 // Update duration text
-                durationPreview.textContent = `${duration} jam`;
+                durationPreview.textContent = `${duration} {{ __('session.hours') }}`;
 
                 // Add visual feedback
                 if (duration <= 0) {
@@ -217,7 +218,7 @@
 
                 if (isNaN(startHour) || isNaN(endHour)) {
                     e.preventDefault();
-                    showValidationError('Harap isi jam mulai dan jam selesai dengan angka 0-23');
+                    showValidationError('{{ __('session.fill_start_end_hours') }}');
                     return;
                 }
 
@@ -226,13 +227,13 @@
 
                 if (duration <= 0) {
                     e.preventDefault();
-                    showValidationError('Durasi session harus lebih dari 0 jam');
+                    showValidationError('{{ __('session.duration_must_be_positive') }}');
                     return;
                 }
 
                 if (duration > 24) {
                     e.preventDefault();
-                    showValidationError('Durasi session tidak boleh lebih dari 24 jam');
+                    showValidationError('{{ __('session.duration_max_24_hours') }}');
                     return;
                 }
             });
@@ -240,7 +241,7 @@
             function showValidationError(message) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Validasi Gagal',
+                    title: '{{ __('session.validation_failed') }}',
                     text: message,
                     confirmButtonColor: '#d33',
                     customClass: {

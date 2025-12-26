@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Symbols')
+@section('title', __('symbol.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trading Symbols
+                        {{ __('symbol.header_title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Kelola simbol perdagangan Anda</p>
+                    <p class="text-gray-500 mt-1">{{ __('symbol.header_subtitle') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <!-- Toggle Button -->
@@ -29,7 +29,7 @@
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Dashboard
+                                        {{ __('nav_header.nav.dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -42,7 +42,7 @@
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        PnL Calendar
+                                        {{ __('nav_header.nav.calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -55,7 +55,7 @@
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Analysis
+                                        {{ __('nav_header.nav.analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -70,7 +70,7 @@
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Journal Trades
+                                        {{ __('nav_header.nav.trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -83,7 +83,7 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Sessions
+                                        {{ __('nav_header.nav.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -96,7 +96,7 @@
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Symbols
+                                        {{ __('nav_header.nav.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -109,7 +109,7 @@
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Rules
+                                        {{ __('nav_header.nav.rules') }}
                                     </span>
                                 </a>
                             @endif
@@ -153,13 +153,14 @@
             <div class="px-6 py-4 border-b border-gray-700">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h2 class="text-xl font-semibold">Daftar Symbol</h2>
-                        <p class="text-gray-500 text-sm mt-1">Total: {{ $symbols->count() }} Symbols</p>
+                        <h2 class="text-xl font-semibold">{{ __('symbol.table_title') }}</h2>
+                        <p class="text-gray-500 text-sm mt-1">
+                            {{ __('symbol.total_symbols', ['count' => $symbols->count()]) }}</p>
                     </div>
                     <a href="{{ route('symbols.create') }}"
                         class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                         <i class="fas fa-plus mr-2"></i>
-                        Tambah Symbol
+                        {{ __('symbol.add_symbol_button') }}
                     </a>
                 </div>
             </div>
@@ -169,22 +170,22 @@
                     <thead>
                         <tr class="bg-gray-750 border-b border-gray-600">
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-hashtag mr-2"></i>ID
+                                <i class="fas fa-hashtag mr-2"></i>{{ __('symbol.column_id') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-tag mr-2"></i>Name
+                                <i class="fas fa-tag mr-2"></i>{{ __('symbol.column_name') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-coins mr-2"></i>Pip Value
+                                <i class="fas fa-coins mr-2"></i>{{ __('symbol.column_pip_value') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-dollar-sign mr-2"></i>Pip Worth
+                                <i class="fas fa-dollar-sign mr-2"></i>{{ __('symbol.column_pip_worth') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-power-off mr-2"></i>Active
+                                <i class="fas fa-power-off mr-2"></i>{{ __('symbol.column_active') }}
                             </th>
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
-                                <i class="fas fa-cogs mr-2"></i>Actions
+                                <i class="fas fa-cogs mr-2"></i>{{ __('symbol.column_actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -216,12 +217,12 @@
                                     @if ($s->active)
                                         <span
                                             class="bg-green-500/20 text-green-400 border border-green-500/30 py-1 px-3 rounded-lg text-xs font-medium">
-                                            <i class="fas fa-check-circle mr-1"></i> Active
+                                            <i class="fas fa-check-circle mr-1"></i> {{ __('symbol.status_active') }}
                                         </span>
                                     @else
                                         <span
                                             class="bg-red-500/20 text-red-400 border border-red-500/30 py-1 px-3 rounded-lg text-xs font-medium">
-                                            <i class="fas fa-times-circle mr-1"></i> Inactive
+                                            <i class="fas fa-times-circle mr-1"></i> {{ __('symbol.status_inactive') }}
                                         </span>
                                     @endif
                                 </td>
@@ -229,12 +230,12 @@
                                     <div class="flex space-x-2">
                                         <a href="{{ route('symbols.edit', $s->id) }}"
                                             class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-2 rounded-lg"
-                                            title="Edit Symbol">
+                                            title="{{ __('symbol.edit_button_title') }}">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                         <button onclick="deleteSymbol({{ $s->id }}, '{{ $s->name }}')"
                                             class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
-                                            title="Delete Symbol">
+                                            title="{{ __('symbol.delete_button_title') }}">
                                             <i class="fas fa-trash text-sm"></i>
                                         </button>
                                     </div>
@@ -248,13 +249,13 @@
                                             <i class="fas fa-chart-line text-2xl opacity-50"></i>
                                         </div>
                                         <div class="space-y-1">
-                                            <p class="text-base font-medium">Belum ada symbol</p>
-                                            <p class="text-sm">Mulai dengan menambahkan symbol pertama Anda</p>
+                                            <p class="text-base font-medium">{{ __('symbol.no_symbols_title') }}</p>
+                                            <p class="text-sm">{{ __('symbol.no_symbols_subtitle') }}</p>
                                         </div>
                                         <a href="{{ route('symbols.create') }}"
                                             class="mt-2 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg flex items-center">
                                             <i class="fas fa-plus mr-2"></i>
-                                            Tambah Symbol Pertama
+                                            {{ __('symbol.add_first_symbol_button') }}
                                         </a>
                                     </div>
                                 </td>
@@ -276,11 +277,11 @@
     <script>
         function deleteSymbol(id, name) {
             Swal.fire({
-                title: 'Hapus Symbol?',
+                title: '{{ __('symbol.delete_modal_title') }}',
                 html: `
                     <div class="text-left text-sm">
                         <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                            <p class="font-bold mb-2 text-red-300">Symbol yang akan dihapus:</p>
+                            <p class="font-bold mb-2 text-red-300">{{ __('symbol.delete_modal_symbol_to_delete') }}</p>
                             <ul class="space-y-1 text-gray-300">
                                 <li class="flex items-center">
                                     <i class="fas fa-tag text-red-500 mr-2 text-xs"></i>
@@ -288,18 +289,18 @@
                                 </li>
                                 <li class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-amber-500 mr-2 text-xs"></i>
-                                    <span class="text-amber-300">Trade yang menggunakan symbol ini akan tetap ada</span>
+                                    <span class="text-amber-300">{{ __('symbol.delete_modal_warning') }}</span>
                                 </li>
                             </ul>
                         </div>
-                        <p class="text-gray-300 mb-2">Ketik konfirmasi:</p>
+                        <p class="text-gray-300 mb-2">{{ __('symbol.delete_modal_confirm_prompt') }}</p>
                         <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
                             <code class="text-red-400 font-mono font-bold">DELETE_${id}</code>
                         </div>
                         <input type="text" 
                                id="confirmDelete" 
                                class="swal2-input w-full" 
-                               placeholder="Ketik kode konfirmasi..."
+                               placeholder="{{ __('symbol.delete_modal_input_placeholder') }}"
                                autocomplete="off">
                     </div>
                 `,
@@ -308,8 +309,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Hapus Symbol',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Batal',
+                confirmButtonText: '<i class="fas fa-trash mr-2"></i>{{ __('symbol.delete_modal_confirm_button') }}',
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>{{ __('symbol.delete_modal_cancel_button') }}',
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -328,7 +329,7 @@
                         Swal.showValidationMessage(
                             `<div class="text-red-400 text-sm">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
-                                Silakan ketik <code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_${id}</code>
+                                {{ __('symbol.delete_modal_validation_message_part1') }} <code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_${id}</code>{{ __('symbol.delete_modal_validation_message_part2') }}
                             </div>`
                         );
                         return false;
@@ -339,11 +340,11 @@
                 if (result.isConfirmed) {
                     // Show loading
                     Swal.fire({
-                        title: 'Menghapus...',
+                        title: '{{ __('symbol.delete_loading_title') }}',
                         html: `
                             <div class="text-center">
                                 <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
-                                <p class="text-gray-400">Menghapus symbol "${name}"...</p>
+                                <p class="text-gray-400">{{ __('symbol.delete_loading_message', ['name' => '${name}']) }}</p>
                             </div>
                         `,
                         showConfirmButton: false,
