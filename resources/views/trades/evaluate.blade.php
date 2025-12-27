@@ -319,15 +319,6 @@
 
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="space-y-2">
-                                        <label for="exit_date" class="block text-sm font-semibold text-gray-300">
-                                            {{ __('trades.exit_date') }}
-                                        </label>
-                                        <input type="date" name="exit_date" id="exit_date"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
-                                            value="{{ optional($trade->exit_timestamp)->format('Y-m-d') }}">
-                                    </div>
-
-                                    <div class="space-y-2">
                                         <label for="exit_time" class="block text-sm font-semibold text-gray-300">
                                             {{ __('trades.exit_time') }}
                                         </label>
@@ -335,7 +326,14 @@
                                             class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
                                             value="{{ optional($trade->exit_timestamp)->format('H:i') }}">
                                     </div>
-
+                                    <div class="space-y-2">
+                                        <label for="exit_date" class="block text-sm font-semibold text-gray-300">
+                                            {{ __('trades.exit_date') }}
+                                        </label>
+                                        <input type="date" name="exit_date" id="exit_date"
+                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
+                                            value="{{ optional($trade->exit_timestamp)->format('Y-m-d') }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
