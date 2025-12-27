@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Trading Rules Management')
+@section('title', __('rules.title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-500">
-                        Trading Rules Management
+                        {{ __('rules.header.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">Kelola daftar aturan trading untuk evaluasi yang lebih baik</p>
+                    <p class="text-gray-500 mt-1">{{ __('rules.header.subtitle') }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <!-- Toggle Button -->
@@ -29,7 +29,7 @@
                                     <i class="fas fa-home text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Dashboard
+                                        {{ __('nav_header.nav.dashboard') }}
                                     </span>
                                 </a>
                             @endif
@@ -42,7 +42,7 @@
                                     <i class="fas fa-calendar text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        PnL Calendar
+                                        {{ __('nav_header.nav.calendar') }}
                                     </span>
                                 </a>
                             @endif
@@ -55,7 +55,7 @@
                                     <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Trade Analysis
+                                        {{ __('nav_header.nav.analysis') }}
                                     </span>
                                 </a>
                             @endif
@@ -70,7 +70,7 @@
                                     <i class="fas fa-chart-line text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Journal Trades
+                                        {{ __('nav_header.nav.trades') }}
                                     </span>
                                 </a>
                             @endif
@@ -83,7 +83,7 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Sessions
+                                        {{ __('nav_header.nav.sessions') }}
                                     </span>
                                 </a>
                             @endif
@@ -96,7 +96,7 @@
                                     <i class="fas fa-money-bill-transfer text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Symbols
+                                        {{ __('nav_header.nav.symbols') }}
                                     </span>
                                 </a>
                             @endif
@@ -109,7 +109,7 @@
                                     <i class="fas fa-list text-primary-500"></i>
                                     <span
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                        Rules
+                                        {{ __('nav_header.nav.rules') }}
                                     </span>
                                 </a>
                             @endif
@@ -134,7 +134,7 @@
                             <i class="fas fa-list text-primary-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Total Rules</p>
+                            <p class="text-sm text-gray-400">{{ __('rules.stats.total_rules') }}</p>
                             <p class="text-base font-semibold">{{ $rules->count() }}</p>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                             <i class="fas fa-check-circle text-green-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Active Rules</p>
+                            <p class="text-sm text-gray-400">{{ __('rules.stats.active_rules') }}</p>
                             <p class="text-base font-semibold">{{ $rules->where('is_active', true)->count() }}</p>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                             <i class="fas fa-pause-circle text-red-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Inactive Rules</p>
+                            <p class="text-sm text-gray-400">{{ __('rules.stats.inactive_rules') }}</p>
                             <p class="text-base font-semibold">{{ $rules->where('is_active', false)->count() }}</p>
                         </div>
                     </div>
@@ -170,7 +170,7 @@
                             <i class="fas fa-history text-blue-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">Last Updated</p>
+                            <p class="text-sm text-gray-400">{{ __('rules.stats.last_updated') }}</p>
                             <p class="text-base font-semibold">
                                 {{ $rules->sortByDesc('updated_at')->first()->updated_at->diffForHumans() ?? 'N/A' }}
                             </p>
@@ -186,14 +186,15 @@
             <div class="px-6 py-4 border-b border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold">Daftar Trading Rules</h2>
-                        <p class="text-gray-500 text-sm mt-1">Total: {{ $rules->total() }} rules</p>
+                        <h2 class="text-xl font-semibold">{{ __('rules.table.title') }}</h2>
+                        <p class="text-gray-500 text-sm mt-1">{{ __('rules.table.total', ['count' => $rules->total()]) }}
+                        </p>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-3">
                         <!-- Search Input -->
                         <div class="relative">
-                            <input type="text" id="searchInput" placeholder="Cari rule..."
+                            <input type="text" id="searchInput" placeholder="{{ __('rules.table.search_placeholder') }}"
                                 class="bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 w-48">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>
@@ -203,7 +204,7 @@
                             <button id="sortDropdownButton"
                                 class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                                 <i class="fas fa-sort mr-2"></i>
-                                Sort By
+                                {{ __('rules.table.sort_by') }}
                                 <i class="fas fa-chevron-down ml-2 text-xs"></i>
                             </button>
                             <div id="sortDropdown"
@@ -212,22 +213,22 @@
                                     <button onclick="sortTable('name', 'asc')"
                                         class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
                                         <i class="fas fa-font mr-2 text-primary-400"></i>
-                                        Nama (A-Z)
+                                        {{ __('rules.table.sort_name_asc') }}
                                     </button>
                                     <button onclick="sortTable('name', 'desc')"
                                         class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
                                         <i class="fas fa-font mr-2 text-primary-400"></i>
-                                        Nama (Z-A)
+                                        {{ __('rules.table.sort_name_desc') }}
                                     </button>
                                     <button onclick="sortTable('order', 'asc')"
                                         class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
                                         <i class="fas fa-sort-numeric-up mr-2 text-primary-400"></i>
-                                        Urutan (Terendah)
+                                        {{ __('rules.table.sort_order_asc') }}
                                     </button>
                                     <button onclick="sortTable('order', 'desc')"
                                         class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
                                         <i class="fas fa-sort-numeric-down mr-2 text-primary-400"></i>
-                                        Urutan (Tertinggi)
+                                        {{ __('rules.table.sort_order_desc') }}
                                     </button>
                                 </div>
                             </div>
@@ -237,7 +238,7 @@
                             <button onclick="openCreateModal()"
                                 class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                                 <i class="fas fa-plus mr-2"></i>
-                                Tambah Rule Baru
+                                {{ __('rules.table.add_new_rule') }}
                             </button>
                         </div>
                     </div>
@@ -250,11 +251,16 @@
                     <thead>
                         <tr class="bg-gray-750 border-b border-gray-600">
                             <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">#</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Nama Rule</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Deskripsi</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Status</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Urutan</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Actions</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                                {{ __('rules.table.columns.name') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                                {{ __('rules.table.columns.description') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                                {{ __('rules.table.columns.status') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                                {{ __('rules.table.columns.order') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                                {{ __('rules.table.columns.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700/50" id="rulesTableBody">
@@ -279,7 +285,7 @@
                                 <td class="py-3 px-4">
                                     <span
                                         class="px-2 py-1 rounded-full text-xs font-semibold {{ $rule->is_active ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
-                                        {{ $rule->is_active ? 'ACTIVE' : 'INACTIVE' }}
+                                        {{ $rule->is_active ? __('rules.status.active') : __('rules.status.inactive') }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
@@ -293,19 +299,38 @@
                                         <button
                                             onclick="openEditModal({{ $rule->id }}, '{{ $rule->name }}', `{{ $rule->description }}`, {{ $rule->order }}, {{ $rule->is_active ? 'true' : 'false' }})"
                                             class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-2 rounded-lg"
-                                            title="Edit Rule">
+                                            title="{{ __('rules.actions.edit') }}">
                                             <i class="fas fa-edit text-sm"></i>
                                         </button>
                                         <button onclick="deleteRule({{ $rule->id }}, '{{ $rule->name }}')"
                                             class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
-                                            title="Delete Rule">
+                                            title="{{ __('rules.actions.delete') }}">
                                             <i class="fas fa-trash text-sm"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
-                            <!-- ... existing empty state ... -->
+                            <tr>
+                                <td colspan="6" class="py-8 px-4 text-center">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <div class="bg-gray-700/50 rounded-full p-4 mb-3">
+                                            <i class="fas fa-list text-gray-400 text-2xl"></i>
+                                        </div>
+                                        <h3 class="text-lg font-medium text-gray-300 mb-1">
+                                            {{ __('rules.table.empty.title') }}
+                                        </h3>
+                                        <p class="text-gray-500 mb-4">
+                                            {{ __('rules.table.empty.message') }}
+                                        </p>
+                                        <button onclick="openCreateModal()"
+                                            class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                                            <i class="fas fa-plus mr-2"></i>
+                                            {{ __('rules.table.empty.add_first_rule') }}
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -326,23 +351,23 @@
                     <i class="fas fa-lightbulb text-amber-500"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-200 mb-2">Tips Penggunaan Trading Rules</h3>
+                    <h3 class="text-lg font-semibold text-gray-200 mb-2">{{ __('rules.tips.title') }}</h3>
                     <ul class="text-gray-500 text-sm space-y-1">
                         <li class="flex items-center">
                             <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
-                            Urutkan rules berdasarkan prioritas dengan tombol panah
+                            {{ __('rules.tips.tip1') }}
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
-                            Nonaktifkan rule yang tidak digunakan tanpa menghapus
+                            {{ __('rules.tips.tip2') }}
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
-                            Gunakan deskripsi untuk penjelasan detail rule
+                            {{ __('rules.tips.tip3') }}
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
-                            Rules akan muncul di form evaluasi trade
+                            {{ __('rules.tips.tip4') }}
                         </li>
                     </ul>
                 </div>
@@ -362,8 +387,9 @@
                                 <i class="fas fa-rules text-primary-500"></i>
                             </div>
                             <div>
-                                <h2 id="modalTitle" class="text-xl font-semibold">Tambah Rule Baru</h2>
-                                <p class="text-gray-500 text-sm mt-1">Atur detail trading rule untuk evaluasi</p>
+                                <h2 id="modalTitle" class="text-xl font-semibold">{{ __('rules.modal.create_title') }}
+                                </h2>
+                                <p class="text-gray-500 text-sm mt-1">{{ __('rules.modal.create_subtitle') }}</p>
                             </div>
                         </div>
                         <button onclick="closeModal()" class="text-gray-400 hover:text-gray-300">
@@ -381,11 +407,11 @@
                         <!-- Name -->
                         <div class="space-y-2">
                             <label for="name" class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-tag mr-2 text-primary-500"></i>Nama Rule
+                                <i class="fas fa-tag mr-2 text-primary-500"></i>{{ __('rules.modal.fields.name.label') }}
                             </label>
                             <input type="text" id="name" name="name" required
                                 class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
-                                placeholder="Contoh: Time 07.00 AM (Forex) - 08.00 AM (Indexs)">
+                                placeholder="{{ __('rules.modal.fields.name.placeholder') }}">
                             @error('name')
                                 <p class="text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
@@ -397,11 +423,12 @@
                         <!-- Description -->
                         <div class="space-y-2">
                             <label for="description" class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-align-left mr-2 text-blue-500"></i>Deskripsi (Opsional)
+                                <i
+                                    class="fas fa-align-left mr-2 text-blue-500"></i>{{ __('rules.modal.fields.description.label') }}
                             </label>
                             <textarea id="description" name="description" rows="3"
                                 class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500/50 transition-all duration-200 resize-none"
-                                placeholder="Penjelasan detail rule, contoh, atau catatan tambahan..."></textarea>
+                                placeholder="{{ __('rules.modal.fields.description.placeholder') }}"></textarea>
                             @error('description')
                                 <p class="text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
@@ -413,11 +440,12 @@
                         <!-- Order -->
                         <div class="space-y-2">
                             <label for="order" class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-sort-numeric-up mr-2 text-amber-500"></i>Urutan Tampilan
+                                <i
+                                    class="fas fa-sort-numeric-up mr-2 text-amber-500"></i>{{ __('rules.modal.fields.order.label') }}
                             </label>
                             <input type="number" id="order" name="order" min="0"
                                 class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500/50 transition-all duration-200"
-                                placeholder="Angka urutan (semakin kecil = semakin atas)">
+                                placeholder="{{ __('rules.modal.fields.order.placeholder') }}">
                             @error('order')
                                 <p class="text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
@@ -429,7 +457,8 @@
                         <!-- Status -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-toggle-on mr-2 text-green-500"></i>Status Rule
+                                <i
+                                    class="fas fa-toggle-on mr-2 text-green-500"></i>{{ __('rules.modal.fields.status.label') }}
                             </label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="cursor-pointer">
@@ -437,8 +466,10 @@
                                     <div
                                         class="bg-gray-700/50 border-2 border-gray-600 peer-checked:border-green-500 peer-checked:bg-green-500/20 rounded-lg p-3 text-center transition-all duration-200">
                                         <i class="fas fa-check-circle text-green-500 mb-1"></i>
-                                        <div class="text-green-500 font-medium text-sm">Active</div>
-                                        <div class="text-green-500/70 text-xs mt-1">Tampil di form evaluasi</div>
+                                        <div class="text-green-500 font-medium text-sm">
+                                            {{ __('rules.modal.fields.status.active') }}</div>
+                                        <div class="text-green-500/70 text-xs mt-1">
+                                            {{ __('rules.modal.fields.status.active_desc') }}</div>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
@@ -446,8 +477,10 @@
                                     <div
                                         class="bg-gray-700/50 border-2 border-gray-600 peer-checked:border-red-500 peer-checked:bg-red-500/20 rounded-lg p-3 text-center transition-all duration-200">
                                         <i class="fas fa-pause-circle text-red-500 mb-1"></i>
-                                        <div class="text-red-500 font-medium text-sm">Inactive</div>
-                                        <div class="text-red-500/70 text-xs mt-1">Tidak tampil di form</div>
+                                        <div class="text-red-500 font-medium text-sm">
+                                            {{ __('rules.modal.fields.status.inactive') }}</div>
+                                        <div class="text-red-500/70 text-xs mt-1">
+                                            {{ __('rules.modal.fields.status.inactive_desc') }}</div>
                                     </div>
                                 </label>
                             </div>
@@ -460,12 +493,12 @@
                         <button type="button" onclick="closeModal()"
                             class="flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200 w-full sm:w-auto justify-center sm:justify-start">
                             <i class="fas fa-times mr-2"></i>
-                            Batal
+                            {{ __('rules.modal.buttons.cancel') }}
                         </button>
                         <button type="submit" id="submitBtn"
                             class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
                             <i class="fas fa-save mr-2"></i>
-                            <span id="submitText">Simpan Rule</span>
+                            <span id="submitText">{{ __('rules.modal.buttons.save') }}</span>
                         </button>
                     </div>
                 </form>
@@ -480,7 +513,7 @@
         let deleteRuleName = null;
 
         function openCreateModal() {
-            document.getElementById('modalTitle').textContent = 'Tambah Rule Baru';
+            document.getElementById('modalTitle').textContent = '{{ __('rules.modal.create_title') }}';
             document.getElementById('ruleForm').action = "{{ route('trading-rules.store') }}";
             document.getElementById('ruleForm').method = 'POST';
 
@@ -490,7 +523,7 @@
             document.getElementById('description').value = '';
             document.getElementById('order').value = '';
             document.querySelector('input[name="is_active"][value="1"]').checked = true;
-            document.getElementById('submitText').textContent = 'Simpan Rule';
+            document.getElementById('submitText').textContent = '{{ __('rules.modal.buttons.save') }}';
 
             // Remove PUT method if exists
             const methodField = document.querySelector('input[name="_method"]');
@@ -500,7 +533,7 @@
         }
 
         function openEditModal(id, name, description, order, isActive) {
-            document.getElementById('modalTitle').textContent = 'Edit Rule';
+            document.getElementById('modalTitle').textContent = '{{ __('rules.modal.edit_title') }}';
             document.getElementById('ruleForm').action = "{{ route('trading-rules.update', '') }}/" + id;
             document.getElementById('ruleForm').method = 'POST';
 
@@ -523,7 +556,7 @@
             const statusValue = isActive ? '1' : '0';
             document.querySelector(`input[name="is_active"][value="${statusValue}"]`).checked = true;
 
-            document.getElementById('submitText').textContent = 'Update Rule';
+            document.getElementById('submitText').textContent = '{{ __('rules.modal.buttons.update') }}';
             document.getElementById('ruleModal').classList.remove('hidden');
         }
 
@@ -535,12 +568,16 @@
             deleteRuleId = id;
             deleteRuleName = name;
 
+            // Ambil pesan validasi dari Blade terlebih dahulu
+            const validationMessage = `{{ __('rules.delete.validation_message', ['code' => 'DELETE_RULE_ID']) }}`.replace(
+                'DELETE_RULE_ID', 'DELETE_RULE_' + id);
+
             Swal.fire({
-                title: 'Hapus Rule?',
+                title: '{{ __('rules.delete.title') }}',
                 html: `
                     <div class="text-left text-sm">
                         <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                            <p class="font-bold mb-2 text-red-300">Rule yang akan dihapus:</p>
+                            <p class="font-bold mb-2 text-red-300">{{ __('rules.delete.rule_to_delete') }}:</p>
                             <ul class="space-y-1 text-gray-300">
                                 <li class="flex items-center">
                                     <i class="fas fa-tag text-red-500 mr-2 text-xs"></i>
@@ -548,19 +585,19 @@
                                 </li>
                                 <li class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-amber-500 mr-2 text-xs"></i>
-                                    <span class="text-amber-300">Rule yang sudah digunakan di evaluasi trade akan tetap tersimpan</span>
+                                    <span class="text-amber-300">{{ __('rules.delete.warning_used') }}</span>
                                 </li>
                             </ul>
                         </div>
-                        <p class="text-gray-300 mb-2">Untuk mengonfirmasi, ketik:</p>
+                        <p class="text-gray-300 mb-2">{{ __('rules.delete.confirm_text') }}</p>
                         <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
                             <code class="text-red-400 font-mono font-bold">DELETE_RULE_${id}</code>
                         </div>
                         <input type="text" 
-                               id="confirmDelete" 
-                               class="swal2-input w-full" 
-                               placeholder="Ketik kode konfirmasi..."
-                               autocomplete="off">
+                            id="confirmDelete" 
+                            class="swal2-input w-full" 
+                            placeholder="{{ __('rules.delete.input_placeholder') }}"
+                            autocomplete="off">
                     </div>
                 `,
                 icon: 'warning',
@@ -568,8 +605,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Hapus Rule',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Batal',
+                confirmButtonText: '<i class="fas fa-trash mr-2"></i>{{ __('rules.delete.confirm_button') }}',
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>{{ __('rules.delete.cancel_button') }}',
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -587,9 +624,9 @@
                     if (typedValue !== `DELETE_RULE_${deleteRuleId}`) {
                         Swal.showValidationMessage(
                             `<div class="text-red-400 text-sm">
-                                <i class="fas fa-exclamation-circle mr-1"></i>
-                                Silakan ketik <code class="bg-red-900/30 px-1 py-0.5 rounded">DELETE_RULE_${deleteRuleId}</code>
-                            </div>`
+                        <i class="fas fa-exclamation-circle mr-1"></i>
+                        ${validationMessage}
+                    </div>`
                         );
                         return false;
                     }
@@ -597,15 +634,18 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Show loading
+                    // Show loading - tambahkan replace untuk dynamic name
+                    const deletingMessage = `{{ __('rules.delete.deleting_message', ['name' => 'RULE_NAME']) }}`
+                        .replace('RULE_NAME', deleteRuleName);
+
                     Swal.fire({
-                        title: 'Menghapus...',
+                        title: '{{ __('rules.delete.deleting') }}',
                         html: `
-                            <div class="text-center">
-                                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
-                                <p class="text-gray-400">Menghapus rule "${deleteRuleName}"...</p>
-                            </div>
-                        `,
+                                <div class="text-center">
+                                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+                                    <p class="text-gray-400">${deletingMessage}</p>
+                                </div>
+                            `,
                         showConfirmButton: false,
                         allowOutsideClick: false,
                         allowEscapeKey: false
@@ -711,16 +751,16 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal',
-                        text: 'Gagal memperbarui urutan rule',
+                        title: '{{ __('rules.messages.error') }}',
+                        text: '{{ __('rules.messages.order_failed') }}',
                         confirmButtonColor: '#d33'
                     });
                 }
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Terjadi kesalahan saat memperbarui urutan',
+                    title: '{{ __('rules.messages.error') }}',
+                    text: '{{ __('rules.messages.order_error') }}',
                     confirmButtonColor: '#d33'
                 });
             }
@@ -936,8 +976,8 @@
                     // Show success notification
                     Swal.fire({
                         icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Urutan rules telah diperbarui',
+                        title: '{{ __('rules.messages.success') }}',
+                        text: '{{ __('rules.messages.order_updated') }}',
                         timer: 1500,
                         showConfirmButton: false,
                         toast: true,
@@ -954,8 +994,8 @@
 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal',
-                    text: 'Gagal menyimpan urutan baru',
+                    title: '{{ __('rules.messages.error') }}',
+                    text: '{{ __('rules.messages.order_save_failed') }}',
                     confirmButtonColor: '#d33'
                 });
             }
