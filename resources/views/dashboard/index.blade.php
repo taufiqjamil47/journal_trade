@@ -342,7 +342,7 @@
                     </form>
                 </div>
             </div>
-            <div class="h-64">
+            <div class="h-64 lg:h-96">
                 <canvas id="equityChart"></canvas>
             </div>
         </div>

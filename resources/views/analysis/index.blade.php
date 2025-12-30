@@ -1497,7 +1497,7 @@
                 if (pairLabels.length === 0) return;
 
                 new Chart(pairCtx, {
-                    type: 'bar',
+                    type: 'pie',
                     data: {
                         labels: pairLabels,
                         datasets: [{
@@ -1561,7 +1561,7 @@
                 if (entryLabels.length === 0) return;
 
                 new Chart(etx, {
-                    type: 'bar',
+                    type: 'pie',
                     data: {
                         labels: entryLabels,
                         datasets: [{
@@ -1644,6 +1644,7 @@
                         }]
                     },
                     options: {
+                        indexAxis: 'y', // Ubah menjadi horizontal chart
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: {
@@ -1651,12 +1652,42 @@
                             easing: 'easeOutQuart'
                         },
                         plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
                             tooltip: {
                                 callbacks: {
                                     afterLabel: function(context) {
                                         const dataIndex = context.dataIndex;
                                         const winrate = dowWinrates[dataIndex];
                                         return `{{ __('analysis.stats.winrate') }}: ${winrate}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: true,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value
+                                            .toLocaleString(); // Sesuaikan dengan mata uang Anda
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 12
                                     }
                                 }
                             }
