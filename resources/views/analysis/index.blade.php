@@ -832,7 +832,7 @@
                         </div>
 
                         <!-- Data rows for each day -->
-                        @foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $dayIndex => $dayName)
+                        @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $dayIndex => $dayName)
                             <div class="grid grid-cols-25 gap-1 mb-1">
                                 <!-- Day label -->
                                 <div class="text-xs text-gray-400 text-center py-1 font-medium">
@@ -965,7 +965,7 @@
                         <canvas id="dayOfWeekChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-y-auto h-64">
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-600">
@@ -1347,6 +1347,7 @@
                 }
             }
 
+            // Render chart based on ID
             renderChart(chartId) {
                 switch (chartId) {
                     case 'hourlyChart':
@@ -1367,6 +1368,7 @@
                 }
             }
 
+            // hourly chart function
             renderHourlyChart() {
                 const hourlyCtx = document.getElementById('hourlyChart');
                 if (!hourlyCtx) return;
@@ -1489,6 +1491,7 @@
                 });
             }
 
+            // pair chart function
             renderPairChart() {
                 const pairCtx = document.getElementById('pairChart').getContext('2d');
                 const pairLabels = @json($pairData->keys());
@@ -1553,6 +1556,7 @@
                 });
             }
 
+            // entry type chart function
             renderEntryTypeChart() {
                 const etx = document.getElementById('entryTypeChart').getContext('2d');
                 const entryLabels = @json($entryTypeData->keys());
@@ -1561,7 +1565,7 @@
                 if (entryLabels.length === 0) return;
 
                 new Chart(etx, {
-                    type: 'pie',
+                    type: 'bar',
                     data: {
                         labels: entryLabels,
                         datasets: [{
@@ -1617,6 +1621,7 @@
                 });
             }
 
+            // day of week chart function
             renderDayOfWeekChart() {
                 const dowCtx = document.getElementById('dayOfWeekChart');
                 if (!dowCtx) return;
@@ -1696,6 +1701,7 @@
                 });
             }
 
+            // monthly chart function
             renderMonthlyChart() {
                 const monthlyCtx = document.getElementById('monthlyChart');
                 if (!monthlyCtx) return;
@@ -2014,28 +2020,6 @@
             });
         });
     </script>
-
-    <!-- General Styles -->
-    <style>
-        /* Simple scrollbar */
-        .overflow-x-auto::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .overflow-x-auto::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .overflow-x-auto::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-        }
-
-        /* Hover effects for tables */
-        tr:hover {
-            background-color: rgba(55, 65, 81, 0.3);
-        }
-    </style>
 
     <!-- Chart Loading Styles -->
     <style>

@@ -172,6 +172,40 @@
             }
         }
     </style>
+
+    <style>
+        /* Simple scrollbar */
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        /* Hover effects for tables */
+        tr:hover {
+            background-color: rgba(55, 65, 81, 0.3);
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
