@@ -324,4 +324,11 @@ return [
     'after_chart_alt' => 'Grafik Setelah Entri - :symbol',
     'download_pdf_report' => 'Unduh Laporan PDF',
     'zoom_instructions' => 'Gunakan scroll untuk zoom in/out • Klik di luar gambar untuk menutup',
+
+    'duplicate_trade' => 'Duplikasi Trade',
+    'duplicate_confirmation' => 'Apakah Anda ingin membuat salinan dari trade ini?',
+    'duplicate' => 'Duplikasi',
+    'trade_duplicated_success' => 'Trade berhasil diduplikasi. Anda dapat mengedit trade baru.',
+    'edit_new_trade' => 'Edit Trade Baru',
+    'refresh_page' => 'Refresh Halaman'
 ];

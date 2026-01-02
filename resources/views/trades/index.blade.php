@@ -481,25 +481,39 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex space-x-2">
-                                        <a href="{{ route('trades.edit', $trade->id) }}"
-                                            class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-2 rounded-lg"
-                                            title="{{ __('trades.update_exit') }}">
-                                            <i class="fas fa-edit text-sm"></i>
-                                        </a>
-                                        <a href="{{ route('trades.evaluate', $trade->id) }}"
-                                            class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 p-2 rounded-lg"
-                                            title="{{ __('trades.evaluate') }}">
-                                            <i class="fas fa-chart-bar text-sm"></i>
-                                        </a>
-                                        <!-- Ganti dari link menjadi button dengan event handler -->
-                                        <button
-                                            onclick="confirmDeleteTrade(event, '{{ $trade->id }}', '{{ $trade->symbol->name }}', '{{ $trade->type }}')"
-                                            class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
-                                            title="{{ __('trades.delete_trade') }}">
-                                            <i class="fas fa-trash text-sm"></i>
-                                        </button>
+                                <td class="py-3 px-3 w-auto">
+                                    <div class="relative">
+                                        <!-- Container utama dengan grid -->
+                                        <div class="grid grid-cols-3 gap-2 relative z-10">
+                                            <!-- Edit Button -->
+                                            <a href="{{ route('trades.edit', $trade->id) }}"
+                                                class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-1 rounded-lg flex items-center justify-center transition-all duration-200"
+                                                title="{{ __('trades.update_exit') }}">
+                                                <i class="fas fa-edit text-sm"></i>
+                                            </a>
+
+                                            <!-- Evaluate Button -->
+                                            <a href="{{ route('trades.evaluate', $trade->id) }}"
+                                                class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 p-1 rounded-lg flex items-center justify-center transition-all duration-200"
+                                                title="{{ __('trades.evaluate') }}">
+                                                <i class="fas fa-chart-bar text-sm"></i>
+                                            </a>
+
+                                            <!-- Delete Button -->
+                                            <button
+                                                onclick="confirmDeleteTrade(event, '{{ $trade->id }}', '{{ $trade->symbol->name }}', '{{ $trade->type }}')"
+                                                class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-1 rounded-lg flex items-center justify-center transition-all duration-200"
+                                                title="{{ __('trades.delete_trade') }}">
+                                                <i class="fas fa-trash text-sm"></i>
+                                            </button>
+                                            <!-- Duplicate Button (Overlay di kiri) -->
+                                            <button onclick="duplicateTrade(event, {{ $trade->id }})"
+                                                class="duplicate-btn absolute -left-9 top-0 bottom-0 bg-gray-500/90 hover:bg-gray-600 text-white px-2 rounded-lg flex items-center justify-center transition-all duration-300 opacity-0 transform -translate-x-2 w-auto h-auto z-20 shadow-lg"
+                                                title="{{ __('trades.duplicate_trade') }}">
+                                                <i class="fas fa-copy text-sm"></i>
+                                            </button>
+                                        </div>
+
                                     </div>
                                 </td>
                             </tr>
@@ -643,40 +657,40 @@
             Swal.fire({
                 title: '🚨 ' + translations.clear_all_trades + '?',
                 html: `
-        <div class="text-left text-sm">
-            <p class="text-red-400 mb-3 font-bold">${translations.cannot_be_undone}!</p>
-            <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                <p class="font-bold mb-2 text-red-300">${translations.will_be_deleted}:</p>
-                <ul class="space-y-1 text-gray-300">
-                    <li class="flex items-center">
-                        <i class="fas fa-trash text-red-500 mr-2 text-xs"></i>
-                        <span><strong>${tradeCount}</strong> ${translations.trading_records}</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-chart-bar text-red-500 mr-2 text-xs"></i>
-                        <span>${translations.all_performance_stats}</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-link text-red-500 mr-2 text-xs"></i>
-                        <span>${translations.all_rule_associations}</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-history text-red-500 mr-2 text-xs"></i>
-                        <span>${translations.complete_trading_history}</span>
-                    </li>
-                </ul>
-            </div>
-            <p class="text-gray-300 mb-2">${translations.to_confirm_type}:</p>
-            <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
-                <code class="text-red-400 font-mono font-bold">DELETE_ALL_TRADES</code>
-            </div>
-            <input type="text" 
-                   id="quickConfirm" 
-                   class="swal2-input w-full" 
-                   placeholder="${translations.please_type_confirmation}..."
-                   autocomplete="off">
-        </div>
-    `,
+                        <div class="text-left text-sm">
+                            <p class="text-red-400 mb-3 font-bold">${translations.cannot_be_undone}!</p>
+                            <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
+                                <p class="font-bold mb-2 text-red-300">${translations.will_be_deleted}:</p>
+                                <ul class="space-y-1 text-gray-300">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-trash text-red-500 mr-2 text-xs"></i>
+                                        <span><strong>${tradeCount}</strong> ${translations.trading_records}</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-chart-bar text-red-500 mr-2 text-xs"></i>
+                                        <span>${translations.all_performance_stats}</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-link text-red-500 mr-2 text-xs"></i>
+                                        <span>${translations.all_rule_associations}</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-history text-red-500 mr-2 text-xs"></i>
+                                        <span>${translations.complete_trading_history}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <p class="text-gray-300 mb-2">${translations.to_confirm_type}:</p>
+                            <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                                <code class="text-red-400 font-mono font-bold">DELETE_ALL_TRADES</code>
+                            </div>
+                            <input type="text" 
+                                id="quickConfirm" 
+                                class="swal2-input w-full" 
+                                placeholder="${translations.please_type_confirmation}..."
+                                autocomplete="off">
+                        </div>
+                    `,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,
@@ -861,36 +875,36 @@
             Swal.fire({
                 title: deleteTranslations.delete_trade + '?',
                 html: `
-        <div class="text-left text-sm">
-            <p class="text-red-400 mb-3 font-bold">${deleteTranslations.action_cannot_undone}!</p>
-            <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
-                <p class="font-bold mb-2 text-red-300">${deleteTranslations.trade_to_be_deleted}:</p>
-                <ul class="space-y-2 text-gray-300">
-                    <li class="flex items-center">
-                        <i class="fas fa-hashtag text-red-500 mr-2 text-xs"></i>
-                        <span>ID: <strong>${tradeId}</strong></span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-chart-simple text-red-500 mr-2 text-xs"></i>
-                        <span>Symbol: <strong>${symbol}</strong></span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-exchange-alt text-red-500 mr-2 text-xs"></i>
-                        <span>Type: <span class="font-bold ${type === 'buy' ? 'text-green-400' : 'text-red-400'}">${tradeType}</span></span>
-                    </li>
-                </ul>
-            </div>
-            <p class="text-gray-300 mb-2">${deleteTranslations.to_confirm_type_exact}:</p>
-            <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
-                <code class="text-red-400 font-mono font-bold">DELETE_TRADE_${tradeId}</code>
-            </div>
-            <input type="text" 
-                   id="deleteConfirm_${tradeId}" 
-                   class="swal2-input w-full" 
-                   placeholder="${deleteTranslations.please_type_confirmation_exact}..."
-                   autocomplete="off">
-        </div>
-    `,
+                    <div class="text-left text-sm">
+                        <p class="text-red-400 mb-3 font-bold">${deleteTranslations.action_cannot_undone}!</p>
+                        <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
+                            <p class="font-bold mb-2 text-red-300">${deleteTranslations.trade_to_be_deleted}:</p>
+                            <ul class="space-y-2 text-gray-300">
+                                <li class="flex items-center">
+                                    <i class="fas fa-hashtag text-red-500 mr-2 text-xs"></i>
+                                    <span>ID: <strong>${tradeId}</strong></span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-chart-simple text-red-500 mr-2 text-xs"></i>
+                                    <span>Symbol: <strong>${symbol}</strong></span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-exchange-alt text-red-500 mr-2 text-xs"></i>
+                                    <span>Type: <span class="font-bold ${type === 'buy' ? 'text-green-400' : 'text-red-400'}">${tradeType}</span></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="text-gray-300 mb-2">${deleteTranslations.to_confirm_type_exact}:</p>
+                        <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                            <code class="text-red-400 font-mono font-bold">DELETE_TRADE_${tradeId}</code>
+                        </div>
+                        <input type="text" 
+                            id="deleteConfirm_${tradeId}" 
+                            class="swal2-input w-full" 
+                            placeholder="${deleteTranslations.please_type_confirmation_exact}..."
+                            autocomplete="off">
+                    </div>
+                `,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,
@@ -1043,6 +1057,128 @@
         });
     </script>
 
+    <script>
+        // Fungsi untuk duplicate trade
+        function duplicateTrade(event, tradeId) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            Swal.fire({
+                title: '{{ __('trades.duplicate_trade') }}?',
+                text: '{{ __('trades.duplicate_confirmation') }}',
+                icon: 'question',
+                iconColor: '#8b5cf6',
+                showCancelButton: true,
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-copy mr-2"></i>{{ __('trades.duplicate') }}',
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>{{ __('trades.cancel_btn') }}',
+                showLoaderOnConfirm: true,
+                customClass: {
+                    popup: 'bg-gray-800 border border-purple-700/30',
+                    title: 'text-purple-300',
+                },
+                preConfirm: () => {
+                    return fetch(`/trades/${tradeId}/duplicate`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.success) {
+                                throw new Error(data.message || 'Gagal menduplikasi trade');
+                            }
+                            return data;
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Error: ${error.message}`
+                            );
+                        });
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    const data = result.value;
+
+                    Swal.fire({
+                        icon: 'success',
+                        iconColor: '#10b981',
+                        title: '{{ __('trades.success') }}!',
+                        html: `
+                                <div class="text-center">
+                                    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                                        <i class="fas fa-copy text-green-500 text-2xl"></i>
+                                    </div>
+                                    <p class="text-green-400 font-bold text-lg mb-2">${data.message}</p>
+                                    <p class="text-gray-400 text-sm mb-4">{{ __('trades.trade_duplicated_success') }}</p>
+                                    <div class="flex justify-center space-x-3">
+                                        <a href="${data.data.edit_url}" 
+                                        class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                                            <i class="fas fa-edit mr-2"></i>
+                                            {{ __('trades.edit_new_trade') }}
+                                        </a>
+                                        <button onclick="location.reload()" 
+                                                class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">
+                                            <i class="fas fa-sync-alt mr-2"></i>
+                                            {{ __('trades.refresh_page') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                }
+            });
+        }
+
+        // Perbarui event handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('tbody tr[onclick]');
+
+            rows.forEach(row => {
+                const duplicateBtn = row.querySelector('.duplicate-btn');
+                const actionsContainer = row.querySelector('td .relative');
+
+                if (duplicateBtn && actionsContainer) {
+                    // Hover pada row
+                    row.addEventListener('mouseenter', function() {
+                        duplicateBtn.classList.remove('opacity-0', '-translate-x-2');
+                        duplicateBtn.classList.add('opacity-100', 'translate-x-0');
+                    });
+
+                    row.addEventListener('mouseleave', function() {
+                        duplicateBtn.classList.remove('opacity-100', 'translate-x-0');
+                        duplicateBtn.classList.add('opacity-0', '-translate-x-2');
+                    });
+
+                    // Hover pada tombol duplicate
+                    duplicateBtn.addEventListener('mouseenter', function(e) {
+                        e.stopPropagation();
+                    });
+
+                    duplicateBtn.addEventListener('mouseleave', function(e) {
+                        e.stopPropagation();
+                        // Delay untuk cek apakah masih di row
+                        setTimeout(() => {
+                            if (!row.matches(':hover')) {
+                                duplicateBtn.classList.remove('opacity-100',
+                                    'translate-x-0');
+                                duplicateBtn.classList.add('opacity-0', '-translate-x-2');
+                            }
+                        }, 100);
+                    });
+                }
+            });
+        });
+    </script>
+
     <style>
         /* SweetAlert Custom Styles */
         .swal2-popup {
@@ -1110,6 +1246,79 @@
 
         .group:hover>div {
             transform: translateY(0);
+        }
+    </style>
+
+    <style>
+        /* Hover effect untuk tombol duplicate */
+        tr:hover .duplicate-btn {
+            opacity: 1 !important;
+        }
+
+        /* Transisi halus untuk hover */
+        .duplicate-btn {
+            transition: opacity 0.2s ease-in-out, background-color 0.2s ease;
+        }
+
+        .duplicate-btn:hover {
+            background-color: rgba(168, 85, 247, 0.3) !important;
+            transform: scale(1.05);
+        }
+    </style>
+
+    <style>
+        /* Pastikan kolom aksi memiliki lebar tetap */
+        td:last-child {
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+        }
+
+        /* Container untuk tombol aksi */
+        td .relative {
+            position: relative;
+        }
+
+        /* Grid untuk tombol utama */
+        td .grid {
+            position: relative;
+            width: 100%;
+            z-index: 1;
+            background: transparent;
+        }
+
+        /* Styling untuk duplicate button */
+        .duplicate-btn {
+            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            will-change: opacity, transform;
+            pointer-events: none;
+        }
+
+        /* Ketika hover pada row, enable pointer events */
+        tr:hover .duplicate-btn {
+            pointer-events: auto;
+        }
+
+        /* Efek hover pada duplicate button */
+        .duplicate-btn:hover {
+            background-color: rgba(139, 92, 246, 0.95) !important;
+        }
+
+        /* Transisi untuk tombol utama saat duplicate muncul (geser ke kanan) */
+        tr:hover td .grid {
+            transform: translateX(8px);
+            transition: transform 0.1s ease;
+        }
+
+        /* Reset untuk row yang tidak di-hover */
+        tr:not(:hover) td .grid {
+            transform: translateX(0);
+            transition: transform 0.1s ease;
+        }
+
+        /* Pastikan row tidak overflow */
+        tr {
+            overflow: hidden;
         }
     </style>
 @endsection

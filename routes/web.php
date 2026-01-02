@@ -64,6 +64,7 @@ Route::group([
     Route::get('/trades/{id}/evaluate', [TradeController::class, 'evaluate'])->name('trades.evaluate');
     Route::post('/trades/{id}/delete', [TradeController::class, 'destroy'])->name('trades.destroy');
     Route::post('/trades/{id}/evaluate', [TradeController::class, 'saveEvaluation'])->name('trades.saveEvaluation');
+    Route::post('/trades/{trade}/duplicate', [TradeController::class, 'duplicate'])->name('trades.duplicate');
 
     Route::delete('/trades/clear-all', [TradeController::class, 'clearAll'])->name('trades.clear-all');
 

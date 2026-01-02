@@ -430,6 +430,61 @@ class TradeController extends Controller
         }
     }
 
+    public function duplicate(Trade $trade)
+    {
+        try {
+            // Clone trade data
+            $newTrade = $trade->replicate();
+
+            // Reset beberapa field yang perlu unique
+            $newTrade->exit = null;
+            $newTrade->exit_timestamp = null;
+            $newTrade->exit_pips = null;
+            $newTrade->profit_loss = null;
+            $newTrade->hasil = null;
+            $newTrade->streak_win = 0;
+            $newTrade->streak_loss = 0;
+            $newTrade->before_link = null;
+            $newTrade->after_link = null;
+
+            // Simpan trade baru
+            $newTrade->save();
+
+            // Duplikasi hubungan dengan trading rules
+            if ($trade->tradingRules()->exists()) {
+                $ruleIds = $trade->tradingRules()->pluck('trading_rules.id')->toArray();
+                $newTrade->tradingRules()->sync($ruleIds);
+
+                // Update kolom rules
+                $ruleNames = TradingRule::whereIn('id', $ruleIds)
+                    ->pluck('name')
+                    ->toArray();
+                $newTrade->update(['rules' => implode(',', $ruleNames)]);
+            }
+
+            Log::info('Trade duplicated successfully', [
+                'original_id' => $trade->id,
+                'new_id' => $newTrade->id
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Trade berhasil diduplikasi',
+                'data' => [
+                    'new_id' => $newTrade->id,
+                    'edit_url' => route('trades.edit', $newTrade->id)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error duplicating trade: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menduplikasi trade: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     // destroy method
     public function destroy(Request $request, $id)
     {

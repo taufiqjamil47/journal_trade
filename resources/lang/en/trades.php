@@ -324,4 +324,11 @@ return [
     'after_chart_alt' => 'Chart After Entry - :symbol',
     'download_pdf_report' => 'Download PDF Report',
     'zoom_instructions' => 'Use scroll to zoom in/out • Click outside the image to close',
+
+    'duplicate_trade' => 'Duplicate Trade',
+    'duplicate_confirmation' => 'Do you want to create a copy of this trade?',
+    'duplicate' => 'Duplicate',
+    'trade_duplicated_success' => 'The trade has been successfully duplicated. You can edit the new trade.',
+    'edit_new_trade' => 'Edit New Trade',
+    'refresh_page' => 'Refresh Page',
 ];
