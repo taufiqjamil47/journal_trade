@@ -27,6 +27,7 @@ class Trade extends Model
         'risk_usd',
         'rr',
         'profit_loss',
+        'partial_close_percent',
         'risk_percent',
         'lot_size',
         'entry_type',

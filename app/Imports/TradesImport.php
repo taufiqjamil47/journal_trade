@@ -96,6 +96,7 @@ class TradesImport implements ToModel, WithHeadingRow
             'exit'              => $this->getValue($normalizedRow, 'exit'),
             'exit_pips'         => $this->getValue($normalizedRow, ['exitpips', 'exit_pips']),
             'risk_percent'      => $this->getValue($normalizedRow, ['riskpercent', 'risk_percent']),
+            'partial_close_percent' => $this->getValue($normalizedRow, ['partialclosepercent', 'partial_close_percent']),
             'risk_usd'          => $this->getValue($normalizedRow, ['riskusd', 'risk_usd']),
             'rr'                => $this->getValue($normalizedRow, 'rr'),
             'lot_size'          => $this->getValue($normalizedRow, ['lotsize', 'lot_size']),

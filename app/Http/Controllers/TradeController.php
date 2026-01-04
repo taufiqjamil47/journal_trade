@@ -120,10 +120,25 @@ class TradeController extends Controller
             'risk_percent' => 'nullable|numeric|min:0|max:100',
             'risk_usd' => 'nullable|numeric|min:0',
             'rules' => 'nullable|array',
-            'rules.*' => 'exists:trading_rules,id'
+            'rules.*' => 'exists:trading_rules,id',
+            'partial_close_percent' => 'nullable|numeric|min:0|max:100', // ⬅️ TAMBAHKAN
+            'partial_close_custom' => 'nullable|numeric|min:0|max:100', // ⬅️ TAMBAHKAN
+            'use_partial_close' => 'nullable|boolean', // ⬅️ TAMBAHKAN
         ]);
 
         $trade->exit = $data['exit'];
+
+        // LOGIKA PARTIAL CLOSE
+        $partialPercent = 100; // default full close
+
+        if ($request->has('use_partial_close') && $request->boolean('use_partial_close')) {
+            // Gunakan custom input jika diisi, jika tidak gunakan preset
+            if (!empty($data['partial_close_custom']) && $data['partial_close_custom'] > 0) {
+                $partialPercent = min(100, max(0, $data['partial_close_custom']));
+            } elseif (!empty($data['partial_close_percent'])) {
+                $partialPercent = $data['partial_close_percent'];
+            }
+        }
 
         // Hitung Exit Pips (keep higher precision here to avoid premature rounding)
         $pipValue = $trade->symbol->pip_value;
@@ -188,6 +203,12 @@ class TradeController extends Controller
             $trade->risk_usd = $data['risk_usd'];
         }
 
+        // APLIKASI PARTIAL CLOSE PADA LOT SIZE
+        if ($partialPercent < 100) {
+            $trade->lot_size = $trade->lot_size * ($partialPercent / 100);
+            $trade->partial_close_percent = $partialPercent; // Simpan persentase yang digunakan
+        }
+
         // Hitung Profit/Loss USD using high-precision pips calculation
         $profitLoss = ($rawExitPips ?? $trade->exit_pips) * $trade->lot_size * $pipWorth;
         $trade->profit_loss = round($profitLoss, 2);
@@ -236,7 +257,7 @@ class TradeController extends Controller
         $trade->setSessionFromTimestamp();
 
         // Wrap save + rule sync in transaction
-        DB::transaction(function () use ($request, $trade) {
+        DB::transaction(function () use ($request, $trade, $partialPercent) {
             // SYNC RULES JIKA ADA
             if ($request->has('rules')) {
                 $trade->tradingRules()->sync($request->rules);
@@ -256,12 +277,20 @@ class TradeController extends Controller
                 });
             }
 
+            // Simpan persentase partial close jika digunakan
+            if ($partialPercent < 100) {
+                $trade->partial_close_percent = $partialPercent;
+            }
+
             $trade->save();
         });
 
-        // HAPUS KODE LAMA: $trade->rules = implode(',', $request->rules ?? []);
+        // Tampilkan pesan berdasarkan apakah partial close digunakan
+        $message = $partialPercent < 100
+            ? "Trade berhasil diperbarui dengan Partial Close {$partialPercent}%"
+            : 'Trade berhasil diperbarui dengan Exit, Risk%, dan Lot Size';
 
-        return redirect()->route('trades.index')->with('success', 'Trade berhasil diperbarui dengan Exit, Risk%, dan Lot Size');
+        return redirect()->route('trades.index')->with('success', $message);
     }
 
     public function store(Request $request)
@@ -444,7 +473,7 @@ class TradeController extends Controller
             $newTrade->hasil = null;
             $newTrade->streak_win = 0;
             $newTrade->streak_loss = 0;
-            $newTrade->before_link = null;
+            // $newTrade->before_link = null;
             $newTrade->after_link = null;
 
             // Simpan trade baru

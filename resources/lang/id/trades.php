@@ -330,5 +330,19 @@ return [
     'duplicate' => 'Duplikasi',
     'trade_duplicated_success' => 'Trade berhasil diduplikasi. Anda dapat mengedit trade baru.',
     'edit_new_trade' => 'Edit Trade Baru',
-    'refresh_page' => 'Refresh Halaman'
+    'refresh_page' => 'Refresh Halaman',
+
+    // Tambahkan key berikut:
+    'partial_close' => 'Partial Close',
+    'enable_partial_close' => 'Aktifkan Partial Close',
+    'close_portion_position' => 'Tutup sebagian posisi',
+    'fixed_percentages' => 'Persentase Tetap',
+    'custom_percentage' => 'Persentase Kustom',
+    'enter_any_percentage' => 'Masukkan persentase apapun (0-100)',
+    'partial_close_preview' => 'Preview Partial Close',
+    'original_lot_size' => 'Lot Size Awal',
+    'after_partial_close' => 'Setelah Partial Close',
+    'remaining_position' => 'Posisi Tersisa',
+    'full_close' => 'Tutup Penuh',
+    'partial_position' => 'Posisi Parsial',
 ];

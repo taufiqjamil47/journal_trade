@@ -269,6 +269,112 @@
                         </div>
                     </div>
 
+                    <!-- Partial Close Section -->
+                    <div class="mt-6 bg-gray-750 rounded-xl p-4 border border-gray-600">
+                        <h3 class="text-lg font-bold mb-4 flex items-center text-purple-300">
+                            <i class="fas fa-layer-group text-purple-400 mr-3"></i>
+                            {{ __('trades.partial_close') }}
+                        </h3>
+
+                        <!-- Toggle Switch -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="font-medium text-gray-300">{{ __('trades.enable_partial_close') }}</p>
+                                <p class="text-sm text-gray-500">{{ __('trades.close_portion_position') }}</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="use_partial_close" name="use_partial_close"
+                                    class="sr-only peer" value="1">
+                                <div
+                                    class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 
+                peer-focus:ring-purple-800 rounded-full peer peer-checked:after:translate-x-full 
+                peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] 
+                after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
+                after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Partial Close Options (Hidden by default) -->
+                        <div id="partialCloseOptions" class="hidden space-y-4">
+                            <!-- Fixed Percentages -->
+                            <div>
+                                <p class="text-sm font-semibold text-gray-300 mb-2">{{ __('trades.fixed_percentages') }}
+                                </p>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    @foreach ([20, 50, 75, 100] as $percent)
+                                        <label class="relative">
+                                            <input type="radio" name="partial_close_percent"
+                                                value="{{ $percent }}" class="peer hidden partial-percent-radio"
+                                                onclick="document.getElementById('partial_close_custom').value = ''">
+                                            <div
+                                                class="bg-gray-800 border border-gray-600 rounded-lg p-3 
+                            text-center cursor-pointer transition-all hover:border-purple-500 
+                            peer-checked:border-purple-500 peer-checked:bg-purple-900/20">
+                                                <span
+                                                    class="block text-lg font-bold {{ $percent == 100 ? 'text-green-400' : 'text-purple-400' }}">
+                                                    {{ $percent }}%
+                                                </span>
+                                                <span class="text-xs text-gray-500 mt-1">
+                                                    @if ($percent == 100)
+                                                        {{ __('trades.full_close') }}
+                                                    @else
+                                                        {{ __('trades.partial_position') }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Custom Percentage -->
+                            <div>
+                                <p class="text-sm font-semibold text-gray-300 mb-2">{{ __('trades.custom_percentage') }}
+                                </p>
+                                <div class="relative">
+                                    <input type="number" step="0.1" min="0" max="100"
+                                        id="partial_close_custom" name="partial_close_custom"
+                                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
+                                        placeholder="0.0"
+                                        oninput="document.querySelectorAll('.partial-percent-radio').forEach(radio => radio.checked = false)">
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                        <span class="text-purple-400">%</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">{{ __('trades.enter_any_percentage') }}</p>
+                            </div>
+
+                            <!-- Preview -->
+                            <div class="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                                <h4 class="font-semibold text-gray-300 mb-3 flex items-center">
+                                    <i class="fas fa-eye text-cyan-400 mr-2"></i>
+                                    {{ __('trades.partial_close_preview') }}
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div class="text-center">
+                                        <p class="text-sm text-gray-400 mb-1">{{ __('trades.original_lot_size') }}</p>
+                                        <p class="text-base font-bold text-gray-300" id="originalLotSize">
+                                            {{ number_format($trade->lot_size ?? 0, 2) }}
+                                        </p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-sm text-gray-400 mb-1">{{ __('trades.after_partial_close') }}</p>
+                                        <p class="text-base font-bold text-purple-400" id="partialLotSize">
+                                            {{ number_format($trade->lot_size ?? 0, 2) }}
+                                        </p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-sm text-gray-400 mb-1">{{ __('trades.remaining_position') }}</p>
+                                        <p class="text-base font-bold text-amber-400" id="remainingPosition">
+                                            {{ number_format(0, 2) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Form Actions -->
                     <div
                         class="flex flex-col md:flex-row justify-between items-center mt-8 pt-6 border-t border-gray-700 space-y-4 md:space-y-0">
@@ -451,5 +557,113 @@
 
             setExitPrice(breakEven.toFixed(5));
         }
+    </script>
+
+    <script>
+        // Partial Close Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const partialCloseToggle = document.getElementById('use_partial_close');
+            const partialCloseOptions = document.getElementById('partialCloseOptions');
+            const partialPercentRadios = document.querySelectorAll('.partial-percent-radio');
+            const partialCustomInput = document.getElementById('partial_close_custom');
+            const originalLotSize = parseFloat(@json($trade->lot_size ?? 0));
+
+            // Initialize original lot size display
+            document.getElementById('originalLotSize').textContent = originalLotSize.toFixed(2);
+            updatePartialPreview();
+
+            // Toggle partial close options
+            if (partialCloseToggle) {
+                partialCloseToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        partialCloseOptions.classList.remove('hidden');
+                        partialCloseOptions.classList.add('block');
+                        updatePartialPreview();
+                    } else {
+                        partialCloseOptions.classList.remove('block');
+                        partialCloseOptions.classList.add('hidden');
+                        // Reset to full close
+                        document.getElementById('partialLotSize').textContent = originalLotSize.toFixed(2);
+                        document.getElementById('remainingPosition').textContent = '0.00';
+                    }
+                });
+            }
+
+            // Handle radio button changes
+            partialPercentRadios.forEach(radio => {
+                radio.addEventListener('change', updatePartialPreview);
+            });
+
+            // Handle custom input changes
+            if (partialCustomInput) {
+                partialCustomInput.addEventListener('input', updatePartialPreview);
+            }
+
+            // Update lot size input when partial close changes
+            function updatePartialPreview() {
+                if (!partialCloseToggle || !partialCloseToggle.checked) {
+                    return;
+                }
+
+                let percent = 100;
+
+                // Check if custom input is used
+                if (partialCustomInput && partialCustomInput.value) {
+                    percent = parseFloat(partialCustomInput.value);
+                } else {
+                    // Check which radio is selected
+                    partialPercentRadios.forEach(radio => {
+                        if (radio.checked) {
+                            percent = parseFloat(radio.value);
+                        }
+                    });
+                }
+
+                // Validate percent
+                if (isNaN(percent) || percent < 0) percent = 100;
+                if (percent > 100) percent = 100;
+
+                const partialLotSize = originalLotSize * (percent / 100);
+                const remainingPosition = originalLotSize - partialLotSize;
+
+                // Update display
+                document.getElementById('partialLotSize').textContent = partialLotSize.toFixed(2);
+                document.getElementById('remainingPosition').textContent = remainingPosition.toFixed(2);
+
+                // Update the actual lot size input field
+                const lotSizeInput = document.getElementById('lot_size');
+                if (lotSizeInput) {
+                    lotSizeInput.value = partialLotSize.toFixed(2);
+                    calculatePotentialPL(); // Recalculate P/L with new lot size
+                }
+            }
+
+            // Update preview when risk management fields change
+            const riskPercentEl = document.getElementById('risk_percent');
+            const riskUsdEl = document.getElementById('risk_usd');
+            const lotSizeEl = document.getElementById('lot_size');
+
+            if (riskPercentEl) {
+                riskPercentEl.addEventListener('input', function() {
+                    setTimeout(updatePartialPreview, 100);
+                });
+            }
+
+            if (riskUsdEl) {
+                riskUsdEl.addEventListener('input', function() {
+                    setTimeout(updatePartialPreview, 100);
+                });
+            }
+
+            if (lotSizeEl) {
+                lotSizeEl.addEventListener('input', function() {
+                    // Update original lot size when user manually changes it
+                    if (partialCloseToggle && !partialCloseToggle.checked) {
+                        originalLotSize = parseFloat(this.value) || 0;
+                        document.getElementById('originalLotSize').textContent = originalLotSize.toFixed(2);
+                    }
+                });
+            }
+        });
     </script>
 @endsection
