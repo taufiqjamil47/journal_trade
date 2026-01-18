@@ -13,8 +13,10 @@ class TradeReportController extends Controller
 {
     public function calendar(Request $request)
     {
-        $month = $request->input('month', \Carbon\Carbon::now()->month);
-        $year = $request->input('year', \Carbon\Carbon::now()->year);
+        // Use Indonesia timezone (Asia/Jakarta)
+        $now = Carbon::now('Asia/Jakarta');
+        $month = $request->input('month', $now->month);
+        $year = $request->input('year', $now->year);
 
         // DAILY
         $daily = DB::table('trades')

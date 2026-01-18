@@ -171,7 +171,8 @@
                                     class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.year') }}:</label>
                                 <select id="yearSelect"
                                     class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
-                                    @for ($y = date('Y') - 5; $y <= date('Y') + 1; $y++)
+                                    @php $nowJakarta = \Carbon\Carbon::now('Asia/Jakarta'); @endphp
+                                    @for ($y = $nowJakarta->year - 5; $y <= $nowJakarta->year + 1; $y++)
                                         <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
                                             {{ $y }}
                                         </option>
@@ -187,7 +188,7 @@
                                 {{ __('calendar.go') }}
                             </button>
 
-                            <a href="{{ route('reports.calendar', ['month' => date('m'), 'year' => date('Y')]) }}"
+                            <a href="{{ route('reports.calendar', ['month' => \Carbon\Carbon::now('Asia/Jakarta')->month, 'year' => \Carbon\Carbon::now('Asia/Jakarta')->year]) }}"
                                 class="bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none text-center">
                                 {{ __('calendar.today') }}
                             </a>
@@ -234,7 +235,7 @@
                                 $dayTrades = $trades[$date] ?? collect();
                                 $isCurrentMonth = $day->month == $month;
                                 $opacityClass = $isCurrentMonth ? 'opacity-100' : 'opacity-30';
-                                $isToday = $date == date('Y-m-d');
+                                $isToday = $date == \Carbon\Carbon::now('Asia/Jakarta')->format('Y-m-d');
                                 $dayOfWeek = $day->dayOfWeek;
                                 $currentWeekNum = $day->weekOfYear;
 
@@ -339,7 +340,8 @@
                                                 : 'border-gray-600');
 
                                     $isCurrentWeek =
-                                        $currentWeekStart <= now() && now() <= $currentWeekStart->copy()->endOfWeek();
+                                        $currentWeekStart <= \Carbon\Carbon::now('Asia/Jakarta') &&
+                                        \Carbon\Carbon::now('Asia/Jakarta') <= $currentWeekStart->copy()->endOfWeek();
                                     if ($isCurrentWeek) {
                                         $weekBorderColor = 'border-primary-500';
                                         $weekBgColor .= ' bg-primary-500/10';
@@ -514,8 +516,9 @@
                 @if ($monthly->count() > 0)
                     <div class="grid grid-cols-2 lg:grid-cols-3 gap-1">
                         @php
-                            $currentMonth = date('n');
-                            $currentYear = date('Y');
+                            $nowJakarta = \Carbon\Carbon::now('Asia/Jakarta');
+                            $currentMonth = $nowJakarta->month;
+                            $currentYear = $nowJakarta->year;
                         @endphp
 
                         @foreach ($monthly as $m)

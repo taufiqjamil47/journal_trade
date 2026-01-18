@@ -359,7 +359,7 @@
                         </div>
 
                         <!-- Management Actions -->
-                        <div class="relative group flex-1 sm:flex-none min-w-[120px]">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px] z-50">
                             <button
                                 class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
                                 <i class="fas fa-tools mr-1 sm:mr-2"></i>
@@ -369,7 +369,7 @@
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
                                 <div class="py-2">
                                     <a href="{{ route('trades.create') }}"
                                         class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
