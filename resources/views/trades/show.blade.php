@@ -12,7 +12,10 @@
                     <p class="text-gray-500 mt-1">{{ __('trades.detail_for_trade', ['id' => $trade->id]) }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('trades.index') }}"
+                    @php
+                        $backPage = request()->query('page', 1);
+                    @endphp
+                    <a href="{{ route('trades.index', ['page' => $backPage]) }}"
                         class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>{{ __('trades.back_to_list') }}</span>
@@ -483,7 +486,10 @@
                     {{ __('trades.download_pdf_report') }}
                 </a>
             </div>
-            <a href="{{ route('trades.index') }}"
+            @php
+                $backPage = request()->query('page', 1);
+            @endphp
+            <a href="{{ route('trades.index', ['page' => $backPage]) }}"
                 class="flex items-center text-gray-400 hover:text-gray-300 transition-colors">
                 <i class="fas fa-arrow-left mr-2"></i>
                 {{ __('trades.back_to_list') }}

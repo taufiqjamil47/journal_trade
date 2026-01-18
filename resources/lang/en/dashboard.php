@@ -60,4 +60,11 @@ return [
     'sydney' => 'Sydney',
     'non_session' => 'Non-Session',
     'other' => 'Other',
+
+    // ranges
+    // ranges
+    'range' => 'Select Range',
+    'from' => 'From',
+    'to' => 'To',
+    'reset' => 'Reset',
 ];

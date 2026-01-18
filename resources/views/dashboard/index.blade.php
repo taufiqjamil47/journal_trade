@@ -342,6 +342,32 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Range Slider -->
+            <div class="mb-4 bg-gray-700 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <label class="text-sm font-medium text-gray-300">{{ __('dashboard.range') }}</label>
+                    <div class="flex gap-2">
+                        <span class="text-xs text-gray-400">{{ __('dashboard.from') }}: <span id="rangeStartLabel"
+                                class="text-primary-400">-</span></span>
+                        <span class="text-xs text-gray-400">{{ __('dashboard.to') }}: <span id="rangeEndLabel"
+                                class="text-primary-400">-</span></span>
+                        <button id="resetRange"
+                            class="ml-2 px-3 py-1 text-xs bg-primary-500/20 text-primary-400 rounded hover:bg-primary-500/30 transition-colors">
+                            {{ __('dashboard.reset') }}
+                        </button>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="range" id="rangeStart" min="0" max="100" value="0"
+                        class="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        style="z-index: 5;">
+                    <input type="range" id="rangeEnd" min="0" max="100" value="100"
+                        class="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        style="z-index: 6;">
+                </div>
+            </div>
+
             <div class="h-64 lg:h-96">
                 <canvas id="equityChart"></canvas>
             </div>
@@ -349,9 +375,11 @@
     </div>
 
     <script>
-        // Equity Chart
+        // Equity Chart with Range Slider
         const ctx = document.getElementById('equityChart').getContext('2d');
         const equityData = @json($equityData);
+        let chartInstance = null;
+        let allData = {};
 
         // Define colors for different sessions
         const sessionColors = {
@@ -386,13 +414,108 @@
             background: 'rgba(148, 163, 184, 0.1)'
         };
 
-        // Create datasets dynamically
-        const datasets = [];
-        const availableSessions = Object.keys(equityData);
+        // Store original data
+        allData = JSON.parse(JSON.stringify(equityData));
 
+        // Get range slider elements
+        const rangeStart = document.getElementById('rangeStart');
+        const rangeEnd = document.getElementById('rangeEnd');
+        const rangeStartLabel = document.getElementById('rangeStartLabel');
+        const rangeEndLabel = document.getElementById('rangeEndLabel');
+        const resetRange = document.getElementById('resetRange');
+
+        function updateRangeSliders() {
+            let startVal = parseInt(rangeStart.value);
+            let endVal = parseInt(rangeEnd.value);
+
+            if (startVal > endVal) {
+                [startVal, endVal] = [endVal, startVal];
+                rangeStart.value = startVal;
+                rangeEnd.value = endVal;
+            }
+
+            rangeStart.style.zIndex = startVal > 50 ? '6' : '5';
+            rangeEnd.style.zIndex = endVal > 50 ? '5' : '6';
+        }
+
+        function getFilteredData() {
+            const startPercent = parseInt(rangeStart.value);
+            const endPercent = parseInt(rangeEnd.value);
+
+            const availableSessions = Object.keys(allData);
+            const filteredData = {};
+
+            availableSessions.forEach(session => {
+                const sessionData = allData[session] || [];
+                const startIdx = Math.floor(sessionData.length * startPercent / 100);
+                const endIdx = Math.ceil(sessionData.length * endPercent / 100);
+                filteredData[session] = sessionData.slice(startIdx, endIdx);
+            });
+
+            return filteredData;
+        }
+
+        function updateChart() {
+            const filteredData = getFilteredData();
+            const availableSessions = Object.keys(filteredData);
+
+            // Update labels
+            if (availableSessions.length > 0 && filteredData[availableSessions[0]].length > 0) {
+                const sessionData = filteredData[availableSessions[0]];
+                rangeStartLabel.textContent = sessionData[0]?.date || '-';
+                rangeEndLabel.textContent = sessionData[sessionData.length - 1]?.date || '-';
+            }
+
+            // Create new datasets with filtered data
+            const datasets = [];
+            availableSessions.forEach(session => {
+                const sessionData = filteredData[session] || [];
+                const colors = sessionColors[session] || defaultColors;
+
+                datasets.push({
+                    label: session,
+                    data: sessionData.map(d => d.balance || 0),
+                    borderColor: colors.border,
+                    backgroundColor: colors.background,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4
+                });
+            });
+
+            // Update chart data
+            if (chartInstance) {
+                chartInstance.data.labels = availableSessions.length > 0 && filteredData[availableSessions[0]] ?
+                    filteredData[availableSessions[0]].map(d => d.date) : [];
+                chartInstance.data.datasets = datasets;
+                chartInstance.update('none'); // Update without animation for smoother interaction
+            }
+        }
+
+        // Event listeners
+        rangeStart.addEventListener('input', function() {
+            updateRangeSliders();
+            updateChart();
+        });
+
+        rangeEnd.addEventListener('input', function() {
+            updateRangeSliders();
+            updateChart();
+        });
+
+        resetRange.addEventListener('click', function() {
+            rangeStart.value = 0;
+            rangeEnd.value = 100;
+            updateRangeSliders();
+            updateChart();
+        });
+
+        // Create chart if data exists
+        const availableSessions = Object.keys(equityData);
         if (availableSessions.length > 0) {
-            const firstSession = availableSessions[0];
-            const dates = equityData[firstSession] ? equityData[firstSession].map(d => d.date) : [];
+            const datasets = [];
 
             availableSessions.forEach(session => {
                 const sessionData = equityData[session] || [];
@@ -410,11 +533,8 @@
                     pointHoverRadius: 4
                 });
             });
-        }
 
-        // Create chart if data exists
-        if (datasets.length > 0) {
-            new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: availableSessions.length > 0 ? (equityData[availableSessions[0]] || []).map(d => d
@@ -463,6 +583,9 @@
                     }
                 }
             });
+
+            // Initialize range labels
+            updateChart();
         } else {
             // Show message if no data
             document.getElementById('equityChart').parentElement.innerHTML = `

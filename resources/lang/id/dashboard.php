@@ -51,4 +51,10 @@ return [
     'sydney' => 'Sydney',
     'non_session' => 'Non-Sesi',
     'other' => 'Lainnya',
+
+    // ranges
+    'range' => 'Pilih Rentang',
+    'from' => 'Dari',
+    'to' => 'Sampai',
+    'reset' => 'Atur Ulang',
 ];

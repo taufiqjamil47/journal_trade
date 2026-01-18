@@ -423,7 +423,7 @@
                     <tbody class="divide-y divide-gray-700/50">
                         @forelse($trades as $trade)
                             <tr class="hover:bg-gray-750 cursor-pointer"
-                                onclick="window.location.href='{{ route('trades.show', $trade->id) }}'">
+                                onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                 <td class="py-3 px-4">
                                     <span
                                         class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
