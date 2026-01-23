@@ -174,6 +174,45 @@
     </style>
 
     <style>
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            padding: 4px 8px;
+            background-color: rgba(17, 24, 39, 0.95);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+            z-index: 10;
+        }
+
+        .group:hover .tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        .nav-items-container {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Smooth scaling for toggle button */
+        button {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Smooth icon rotation */
+        .nav-toggle-icon {
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+    </style>
+
+    <style>
         /* Simple scrollbar */
         .overflow-x-auto::-webkit-scrollbar {
             height: 4px;
@@ -450,46 +489,147 @@
             const navToggle = document.getElementById('navToggle');
             const navToggleIcon = document.getElementById('navToggleIcon');
             const navItems = document.getElementById('navItems');
+            const navContainer = document.querySelector('.nav-container');
 
-            // RESET localStorage setiap kali pindah halaman
-            // localStorage.removeItem('navVisible');
+            // Ambil state dari localStorage (jika ada)
+            let isNavVisible = localStorage.getItem('navVisible') === 'true';
 
-            // Atau lebih baik: Hapus hanya jika berpindah dari dashboard ke halaman lain
-            const currentPage = window.location.pathname;
-            if (!currentPage.includes('dashboard')) {
-                localStorage.removeItem('navVisible');
+            // Jika belum ada di localStorage, set default ke false
+            if (localStorage.getItem('navVisible') === null) {
+                isNavVisible = false;
+                localStorage.setItem('navVisible', 'false');
             }
 
-            // Default state selalu hidden
-            let isNavVisible = false;
+            // Set initial state dengan delay untuk animasi masuk
+            setTimeout(() => {
+                updateNavVisibility(isNavVisible, false); // false = bukan dari toggle
+            }, 100);
 
-            // Set initial state
-            updateNavVisibility(isNavVisible);
-
-            // Update localStorage dengan state default
-            localStorage.setItem('navVisible', isNavVisible);
-
-            // Toggle event
+            // Toggle event dengan animasi
             navToggle.addEventListener('click', function() {
                 isNavVisible = !isNavVisible;
-                updateNavVisibility(isNavVisible);
+                updateNavVisibility(isNavVisible, true); // true = dari toggle
                 localStorage.setItem('navVisible', isNavVisible);
+
+                // Tambahkan efek klik
+                navToggle.classList.add('scale-95');
+                setTimeout(() => {
+                    navToggle.classList.remove('scale-95');
+                }, 150);
             });
 
-            function updateNavVisibility(visible) {
+            // Simpan state sebelum pindah halaman
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.href) {
+                    // Simpan state saat ini ke sessionStorage sebagai backup
+                    sessionStorage.setItem('navVisibleBeforeNavigate', isNavVisible);
+                }
+            });
+
+            // Handle browser back/forward
+            window.addEventListener('pageshow', function(event) {
+                // Jika halaman dimuat dari cache (bukan fresh load)
+                if (event.persisted) {
+                    const savedState = localStorage.getItem('navVisible') === 'true';
+                    if (savedState !== isNavVisible) {
+                        isNavVisible = savedState;
+                        updateNavVisibility(isNavVisible, false);
+                    }
+                }
+            });
+
+            function updateNavVisibility(visible, fromToggle = true) {
                 if (visible) {
+                    // Animate in
                     navItems.classList.remove('hidden');
                     navItems.classList.add('flex');
-                    navToggleIcon.classList.remove('fa-chevron-left');
-                    navToggleIcon.classList.add('fa-chevron-right');
+
+                    // Trigger reflow untuk memulai animasi
+                    void navItems.offsetWidth;
+
+                    // Animate opacity and scale
+                    if (fromToggle) {
+                        navItems.classList.remove('opacity-0', 'scale-95');
+                        navItems.classList.add('opacity-100', 'scale-100');
+                    } else {
+                        // Jika dari page load, langsung tampilkan tanpa animasi awal
+                        navItems.classList.remove('opacity-0', 'scale-95');
+                        navItems.classList.add('opacity-100', 'scale-100');
+                    }
+
+                    // Rotate icon smoothly
+                    navToggleIcon.classList.remove('rotate-180');
+                    navToggleIcon.classList.add('rotate-0');
+
+                    // Add glow effect to toggle button
+                    navToggle.classList.add('border-primary-500');
                 } else {
-                    navItems.classList.remove('flex');
-                    navItems.classList.add('hidden');
-                    navToggleIcon.classList.remove('fa-chevron-right');
-                    navToggleIcon.classList.add('fa-chevron-left');
+                    // Animate out
+                    if (fromToggle) {
+                        navItems.classList.remove('opacity-100', 'scale-100');
+                        navItems.classList.add('opacity-0', 'scale-95');
+
+                        // Hide after animation completes
+                        setTimeout(() => {
+                            if (!isNavVisible) {
+                                navItems.classList.add('hidden');
+                                navItems.classList.remove('flex');
+                            }
+                        }, 300);
+                    } else {
+                        // Jika dari page load, langsung sembunyikan tanpa animasi
+                        navItems.classList.add('hidden');
+                        navItems.classList.remove('flex', 'opacity-100', 'scale-100');
+                        navItems.classList.add('opacity-0', 'scale-95');
+                    }
+
+                    // Rotate icon back
+                    navToggleIcon.classList.remove('rotate-0');
+                    navToggleIcon.classList.add('rotate-180');
+
+                    // Remove glow effect
+                    navToggle.classList.remove('border-primary-500');
                 }
             }
+
+            // Tambahkan event listener untuk sebelum unload (opsional)
+            window.addEventListener('beforeunload', function() {
+                // Pastikan state terakhir tersimpan
+                localStorage.setItem('navVisible', isNavVisible);
+            });
         });
+    </script>
+
+    <script>
+        // Script ini berjalan sebelum halaman berpindah
+        (function() {
+            // Simpan state nav ke sessionStorage saat link diklik
+            document.addEventListener('DOMContentLoaded', function() {
+                const links = document.querySelectorAll('a[href]');
+
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        // Hanya untuk link internal (tidak eksternal atau anchor)
+                        if (this.href && !this.target && this.href.startsWith(window.location
+                                .origin)) {
+                            const navState = localStorage.getItem('navVisible');
+                            sessionStorage.setItem('navVisibleTemp', navState);
+                        }
+                    });
+                });
+            });
+
+            // Restore state dari sessionStorage saat halaman dimuat
+            window.addEventListener('load', function() {
+                const tempState = sessionStorage.getItem('navVisibleTemp');
+
+                if (tempState !== null) {
+                    localStorage.setItem('navVisible', tempState);
+                    // Hapus temp storage
+                    sessionStorage.removeItem('navVisibleTemp');
+                }
+            });
+        })();
     </script>
 
     <!-- Page Specific Scripts -->

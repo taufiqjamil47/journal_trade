@@ -13,104 +13,106 @@
                 </div>
 
                 <!-- Navigation and Trader Info -->
-                <div class="flex flex-wrap gap-3">
+                <div class="flex flex-wrap gap-3 items-center">
                     <!-- Toggle Button -->
                     <button id="navToggle"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
-                        <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2"></i>
+                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-all duration-300  active:scale-95"
+                        data-nav-state-save="true">
+                        <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
                     </button>
 
-                    <!-- Navigation Items (hidden by default) -->
-                    <div id="navItems" class="hidden">
+                    <!-- Navigation Items Container -->
+                    <div id="navItems"
+                        class="hidden nav-items-container opacity-0 scale-95 transform transition-all duration-300">
                         <div class="flex items-center space-x-1 bg-gray-800 rounded-lg p-1 border border-gray-700">
                             <!-- Dashboard Link -->
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
-                                    title="Dashboard">
-                                    <i class="fas fa-home text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
+                                    title="Dashboard" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-home text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.dashboard') }}
                                     </span>
                                 </a>
                             @endif
 
-                            <!-- Calendar Link - hanya tampil jika BUKAN di route calendar -->
+                            <!-- Calendar Link -->
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Calendar">
-                                    <i class="fas fa-calendar text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Calendar" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-calendar text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.calendar') }}
                                     </span>
                                 </a>
                             @endif
 
-                            <!-- Analysis Link - hanya tampil jika BUKAN di route analysis -->
+                            <!-- Analysis Link -->
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Analysis">
-                                    <i class="fa-solid fa-magnifying-glass-chart text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Analysis" data-nav-state-save="true">
+                                    <i
+                                        class="fa-solid fa-magnifying-glass-chart text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.analysis') }}
                                     </span>
                                 </a>
                             @endif
 
-                            <div class="h-6 w-px bg-gray-600"></div>
+                            <div class="h-6 w-px bg-gray-600 transition-all duration-300"></div>
 
-                            <!-- Trades Link - hanya tampil jika BUKAN di route trades -->
+                            <!-- Trades Link -->
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Trades">
-                                    <i class="fas fa-chart-line text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Trades" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-chart-line text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.trades') }}
                                     </span>
                                 </a>
                             @endif
 
-                            <!-- Sessions Link - hanya tampil jika BUKAN di route sessions -->
+                            <!-- Sessions Link -->
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Sessions">
-                                    <i class="fas fa-clock text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Sessions" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-clock text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.sessions') }}
                                     </span>
                                 </a>
                             @endif
 
-                            <!-- Symbols Link - hanya tampil jika BUKAN di route symbols -->
+                            <!-- Symbols Link -->
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Symbols">
-                                    <i class="fas fa-money-bill-transfer text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Symbols" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-money-bill-transfer text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.symbols') }}
                                     </span>
                                 </a>
                             @endif
 
-                            <!-- Rules Link - hanya tampil jika BUKAN di route trading-rules -->
+                            <!-- Rules Link -->
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
-                                    class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-colors group relative"
-                                    title="Rules">
-                                    <i class="fas fa-list text-primary-500"></i>
-                                    <span
-                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Rules" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-list text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
                                         {{ __('nav_header.nav.rules') }}
                                     </span>
                                 </a>
@@ -118,10 +120,11 @@
                         </div>
                     </div>
 
-                    <!-- Trader Item -->
-                    <div class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700">
-                        <i class="fas fa-user text-primary-500 mr-2"></i>
-                        <span>Trader</span>
+                    <!-- Trader Item dengan animasi muncul -->
+                    <div
+                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 transition-all duration-300 hover:border-primary-500 ">
+                        <i class="fas fa-user text-primary-500 mr-2 transition-transform duration-200 hover:scale-110"></i>
+                        <span class="transition-all duration-200">Trader</span>
                     </div>
                 </div>
             </div>

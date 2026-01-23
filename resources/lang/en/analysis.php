@@ -71,7 +71,7 @@ return [
         'hide_details' => 'Hide Detailed Risk Metrics',
         'risk_per_trade' => 'Risk Per Trade',
         'average_risk' => 'Average Risk',
-        'max_risk' => 'Maximum Risk',
+        'max_risk' => 'Maximum Risk taken on a Trade',
         'recommended_risk' => 'Recommended: 1-2% risk per Trade',
         'risk_reward_profile' => 'Risk/Reward Profile',
         'avg_rr_ratio' => 'Average R:R Ratio',

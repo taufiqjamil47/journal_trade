@@ -72,7 +72,7 @@ return [
         'hide_details' => 'Sembunyikan Risk Metrik Terperinci',
         'risk_per_trade' => 'Risiko Per Pesanan',
         'average_risk' => 'Rata-rata Risk',
-        'max_risk' => 'Risiko Maks',
+        'max_risk' => 'Risiko Maksimal tertinggi pada Pesanan',
         'recommended_risk' => 'Rekomendasi: 1-2% risiko per Pesanan',
         'risk_reward_profile' => 'Profil Risiko/Imbalan',
         'avg_rr_ratio' => 'Rasio R:R Rata-rata',
