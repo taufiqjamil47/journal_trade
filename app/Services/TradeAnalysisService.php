@@ -317,11 +317,16 @@ class TradeAnalysisService
         return $trades->groupBy('session')->map(function ($group) {
             $wins = $group->where('hasil', 'win')->count();
             $total = $group->count();
+            $rrValues = $group->pluck('rr')->filter(function ($rr) {
+                return $rr !== null && $rr > 0;
+            });
+
             return [
                 'trades' => $total,
                 'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
                 'profit_loss' => $group->sum('profit_loss'),
-                'avg_profit' => $total > 0 ? round($group->avg('profit_loss'), 2) : 0
+                'avg_profit' => $total > 0 ? round($group->avg('profit_loss'), 2) : 0,
+                'avg_rr' => $rrValues->count() > 0 ? round($rrValues->avg(), 2) : 0
             ];
         });
     }

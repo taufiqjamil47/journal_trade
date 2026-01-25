@@ -1057,6 +1057,98 @@
             </div>
         </div>
 
+        <!-- Session Analysis with Polar Chart -->
+        <div class="my-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Session Polar Chart -->
+                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-primary-300">
+                                {{ __('analysis.time_analysis.session_performance') }}</h3>
+                            <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.distribution') }}</p>
+                        </div>
+                        <div class="bg-purple-500/20 p-2 rounded-lg">
+                            <i class="fas fa-chart-pie text-purple-500"></i>
+                        </div>
+                    </div>
+
+                    <!-- Chart Container dengan Loading State -->
+                    <div id="sessionPolarChartContainer" class="h-80 relative">
+                        <div id="sessionPolarChartLoading" class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p class="chart-loading-text">{{ __('analysis.time_analysis.session_polar_chart') }}</p>
+                        </div>
+                        <canvas id="sessionPolarChart" class="chart-canvas" style="display: none;"></canvas>
+                    </div>
+                </div>
+
+                <!-- Session Stats Table -->
+                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-primary-300">
+                                {{ __('analysis.time_analysis.metrics.label1') }}</h3>
+                            <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.metrics.label2') }}</p>
+                        </div>
+                        <div class="bg-indigo-500/20 p-2 rounded-lg">
+                            <i class="fas fa-table text-indigo-500"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto max-h-80 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-700">
+                        <table class="w-full text-sm">
+                            <thead class="sticky top-0">
+                                <tr class="border-b border-gray-600">
+                                    <th class="text-left py-3 px-2 text-gray-400 font-medium">
+                                        {{ __('analysis.time_analysis.metrics.session') }}</th>
+                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                        {{ __('analysis.time_analysis.metrics.trades') }}</th>
+                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                        {{ __('analysis.time_analysis.metrics.winrate') }}</th>
+                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                        {{ __('analysis.time_analysis.metrics.avg_rr') }}</th>
+                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                        {{ __('analysis.time_analysis.metrics.profit_loss') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($sessionAnalysis as $session => $data)
+                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                        <td class="py-3 px-2 font-medium text-white">
+                                            <span
+                                                class="inline-block px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-xs">
+                                                {{ $session ?? 'N/A' }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3 px-2 text-center text-white font-semibold">{{ $data['trades'] }}
+                                        </td>
+                                        <td class="py-3 px-2 text-center">
+                                            <span
+                                                class="inline-block px-2 py-1 rounded {{ $data['winrate'] >= 50 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }} font-medium">
+                                                {{ $data['winrate'] }}%
+                                            </span>
+                                        </td>
+                                        <td class="py-3 px-2 text-center text-blue-400 font-medium">{{ $data['avg_rr'] }}
+                                        </td>
+                                        <td
+                                            class="py-3 px-2 text-right font-semibold {{ $data['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                            {{ number_format($data['profit_loss'], 2) }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="py-6 text-center text-gray-500">No session data
+                                            available</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Two Column Charts -->
         <div class="my-6">
             <div class="flex items-center justify-between mb-4">
@@ -1205,6 +1297,7 @@
 
                 // Chart loading order priority
                 this.chartPriority = [
+                    'sessionPolarChart',
                     'hourlyChart',
                     'pairChart',
                     'entryTypeChart',
@@ -1367,6 +1460,9 @@
                         break;
                     case 'monthlyChart':
                         this.renderMonthlyChart();
+                        break;
+                    case 'sessionPolarChart':
+                        this.renderSessionPolarChart();
                         break;
                 }
             }
@@ -1739,6 +1835,126 @@
                                 backgroundColor: 'rgba(31, 41, 55, 0.9)',
                                 titleColor: '#f3f4f6',
                                 bodyColor: '#f3f4f6'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // session polar chart function
+            renderSessionPolarChart() {
+                const sessionCtx = document.getElementById('sessionPolarChart');
+                if (!sessionCtx) return;
+
+                const sessionData = @json($sessionAnalysis);
+                const sessionLabels = Object.keys(sessionData);
+                const winrates = Object.values(sessionData).map(d => d.winrate);
+                const trades = Object.values(sessionData).map(d => d.trades);
+                const profits = Object.values(sessionData).map(d => d.profit_loss);
+                const avgRR = Object.values(sessionData).map(d => d.avg_rr);
+
+                // Generate colors based on winrate
+                const colors = winrates.map(wr => {
+                    if (wr >= 60) return 'rgba(16, 185, 129, 0.7)'; // Green for > 60%
+                    if (wr >= 50) return 'rgba(59, 130, 246, 0.7)'; // Blue for > 50%
+                    return 'rgba(239, 68, 68, 0.7)'; // Red for < 50%
+                });
+
+                const borderColors = winrates.map(wr => {
+                    if (wr >= 60) return 'rgba(16, 185, 129, 1)';
+                    if (wr >= 50) return 'rgba(59, 130, 246, 1)';
+                    return 'rgba(239, 68, 68, 1)';
+                });
+
+                new Chart(sessionCtx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: sessionLabels,
+                        datasets: [{
+                            label: 'Win Rate (%)',
+                            data: winrates,
+                            backgroundColor: colors,
+                            borderColor: borderColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#9ca3af',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                                titleColor: '#f3f4f6',
+                                bodyColor: '#f3f4f6',
+                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                borderWidth: 1,
+                                padding: 12,
+                                displayColors: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        const index = context.dataIndex;
+                                        const label = context.label;
+                                        const winrate = winrates[index];
+                                        const tradeCount = trades[index];
+                                        const profit = profits[index];
+                                        const rr = avgRR[index];
+
+                                        return [
+                                            `${label}`,
+                                            `Win Rate: ${winrate}%`,
+                                            `Trades: ${tradeCount}`,
+                                            `Avg RR: ${rr}`,
+                                            `Profit: $${profit.toFixed(2)}`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    color: '#9ca3af',
+                                    backdropColor: 'transparent',
+                                    // Hapus stepSize untuk otomatis
+                                    font: {
+                                        size: 11
+                                    },
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                },
+                                pointLabels: {
+                                    color: '#e5e7eb',
+                                    font: {
+                                        size: 13,
+                                        weight: 'bold'
+                                    },
+                                    padding: 8
+                                },
+                                grid: {
+                                    color: 'rgba(75, 85, 99, 0.3)',
+                                    drawBorder: true,
+                                    borderColor: 'rgba(75, 85, 99, 0.4)'
+                                },
+                                angleLines: {
+                                    color: 'rgba(75, 85, 99, 0.2)'
+                                }
                             }
                         }
                     }

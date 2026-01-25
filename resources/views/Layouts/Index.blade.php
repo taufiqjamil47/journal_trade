@@ -100,7 +100,7 @@
             background: rgba(14, 165, 233, 0.1);
             /* border: 1px solid rgba(14, 165, 233, 0.3); */
             transition: all 0.3s ease;
-            flex-shrink: 01;
+            flex-shrink: -1;
         }
 
         .currency-pair.up {
@@ -337,6 +337,55 @@
                 change: 0.42,
                 direction: "up",
                 decimal: 2
+            },
+            {
+                pair: "USDTRY",
+                price: 26.45,
+                change: -0.15,
+                direction: "down",
+                decimal: 2
+            },
+            {
+                pair: "USDMXN",
+                price: 18.75,
+                change: 0.10,
+                direction: "up",
+                decimal: 2
+            },
+            {
+                pair: "EURJPY",
+                price: 161.50,
+                change: -0.30,
+                direction: "down",
+                decimal: 2
+            },
+            {
+                pair: "GBPJPY",
+                price: 187.20,
+                change: 0.25,
+                direction: "up",
+                decimal: 2
+            },
+            {
+                pair: "COIN",
+                price: 124.85,
+                change: -0.12,
+                direction: "down",
+                decimal: 2
+            },
+            {
+                pair: "IDX30",
+                price: 6350.25,
+                change: 15.75,
+                direction: "up",
+                decimal: 2
+            },
+            {
+                pair: "NAS100",
+                price: 13450.50,
+                change: -25.30,
+                direction: "down",
+                decimal: 2
             }
         ];
 
@@ -376,12 +425,12 @@
             const changeClass = pairData.direction === 'up' ? 'up' : 'down';
 
             pairDiv.innerHTML = `
-                <span class="font-semibold text-white mr-3">${pairData.pair}</span>
-                <span class="text-sm ${changeClass} mr-3 flex items-center change-value">
+                <span class="font-semibold text-xs text-white mr-3">${pairData.pair}</span>
+                <span class="text-xs ${changeClass} mr-3 flex items-center change-value">
                     <i class="fas ${directionIcon} mr-1"></i>
                     ${pairData.change.toFixed(pairData.decimal)}
                 </span>
-                <span class="font-bold text-lg price-value">${pairData.price.toFixed(pairData.decimal)}</span>
+                <span class="font-semibold text-xs price-value">${pairData.price.toFixed(pairData.decimal)}</span>
             `;
 
             return pairDiv;
@@ -410,7 +459,7 @@
                     const changeClass = newData.direction === 'up' ? 'up' : 'down';
 
                     const changeElement = pairElement.querySelector('.change-value');
-                    changeElement.className = `text-sm ${changeClass} mr-3 flex items-center change-value`;
+                    changeElement.className = `text-xs ${changeClass} mr-3 flex items-center change-value`;
                     changeElement.innerHTML = `
                         <i class="fas ${directionIcon} mr-1"></i>
                         ${newData.change.toFixed(pair.decimal)}
@@ -434,7 +483,7 @@
 
             // Duplikasi data untuk efek scroll yang smooth (4 set agar infinite)
             const duplicatedPairs = [];
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 2; i++) {
                 forexPairs.forEach(pair => {
                     duplicatedPairs.push({
                         ...pair

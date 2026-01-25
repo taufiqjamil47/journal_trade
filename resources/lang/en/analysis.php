@@ -106,6 +106,17 @@ return [
         'pl' => 'P/L ($)',
         'monthly_trends' => 'Monthly Trends',
         'month' => 'Month',
+        'session_performance' => 'Performance per Session',
+        'distribution' => 'Win Rate Distribution across Sessions',
+        'metrics' => [
+            'label1' => 'Session Metrics',
+            'label2' => 'Performance Details per Session',
+            'session' => 'Session',
+            'trades' => 'Orders',
+            'winrate' => 'Winrate (%)',
+            'profit_loss' => 'PnL ($)',
+            'avg_rr' => 'Average R:R',
+        ],
     ],
 
     'pair_analysis' => [

@@ -107,6 +107,17 @@ return [
         'pl' => 'P/L ($)',
         'monthly_trends' => 'Tren Bulanan',
         'month' => 'Bulan',
+        'session_performance' => 'Kinerja per-Sesi',
+        'distribution' => 'Distribusi Tingkat Kemenangan diseluruh Sesi',
+        'metrics' => [
+            'label1' => 'Metrik Sesi',
+            'label2' => 'Rincian Kinerja per Sesi',
+            'session' => 'Sesi',
+            'trades' => 'Pesanan',
+            'winrate' => 'Winrate (%)',
+            'profit_loss' => 'PnL ($)',
+            'avg_rr' => 'Rata-rata R:R',
+        ],
     ],
 
     'pair_analysis' => [
@@ -148,6 +159,7 @@ return [
         'monthly_trends' => 'Memuat Tren Bulanan...',
         'pair_chart' => 'Memuat Grafik Pair...',
         'entry_type_chart' => 'Memuat Grafik Tipe Entry...',
+        'session_polar_chart' => 'Memuat Grafik Polar Sesi...',
         'chart_error' => 'Gagal memuat grafik',
     ],
 
