@@ -106,6 +106,9 @@ return [
         'no_trades' => 'No Orders',
         'day_of_week_performance' => 'Day of the Week Performance',
         'pl' => 'P/L ($)',
+        'quarterly_trends' => 'Quarterly Trends',
+        'quarterly_description' => 'Performance analysis by quarter',
+        'quarter' => 'Quarter',
         'monthly_trends' => 'Monthly Trends',
         'month' => 'Month',
         'session_performance' => 'Performance per Session',
@@ -157,6 +160,7 @@ return [
     'loading' => [
         'hourly_performance' => 'Loading Hourly Performance...',
         'day_of_week_chart' => 'Loading Day of Week Chart One Week...',
+        'quarterly_trends' => 'Loading Quarterly Trends...',
         'monthly_trends' => 'Loading Monthly Trends...',
         'pair_chart' => 'Loading Pair Chart...',
         'entry_type_chart' => 'Loading Entry Type Chart...',

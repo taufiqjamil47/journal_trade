@@ -107,6 +107,9 @@ return [
         'no_trades' => 'Tidak Ada Pesanan',
         'day_of_week_performance' => 'Kinerja Hari dalam Seminggu',
         'pl' => 'P/L ($)',
+        'quarterly_trends' => 'Tren Kuartalan',
+        'quarterly_description' => 'Analisis kinerja per kuartal',
+        'quarter' => 'Kuartal',
         'monthly_trends' => 'Tren Bulanan',
         'month' => 'Bulan',
         'session_performance' => 'Kinerja per-Sesi',
@@ -158,6 +161,7 @@ return [
     'loading' => [
         'hourly_performance' => 'Memuat Kinerja Per Jam...',
         'day_of_week_chart' => 'Memuat Grafik Hari dalam Seminggu...',
+        'quarterly_trends' => 'Memuat Tren Kuartalan...',
         'monthly_trends' => 'Memuat Tren Bulanan...',
         'pair_chart' => 'Memuat Grafik Pair...',
         'entry_type_chart' => 'Memuat Grafik Tipe Entry...',

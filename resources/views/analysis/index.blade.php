@@ -952,106 +952,217 @@
                 </div>
             </div>
 
-            <!-- Day of Week & Monthly Performance -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Day of Week Performance dengan Loading -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                    <h3 class="text-lg font-bold text-primary-300 mb-4">
-                        {{ __('analysis.time_analysis.day_of_week_performance') }}</h3>
+            <!-- Day of Week & Monthly Performance - Vertical Layout -->
+            <div class="space-y-6">
+                <!-- Row 1: Day of Week Chart + Table -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 mb-0">
+                    <!-- Day of Week Chart (Left) -->
+                    <div
+                        class="bg-gray-800 border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        <h3 class="text-lg font-bold text-primary-300 mb-4">
+                            {{ __('analysis.time_analysis.day_of_week_performance') }}</h3>
 
-                    <!-- Chart Container dengan Loading State -->
-                    <div id="dayOfWeekChartContainer" class="h-56 mb-4 relative">
-                        <div id="dayOfWeekChartLoading" class="chart-loading">
-                            <div class="chart-loading-spinner"></div>
-                            <p class="chart-loading-text">{{ __('analysis.loading.day_of_week_chart') }}</p>
+                        <!-- Chart Container dengan Loading State -->
+                        <div id="dayOfWeekChartContainer" class="h-56 relative">
+                            <div id="dayOfWeekChartLoading" class="chart-loading">
+                                <div class="chart-loading-spinner"></div>
+                                <p class="chart-loading-text">{{ __('analysis.loading.day_of_week_chart') }}</p>
+                            </div>
+                            <canvas id="dayOfWeekChart" class="chart-canvas" style="display: none;"></canvas>
                         </div>
-                        <canvas id="dayOfWeekChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
 
-                    <div class="overflow-y-auto h-64">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.time_analysis.day') }}</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.stats.trades') }}</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.stats.winrate') }}</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.time_analysis.pl') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ __("analysis.days_short.{$day['short_name']}") }}
-                                        </td>
-                                        <td class="py-2 text-center text-sm">{{ $day['trades'] }}</td>
-                                        <td class="py-2 text-center text-sm">
-                                            <span
-                                                class="{{ $day['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
-                                                {{ $day['winrate'] }}%
-                                            </span>
-                                        </td>
-                                        <td
-                                            class="py-2 text-right font-medium {{ $day['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
-                                            ${{ number_format($day['profit'], 2) }}
-                                        </td>
+                    <!-- Day of Week Table (Right) -->
+                    <div
+                        class="bg-gray-800 border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        <div class="overflow-y-auto h-80">
+                            <table class="w-full text-sm">
+                                <thead class="sticky top-0 bg-gray-800">
+                                    <tr class="border-b border-gray-600">
+                                        <th class="text-left py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.time_analysis.day') }}</th>
+                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.stats.trades') }}</th>
+                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.stats.winrate') }}</th>
+                                        <th class="text-right py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.time_analysis.pl') }}</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
+                                        <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                            <td class="py-2 px-2 text-sm">
+                                                {{ __("analysis.days_short.{$day['short_name']}") }}</td>
+                                            <td class="py-2 px-2 text-center text-sm">{{ $day['trades'] }}</td>
+                                            <td class="py-2 px-2 text-center text-sm">
+                                                <span
+                                                    class="{{ $day['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                    {{ $day['winrate'] }}%
+                                                </span>
+                                            </td>
+                                            <td
+                                                class="py-2 px-2 text-right font-medium {{ $day['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                                ${{ number_format($day['profit'], 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Monthly Trends dengan Loading -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
-                    <h3 class="text-lg font-bold text-primary-300 mb-4">{{ __('analysis.time_analysis.monthly_trends') }}
-                    </h3>
-
-                    <!-- Chart Container dengan Loading State -->
-                    <div id="monthlyChartContainer" class="h-56 mb-4 relative">
-                        <div id="monthlyChartLoading" class="chart-loading">
-                            <div class="chart-loading-spinner"></div>
-                            <p class="chart-loading-text">{{ __('analysis.loading.monthly_trends') }}</p>
+                <!-- Row 2: Quarterly Chart + Table -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 mb-0">
+                    <!-- Quarterly Chart (Left) -->
+                    <div
+                        class="bg-gray-800 border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-primary-300">
+                                    {{ __('analysis.time_analysis.quarterly_trends') }}</h3>
+                                <p class="text-gray-500 text-sm mt-1">
+                                    {{ __('analysis.time_analysis.quarterly_description') }}</p>
+                            </div>
+                            <div class="bg-amber-500/20 p-2 rounded-lg">
+                                <i class="fas fa-chart-line text-amber-500"></i>
+                            </div>
                         </div>
-                        <canvas id="monthlyChart" class="chart-canvas" style="display: none;"></canvas>
+
+                        <!-- Chart Container dengan Loading State -->
+                        <div id="quarterlyChartContainer" class="h-56 relative">
+                            <div id="quarterlyChartLoading" class="chart-loading">
+                                <div class="chart-loading-spinner"></div>
+                                <p class="chart-loading-text">{{ __('analysis.loading.quarterly_trends') }}</p>
+                            </div>
+                            <canvas id="quarterlyChart" class="chart-canvas" style="display: none;"></canvas>
+                        </div>
                     </div>
 
-                    <div class="overflow-y-auto h-64">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.time_analysis.month') }}</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.stats.trades') }}</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.stats.winrate') }}</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.time_analysis.pl') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($monthlyPerformance->sortDesc() as $month)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ $month['month_name'] }}</td>
-                                        <td class="py-2 text-center text-sm">{{ $month['trades'] }}</td>
-                                        <td class="py-2 text-center text-sm">
-                                            <span
-                                                class="{{ $month['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
-                                                {{ $month['winrate'] }}%
-                                            </span>
-                                        </td>
-                                        <td
-                                            class="py-2 text-right font-medium {{ $month['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
-                                            ${{ number_format($month['profit'], 2) }}
-                                        </td>
+                    <!-- Quarterly Table (Right) -->
+                    <div
+                        class="bg-gray-800 border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        <div class="overflow-y-auto h-80">
+                            <table class="w-full text-sm">
+                                <thead class="sticky top-0 bg-gray-800">
+                                    <tr class="border-b border-gray-600">
+                                        <th class="text-left py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.time_analysis.quarter') }}</th>
+                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.stats.trades') }}</th>
+                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.stats.winrate') }}</th>
+                                        <th class="text-right py-2 px-2 text-gray-400 font-medium">
+                                            {{ __('analysis.time_analysis.pl') }}</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($quarterlyPerformance->sortDesc() as $quarter)
+                                        <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                            <td class="py-2 px-2 text-sm">{{ $quarter['quarter_name'] }}</td>
+                                            <td class="py-2 px-2 text-center text-sm">{{ $quarter['trades'] }}</td>
+                                            <td class="py-2 px-2 text-center text-sm">
+                                                <span
+                                                    class="{{ $quarter['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                    {{ $quarter['winrate'] }}%
+                                                </span>
+                                            </td>
+                                            <td
+                                                class="py-2 px-2 text-right font-medium {{ $quarter['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                                ${{ number_format($quarter['profit'], 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Monthly Chart + Table -->
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <!-- Monthly Chart (Left) -->
+                    <div
+                        class="bg-gray-800 border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        <h3 class="text-lg font-bold text-primary-300 mb-4">
+                            {{ __('analysis.time_analysis.monthly_trends') }}</h3>
+
+                        <!-- Chart Container dengan Loading State -->
+                        <div id="monthlyChartContainer" class="h-56 relative">
+                            <div id="monthlyChartLoading" class="chart-loading">
+                                <div class="chart-loading-spinner"></div>
+                                <p class="chart-loading-text">{{ __('analysis.loading.monthly_trends') }}</p>
+                            </div>
+                            <canvas id="monthlyChart" class="chart-canvas" style="display: none;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Table (Right) -->
+                    <div
+                        class="bg-gray-800 border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        <!-- Grouped by Year with Collapsible Months -->
+                        <div class="space-y-1 overflow-y-auto h-80">
+                            @php
+                                $monthsByYear = $monthlyPerformance
+                                    ->groupBy(function ($month) {
+                                        return \Carbon\Carbon::parse($month['month'])->format('Y');
+                                    })
+                                    ->sortDesc();
+                            @endphp
+
+                            @foreach ($monthsByYear as $year => $months)
+                                <div class="year-group bg-gray-700/30 rounded border border-gray-600">
+                                    <!-- Year Header (Expandable) -->
+                                    <button
+                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-700/50 transition-colors"
+                                        data-year="{{ $year }}">
+                                        <div class="flex items-center gap-2">
+                                            <i
+                                                class="fas fa-chevron-down text-primary-400 year-toggle-icon transition-transform duration-300 text-sm"></i>
+                                            <span class="font-bold text-primary-300 text-sm">{{ $year }}</span>
+                                            <span class="text-xs text-gray-400">
+                                                ({{ $months->sum('trades') }} trades,
+                                                <span
+                                                    class="{{ $months->sum('profit') >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                                    ${{ number_format($months->sum('profit'), 2) }}
+                                                </span>)
+                                            </span>
+                                        </div>
+                                        <div class="text-xs bg-primary-500/20 px-1.5 py-0.5 rounded text-primary-300">
+                                            {{ round(($months->sum('wins') / $months->sum('trades')) * 100, 1) }}%
+                                        </div>
+                                    </button>
+
+                                    <!-- Month Details (Collapsible) -->
+                                    <div
+                                        class="year-content border-t border-gray-600 max-h-0 overflow-hidden transition-all duration-300">
+                                        <div class="p-2">
+                                            @foreach ($months->sortDesc() as $month)
+                                                <div
+                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-700/30 rounded transition-colors text-xs border-b border-gray-600/30 last:border-0">
+                                                    <span class="text-gray-300">{{ $month['month_name'] }}</span>
+                                                    <div class="flex items-center gap-2">
+                                                        <span
+                                                            class="text-gray-400 w-10 text-center">{{ $month['trades'] }}</span>
+                                                        <span class="text-gray-400 w-10 text-center">
+                                                            <span
+                                                                class="{{ $month['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                                {{ $month['winrate'] }}%
+                                                            </span>
+                                                        </span>
+                                                        <span
+                                                            class="font-medium {{ $month['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} w-16 text-right">
+                                                            ${{ number_format($month['profit'], 2) }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1185,7 +1296,7 @@
 
                     <div class="overflow-x-auto max-h-80">
                         <table class="w-full text-sm">
-                            <thead class="sticky top-0 bg-gray-900">
+                            <thead class="sticky top-0">
                                 <tr class="border-b border-gray-600">
                                     <th class="text-left py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.symbol') }}</th>
@@ -1238,7 +1349,7 @@
 
                     <div class="overflow-x-auto max-h-80">
                         <table class="w-full text-sm">
-                            <thead class="sticky top-0 bg-gray-900">
+                            <thead class="sticky top-0">
                                 <tr class="border-b border-gray-600">
                                     <th class="text-left py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.entry_type') }}</th>
@@ -1250,12 +1361,12 @@
                                     </th>
                                     <th class="text-center py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.stats.winrate') }}</th>
-                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                    {{-- <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         <span class="text-green-400">Profit</span>
                                     </th>
                                     <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         <span class="text-red-400">Loss</span>
-                                    </th>
+                                    </th> --}}
                                     <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.pl') }}</th>
                                 </tr>
@@ -1274,12 +1385,12 @@
                                                 {{ $data['winrate'] }}%
                                             </span>
                                         </td>
-                                        <td class="py-2 px-2 text-right text-green-400 font-semibold">
+                                        {{-- <td class="py-2 px-2 text-right text-green-400 font-semibold">
                                             +${{ number_format($data['total_profit_wins'], 2) }}
                                         </td>
                                         <td class="py-2 px-2 text-right text-red-400 font-semibold">
                                             -${{ number_format(abs($data['total_loss_losses']), 2) }}
-                                        </td>
+                                        </td> --}}
                                         <td
                                             class="py-2 px-2 text-right font-bold {{ $data['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
                                             {{ $data['profit_loss'] >= 0 ? '+' : '' }}${{ number_format($data['profit_loss'], 2) }}
@@ -1331,6 +1442,7 @@
                     'pairChart',
                     'entryTypeChart',
                     'dayOfWeekChart',
+                    'quarterlyChart',
                     'monthlyChart'
                 ];
             }
@@ -1486,6 +1598,9 @@
                         break;
                     case 'dayOfWeekChart':
                         this.renderDayOfWeekChart();
+                        break;
+                    case 'quarterlyChart':
+                        this.renderQuarterlyChart();
                         break;
                     case 'monthlyChart':
                         this.renderMonthlyChart();
@@ -1901,6 +2016,89 @@
                 });
             }
 
+            // quarterly chart function
+            renderQuarterlyChart() {
+                const quarterlyCtx = document.getElementById('quarterlyChart');
+                if (!quarterlyCtx) return;
+
+                const quarterlyData = @json($quarterlyPerformance->sortDesc());
+                const quarterlyLabels = Object.values(quarterlyData).map(q => q.quarter_name);
+                const quarterlyProfits = Object.values(quarterlyData).map(q => q.profit);
+                const quarterlyWinrates = Object.values(quarterlyData).map(q => q.winrate);
+
+                new Chart(quarterlyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: quarterlyLabels,
+                        datasets: [{
+                            label: '{{ __('analysis.charts.profit') }}',
+                            data: quarterlyProfits,
+                            backgroundColor: quarterlyProfits.map(p =>
+                                p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
+                            ),
+                            borderColor: quarterlyProfits.map(p =>
+                                p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                            ),
+                            borderRadius: 4,
+                            yAxisID: 'y',
+                        }, {
+                            label: '{{ __('analysis.stats.winrate') }} (%)',
+                            data: quarterlyWinrates,
+                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                                titleColor: '#f3f4f6',
+                                bodyColor: '#f3f4f6'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                grid: {
+                                    drawOnChartArea: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
             // monthly chart function
             renderMonthlyChart() {
                 const monthlyCtx = document.getElementById('monthlyChart');
@@ -2068,6 +2266,19 @@
             // Initialize chart loader
             const chartLoader = new ChartLoader();
             chartLoader.init();
+
+            // Year Group Toggle Handler
+            document.querySelectorAll('.year-toggle').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const yearGroup = this.closest('.year-group');
+                    const yearContent = yearGroup.querySelector('.year-content');
+                    const icon = this.querySelector('.year-toggle-icon');
+
+                    yearContent.classList.toggle('max-h-0');
+                    yearContent.classList.toggle('max-h-96');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
 
             // Tambahkan di script section
             document.querySelectorAll('.stat-card').forEach(card => {

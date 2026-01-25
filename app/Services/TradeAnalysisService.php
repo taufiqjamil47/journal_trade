@@ -283,6 +283,7 @@ class TradeAnalysisService
             'hourlyPerformance' => $this->calculateHourlyPerformance($trades),
             'dayOfWeekPerformance' => $this->calculateDayOfWeekPerformance($trades),
             'monthlyPerformance' => $this->calculateMonthlyPerformance($trades),
+            'quarterlyPerformance' => $this->calculateQuarterlyPerformance($trades),
             'heatmapData' => $this->calculateHeatmapData($trades),
             'bestHour' => $this->findBestHour($trades),
             'worstHour' => $this->findWorstHour($trades),
@@ -556,6 +557,57 @@ class TradeAnalysisService
             return [
                 'month' => $month,
                 'month_name' => $monthName,
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => $profit,
+                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
+            ];
+        })->sortKeys();
+    }
+
+    private function calculateQuarterlyPerformance($trades)
+    {
+        return $trades->groupBy(function ($trade) {
+            if (!$trade->timestamp) {
+                return 'Unknown';
+            }
+
+            try {
+                $timestamp = $trade->timestamp;
+                if (is_string($timestamp)) {
+                    $timestamp = Carbon::parse($timestamp);
+                }
+                $year = $timestamp->format('Y');
+                $quarter = ceil($timestamp->month / 3);
+                return "{$year}-Q{$quarter}";
+            } catch (\Exception $e) {
+                return 'Unknown';
+            }
+        })->map(function ($quarterTrades, $quarter) {
+            $total = $quarterTrades->count();
+            $wins = $quarterTrades->where('hasil', 'win')->count();
+            $profit = $quarterTrades->sum('profit_loss');
+
+            $quarterName = 'Unknown';
+            if ($quarter !== 'Unknown' && $quarterTrades->first() && $quarterTrades->first()->timestamp) {
+                try {
+                    $timestamp = $quarterTrades->first()->timestamp;
+                    if (is_string($timestamp)) {
+                        $timestamp = Carbon::parse($timestamp);
+                    }
+                    $year = $timestamp->format('Y');
+                    $quarter_num = ceil($timestamp->month / 3);
+                    $quarterName = "Q{$quarter_num} {$year}";
+                } catch (\Exception $e) {
+                    $quarterName = 'Unknown';
+                }
+            }
+
+            return [
+                'quarter' => $quarter,
+                'quarter_name' => $quarterName,
                 'trades' => $total,
                 'wins' => $wins,
                 'losses' => $total - $wins,
