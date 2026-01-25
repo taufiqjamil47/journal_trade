@@ -6,6 +6,8 @@ return [
 
     'stats' => [
         'trades' => 'Transaksi',
+        'wins' => 'Kemenangan',
+        'losses' => 'Kekalahan',
         'winrate' => 'Tingkat Kemenangan',
         'winrate_short' => 'WR',
         'balance' => 'Saldo',

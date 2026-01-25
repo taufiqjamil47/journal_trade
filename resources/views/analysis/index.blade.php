@@ -1175,7 +1175,7 @@
                     </div>
 
                     <!-- Chart Container dengan Loading State -->
-                    <div id="pairChartContainer" class="h-56 mb-4 relative">
+                    <div id="pairChartContainer" class="h-80 mb-4 relative">
                         <div id="pairChartLoading" class="chart-loading">
                             <div class="chart-loading-spinner"></div>
                             <p class="chart-loading-text">{{ __('analysis.loading.pair_chart') }}</p>
@@ -1183,23 +1183,28 @@
                         <canvas id="pairChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
+                    <div class="overflow-x-auto max-h-80">
+                        <table class="w-full text-sm">
+                            <thead class="sticky top-0 bg-gray-900">
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
+                                    <th class="text-left py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.symbol') }}</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
+                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.total_pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($pairData as $symbol => $pl)
+                                @php
+                                    $sortedPairs = $pairData->sortByDesc(function ($value) {
+                                        return abs($value);
+                                    });
+                                @endphp
+                                @foreach ($sortedPairs as $symbol => $pl)
                                     <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ $symbol }}</td>
+                                        <td class="py-2 px-2 text-sm font-medium">{{ $symbol }}</td>
                                         <td
-                                            class="py-2 text-right font-medium {{ $pl >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
-                                            {{ number_format($pl, 2) }}
+                                            class="py-2 px-2 text-right font-bold {{ $pl >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                            {{ $pl >= 0 ? '+' : '' }}${{ number_format($pl, 2) }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -1231,29 +1236,53 @@
                         <canvas id="entryTypeChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
+                    <div class="overflow-x-auto max-h-80">
+                        <table class="w-full text-sm">
+                            <thead class="sticky top-0 bg-gray-900">
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-2 text-gray-400 font-medium text-sm">
+                                    <th class="text-left py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.entry_type') }}</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
-                                        {{ __('analysis.stats.trades') }}</th>
-                                    <th class="text-center py-2 text-gray-400 font-medium text-sm">
+                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                        <span class="text-green-400">{{ __('analysis.stats.wins') }}</span>
+                                    </th>
+                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                        <span class="text-red-400">{{ __('analysis.stats.losses') }}</span>
+                                    </th>
+                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.stats.winrate') }}</th>
-                                    <th class="text-right py-2 text-gray-400 font-medium text-sm">
+                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                        <span class="text-green-400">Profit</span>
+                                    </th>
+                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                        <span class="text-red-400">Loss</span>
+                                    </th>
+                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($entryTypeData as $type => $data)
                                     <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                        <td class="py-2 text-sm">{{ $type ?? 'N/A' }}</td>
-                                        <td class="py-2 text-center text-sm">{{ $data['trades'] }}</td>
-                                        <td class="py-2 text-center text-sm">{{ $data['winrate'] }}%</td>
+                                        <td class="py-2 px-2 text-sm font-medium">{{ $type ?? 'N/A' }}</td>
+                                        <td class="py-2 px-2 text-center text-green-400 font-semibold">
+                                            {{ $data['wins'] }}</td>
+                                        <td class="py-2 px-2 text-center text-red-400 font-semibold">
+                                            {{ $data['losses'] }}</td>
+                                        <td class="py-2 px-2 text-center">
+                                            <span
+                                                class="inline-block px-2 py-1 rounded {{ $data['winrate'] >= 50 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }} font-semibold text-xs">
+                                                {{ $data['winrate'] }}%
+                                            </span>
+                                        </td>
+                                        <td class="py-2 px-2 text-right text-green-400 font-semibold">
+                                            +${{ number_format($data['total_profit_wins'], 2) }}
+                                        </td>
+                                        <td class="py-2 px-2 text-right text-red-400 font-semibold">
+                                            -${{ number_format(abs($data['total_loss_losses']), 2) }}
+                                        </td>
                                         <td
-                                            class="py-2 text-right font-medium {{ $data['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
-                                            {{ number_format($data['profit_loss'], 2) }}
+                                            class="py-2 px-2 text-right font-bold {{ $data['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                            {{ $data['profit_loss'] >= 0 ? '+' : '' }}${{ number_format($data['profit_loss'], 2) }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -1593,28 +1622,40 @@
             // pair chart function
             renderPairChart() {
                 const pairCtx = document.getElementById('pairChart').getContext('2d');
-                const pairLabels = @json($pairData->keys());
-                const pairValues = @json($pairData->values());
+                const pairData = @json($pairData);
+                const pairLabels = Object.keys(pairData);
+                const pairValues = Object.values(pairData);
 
                 if (pairLabels.length === 0) return;
 
+                // Sort by value (descending)
+                const sortedPairs = pairLabels
+                    .map((label, idx) => ({
+                        label,
+                        value: pairValues[idx]
+                    }))
+                    .sort((a, b) => b.value - a.value);
+
+                const sortedLabels = sortedPairs.map(p => p.label);
+                const sortedValues = sortedPairs.map(p => p.value);
+
                 new Chart(pairCtx, {
-                    type: 'pie',
+                    type: 'bar',
                     data: {
-                        labels: pairLabels,
+                        labels: sortedLabels,
                         datasets: [{
                             label: '{{ __('analysis.charts.profit_loss') }}',
-                            data: pairValues,
-                            backgroundColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
+                            data: sortedValues,
+                            backgroundColor: sortedValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
                                 'rgba(239, 68, 68, 0.7)'),
-                            borderColor: pairValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
+                            borderColor: sortedValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
                                 'rgba(239, 68, 68, 1)'),
                             borderWidth: 1,
                             borderRadius: 4,
-                            borderSkipped: false,
                         }]
                     },
                     options: {
+                        indexAxis: 'y', // Horizontal bar
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: {
@@ -1630,24 +1671,38 @@
                                 titleColor: '#f3f4f6',
                                 bodyColor: '#f3f4f6',
                                 borderColor: 'rgba(75, 85, 99, 0.5)',
-                                borderWidth: 1
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.x;
+                                        return (value >= 0 ? '+' : '') + '$' + value.toFixed(2);
+                                    }
+                                }
                             }
                         },
                         scales: {
                             x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    color: '#9ca3af'
-                                }
-                            },
-                            y: {
+                                beginAtZero: true,
                                 grid: {
                                     color: 'rgba(75, 85, 99, 0.3)'
                                 },
                                 ticks: {
-                                    color: '#9ca3af'
+                                    color: '#9ca3af',
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#9ca3af',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
                                 }
                             }
                         }
@@ -1658,26 +1713,41 @@
             // entry type chart function
             renderEntryTypeChart() {
                 const etx = document.getElementById('entryTypeChart').getContext('2d');
-                const entryLabels = @json($entryTypeData->keys());
-                const entryValues = @json($entryTypeData->map(fn($d) => $d['profit_loss'])->values());
+                const entryData = @json($entryTypeData);
+                const entryLabels = Object.keys(entryData);
 
                 if (entryLabels.length === 0) return;
+
+                // Extract wins and losses for grouped bars
+                const winsData = entryLabels.map(label => entryData[label].wins);
+                const lossesData = entryLabels.map(label => entryData[label].losses);
+                const profitData = entryLabels.map(label => entryData[label].profit_loss);
+                const totalProfitWins = entryLabels.map(label => entryData[label].total_profit_wins);
+                const totalLossLosses = entryLabels.map(label => entryData[label].total_loss_losses);
 
                 new Chart(etx, {
                     type: 'bar',
                     data: {
                         labels: entryLabels,
                         datasets: [{
-                            label: '{{ __('analysis.charts.profit_loss') }}',
-                            data: entryValues,
-                            backgroundColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
-                                'rgba(239, 68, 68, 0.7)'),
-                            borderColor: entryValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
-                                'rgba(239, 68, 68, 1)'),
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            borderSkipped: false,
-                        }]
+                                label: '{{ __('analysis.stats.wins') }}',
+                                data: winsData,
+                                backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                                borderColor: 'rgba(16, 185, 129, 1)',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                order: 2
+                            },
+                            {
+                                label: '{{ __('analysis.stats.losses') }}',
+                                data: lossesData,
+                                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                                borderColor: 'rgba(239, 68, 68, 1)',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                order: 2
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
@@ -1688,26 +1758,57 @@
                         },
                         plugins: {
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#9ca3af',
+                                    font: {
+                                        size: 12
+                                    },
+                                    padding: 15
+                                }
                             },
                             tooltip: {
                                 backgroundColor: 'rgba(31, 41, 55, 0.9)',
                                 titleColor: '#f3f4f6',
                                 bodyColor: '#f3f4f6',
                                 borderColor: 'rgba(75, 85, 99, 0.5)',
-                                borderWidth: 1
+                                borderWidth: 1,
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const dataIndex = context.dataIndex;
+                                        const entryType = entryLabels[dataIndex];
+                                        const profit = profitData[dataIndex];
+                                        const profitWins = totalProfitWins[dataIndex];
+                                        const lossLosses = totalLossLosses[dataIndex];
+
+                                        let tooltip = 'Total P/L: ' + (profit >= 0 ? '+' : '') + '$' +
+                                            profit.toFixed(2);
+                                        tooltip += '\nProfit $: +$' + profitWins.toFixed(2);
+                                        tooltip += '\nLoss $: -$' + Math.abs(lossLosses).toFixed(2);
+
+                                        return tooltip;
+                                    }
+                                }
                             }
                         },
                         scales: {
                             x: {
+                                stacked: false,
                                 grid: {
                                     display: false
                                 },
                                 ticks: {
-                                    color: '#9ca3af'
+                                    color: '#9ca3af',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
                                 }
                             },
                             y: {
+                                stacked: false,
+                                beginAtZero: true,
                                 grid: {
                                     color: 'rgba(75, 85, 99, 0.3)'
                                 },

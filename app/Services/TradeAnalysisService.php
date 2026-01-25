@@ -201,12 +201,20 @@ class TradeAnalysisService
         }
 
         return $trades->groupBy('entry_type')->map(function ($group) {
-            $wins = $group->where('hasil', 'win')->count();
+            $winningTrades = $group->where('hasil', 'win');
+            $losingTrades = $group->where('hasil', 'loss');
+            $wins = $winningTrades->count();
+            $losses = $losingTrades->count();
             $total = $group->count();
+
             return [
                 'trades' => $total,
                 'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
-                'profit_loss' => $group->sum('profit_loss')
+                'profit_loss' => $group->sum('profit_loss'),
+                'wins' => $wins,
+                'losses' => $losses,
+                'total_profit_wins' => round($winningTrades->sum('profit_loss'), 2),
+                'total_loss_losses' => round($losingTrades->sum('profit_loss'), 2)
             ];
         });
     }
@@ -229,7 +237,15 @@ class TradeAnalysisService
      */
     public function calculateEntryTypeAnalysisDb($query)
     {
-        $rows = $query->select('entry_type', DB::raw("SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins"), DB::raw('COUNT(*) as total'), DB::raw('SUM(profit_loss) as total_profit'))
+        $rows = $query->select(
+            'entry_type',
+            DB::raw("SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins"),
+            DB::raw("SUM(CASE WHEN hasil = 'loss' THEN 1 ELSE 0 END) as losses"),
+            DB::raw('COUNT(*) as total'),
+            DB::raw('SUM(profit_loss) as total_profit'),
+            DB::raw("SUM(CASE WHEN hasil = 'win' THEN profit_loss ELSE 0 END) as total_profit_wins"),
+            DB::raw("SUM(CASE WHEN hasil = 'loss' THEN profit_loss ELSE 0 END) as total_loss_losses")
+        )
             ->groupBy('entry_type')
             ->get();
 
@@ -237,10 +253,15 @@ class TradeAnalysisService
         foreach ($rows as $row) {
             $total = (int) $row->total;
             $wins = (int) $row->wins;
+            $losses = (int) $row->losses;
             $result[$row->entry_type] = [
                 'trades' => $total,
                 'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
-                'profit_loss' => (float) $row->total_profit
+                'profit_loss' => (float) $row->total_profit,
+                'wins' => $wins,
+                'losses' => $losses,
+                'total_profit_wins' => round((float) $row->total_profit_wins, 2),
+                'total_loss_losses' => round((float) $row->total_loss_losses, 2)
             ];
         }
 

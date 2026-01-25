@@ -5,6 +5,8 @@ return [
 
     'stats' => [
         'trades' => 'Transactions',
+        'wins' => 'Wins',
+        'losses' => 'Losses',
         'winrate' => 'Win Rate',
         'winrate_short' => 'WR',
         'balance' => 'Balance',
