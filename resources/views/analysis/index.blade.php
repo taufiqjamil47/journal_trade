@@ -1429,6 +1429,7 @@
         class ChartLoader {
             constructor() {
                 this.charts = [];
+                this.chartInstances = {}; // Simpan chart instances untuk di-destroy nanti
                 this.loadedCharts = new Set();
                 this.isLoading = false;
                 this.loadDelay = 300; // ms delay between chart loads
@@ -1611,10 +1612,25 @@
                 }
             }
 
+            // Helper method untuk destroy chart yang sudah ada
+            destroyChart(chartId) {
+                if (this.chartInstances[chartId]) {
+                    try {
+                        this.chartInstances[chartId].destroy();
+                        delete this.chartInstances[chartId];
+                    } catch (e) {
+                        console.warn(`Warning destroying chart ${chartId}:`, e);
+                    }
+                }
+            }
+
             // hourly chart function
             renderHourlyChart() {
                 const hourlyCtx = document.getElementById('hourlyChart');
                 if (!hourlyCtx) return;
+
+                // Destroy chart yang sudah ada
+                this.destroyChart('hourlyChart');
 
                 const hourlyData = @json($hourlyPerformance->sortKeys());
                 const hourlyLabels = Object.keys(hourlyData).map(hour => {
@@ -1732,10 +1748,14 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['hourlyChart'] = Chart.instances[Chart.instances.length - 1];
             }
 
             // pair chart function
             renderPairChart() {
+                // Destroy chart yang sudah ada
+                this.destroyChart('pairChart');
                 const pairCtx = document.getElementById('pairChart').getContext('2d');
                 const pairData = @json($pairData);
                 const pairLabels = Object.keys(pairData);
@@ -1823,10 +1843,14 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['pairChart'] = Chart.instances[Chart.instances.length - 1];
             }
 
             // entry type chart function
             renderEntryTypeChart() {
+                // Destroy chart yang sudah ada
+                this.destroyChart('entryTypeChart');
                 const etx = document.getElementById('entryTypeChart').getContext('2d');
                 const entryData = @json($entryTypeData);
                 const entryLabels = Object.keys(entryData);
@@ -1934,10 +1958,14 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['entryTypeChart'] = Chart.instances[Chart.instances.length - 1];
             }
 
             // day of week chart function
             renderDayOfWeekChart() {
+                // Destroy chart yang sudah ada
+                this.destroyChart('dayOfWeekChart');
                 const dowCtx = document.getElementById('dayOfWeekChart');
                 if (!dowCtx) return;
 
@@ -2014,10 +2042,14 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['dayOfWeekChart'] = Chart.instances[Chart.instances.length - 1];
             }
 
             // quarterly chart function
             renderQuarterlyChart() {
+                // Destroy chart yang sudah ada
+                this.destroyChart('quarterlyChart');
                 const quarterlyCtx = document.getElementById('quarterlyChart');
                 if (!quarterlyCtx) return;
 
@@ -2097,10 +2129,14 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['quarterlyChart'] = Chart.instances[Chart.instances.length - 1];
             }
 
             // monthly chart function
             renderMonthlyChart() {
+                // Destroy chart yang sudah ada
+                this.destroyChart('monthlyChart');
                 const monthlyCtx = document.getElementById('monthlyChart');
                 if (!monthlyCtx) return;
 
@@ -2138,10 +2174,14 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['monthlyChart'] = Chart.instances[Chart.instances.length - 1];
             }
 
             // session polar chart function
             renderSessionPolarChart() {
+                // Destroy chart yang sudah ada
+                this.destroyChart('sessionPolarChart');
                 const sessionCtx = document.getElementById('sessionPolarChart');
                 if (!sessionCtx) return;
 
@@ -2258,6 +2298,8 @@
                         }
                     }
                 });
+                // Simpan chart instance
+                this.chartInstances['sessionPolarChart'] = Chart.instances[Chart.instances.length - 1];
             }
         }
 
