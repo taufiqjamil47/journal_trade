@@ -7,6 +7,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DashNoteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TradeReportController;
@@ -32,6 +33,7 @@ Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
 ], function () {
+    Route::resource('accounts', AccountController::class);
     Route::resource('sessions', SessionController::class);
     Route::resource('trading-rules', TradingRuleController::class);
     Route::resource('symbols', SymbolController::class);

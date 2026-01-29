@@ -8,5 +8,6 @@ return [
         'sessions' => 'Sessions',
         'symbols' => 'Symbols',
         'rules' => 'Rules',
+        'accounts' => 'Trading Accounts',
     ],
 ];
