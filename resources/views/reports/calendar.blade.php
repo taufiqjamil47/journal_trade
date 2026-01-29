@@ -122,19 +122,6 @@
                                     </span>
                                 </a>
                             @endif
-
-                            <!-- Account Link - Ditambahkan setelah Rules Link -->
-                            @if (!request()->routeIs('accounts.*'))
-                                <a href="{{ route('accounts.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
-                                    title="Account" data-nav-state-save="true">
-                                    <i
-                                        class="fas fa-user text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
-                                    <span class="tooltip">
-                                        {{ __('nav_header.nav.accounts') }}
-                                    </span>
-                                </a>
-                            @endif
                         </div>
                     </div>
 

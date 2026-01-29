@@ -9,6 +9,5 @@ return [
         'sessions' => 'Sesi',
         'symbols' => 'Simbol',
         'rules' => 'Aturan',
-        'accounts' => 'Akun Perdagangan',
     ],
 ];
