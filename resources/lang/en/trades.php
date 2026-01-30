@@ -171,6 +171,12 @@ return [
     'cover_spread' => 'Cover Spread',
     'evaluate_trade' => 'Evaluate Trade',
     'update_exit' => 'Update Exit',
+    'gross_pl' => 'PnL Gross',
+    'net_pl' => 'PnL Net',
+    'account' => 'Account',
+    'current_balance' => 'Current Balance',
+    'commision_per_lot' => 'Commission per Lot',
+    'commission' => 'Commission',
 
     // Trade Evaluation Form
     'evaluate_trade' => 'Trade Evaluation',

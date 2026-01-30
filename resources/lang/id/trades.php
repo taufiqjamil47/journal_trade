@@ -171,6 +171,12 @@ return [
     'cover_spread' => 'Cover Spread',
     'evaluate_trade' => 'Evaluasi Perdagangan',
     'update_exit' => 'Perbarui Keluar',
+    'gross_pl' => 'PnL Kotor',
+    'net_pl' => 'PnL Bersih',
+    'account' => 'Akun',
+    'current_balance' => 'Akun Saat Ini',
+    'commission_per_lot' => 'Komisi per Lot',
+    'commission' => 'Komisi',
 
     // Trade Evaluation Form
     'evaluate_trade' => 'Evaluasi Perdagangan',

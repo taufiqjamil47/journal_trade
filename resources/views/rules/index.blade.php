@@ -117,6 +117,19 @@
                                     </span>
                                 </a>
                             @endif
+
+                            <!-- Account Link - Ditambahkan setelah Rules Link -->
+                            @if (!request()->routeIs('accounts.*'))
+                                <a href="{{ route('accounts.index') }}"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    title="Account" data-nav-state-save="true">
+                                    <i
+                                        class="fas fa-user text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
+                                    <span class="tooltip">
+                                        {{ __('nav_header.nav.accounts') }}
+                                    </span>
+                                </a>
+                            @endif
                         </div>
                     </div>
 
@@ -199,7 +212,8 @@
                     <div class="flex flex-wrap items-center gap-3">
                         <!-- Search Input -->
                         <div class="relative">
-                            <input type="text" id="searchInput" placeholder="{{ __('rules.table.search_placeholder') }}"
+                            <input type="text" id="searchInput"
+                                placeholder="{{ __('rules.table.search_placeholder') }}"
                                 class="bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 w-48">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>

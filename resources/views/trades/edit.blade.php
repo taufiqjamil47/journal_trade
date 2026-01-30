@@ -99,7 +99,7 @@
                     </div>
 
                     <!-- Additional Info -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">{{ __('trades.stop_loss') }}</p>
                             <p class="text-base font-semibold font-mono text-amber-400">
@@ -115,6 +115,27 @@
                         <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
                             <p class="text-xs text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
                             <p class="text-base font-semibold text-cyan-400">{{ $trade->rr ?? '0' }}</p>
+                        </div>
+
+                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
+                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.commission_per_lot') }}</p>
+                            <p class="text-base font-semibold text-orange-400">
+                                ${{ number_format($account->commission_per_lot, 2) }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Account Info -->
+                    <div class="mt-4 p-3 bg-gray-750 rounded-lg border border-gray-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-400">{{ __('trades.account') }}</p>
+                                <p class="text-base font-semibold text-primary-400">{{ $account->currency }} Account (ID:
+                                    {{ $account->id }})</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-400">{{ __('trades.current_balance') }}</p>
+                                <p class="text-base font-semibold text-green-400">${{ number_format($balance, 2) }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -222,14 +243,24 @@
                                             <i class="fas fa-calculator text-purple-400 mr-2"></i>
                                             {{ __('trades.calculation_preview') }}
                                         </h4>
-                                        <div class="grid grid-cols-2 gap-3">
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                             <div class="text-center">
                                                 <p class="text-sm text-gray-400 mb-1">{{ __('trades.risk_amount') }}</p>
                                                 <p class="text-base font-bold text-amber-400" id="riskAmount">-</p>
                                             </div>
                                             <div class="text-center">
-                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.potential_pl') }}</p>
-                                                <p class="text-base font-bold text-green-400" id="potentialPL">-</p>
+                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.gross_pl') }}</p>
+                                                <p class="text-base font-bold text-blue-400" id="grossPL">-</p>
+                                            </div>
+                                            <div class="text-center">
+                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.commission') }}</p>
+                                                <p class="text-base font-bold text-orange-400" id="commissionAmount">
+                                                    -${{ number_format($account->commission_per_lot * $trade->lot_size, 2) }}
+                                                </p>
+                                            </div>
+                                            <div class="text-center">
+                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.net_pl') }}</p>
+                                                <p class="text-base font-bold text-green-400" id="netPL">-</p>
                                             </div>
                                         </div>
                                     </div>
@@ -409,7 +440,8 @@
             balance: Number(@json($balance ?? 0)),
             slPips: Number(@json($trade->sl_pips ?? 0)),
             pipValue: Number(@json($trade->symbol->pip_value ?? 0.0001)),
-            pipWorth: Number(@json($trade->symbol->pip_worth ?? 10))
+            pipWorth: Number(@json($trade->symbol->pip_worth ?? 10)),
+            commissionPerLot: Number(@json($account->commission_per_lot ?? 0))
         };
 
         // Ensure the exit input contains raw numeric value (not formatted) so parseFloat works
@@ -470,7 +502,10 @@
             }
 
             if (lotSizeEl) {
-                lotSizeEl.addEventListener('input', calculatePotentialPL);
+                lotSizeEl.addEventListener('input', function() {
+                    calculatePotentialPL();
+                    updateCommissionAmount();
+                });
             }
 
             if (exitInput) {
@@ -483,6 +518,9 @@
             } else {
                 calculatePotentialPL();
             }
+
+            // Update commission amount initially
+            updateCommissionAmount();
         });
 
         // Calculate potential P/L using the same logic as server
@@ -494,6 +532,7 @@
             const type = String(tradeData.type);
             const pipValue = Number(tradeData.pipValue) || 0.0001;
             const pipWorth = Number(tradeData.pipWorth) || 10;
+            const commissionPerLot = Number(tradeData.commissionPerLot) || 0;
 
             if (!isNaN(entry) && !isNaN(exit) && lotSize > 0) {
                 let pips;
@@ -504,16 +543,45 @@
                 }
 
                 pips = Math.round(pips * 10) / 10;
-                const profitLoss = pips * lotSize * pipWorth;
-                const roundedProfitLoss = Math.round(profitLoss * 100) / 100;
+                const grossProfitLoss = pips * lotSize * pipWorth;
+                const commission = commissionPerLot * lotSize;
+                const netProfitLoss = grossProfitLoss - commission;
 
-                const plElement = document.getElementById('potentialPL');
-                plElement.textContent = `$${roundedProfitLoss.toFixed(2)}`;
-                plElement.className = `text-base font-bold ${roundedProfitLoss >= 0 ? 'text-green-400' : 'text-red-400'}`;
+                const roundedGrossPL = Math.round(grossProfitLoss * 100) / 100;
+                const roundedCommission = Math.round(commission * 100) / 100;
+                const roundedNetPL = Math.round(netProfitLoss * 100) / 100;
+
+                // Update gross P/L
+                const grossPLElement = document.getElementById('grossPL');
+                grossPLElement.textContent = `$${roundedGrossPL.toFixed(2)}`;
+                grossPLElement.className = `text-base font-bold ${roundedGrossPL >= 0 ? 'text-blue-400' : 'text-red-400'}`;
+
+                // Update commission
+                const commissionElement = document.getElementById('commissionAmount');
+                commissionElement.textContent = `-$${roundedCommission.toFixed(2)}`;
+
+                // Update net P/L
+                const netPLElement = document.getElementById('netPL');
+                netPLElement.textContent = `$${roundedNetPL.toFixed(2)}`;
+                netPLElement.className = `text-base font-bold ${roundedNetPL >= 0 ? 'text-green-400' : 'text-red-400'}`;
             } else {
-                document.getElementById('potentialPL').textContent = '-';
-                document.getElementById('potentialPL').className = 'text-base font-bold text-gray-400';
+                document.getElementById('grossPL').textContent = '-';
+                document.getElementById('grossPL').className = 'text-base font-bold text-gray-400';
+                document.getElementById('commissionAmount').textContent = '-';
+                document.getElementById('netPL').textContent = '-';
+                document.getElementById('netPL').className = 'text-base font-bold text-gray-400';
             }
+        }
+
+        // Update commission amount display
+        function updateCommissionAmount() {
+            const lotSize = parseFloat(document.getElementById('lot_size')?.value) || 0;
+            const commissionPerLot = Number(tradeData.commissionPerLot) || 0;
+            const commission = commissionPerLot * lotSize;
+            const roundedCommission = Math.round(commission * 100) / 100;
+
+            const commissionElement = document.getElementById('commissionAmount');
+            commissionElement.textContent = `-$${roundedCommission.toFixed(2)}`;
         }
 
         // Quick action functions

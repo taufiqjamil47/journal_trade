@@ -79,11 +79,11 @@ class TradeController extends Controller
     public function edit($id)
     {
         try {
-            $trade = Trade::with('tradingRules')->findOrFail($id);
+            $trade = Trade::with('tradingRules', 'account')->findOrFail($id);
 
-            $account = Account::first();
+            $account = $trade->account;
             if (!$account) {
-                Log::error('No account found');
+                Log::error('No account found for trade: ' . $id);
                 throw new DataNotFoundException('Account');
             }
 
@@ -92,6 +92,7 @@ class TradeController extends Controller
             // PERBAIKAN: Hitung balance yang benar termasuk semua trade selesai kecuali yang sedang diedit
             $completedTrades = Trade::where('exit', '!=', null)
                 ->where('id', '!=', $id) // JANGAN sertakan trade yang sedang diedit
+                ->where('account_id', $account->id) // Hanya trade dari account yang sama
                 ->get();
 
             $balance = $initialBalance + $completedTrades->sum('profit_loss');
@@ -100,7 +101,7 @@ class TradeController extends Controller
                 ->orderBy('order')
                 ->get();
 
-            return view('trades.edit', compact('trade', 'balance', 'tradingRules'));
+            return view('trades.edit', compact('trade', 'balance', 'tradingRules', 'account'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::warning("Trade not found: ID {$id}");
             return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
@@ -210,8 +211,13 @@ class TradeController extends Controller
         }
 
         // Hitung Profit/Loss USD using high-precision pips calculation
-        $profitLoss = ($rawExitPips ?? $trade->exit_pips) * $trade->lot_size * $pipWorth;
-        $trade->profit_loss = round($profitLoss, 2);
+        $grossProfitLoss = ($rawExitPips ?? $trade->exit_pips) * $trade->lot_size * $pipWorth;
+
+        // Kurangi commission
+        $commission = $trade->account->commission_per_lot * $trade->lot_size;
+        $netProfitLoss = $grossProfitLoss - $commission;
+
+        $trade->profit_loss = round($netProfitLoss, 2);
 
         // Tentukan hasil trade
         if ($trade->profit_loss > 0) {
