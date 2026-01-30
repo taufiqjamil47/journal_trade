@@ -36,6 +36,7 @@ Route::group([
     Route::resource('trading-rules', TradingRuleController::class);
     Route::resource('symbols', SymbolController::class);
     Route::resource('notes', DashNoteController::class);
+    Route::resource('accounts', App\Http\Controllers\AccountController::class);
 
     // Semua route yang sudah ada
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

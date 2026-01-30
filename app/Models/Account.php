@@ -12,6 +12,7 @@ class Account extends Model
     protected $fillable = [
         'initial_balance',
         'currency',
+        'commission_per_lot',
     ];
 
     public function trades()
