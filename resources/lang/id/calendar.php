@@ -67,6 +67,7 @@ return [
     // Modal Titles
     'trade_details' => 'Detail Trade',
     'total_pl' => 'Total P/L',
+    'total_weekly' => 'Total Pesanan',
     'winning' => 'Menang',
     'losing' => 'Kalah',
     'total' => 'Total',

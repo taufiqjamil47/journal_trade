@@ -16,7 +16,7 @@
                 <div class="flex flex-wrap gap-3 items-center">
                     <!-- Toggle Button -->
                     <button id="navToggle"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-all duration-300  active:scale-95"
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 active:scale-95"
                         data-nav-state-save="true">
                         <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
                     </button>
@@ -24,11 +24,12 @@
                     <!-- Navigation Items Container -->
                     <div id="navItems"
                         class="hidden nav-items-container opacity-0 scale-95 transform transition-all duration-300">
-                        <div class="flex items-center space-x-1 bg-gray-800 rounded-lg p-1 border border-gray-700">
+                        <div
+                            class="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                             <!-- Dashboard Link -->
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
                                     title="Dashboard" data-nav-state-save="true">
                                     <i
                                         class="fas fa-home text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -41,7 +42,7 @@
                             <!-- Calendar Link -->
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('reports.calendar') ? 'bg-gray-700' : '' }}"
                                     title="Calendar" data-nav-state-save="true">
                                     <i
                                         class="fas fa-calendar text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -54,7 +55,7 @@
                             <!-- Analysis Link -->
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('analisys.*') ? 'bg-gray-700' : '' }}"
                                     title="Analysis" data-nav-state-save="true">
                                     <i
                                         class="fa-solid fa-magnifying-glass-chart text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -69,7 +70,7 @@
                             <!-- Trades Link -->
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trades.*') ? 'bg-gray-700' : '' }}"
                                     title="Trades" data-nav-state-save="true">
                                     <i
                                         class="fas fa-chart-line text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -82,7 +83,7 @@
                             <!-- Sessions Link -->
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('sessions.*') ? 'bg-gray-700' : '' }}"
                                     title="Sessions" data-nav-state-save="true">
                                     <i
                                         class="fas fa-clock text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -95,7 +96,7 @@
                             <!-- Symbols Link -->
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('simbols.*') ? 'bg-gray-700' : '' }}"
                                     title="Symbols" data-nav-state-save="true">
                                     <i
                                         class="fas fa-money-bill-transfer text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -108,7 +109,7 @@
                             <!-- Rules Link -->
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trading-rules.*') ? 'bg-gray-700' : '' }}"
                                     title="Rules" data-nav-state-save="true">
                                     <i
                                         class="fas fa-list text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -121,7 +122,7 @@
                             <!-- Account Link - Ditambahkan setelah Rules Link -->
                             @if (!request()->routeIs('accounts.*'))
                                 <a href="{{ route('accounts.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('accounts.*') ? 'bg-gray-700' : '' }}"
                                     title="Account" data-nav-state-save="true">
                                     <i
                                         class="fas fa-user text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -135,7 +136,7 @@
 
                     <!-- Trader Item dengan animasi muncul -->
                     <div
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 transition-all duration-300 hover:border-primary-500 ">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500">
                         <i class="fas fa-user text-primary-500 mr-2 transition-transform duration-200 hover:scale-110"></i>
                         <span class="transition-all duration-200">Trader</span>
                     </div>
@@ -146,21 +147,20 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <!-- Balance Card -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('dashboard.balance') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400">{{ __('dashboard.balance') }}</p>
                         <div class="flex items-center gap-2">
                             <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
                             <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
                             </h3>
-                            <button id="toggleBalance" type="button"
-                                class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
+                            <button id="toggleBalance" type="button" class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 "
                                 title="Show/Hide Balance & Equity">
                                 <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
                             </button>
                         </div>
-                        <div class="text-sm mt-1 text-gray-400">
+                        <div class="text-sm mt-1 text-gray-500 dark:text-gray-400">
                             {{ __('dashboard.initial') }}: ${{ number_format($initial_balance ?? $balance, 2) }}
                         </div>
                     </div>
@@ -177,10 +177,10 @@
             </div>
 
             <!-- Equity Card -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('dashboard.equity') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400">{{ __('dashboard.equity') }}</p>
                         <div class="flex items-center gap-2">
                             <h3 id="equityText" class="text-2xl font-bold mt-2">******</h3>
                             <h3 id="equityValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($equity, 2) }}
@@ -244,10 +244,10 @@
             </div>
 
             <!-- Win Rate Card -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('dashboard.win_rate') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400">{{ __('dashboard.win_rate') }}</p>
                         <h3 class="text-2xl font-bold mt-2">{{ $winrate }}%</h3>
                     </div>
                     <div class="bg-green-500/20 p-3 rounded-lg">
@@ -262,14 +262,14 @@
         </div>
 
         <!-- Filters -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Period Filter -->
                 <div>
                     <label for="period"
-                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('dashboard.period') }}</label>
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('dashboard.period') }}</label>
                     <select name="period" onchange="this.form.submit()"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                         <option value="all" {{ $period === 'all' ? 'selected' : '' }}>{{ __('dashboard.all_time') }}
                         </option>
                         <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
@@ -282,9 +282,9 @@
                 <!-- Session Filter -->
                 <div>
                     <label for="session"
-                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('dashboard.session') }}</label>
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('dashboard.session') }}</label>
                     <select name="session" onchange="this.form.submit()"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                         <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>
                             {{ __('dashboard.all_sessions') }}</option>
                         @foreach ($availableSessions as $sessionName)
@@ -298,9 +298,9 @@
                 <!-- Entry Type Filter -->
                 <div>
                     <label for="entry_type"
-                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('dashboard.entry_type') }}</label>
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('dashboard.entry_type') }}</label>
                     <select name="entry_type" onchange="this.form.submit()"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                         <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>
                             {{ __('dashboard.all_types') }}</option>
                         @foreach ($availableEntryTypes as $entryType)
@@ -315,7 +315,8 @@
 
         @if ($summary)
             <!-- Summary Alert -->
-            <div class="bg-primary-900/30 rounded-xl p-4 border border-primary-700/30 mb-6">
+            <div
+                class="bg-primary-900/35 dark:bg-primary-900/30 rounded-xl p-4 border border-green-700/30 dark:border-primary-700/30 mb-6">
                 <div class="flex items-center">
                     <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
                         <i class="fas fa-chart-pie text-primary-500"></i>
@@ -338,7 +339,7 @@
         @endif
 
         <!-- Equity Curve Chart -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
                     <h2 class="text-xl font-bold text-primary-300">{{ __('dashboard.equity_curve') }}</h2>
@@ -347,7 +348,7 @@
                 <div class="mt-2 md:mt-0">
                     <form method="GET" action="{{ route('dashboard') }}">
                         <select name="period" onchange="this.form.submit()"
-                            class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                             <option value="all" {{ $period === 'all' ? 'selected' : '' }}>
                                 {{ __('dashboard.all_time') }}</option>
                             <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
@@ -360,26 +361,27 @@
             </div>
 
             <!-- Range Slider -->
-            <div class="mb-4 bg-gray-700 rounded-lg p-4">
+            <div class="mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
                 <div class="flex items-center justify-between mb-2">
-                    <label class="text-sm font-medium text-gray-300">{{ __('dashboard.range') }}</label>
+                    <label
+                        class="text-sm font-medium text-gray-600 dark:text-gray-300">{{ __('dashboard.range') }}</label>
                     <div class="flex gap-2">
-                        <span class="text-xs text-gray-400">{{ __('dashboard.from') }}: <span id="rangeStartLabel"
-                                class="text-primary-400">-</span></span>
-                        <span class="text-xs text-gray-400">{{ __('dashboard.to') }}: <span id="rangeEndLabel"
-                                class="text-primary-400">-</span></span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.from') }}: <span
+                                id="rangeStartLabel" class="text-primary-400">-</span></span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.to') }}: <span
+                                id="rangeEndLabel" class="text-primary-400">-</span></span>
                         <button id="resetRange"
-                            class="ml-2 px-3 py-1 text-xs bg-primary-500/20 text-primary-400 rounded hover:bg-primary-500/30 transition-colors">
+                            class="ml-2 px-3 py-1 text-xs bg-primary-500 dark:bg-primary-500/20 text-white dark:text-primary-400 rounded hover:bg-primary-500/30 ">
                             {{ __('dashboard.reset') }}
                         </button>
                     </div>
                 </div>
                 <div class="flex gap-2">
                     <input type="range" id="rangeStart" min="0" max="100" value="0"
-                        class="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        class="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
                         style="z-index: 5;">
                     <input type="range" id="rangeEnd" min="0" max="100" value="100"
-                        class="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        class="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
                         style="z-index: 6;">
                 </div>
             </div>

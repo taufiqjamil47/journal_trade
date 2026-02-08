@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -77,6 +78,11 @@
             transition: all 0.3s ease;
         }
 
+        /* .dark .running-text-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.3);
+        } */
+
         .running-text-wrapper {
             display: flex;
             width: max-content;
@@ -101,6 +107,10 @@
             /* border: 1px solid rgba(14, 165, 233, 0.3); */
             transition: all 0.3s ease;
             flex-shrink: -1;
+        }
+
+        .dark .currency-pair {
+            background: rgba(14, 165, 233, 0.1);
         }
 
         .currency-pair.up {
@@ -192,6 +202,11 @@
             z-index: 10;
         }
 
+        .dark .tooltip {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: black;
+        }
+
         .group:hover .tooltip {
             opacity: 1;
             transform: translateX(-50%) translateY(-2px);
@@ -227,6 +242,14 @@
             border-radius: 2px;
         }
 
+        .dark .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
         .overflow-y-auto::-webkit-scrollbar {
             width: 8px;
         }
@@ -240,15 +263,38 @@
             border-radius: 2px;
         }
 
+        .dark .overflow-y-auto::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
         /* Hover effects for tables */
         tr:hover {
             background-color: rgba(55, 65, 81, 0.3);
         }
+
+        .dark tr:hover {
+            background-color: rgba(200, 200, 200, 0.3);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Inline script to prevent theme flash -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
 
-<body class="bg-gradient-to-br from-dark-900 to-primary-900 font-sans text-gray-200 min-h-screen">
+<body
+    class="bg-gradient-to-br from-rose-100 to-teal-200 text-gray-900 dark:from-dark-900 dark:to-primary-900 dark:text-gray-200 font-sans min-h-screen">
     <!-- Running Text Section -->
     <div class="running-text-container py-2" id="runningTextContainer">
         <div class="running-text-wrapper">
@@ -506,6 +552,35 @@
         });
     </script>
 
+    <!-- Theme Switch Script -->
+    <script>
+        // Theme Switch Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeSwitch = document.getElementById('themeSwitch');
+            const themeIcon = document.getElementById('themeIcon');
+            const html = document.documentElement;
+
+            // Set initial icon based on current theme
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            themeIcon.className = currentTheme === 'dark' ? 'fas fa-moon text-lg' : 'fas fa-sun text-lg';
+
+            // Toggle theme on button click
+            themeSwitch.addEventListener('click', function() {
+                if (html.classList.contains('dark')) {
+                    // Currently dark, switch to light
+                    html.classList.remove('dark');
+                    themeIcon.className = 'fas fa-sun text-lg';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    // Currently light, switch to dark
+                    html.classList.add('dark');
+                    themeIcon.className = 'fas fa-moon text-lg';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
+
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -611,7 +686,7 @@
                     navToggleIcon.classList.add('rotate-0');
 
                     // Add glow effect to toggle button
-                    navToggle.classList.add('border-primary-500');
+                    navToggle.classList.add('border-primary-500', 'dark:border-primary-500');
                 } else {
                     // Animate out
                     if (fromToggle) {
@@ -637,7 +712,7 @@
                     navToggleIcon.classList.add('rotate-180');
 
                     // Remove glow effect
-                    navToggle.classList.remove('border-primary-500');
+                    navToggle.classList.remove('border-primary-500', 'dark:border-primary-500');
                 }
             }
 
@@ -680,6 +755,12 @@
             });
         })();
     </script>
+
+    <!-- Theme Switch Button -->
+    <button id="themeSwitch"
+        class="fixed bottom-6 right-6 z-50 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
+        <i id="themeIcon" class="fas fa-moon text-lg"></i>
+    </button>
 
     <!-- Page Specific Scripts -->
     @stack('scripts')

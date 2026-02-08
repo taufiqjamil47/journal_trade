@@ -16,7 +16,7 @@
                 <div class="flex flex-wrap gap-3 items-center">
                     <!-- Toggle Button -->
                     <button id="navToggle"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-all duration-300  active:scale-95"
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 active:scale-95"
                         data-nav-state-save="true">
                         <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
                     </button>
@@ -24,11 +24,12 @@
                     <!-- Navigation Items Container -->
                     <div id="navItems"
                         class="hidden nav-items-container opacity-0 scale-95 transform transition-all duration-300">
-                        <div class="flex items-center space-x-1 bg-gray-800 rounded-lg p-1 border border-gray-700">
+                        <div
+                            class="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                             <!-- Dashboard Link -->
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
                                     title="Dashboard" data-nav-state-save="true">
                                     <i
                                         class="fas fa-home text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -41,7 +42,7 @@
                             <!-- Calendar Link -->
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('reports.calendar') ? 'bg-gray-700' : '' }}"
                                     title="Calendar" data-nav-state-save="true">
                                     <i
                                         class="fas fa-calendar text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -54,7 +55,7 @@
                             <!-- Analysis Link -->
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('analisys.*') ? 'bg-gray-700' : '' }}"
                                     title="Analysis" data-nav-state-save="true">
                                     <i
                                         class="fa-solid fa-magnifying-glass-chart text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -69,7 +70,7 @@
                             <!-- Trades Link -->
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trades.*') ? 'bg-gray-700' : '' }}"
                                     title="Trades" data-nav-state-save="true">
                                     <i
                                         class="fas fa-chart-line text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -82,7 +83,7 @@
                             <!-- Sessions Link -->
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('sessions.*') ? 'bg-gray-700' : '' }}"
                                     title="Sessions" data-nav-state-save="true">
                                     <i
                                         class="fas fa-clock text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -95,7 +96,7 @@
                             <!-- Symbols Link -->
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('simbols.*') ? 'bg-gray-700' : '' }}"
                                     title="Symbols" data-nav-state-save="true">
                                     <i
                                         class="fas fa-money-bill-transfer text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -108,7 +109,7 @@
                             <!-- Rules Link -->
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trading-rules.*') ? 'bg-gray-700' : '' }}"
                                     title="Rules" data-nav-state-save="true">
                                     <i
                                         class="fas fa-list text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -121,7 +122,7 @@
                             <!-- Account Link - Ditambahkan setelah Rules Link -->
                             @if (!request()->routeIs('accounts.*'))
                                 <a href="{{ route('accounts.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('accounts.*') ? 'bg-gray-700' : '' }}"
                                     title="Account" data-nav-state-save="true">
                                     <i
                                         class="fas fa-user text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -135,7 +136,7 @@
 
                     <!-- Trader Item dengan animasi muncul -->
                     <div
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 transition-all duration-300 hover:border-primary-500 ">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500">
                         <i class="fas fa-user text-primary-500 mr-2 transition-transform duration-200 hover:scale-110"></i>
                         <span class="transition-all duration-200">Trader</span>
                     </div>
@@ -171,16 +172,15 @@
         <!-- Basic Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-3">
             <!-- Balance -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.balance') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.balance') }}</p>
                         <div class="flex items-center gap-2">
                             <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
                             <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
                             </h3>
-                            <button id="toggleBalance" type="button"
-                                class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
+                            <button id="toggleBalance" type="button" class="mt-2 px-2 rounded-lg hover:bg-primary-500/30"
                                 title="{{ __('analysis.stats.toggle_balance') }}">
                                 <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
                             </button>
@@ -193,10 +193,10 @@
             </div>
 
             <!-- Win Rate -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.win_rate') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.win_rate') }}</p>
                         <h3 class="text-xl font-bold mt-1">{{ $winrate }}%</h3>
                     </div>
                     <div class="bg-green-500/20 p-2 rounded-lg">
@@ -206,11 +206,12 @@
             </div>
 
             <!-- Net Profit -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.net_profit') }}</p>
-                        <h3 class="text-xl font-bold mt-1 {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.net_profit') }}</p>
+                        <h3
+                            class="text-xl font-bold mt-1 {{ $netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
                             ${{ number_format($netProfit, 2) }}
                         </h3>
                     </div>
@@ -223,33 +224,41 @@
 
         <!-- Expectancy Card (Full Width) -->
         <div class="mb-6">
-            <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+            <div
+                class="dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-white rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <p class="text-gray-400 text-sm">{{ __('analysis.stats.expectancy') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.expectancy') }}</p>
                         <h3 class="text-2xl font-bold mt-1">
                             ${{ number_format($expectancy, 2) }}
-                            <span class="text-lg text-gray-400">{{ __('analysis.stats.per_trade') }}</span>
+                            <span
+                                class="text-lg text-gray-600 dark:text-gray-400">{{ __('analysis.stats.per_trade') }}</span>
                         </h3>
-                        <p class="text-gray-500 text-sm mt-2">
+                        <p class="text-gray-600 dark:text-gray-500 text-sm mt-2">
                             {{ __('analysis.stats.expectancy_description') }}
                         </p>
                     </div>
                     <div class="mt-4 md:mt-0">
-                        <div class="bg-gray-700/50 rounded-lg p-4">
+                        <div
+                            class="bg-gradient-to-tl from-sky-500/10 via-orange-200/10 to-yellow-600/10 dark:bg-none dark:bg-gray-700/50 rounded-lg p-4">
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-8 text-center">
                                 <div>
-                                    <p class="text-xs text-gray-500">{{ __('analysis.stats.total_profit') }}</p>
-                                    <p class="text-lg font-bold text-green-400">${{ number_format($totalProfit, 2) }}</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-500">
+                                        {{ __('analysis.stats.total_profit') }}</p>
+                                    <p class="text-lg font-bold text-green-500 dark:text-green-400">
+                                        ${{ number_format($totalProfit, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">{{ __('analysis.stats.total_loss') }}</p>
-                                    <p class="text-lg font-bold text-red-400">${{ number_format($totalLoss, 2) }}</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-500">
+                                        {{ __('analysis.stats.total_loss') }}</p>
+                                    <p class="text-lg font-bold text-red-500 dark:text-red-400">
+                                        ${{ number_format($totalLoss, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">{{ __('analysis.stats.net_profit') }}</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-500">
+                                        {{ __('analysis.stats.net_profit') }}</p>
                                     <p
-                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400' }}">
                                         ${{ number_format($netProfit, 2) }}
                                     </p>
                                 </div>
@@ -261,14 +270,14 @@
         </div>
 
         <!-- Filters -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <form method="GET" action="{{ route('analysis.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Period Filter -->
                 <div>
                     <label for="period"
-                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('analysis.filters.period') }}</label>
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('analysis.filters.period') }}</label>
                     <select name="period" onchange="this.form.submit()"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                         <option value="all" {{ $period === 'all' ? 'selected' : '' }}>
                             {{ __('analysis.filters.all_time') }}</option>
                         <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
@@ -281,9 +290,9 @@
                 <!-- Session Filter -->
                 <div>
                     <label for="session"
-                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('analysis.filters.session') }}</label>
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('analysis.filters.session') }}</label>
                     <select name="session" onchange="this.form.submit()"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                         <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>
                             {{ __('analysis.filters.all_sessions') }}</option>
                         @foreach ($availableSessions as $sessionName)
@@ -297,9 +306,9 @@
                 <!-- Entry Type Filter -->
                 <div>
                     <label for="entry_type"
-                        class="block text-sm font-medium text-gray-300 mb-1">{{ __('analysis.filters.entry_type') }}</label>
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('analysis.filters.entry_type') }}</label>
                     <select name="entry_type" onchange="this.form.submit()"
-                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                         <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>
                             {{ __('analysis.filters.all_types') }}</option>
                         @foreach ($availableEntryTypes as $entryType)
@@ -316,7 +325,7 @@
         <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.risk_management.title') }}</h2>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-600 dark:text-gray-300">
                     <i class="fas fa-shield mr-1"></i>
                     {{ __('analysis.risk_management.subtitle') }}
                 </div>
@@ -325,10 +334,11 @@
             <!-- Advanced Stats -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
                 <!-- Profit Factor -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.profit_factor') }}</p>
+                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.profit_factor') }}</p>
                             <h3 class="text-xl font-bold mt-1">
                                 @if (is_numeric($profitFactor))
                                     {{ number_format($profitFactor, 2) }}
@@ -359,10 +369,11 @@
                 </div>
 
                 <!-- Average Win/Loss -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.avg_win_loss') }}</p>
+                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.avg_win_loss') }}</p>
                             <h3 class="text-xl font-bold mt-1">{{ number_format($averageRR, 2) }}:1</h3>
                         </div>
                         <div class="bg-blue-500/20 p-2 rounded-lg">
@@ -382,10 +393,11 @@
                 </div>
 
                 <!-- Largest Trades -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.largest_trades') }}</p>
+                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.largest_trades') }}</p>
                             <h3 class="text-xl font-bold mt-1">
                                 ${{ number_format(abs($largestWin) + abs($largestLoss), 2) }}
                             </h3>
@@ -407,10 +419,11 @@
                 </div>
 
                 <!-- Win/Loss Streaks -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.win_loss_streaks') }}</p>
+                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.win_loss_streaks') }}</p>
                             <h3 class="text-xl font-bold mt-1">
                                 @if ($currentStreakType == 'win')
                                     <span class="text-green-400">{{ $currentStreak }}W</span>
@@ -441,13 +454,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Max Drawdown -->
                 <div
-                    class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5 relative overflow-hidden">
+                    class="bg-gradient-to-r from-indigo-200/40 via-red-200/40 to-yellow-100/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full -translate-y-6 translate-x-6">
                     </div>
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.max_drawdown') }}</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                    {{ __('analysis.risk_management.max_drawdown') }}</p>
                                 <h3 class="text-2xl font-bold mt-1 text-red-400">
                                     {{ number_format($maxDrawdownPercentage, 1) }}%
                                 </h3>
@@ -463,7 +477,7 @@
                                     {{ number_format($currentDrawdownPercentage, 1) }}%</span>
                                 <span>{{ $currentDrawdownPercentage <= 10 ? __('analysis.risk_management.low') : ($currentDrawdownPercentage <= 20 ? __('analysis.risk_management.medium') : __('analysis.risk_management.high')) }}</span>
                             </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="w-full bg-white dark:bg-gray-700 rounded-full h-2">
                                 <div class="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full"
                                     style="width: {{ min($currentDrawdownPercentage, 100) }}%"></div>
                             </div>
@@ -472,10 +486,12 @@
                 </div>
 
                 <!-- Recovery Factor -->
-                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                <div
+                    class="bg-gradient-to-r from-yellow-200/40 via-green-200/40 to-green-500/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.recovery_factor') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.recovery_factor') }}</p>
                             <h3 class="text-2xl font-bold mt-1">
                                 @if (is_numeric($recoveryFactor))
                                     {{ number_format($recoveryFactor, 2) }}
@@ -519,10 +535,12 @@
                 </div>
 
                 <!-- Sharpe Ratio -->
-                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                <div
+                    class="bg-gradient-to-r from-blue-100/40 via-blue-300/40 to-blue-500/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.sharpe_ratio') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.sharpe_ratio') }}</p>
                             <h3 class="text-2xl font-bold mt-1">
                                 {{ number_format($sharpeRatio, 2) }}
                             </h3>
@@ -558,10 +576,12 @@
                 </div>
 
                 <!-- Risk Consistency -->
-                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5">
+                <div
+                    class="bg-gradient-to-r from-pink-300/40 via-purple-300/40 to-indigo-400/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.risk_management.consistency_score') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.consistency_score') }}</p>
                             <h3 class="text-2xl font-bold mt-1">
                                 {{ $consistencyScore }}%
                             </h3>
@@ -572,7 +592,7 @@
                         </div>
                     </div>
                     <div class="mt-4">
-                        <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
+                        <div class="w-full bg-white dark:bg-gray-700 rounded-full h-2 mb-2">
                             <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
                                 style="width: {{ $consistencyScore }}%"></div>
                         </div>
@@ -589,7 +609,7 @@
             <!-- Detailed Risk Metrics (Expanded on click) -->
             <div class="mt-2">
                 <button id="toggleRiskDetails"
-                    class="flex items-center justify-center w-full py-2 text-gray-400 hover:text-white transition-colors">
+                    class="flex items-center justify-center w-full py-2 text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-white">
                     <i class="fas fa-chevron-down mr-2"></i>
                     <span class="text-sm">{{ __('analysis.risk_management.show_details') }}</span>
                 </button>
@@ -597,30 +617,32 @@
                 <div id="riskDetails" class="hidden mt-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Risk per Trade -->
-                        <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-300 mb-3">
+                        <div
+                            class="bg-white/20 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                            <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-3">
                                 {{ __('analysis.risk_management.risk_per_trade') }}</h4>
                             <div class="space-y-3">
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
                                         <span
-                                            class="text-gray-400">{{ __('analysis.risk_management.average_risk') }}</span>
+                                            class="text-gray-600 dark:text-gray-400">{{ __('analysis.risk_management.average_risk') }}</span>
                                         <span
                                             class="{{ $averageRiskPerTrade <= 2 ? 'text-green-400' : ($averageRiskPerTrade <= 5 ? 'text-yellow-400' : 'text-red-400') }}">
                                             {{ $averageRiskPerTrade }}%
                                         </span>
                                     </div>
-                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                    <div class="w-full bg-white dark:bg-gray-700 rounded-full h-1.5">
                                         <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-1.5 rounded-full"
                                             style="width: {{ min($averageRiskPerTrade * 10, 100) }}%"></div>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-400">{{ __('analysis.risk_management.max_risk') }}</span>
-                                        <span class="text-red-400">{{ $maxRiskPerTrade }}%</span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400">{{ __('analysis.risk_management.max_risk') }}</span>
+                                        <span class="text-red-600 dark:text-red-400">{{ $maxRiskPerTrade }}%</span>
                                     </div>
-                                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                    <div class="w-full bg-white dark:bg-gray-700 rounded-full h-1.5">
                                         <div class="bg-gradient-to-r from-red-500 to-orange-500 h-1.5 rounded-full"
                                             style="width: {{ min($maxRiskPerTrade * 5, 100) }}%"></div>
                                     </div>
@@ -633,12 +655,14 @@
                         </div>
 
                         <!-- Risk/Reward Distribution -->
-                        <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-300 mb-3">
+                        <div
+                            class="bg-white/20 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                            <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-3">
                                 {{ __('analysis.risk_management.risk_reward_profile') }}</h4>
                             <div class="space-y-2">
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-gray-400">{{ __('analysis.risk_management.avg_rr_ratio') }}</span>
+                                    <span
+                                        class="text-gray-600 dark:text-gray-400">{{ __('analysis.risk_management.avg_rr_ratio') }}</span>
                                     <span
                                         class="{{ $averageRiskReward >= 2 ? 'text-green-400' : ($averageRiskReward >= 1 ? 'text-yellow-400' : 'text-red-400') }}">
                                         {{ $averageRiskReward }}:1
@@ -660,14 +684,15 @@
                         </div>
 
                         <!-- Position Size Analysis -->
-                        <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-300 mb-3">
+                        <div
+                            class="bg-white/20 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                            <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-3">
                                 {{ __('analysis.risk_management.position_size_performance') }}</h4>
                             @if ($positionSizes->count() > 0)
                                 <div class="space-y-2 max-h-32 overflow-y-auto pr-2">
                                     @foreach ($positionSizes as $size => $data)
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-400">{{ $size }}</span>
+                                            <span class="text-gray-600 dark:text-gray-400">{{ $size }}</span>
                                             <div class="flex items-center">
                                                 <span
                                                     class="{{ $data['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} mr-2">
@@ -682,7 +707,8 @@
                                     @endforeach
                                 </div>
                             @else
-                                <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.no_position_data') }}
+                                <p class="text-gray-600 dark:text-gray-500 text-sm">
+                                    {{ __('analysis.risk_management.no_position_data') }}
                                 </p>
                             @endif
                         </div>
@@ -696,7 +722,7 @@
             <!-- Section Header -->
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.time_analysis.title') }}</h2>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-600 dark:text-gray-300">
                     <i class="fas fa-clock mr-1"></i>
                     {{ __('analysis.time_analysis.subtitle') }}
                 </div>
@@ -705,10 +731,12 @@
             <!-- Time Performance Overview -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <!-- Best Trading Hour -->
-                <div class="bg-gradient-to-br from-green-900/20 to-gray-800 rounded-xl border border-gray-700 p-5">
+                <div
+                    class="bg-gradient-to-br from-green-200/20 via-green-400/20 to-green-500/20 dark:from-green-900/20 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.time_analysis.best_hour') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.time_analysis.best_hour') }}</p>
                             <h3 class="text-2xl font-bold mt-1 text-green-400">
                                 @if ($bestHour && $bestHour['hour'] !== 'Unknown')
                                     {{ str_pad($bestHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $bestHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
@@ -732,10 +760,12 @@
                 </div>
 
                 <!-- Worst Trading Hour -->
-                <div class="bg-gradient-to-br from-red-900/20 to-gray-800 rounded-xl border border-gray-700 p-5">
+                <div
+                    class="bg-gradient-to-br from-red-200/20 to-red-600/20 dark:from-red-900/20 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.time_analysis.worst_hour') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.time_analysis.worst_hour') }}</p>
                             <h3 class="text-2xl font-bold mt-1 text-red-400">
                                 @if ($worstHour && $worstHour['hour'] !== 'Unknown')
                                     {{ str_pad($worstHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $worstHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
@@ -760,10 +790,12 @@
                 </div>
 
                 <!-- Busiest Trading Hour -->
-                <div class="bg-gradient-to-br from-blue-900/20 to-gray-800 rounded-xl border border-gray-700 p-5">
+                <div
+                    class="bg-gradient-to-br from-green-200/20 via-green-300/20 to-blue-500/20 dark:from-blue-900/20 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-400 text-sm">{{ __('analysis.time_analysis.busiest_hour') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.time_analysis.busiest_hour') }}</p>
                             <h3 class="text-2xl font-bold mt-1 text-blue-400">
                                 @if ($busiestHour && $busiestHour['hour'] !== 'Unknown')
                                     {{ str_pad($busiestHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $busiestHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
@@ -788,7 +820,7 @@
             </div>
 
             <!-- Hourly Performance Chart dengan Loading -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                     <div>
                         <h3 class="text-lg font-bold text-primary-300">
@@ -820,16 +852,16 @@
             </div>
 
             <!-- Session-Time Heatmap (Collapsible) -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <div>
                         <h3 class="text-lg font-bold text-primary-300">{{ __('analysis.time_analysis.heatmap_title') }}
                         </h3>
                         <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.heatmap_description') }}</p>
                     </div>
-                    <button id="toggleHeatmap" class="text-gray-400 hover:text-white transition-colors">
+                    {{-- <button id="toggleHeatmap" class="text-gray-400 hover:text-white">
                         <i class="fas fa-expand"></i>
-                    </button>
+                    </button> --}}
                 </div>
 
                 {{-- <div id="heatmapContainer" class="verflow-visible relative z-0"> --}}
@@ -866,8 +898,8 @@
 
                                         // Determine color intensity
                                         if ($trades == 0) {
-                                            $bgColor = 'bg-gray-900';
-                                            $textColor = 'text-gray-700';
+                                            $bgColor = 'bg-gray-200/70 dark:bg-gray-900';
+                                            $textColor = 'text-gray-600 dark:text-gray-700';
                                             $intensity = 'No Trades';
                                         } else {
                                             $maxProfit = max(array_column(array_merge(...$heatmapData), 'profit'));
@@ -882,15 +914,15 @@
 
                                             if ($profit > 0) {
                                                 $greenIntensity = min(100, 50 + $intensity / 2);
-                                                $bgColor = 'bg-green-900';
-                                                $textColor = 'text-green-400';
+                                                $bgColor = 'bg-green-300 dark:bg-green-900';
+                                                $textColor = 'text-green-700 dark:text-green-400';
                                             } elseif ($profit < 0) {
                                                 $redIntensity = min(100, 50 + $intensity / 2);
-                                                $bgColor = 'bg-red-900';
-                                                $textColor = 'text-red-400';
+                                                $bgColor = 'bg-red-300 dark:bg-red-900';
+                                                $textColor = 'text-red-700 dark:text-red-400';
                                             } else {
-                                                $bgColor = 'bg-gray-800';
-                                                $textColor = 'text-gray-400';
+                                                $bgColor = 'bg-gray-300 dark:bg-gray-800';
+                                                $textColor = 'text-gray-700 dark:text-gray-400';
                                             }
                                         }
                                     @endphp
@@ -924,16 +956,16 @@
                                             </div>
                                         </div>
                                         @if ($trades > 0)
-                                            <div class="absolute z-50 hidden group-hover:block bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs shadow-xl min-w-32"
+                                            <div class="absolute z-50 hidden group-hover:block bg-white/80 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-xs shadow-xl min-w-32"
                                                 style="left: -100%; bottom: calc(100% + 8px);">
                                                 <div class="font-medium {{ $textColor }}">
                                                     {{ $hourStr }}:00-{{ $nextHour }}:00
                                                 </div>
-                                                <div class="text-gray-400 mt-1">
+                                                <div class="text-gray-600 dark:text-gray-400 mt-1">
                                                     {{ __('analysis.time_analysis.day_label') }}:
                                                     {{ __("analysis.days.$dayName") }}
                                                 </div>
-                                                <div class="text-gray-400">
+                                                <div class="text-gray-600 dark:text-gray-400">
                                                     {{ __('analysis.stats.trades') }}: {{ $trades }}
                                                 </div>
                                                 <div class="{{ $textColor }} font-medium mt-1">
@@ -951,15 +983,15 @@
                 <!-- Legend -->
                 <div class="flex justify-center items-center mt-4 text-xs text-gray-500">
                     <div class="flex items-center mr-4">
-                        <div class="w-4 h-4 bg-green-900 rounded mr-1"></div>
+                        <div class="w-4 h-4 bg-green-300 dark:bg-green-900 rounded mr-1"></div>
                         <span>{{ __('analysis.time_analysis.profitable') }}</span>
                     </div>
                     <div class="flex items-center mr-4">
-                        <div class="w-4 h-4 bg-red-900 rounded mr-1"></div>
+                        <div class="w-4 h-4 bg-red-300 dark:bg-red-900 rounded mr-1"></div>
                         <span>{{ __('analysis.time_analysis.unprofitable') }}</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-4 h-4 bg-gray-900 rounded mr-1"></div>
+                        <div class="w-4 h-4 bg-gray-300 dark:bg-gray-900 rounded mr-1"></div>
                         <span>{{ __('analysis.time_analysis.no_trades') }}</span>
                     </div>
                 </div>
@@ -971,7 +1003,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 mb-0">
                     <!-- Day of Week Chart (Left) -->
                     <div
-                        class="bg-gray-800 border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
                         <h3 class="text-lg font-bold text-primary-300 mb-4">
                             {{ __('analysis.time_analysis.day_of_week_performance') }}</h3>
 
@@ -987,24 +1019,25 @@
 
                     <!-- Day of Week Table (Right) -->
                     <div
-                        class="bg-gray-800 border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
                         <div class="overflow-y-auto h-80">
                             <table class="w-full text-sm">
-                                <thead class="sticky top-0 bg-gray-800">
-                                    <tr class="border-b border-gray-600">
-                                        <th class="text-left py-2 px-2 text-gray-400 font-medium">
+                                <thead class="sticky top-0 bg-white dark:bg-gray-800">
+                                    <tr class="border-b border-gray-200 dark:border-gray-600">
+                                        <th class="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.time_analysis.day') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.stats.trades') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.stats.winrate') }}</th>
-                                        <th class="text-right py-2 px-2 text-gray-400 font-medium">
+                                        <th class="text-right py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.time_analysis.pl') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
-                                        <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                        <tr
+                                            class="border-b border-gray-200 dark:border-gray-700/50 hover-gray-500/50 dark:hover:bg-gray-750/50">
                                             <td class="py-2 px-2 text-sm">
                                                 {{ __("analysis.days_short.{$day['short_name']}") }}</td>
                                             <td class="py-2 px-2 text-center text-sm">{{ $day['trades'] }}</td>
@@ -1030,7 +1063,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 mb-0">
                     <!-- Quarterly Chart (Left) -->
                     <div
-                        class="bg-gray-800 border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-lg font-bold text-primary-300">
@@ -1055,24 +1088,25 @@
 
                     <!-- Quarterly Table (Right) -->
                     <div
-                        class="bg-gray-800 border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
                         <div class="overflow-y-auto h-80">
                             <table class="w-full text-sm">
-                                <thead class="sticky top-0 bg-gray-800">
-                                    <tr class="border-b border-gray-600">
-                                        <th class="text-left py-2 px-2 text-gray-400 font-medium">
+                                <thead class="sticky top-0 bg-white dark:bg-gray-800">
+                                    <tr class="border-b border-gray-200 dark:border-gray-600">
+                                        <th class="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.time_analysis.quarter') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.stats.trades') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.stats.winrate') }}</th>
-                                        <th class="text-right py-2 px-2 text-gray-400 font-medium">
+                                        <th class="text-right py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                             {{ __('analysis.time_analysis.pl') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($quarterlyPerformance->sortDesc() as $quarter)
-                                        <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                        <tr
+                                            class="border-b border-gray-200 dark:border-gray-700/50 hover-gray-500/50 dark:hover:bg-gray-750/50">
                                             <td class="py-2 px-2 text-sm">{{ $quarter['quarter_name'] }}</td>
                                             <td class="py-2 px-2 text-center text-sm">{{ $quarter['trades'] }}</td>
                                             <td class="py-2 px-2 text-center text-sm">
@@ -1097,7 +1131,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <!-- Monthly Chart (Left) -->
                     <div
-                        class="bg-gray-800 border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
                         <h3 class="text-lg font-bold text-primary-300 mb-4">
                             {{ __('analysis.time_analysis.monthly_trends') }}</h3>
 
@@ -1113,7 +1147,7 @@
 
                     <!-- Monthly Table (Right) -->
                     <div
-                        class="bg-gray-800 border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
                         <!-- Grouped by Year with Collapsible Months -->
                         <div class="space-y-1 overflow-y-auto h-80">
                             @php
@@ -1125,16 +1159,17 @@
                             @endphp
 
                             @foreach ($monthsByYear as $year => $months)
-                                <div class="year-group bg-gray-700/30 rounded border border-gray-600">
+                                <div
+                                    class="year-group bg-gray-400/59 dark:bg-gray-700/30 rounded border border-gray-200 dark:border-gray-600">
                                     <!-- Year Header (Expandable) -->
                                     <button
-                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-700/50 transition-colors"
+                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-500/50 dark:hover:bg-gray-700/50"
                                         data-year="{{ $year }}">
                                         <div class="flex items-center gap-2">
                                             <i
                                                 class="fas fa-chevron-down text-primary-400 year-toggle-icon transition-transform duration-300 text-sm"></i>
                                             <span class="font-bold text-primary-300 text-sm">{{ $year }}</span>
-                                            <span class="text-xs text-gray-400">
+                                            <span class="text-xs text-gray-600 dark:text-gray-400">
                                                 ({{ $months->sum('trades') }} trades,
                                                 <span
                                                     class="{{ $months->sum('profit') >= 0 ? 'text-green-400' : 'text-red-400' }}">
@@ -1153,12 +1188,13 @@
                                         <div class="p-2">
                                             @foreach ($months->sortDesc() as $month)
                                                 <div
-                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-700/30 rounded transition-colors text-xs border-b border-gray-600/30 last:border-0">
-                                                    <span class="text-gray-300">{{ $month['month_name'] }}</span>
+                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-700/30 rounded text-xs border-b border-gray-600/30 last:border-0">
+                                                    <span
+                                                        class="text-gray-600 dark:text-gray-300">{{ $month['month_name'] }}</span>
                                                     <div class="flex items-center gap-2">
                                                         <span
-                                                            class="text-gray-400 w-10 text-center">{{ $month['trades'] }}</span>
-                                                        <span class="text-gray-400 w-10 text-center">
+                                                            class="text-gray-600 dark:text-gray-400 w-10 text-center">{{ $month['trades'] }}</span>
+                                                        <span class="text-gray-600 dark:text-gray-400 w-10 text-center">
                                                             <span
                                                                 class="{{ $month['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
                                                                 {{ $month['winrate'] }}%
@@ -1185,12 +1221,13 @@
         <div class="my-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Session Polar Chart -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <h3 class="text-lg font-semibold text-primary-300">
                                 {{ __('analysis.time_analysis.session_performance') }}</h3>
-                            <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.distribution') }}</p>
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                                {{ __('analysis.time_analysis.distribution') }}</p>
                         </div>
                         <div class="bg-purple-500/20 p-2 rounded-lg">
                             <i class="fas fa-chart-pie text-purple-500"></i>
@@ -1208,12 +1245,13 @@
                 </div>
 
                 <!-- Session Stats Table -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <h3 class="text-lg font-semibold text-primary-300">
                                 {{ __('analysis.time_analysis.metrics.label1') }}</h3>
-                            <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.metrics.label2') }}</p>
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                                {{ __('analysis.time_analysis.metrics.label2') }}</p>
                         </div>
                         <div class="bg-indigo-500/20 p-2 rounded-lg">
                             <i class="fas fa-table text-indigo-500"></i>
@@ -1224,28 +1262,30 @@
                         <table class="w-full text-sm">
                             <thead class="sticky top-0">
                                 <tr class="border-b border-gray-600">
-                                    <th class="text-left py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-left py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.time_analysis.metrics.session') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.time_analysis.metrics.trades') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.time_analysis.metrics.winrate') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.time_analysis.metrics.avg_rr') }}</th>
-                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-right py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.time_analysis.metrics.profit_loss') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($sessionAnalysis as $session => $data)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                    <tr
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-500/50 dark:hover:bg-gray-750/50">
                                         <td class="py-3 px-2 font-medium text-white">
                                             <span
-                                                class="inline-block px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-xs">
+                                                class="inline-block px-3 py-1 bg-primary-500/80 dark:bg-primary-500/20 text-primary-300 rounded-full text-xs">
                                                 {{ $session ?? 'N/A' }}
                                             </span>
                                         </td>
-                                        <td class="py-3 px-2 text-center text-white font-semibold">{{ $data['trades'] }}
+                                        <td class="py-3 px-2 text-center text-gray-600 dark:text-white font-semibold">
+                                            {{ $data['trades'] }}
                                         </td>
                                         <td class="py-3 px-2 text-center">
                                             <span
@@ -1277,7 +1317,7 @@
         <div class="my-6">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.pair_analysis.title') }}</h2>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-600 dark:text-gray-500">
                     <i class="fas fa-dollar mr-1"></i>
                     {{ __('analysis.pair_analysis.subtitle') }}
                 </div>
@@ -1285,12 +1325,12 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Profit/Loss per Symbol dengan Loading -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <h2 class="text-xl font-bold text-primary-300">
                                 {{ __('analysis.pair_analysis.profit_loss_symbol') }}</h2>
-                            <p class="text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                                 {{ __('analysis.pair_analysis.profit_loss_description') }}</p>
                         </div>
                         <div class="bg-blue-500/20 p-2 rounded-lg">
@@ -1310,10 +1350,10 @@
                     <div class="overflow-x-auto max-h-80">
                         <table class="w-full text-sm">
                             <thead class="sticky top-0">
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-3 px-2 text-gray-400 font-medium">
+                                <tr class="border-b border-gray-200 dark:border-gray-600">
+                                    <th class="text-left py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.symbol') }}</th>
-                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-right py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.total_pl') }}</th>
                                 </tr>
                             </thead>
@@ -1324,7 +1364,8 @@
                                     });
                                 @endphp
                                 @foreach ($sortedPairs as $symbol => $pl)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                    <tr
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-500/50 dark:hover:bg-gray-750/50">
                                         <td class="py-2 px-2 text-sm font-medium">{{ $symbol }}</td>
                                         <td
                                             class="py-2 px-2 text-right font-bold {{ $pl >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
@@ -1338,12 +1379,12 @@
                 </div>
 
                 <!-- Performance per Entry Type dengan Loading -->
-                <div class="bg-gray-800 rounded-xl border border-gray-700 p-5">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <h2 class="text-xl font-bold text-primary-300">
                                 {{ __('analysis.pair_analysis.performance_entry_type') }}</h2>
-                            <p class="text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                                 {{ __('analysis.pair_analysis.performance_description') }}</p>
                         </div>
                         <div class="bg-green-500/20 p-2 rounded-lg">
@@ -1363,16 +1404,16 @@
                     <div class="overflow-x-auto max-h-80">
                         <table class="w-full text-sm">
                             <thead class="sticky top-0">
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-3 px-2 text-gray-400 font-medium">
+                                <tr class="border-b border-gray-200 dark:border-gray-600">
+                                    <th class="text-left py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.entry_type') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         <span class="text-green-400">{{ __('analysis.stats.wins') }}</span>
                                     </th>
-                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         <span class="text-red-400">{{ __('analysis.stats.losses') }}</span>
                                     </th>
-                                    <th class="text-center py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.stats.winrate') }}</th>
                                     {{-- <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         <span class="text-green-400">Profit</span>
@@ -1380,13 +1421,14 @@
                                     <th class="text-right py-3 px-2 text-gray-400 font-medium">
                                         <span class="text-red-400">Loss</span>
                                     </th> --}}
-                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
+                                    <th class="text-right py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
                                         {{ __('analysis.pair_analysis.pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($entryTypeData as $type => $data)
-                                    <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
+                                    <tr
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-500/50 dark:hover:bg-gray-750/50">
                                         <td class="py-2 px-2 text-sm font-medium">{{ $type ?? 'N/A' }}</td>
                                         <td class="py-2 px-2 text-center text-green-400 font-semibold">
                                             {{ $data['wins'] }}</td>
@@ -1420,11 +1462,11 @@
         <!-- Session-Time Heatmap Modal -->
         <div id="sessionModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div
-                class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-2xl mx-auto max-h-[80vh] overflow-hidden">
+                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl w-full max-w-2xl mx-auto max-h-[80vh] overflow-hidden">
                 <div class="flex justify-between items-center p-4 border-b border-gray-700">
                     <h4 id="sessionModalTitle" class="text-lg font-bold text-primary-400">
                         {{ __('analysis.modal.session_details') }}</h4>
-                    <button id="closeSessionModal" class="text-gray-400 hover:text-white transition-colors p-2">
+                    <button id="closeSessionModal" class="text-gray-400 hover:text-black dark:hover:text-white p-2">
                         <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
@@ -2412,34 +2454,34 @@
                             <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
                                 <div class="flex justify-between items-center mb-2">
                                     <div>
-                                        <div class="text-sm text-gray-400">${'{{ __('analysis.modal.total_performance') }}'}</div>
+                                        <div class="text-sm text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.total_performance') }}'}</div>
                                         <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
                                             $${profit.toFixed(2)}
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <div class="text-sm text-gray-400">${'{{ __('analysis.modal.total_trades') }}'}</div>
-                                        <div class="text-2xl font-bold text-gray-200">${trades}</div>
+                                        <div class="text-sm text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.total_trades') }}'}</div>
+                                        <div class="text-2xl font-bold text-gray-500 dark:text-gray-200">${trades}</div>
                                     </div>
                                 </div>
-                                <div class="mt-2 pt-2 border-t border-gray-600">
-                                    <div class="text-xs text-gray-400">${'{{ __('analysis.modal.time_slot') }}'}</div>
-                                    <div class="text-sm text-gray-300">${hourRange} (GMT)</div>
+                                <div class="mt-2 pt-2 border-t border-gray-400 dark:border-gray-600">
+                                    <div class="text-xs text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.time_slot') }}'}</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300">${hourRange} (GMT)</div>
                                 </div>
                             </div>
                             
                             <div class="mb-4">
-                                <h5 class="text-sm font-medium text-gray-300 mb-2">${'{{ __('analysis.modal.performance_insights') }}'}</h5>
+                                <h5 class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">${'{{ __('analysis.modal.performance_insights') }}'}</h5>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div class="bg-gray-750 rounded-lg p-3">
-                                        <div class="text-xs text-gray-400">${'{{ __('analysis.modal.avg_pl_per_trade') }}'}</div>
+                                    <div class="bg-gray-200/50 dark:bg-gray-900 rounded-lg p-3">
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.avg_pl_per_trade') }}'}</div>
                                         <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
                                             $${(profit/trades).toFixed(2)}
                                         </div>
                                     </div>
                                     <div class="bg-gray-750 rounded-lg p-3">
-                                        <div class="text-xs text-gray-400">${'{{ __('analysis.modal.win_loss_ratio') }}'}</div>
-                                        <div class="text-lg font-bold text-gray-200">
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.win_loss_ratio') }}'}</div>
+                                        <div class="text-lg font-bold text-gray-600 dark:text-gray-200">
                                             ${profit > 0 ? '{{ __('analysis.modal.profitable') }}' : '{{ __('analysis.modal.unprofitable') }}'}
                                         </div>
                                     </div>
@@ -2447,17 +2489,17 @@
                             </div>
                             
                             <div>
-                                <h5 class="text-sm font-medium text-gray-300 mb-2">${'{{ __('analysis.modal.recommendations') }}'}</h5>
-                                <div class="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
+                                <h5 class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">${'{{ __('analysis.modal.recommendations') }}'}</h5>
+                                <div class="bg-gray-300/30 dark:bg-gray-900/50 rounded-lg p-3 border border-gray-700">
                                     <div class="flex items-start gap-2">
                                         <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
                                         <div>
-                                            <p class="text-sm text-gray-300">
+                                            <p class="text-sm text-gray-600 dark:text-gray-300">
                                                 ${profit > 0 
                                                     ? '{{ __('analysis.modal.positive_recommendation') }}'
                                                     : '{{ __('analysis.modal.negative_recommendation') }}'}
                                             </p>
-                                            <p class="text-xs text-gray-500 mt-1">
+                                            <p class="text-xs text-gray-600 dark:text-gray-500 mt-1">
                                                 ${'{{ __('analysis.modal.based_on') }}'} ${trades} ${'{{ __('analysis.stats.trades') }}'}${trades !== 1 ? '' : ''} ${'{{ __('analysis.modal.at_this_time') }}'}.
                                             </p>
                                         </div>
@@ -2466,7 +2508,7 @@
                             </div>
                             
                             <div class="mt-4 pt-4 border-t border-gray-700">
-                                <p class="text-xs text-gray-400 text-center">
+                                <p class="text-xs text-gray-600 dark:text-gray-400 text-center">
                                     <i class="fas fa-lightbulb mr-1"></i>
                                     ${'{{ __('analysis.modal.click_other_slots') }}'}
                                 </p>

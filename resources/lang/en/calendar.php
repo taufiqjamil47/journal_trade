@@ -67,6 +67,7 @@ return [
     // Modal Titles
     'trade_details' => 'Trade Details',
     'total_pl' => 'Total P/L',
+    'total_weekly' => 'Trades Total',
     'winning' => 'Winning',
     'losing' => 'Losing',
     'total' => 'Total',

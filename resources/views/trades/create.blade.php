@@ -9,11 +9,11 @@
                     <h1 class="text-2xl font-bold text-primary-500">
                         {{ __('trades.add_new_trade') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ __('trades.step1_description') }}</p>
+                    <p class="text-gray-600 dark:text-gray-500 mt-1">{{ __('trades.step1_description') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('trades.index') }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>{{ __('trades.back_to_list') }}</span>
                     </a>
@@ -22,7 +22,7 @@
         </header>
 
         <!-- Progress Steps -->
-        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
             <div class="flex items-center justify-between max-w-2xl mx-auto">
                 <!-- Step 1 -->
                 <div class="flex flex-col items-center relative">
@@ -36,7 +36,7 @@
                 <!-- Step 2 -->
                 <div class="flex flex-col items-center relative">
                     <div
-                        class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
+                        class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
                         2
                     </div>
                     <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_exit') }}</span>
@@ -45,7 +45,7 @@
                 <!-- Step 3 -->
                 <div class="flex flex-col items-center">
                     <div
-                        class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
+                        class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
                         3
                     </div>
                     <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_evaluation') }}</span>
@@ -55,9 +55,9 @@
 
         <!-- Form Container -->
         <div class="max-w-5xl mx-auto">
-            <div class="bg-gray-800 rounded-xl border border-gray-700">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <!-- Form Header -->
-                <div class="px-6 py-4 border-b border-gray-700 bg-gray-850">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center">
                         <div class="bg-primary-900/30 p-3 rounded-xl mr-4">
                             <i class="fas fa-plus-circle text-primary-400 text-xl"></i>
@@ -82,11 +82,11 @@
                         <div class="space-y-4">
                             <!-- Symbol Selection -->
                             <div class="space-y-2">
-                                <label for="symbol_id" class="block text-sm font-semibold text-gray-300">
+                                <label for="symbol_id" class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     {{ __('trades.symbol_pair') }}
                                 </label>
                                 <select name="symbol_id"
-                                    class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                                    class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
                                     @foreach ($symbols as $symbol)
                                         <option value="{{ $symbol->id }}"
                                             data-pip-value="{{ $symbol->formatted_pip_value }}"
@@ -100,11 +100,11 @@
 
                             <!-- Trade Type -->
                             <div class="space-y-2">
-                                <label for="type" class="block text-sm font-semibold text-gray-300">
+                                <label for="type" class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     {{ __('trades.trade_type') }}
                                 </label>
                                 <select name="type" id="tradeType"
-                                    class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
+                                    class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                     required>
                                     <option value="buy" class="bg-gray-800">{{ __('trades.type_buy') }}</option>
                                     <option value="sell" class="bg-gray-800">{{ __('trades.type_sell') }}</option>
@@ -114,20 +114,22 @@
                             <!-- Timestamp & Date -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
-                                    <label for="timestamp" class="block text-sm font-semibold text-gray-300">
+                                    <label for="timestamp"
+                                        class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                         {{ __('trades.entry_time') }}
                                     </label>
                                     <input type="time" name="timestamp"
-                                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
+                                        class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                         required>
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label for="date" class="block text-sm font-semibold text-gray-300">
+                                    <label for="date"
+                                        class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                         {{ __('trades.trade_date') }}
                                     </label>
                                     <input type="date" name="date"
-                                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
+                                        class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                         required>
                                 </div>
                             </div>
@@ -137,45 +139,47 @@
                         <div class="space-y-4">
                             <!-- Entry Price -->
                             <div class="space-y-2">
-                                <label for="entry" class="block text-sm font-semibold text-gray-300">
+                                <label for="entry" class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     {{ __('trades.entry_price') }}
                                 </label>
                                 <input type="number" step="0.00001" name="entry" id="entryPrice"
-                                    class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
+                                    class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent"
                                     placeholder="0.00000" required>
                             </div>
 
                             <!-- Stop Loss & Take Profit -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
-                                    <label for="stop_loss" class="block text-sm font-semibold text-gray-300">
+                                    <label for="stop_loss"
+                                        class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                         {{ __('trades.stop_loss') }}
                                     </label>
                                     <input type="number" step="0.00001" name="stop_loss" id="stopLoss"
-                                        class="w-full bg-gray-800 border border-red-700/40 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
+                                        class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                                         placeholder="0.00000" required>
                                     <!-- HIDDEN INPUT UNTUK RR RATIO -->
                                     <input type="hidden" name="rr_ratio" id="rr_ratio" value="0">
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label for="take_profit" class="block text-sm font-semibold text-gray-300">
+                                    <label for="take_profit"
+                                        class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                         {{ __('trades.take_profit') }}
                                     </label>
                                     <input type="number" step="0.00001" name="take_profit"
-                                        class="w-full bg-gray-800 border border-green-700/40 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                                        class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
                                         placeholder="0.00000" required>
                                 </div>
                             </div>
                             <!-- Before Link -->
                             <div class="space-y-2">
                                 <label for="before_link"
-                                    class="block text-sm font-semibold text-gray-300 flex items-center">
+                                    class="block text-sm font-semibold text-gray-600 dark:text-gray-300 flex items-center">
                                     <i class="fas fa-image mr-2 text-primary-400"></i>
                                     {{ __('trades.before_screenshot') }}
                                 </label>
                                 <input type="url" name="before_link" id="before_link"
-                                    class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
+                                    class="w-full bg-gray-200/40 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
                                     placeholder="{{ __('trades.screenshot_placeholder') }}">
                                 <p class="text-xs text-gray-500 mt-1">
                                     {{ __('trades.screenshot_info') }}
@@ -186,7 +190,7 @@
 
                     <!-- Risk Calculator -->
                     <div class="mt-6">
-                        <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
+                        <div class="rounded-xl p-4 border border-gray-300 dark:border-gray-600">
                             <!-- Header -->
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center">
@@ -194,22 +198,27 @@
                                         <i class="fas fa-calculator text-amber-400"></i>
                                     </div>
                                     <div>
-                                        <h3 class="text-lg font-bold text-amber-300">{{ __('trades.risk_calculator') }}
+                                        <h3 class="text-lg font-bold text-amber-400 dark:text-amber-300">
+                                            {{ __('trades.risk_calculator') }}
                                         </h3>
-                                        <p class="text-gray-400 text-sm">{{ __('trades.live_calculation') }}</p>
+                                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                            {{ __('trades.live_calculation') }}</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
                                     <div class="flex items-center gap-2">
-                                        <h3 id="currentEquityText" class="text-base font-bold text-amber-400 mt-2">******
+                                        <h3 id="currentEquityText"
+                                            class="text-base font-bold text-amber-400 dark:text-amber-300 mt-2">******
                                         </h3>
-                                        <h3 id="currentEquity" class="text-base font-bold text-amber-400 mt-2 hidden">
+                                        <h3 id="currentEquity"
+                                            class="text-base font-bold text-amber-400 dark:text-amber-300 mt-2 hidden">
                                             ${{ number_format($currentEquity, 2) }}
                                         </h3>
                                         <button id="toggleBalance" type="button"
                                             class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 transition-colors"
                                             title="{{ __('trades.show_hide_balance') }}">
-                                            <i id="currentEquityIcon" class="fas fa-eye-slash text-amber-400 text-md"></i>
+                                            <i id="currentEquityIcon"
+                                                class="fas fa-eye-slash text-amber-400 dark:text-amber-300 text-md"></i>
                                         </button>
                                     </div>
                                     <p class="text-gray-400 text-xs">{{ __('trades.current_equity') }}</p>
@@ -219,33 +228,43 @@
                             <!-- Risk Metrics Grid -->
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
                                 <!-- Risk/Reward Card -->
-                                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
-                                    <p class="text-base font-bold text-amber-300" id="riskRewardRatio">-</p>
+                                <div
+                                    class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.rr_ratio') }}
+                                    </p>
+                                    <p class="text-base font-bold text-amber-400 dark:text-amber-300"
+                                        id="riskRewardRatio">-</p>
                                 </div>
 
                                 <!-- SL Distance Card -->
-                                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.sl_distance') }}</p>
-                                    <p class="text-base font-bold text-red-300" id="slPips">-</p>
+                                <div
+                                    class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                                        {{ __('trades.sl_distance') }}</p>
+                                    <p class="text-base font-bold text-red-400 dark:text-red-300" id="slPips">-</p>
                                 </div>
 
                                 <!-- TP Distance Card -->
-                                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.tp_distance') }}</p>
-                                    <p class="text-base font-bold text-green-300" id="tpPips">-</p>
+                                <div
+                                    class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                                        {{ __('trades.tp_distance') }}</p>
+                                    <p class="text-base font-bold text-green-400 dark:text-green-300" id="tpPips">-</p>
                                 </div>
 
                                 <!-- Lot Size Card -->
-                                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                                    <p class="text-xs text-gray-400 mb-1">{{ __('trades.recommended_lot') }}</p>
+                                <div
+                                    class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                                        {{ __('trades.recommended_lot') }}</p>
                                     <p class="text-base font-bold text-cyan-300" id="positionSize">-</p>
                                 </div>
                             </div>
 
                             <!-- Risk Level Selector -->
-                            <div class="bg-gray-800 rounded-lg p-3 border border-gray-600 mb-3">
-                                <h4 class="text-sm font-semibold text-amber-300 mb-3">
+                            <div
+                                class="bg-gray-200/20 dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600 mb-3">
+                                <h4 class="text-sm font-semibold text-amber-500 dark:text-amber-300 mb-3">
                                     {{ __('trades.risk_management_level') }}
                                 </h4>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -311,14 +330,16 @@
             </div>
 
             <!-- Tips Section -->
-            <div class="mt-6 bg-gray-800 rounded-xl p-4 border border-gray-600">
+            <div
+                class="mt-6 bg-gradient-to-r from-yellow-50 via-yellow-100 to-yellow-300 dark:bg-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 border border-none dark:border-gray-600">
                 <div class="flex items-start">
                     <div class="bg-amber-500/20 p-2 rounded-lg mr-3">
                         <i class="fas fa-lightbulb text-amber-400"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-amber-300">{{ __('trades.risk_tips_title') }}</h3>
-                        <ul class="mt-2 space-y-1 text-gray-400 text-sm">
+                        <h3 class="text-base font-semibold text-amber-600 dark:text-amber-300">
+                            {{ __('trades.risk_tips_title') }}</h3>
+                        <ul class="mt-2 space-y-1 tex-gray-600 dark:text-gray-400 text-sm">
                             <li class="flex items-start">
                                 <i class="fas fa-check mr-2 mt-1 text-amber-500 text-xs"></i>
                                 {{ __('trades.tip_equity', ['equity' => number_format($currentEquity, 2)]) }}

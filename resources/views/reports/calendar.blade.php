@@ -21,7 +21,7 @@
                 <div class="flex flex-wrap gap-3 items-center">
                     <!-- Toggle Button -->
                     <button id="navToggle"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-all duration-300  active:scale-95"
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 active:scale-95"
                         data-nav-state-save="true">
                         <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
                     </button>
@@ -29,11 +29,12 @@
                     <!-- Navigation Items Container -->
                     <div id="navItems"
                         class="hidden nav-items-container opacity-0 scale-95 transform transition-all duration-300">
-                        <div class="flex items-center space-x-1 bg-gray-800 rounded-lg p-1 border border-gray-700">
+                        <div
+                            class="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                             <!-- Dashboard Link -->
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
                                     title="Dashboard" data-nav-state-save="true">
                                     <i
                                         class="fas fa-home text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -46,7 +47,7 @@
                             <!-- Calendar Link -->
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('reports.calendar') ? 'bg-gray-700' : '' }}"
                                     title="Calendar" data-nav-state-save="true">
                                     <i
                                         class="fas fa-calendar text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -59,7 +60,7 @@
                             <!-- Analysis Link -->
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('analisys.*') ? 'bg-gray-700' : '' }}"
                                     title="Analysis" data-nav-state-save="true">
                                     <i
                                         class="fa-solid fa-magnifying-glass-chart text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -74,7 +75,7 @@
                             <!-- Trades Link -->
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trades.*') ? 'bg-gray-700' : '' }}"
                                     title="Trades" data-nav-state-save="true">
                                     <i
                                         class="fas fa-chart-line text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -87,7 +88,7 @@
                             <!-- Sessions Link -->
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('sessions.*') ? 'bg-gray-700' : '' }}"
                                     title="Sessions" data-nav-state-save="true">
                                     <i
                                         class="fas fa-clock text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -100,7 +101,7 @@
                             <!-- Symbols Link -->
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('simbols.*') ? 'bg-gray-700' : '' }}"
                                     title="Symbols" data-nav-state-save="true">
                                     <i
                                         class="fas fa-money-bill-transfer text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -113,7 +114,7 @@
                             <!-- Rules Link -->
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trading-rules.*') ? 'bg-gray-700' : '' }}"
                                     title="Rules" data-nav-state-save="true">
                                     <i
                                         class="fas fa-list text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -126,7 +127,7 @@
                             <!-- Account Link - Ditambahkan setelah Rules Link -->
                             @if (!request()->routeIs('accounts.*'))
                                 <a href="{{ route('accounts.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('accounts.*') ? 'bg-gray-700' : '' }}"
                                     title="Account" data-nav-state-save="true">
                                     <i
                                         class="fas fa-user text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -140,7 +141,7 @@
 
                     <!-- Trader Item dengan animasi muncul -->
                     <div
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 transition-all duration-300 hover:border-primary-500 ">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500">
                         <i class="fas fa-user text-primary-500 mr-2 transition-transform duration-200 hover:scale-110"></i>
                         <span class="transition-all duration-200">Trader</span>
                     </div>
@@ -149,17 +150,17 @@
         </header>
 
         <!-- Month/Year Navigation - Responsive Version -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-4 md:p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 md:p-5 mb-6">
             <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
                 <!-- Navigation Buttons (Previous/Next) -->
                 <div class="flex gap-2 w-full md:w-auto justify-between md:justify-start">
                     <a href="{{ route('reports.calendar', ['month' => $month == 1 ? 12 : $month - 1, 'year' => $month == 1 ? $year - 1 : $year]) }}"
-                        class="flex items-center justify-center bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-700 hover:border-primary-500 transition-colors flex-1 md:flex-none max-w-[48%] md:max-w-none">
+                        class="flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-200 dark:border-gray-700 hover:border-primary-500  flex-1 md:flex-none max-w-[48%] md:max-w-none">
                         <i class="fas fa-chevron-left text-primary-500 mr-2 text-sm md:text-base"></i>
                         <span class="text-sm md:text-base truncate">{{ __('calendar.previous_month') }}</span>
                     </a>
                     <a href="{{ route('reports.calendar', ['month' => $month == 12 ? 1 : $month + 1, 'year' => $month == 12 ? $year + 1 : $year]) }}"
-                        class="flex items-center justify-center bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-700 hover:border-primary-500 transition-colors flex-1 md:flex-none max-w-[48%] md:max-w-none">
+                        class="flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg px-3 py-2 md:px-4 border border-gray-200 dark:border-gray-700 hover:border-primary-500  flex-1 md:flex-none max-w-[48%] md:max-w-none">
                         <span class="text-sm md:text-base truncate">{{ __('calendar.next_month') }}</span>
                         <i class="fas fa-chevron-right text-primary-500 ml-2 text-sm md:text-base"></i>
                     </a>
@@ -172,9 +173,9 @@
                         <div class="grid grid-cols-2 gap-3 w-full md:w-auto md:flex md:items-center">
                             <div class="grid lg:flex items-center gap-2 w-full">
                                 <label for="monthSelect"
-                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.month') }}:</label>
+                                    class="text-sm text-gray-400 dark:text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.month') }}:</label>
                                 <select id="monthSelect"
-                                    class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
+                                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
                                     @for ($m = 1; $m <= 12; $m++)
                                         <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
                                             {{ $monthNames[$m] ?? \Carbon\Carbon::create()->month($m)->format('F') }}
@@ -185,9 +186,9 @@
 
                             <div class="grid lg:flex items-center gap-2 w-full">
                                 <label for="yearSelect"
-                                    class="text-sm text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.year') }}:</label>
+                                    class="text-sm text-gray-400 dark:text-gray-300 whitespace-nowrap hidden lg:block">{{ __('calendar.year') }}:</label>
                                 <select id="yearSelect"
-                                    class="bg-gray-800 border border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
+                                    class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent text-sm md:text-base w-auto">
                                     @php $nowJakarta = \Carbon\Carbon::now('Asia/Jakarta'); @endphp
                                     @for ($y = $nowJakarta->year - 5; $y <= $nowJakarta->year + 1; $y++)
                                         <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
@@ -201,12 +202,12 @@
                         <!-- Action Buttons -->
                         <div class="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
                             <button id="goToDate"
-                                class="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none">
+                                class="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2  text-sm md:text-base flex-1 md:flex-none">
                                 {{ __('calendar.go') }}
                             </button>
 
                             <a href="{{ route('reports.calendar', ['month' => \Carbon\Carbon::now('Asia/Jakarta')->month, 'year' => \Carbon\Carbon::now('Asia/Jakarta')->year]) }}"
-                                class="bg-gray-700 hover:bg-gray-600 text-white rounded-lg px-4 py-2 transition-colors text-sm md:text-base flex-1 md:flex-none text-center">
+                                class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-2  text-sm md:text-base flex-1 md:flex-none text-center">
                                 {{ __('calendar.today') }}
                             </a>
                         </div>
@@ -216,7 +217,7 @@
         </div>
 
         <!-- Calendar -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <h3 class="text-xl font-bold text-primary-300 mb-4">
                 {{ __('calendar.day_calendar', ['year' => $year]) }}
             </h3>
@@ -228,7 +229,7 @@
                     <div class="grid grid-cols-9 gap-1 mb-2">
                         @foreach ([__('calendar.sun'), __('calendar.mon'), __('calendar.tue'), __('calendar.wed'), __('calendar.thu'), __('calendar.fri'), __('calendar.sat'), __('calendar.week_summary')] as $day)
                             <div
-                                class="text-center font-medium text-gray-400 py-2 bg-gray-750 rounded-lg {{ $loop->last ? 'col-span-2' : '' }}">
+                                class="text-center font-medium text-gray-600 dark:text-gray-400 py-2 bg-gray-750 rounded-lg {{ $loop->last ? 'col-span-2' : '' }}">
                                 {{ $day }}
                             </div>
                         @endforeach
@@ -271,17 +272,17 @@
                                 ];
 
                                 if ($profit > 0) {
-                                    $bgColor = 'bg-green-800/20';
-                                    $borderColor = 'border-green-500/40';
-                                    $textColor = 'text-green-400';
+                                    $bgColor = 'bg-green-200 dark:bg-green-800/20';
+                                    $borderColor = 'border-green-600 dark:border-green-500/40';
+                                    $textColor = 'text-green-600 dark:text-green-400';
                                 } elseif ($profit < 0) {
-                                    $bgColor = 'bg-red-500/20';
-                                    $borderColor = 'border-red-500/40';
-                                    $textColor = 'text-red-400';
+                                    $bgColor = 'bg-red-200 dark:bg-red-500/20';
+                                    $borderColor = 'border-red-600 dark:border-red-500/40';
+                                    $textColor = 'text-red-600 dark:text-red-400';
                                 } else {
                                     $bgColor = 'bg-gray-750';
-                                    $borderColor = 'border-gray-600';
-                                    $textColor = 'text-gray-400';
+                                    $borderColor = 'border-gray-400 dark:border-gray-600';
+                                    $textColor = 'text-gray-200 dark:text-gray-400';
                                 }
 
                                 if ($isToday) {
@@ -291,15 +292,15 @@
                             @endphp
 
                             <!-- Day Cell -->
-                            <div class="p-2 rounded-lg border {{ $borderColor }} {{ $bgColor }} {{ $opacityClass }} cursor-pointer day-cell transition-colors hover:bg-gray-700/50"
+                            <div class="p-2 rounded-lg border {{ $borderColor }} {{ $bgColor }} {{ $opacityClass }} cursor-pointer day-cell  hover:bg-gray-300/30 dark:hover:bg-gray-700/50"
                                 data-date="{{ $date }}" data-trades='@json($dayTrades)'
                                 data-profit="{{ $profit }}">
                                 <div class="flex justify-between items-start">
                                     <strong
-                                        class="text-sm {{ $isToday ? 'text-primary-400' : 'text-gray-200' }}">{{ $day->format('d') }}</strong>
+                                        class="text-sm {{ $isToday ? 'text-primary-400' : 'text-gray-600 dark:text-gray-200' }}">{{ $day->format('d') }}</strong>
                                     @if (count($dayTrades) > 0)
                                         <span
-                                            class="text-xs bg-primary-500/30 text-primary-300 rounded-full px-1.5 py-0.5">
+                                            class="text-xs bg-gray-800 dark:bg-primary-500/30 text-white dark:text-primary-300 rounded-full px-1.5 py-0.5">
                                             {{ count($dayTrades) }}
                                         </span>
                                     @endif
@@ -340,21 +341,21 @@
                                 @php
                                     $weekProfitColor =
                                         $weekTotalProfit > 0
-                                            ? 'text-green-400'
+                                            ? 'text-green-600 dark:text-green-400'
                                             : ($weekTotalProfit < 0
-                                                ? 'text-red-400'
-                                                : 'text-gray-400');
+                                                ? 'text-red-600 dark:text-red-400'
+                                                : 'text-gray-600 dark:text-gray-400');
                                     $weekBgColor =
                                         $weekTotalProfit > 0
-                                            ? 'bg-green-900/20'
+                                            ? 'bg-green-200 dark:bg-green-900/20'
                                             : ($weekTotalProfit < 0
-                                                ? 'bg-red-900/20'
+                                                ? 'bg-red-200 dark:bg-red-900/20'
                                                 : 'bg-gray-750');
                                     $weekBorderColor =
                                         $weekTotalProfit > 0
-                                            ? 'border-green-500/40'
+                                            ? 'border-green-600 dark:border-green-500/40'
                                             : ($weekTotalProfit < 0
-                                                ? 'border-red-500/40'
+                                                ? 'border-red-600 dark:border-red-500/40'
                                                 : 'border-gray-600');
 
                                     $isCurrentWeek =
@@ -371,13 +372,13 @@
                                 @endphp
 
                                 <!-- Weekly Summary Cell -->
-                                <div class="p-2 col-span-2 rounded-lg border {{ $weekBorderColor }} {{ $weekBgColor }} cursor-pointer weekly-cell transition-colors hover:bg-gray-700/50"
+                                <div class="p-2 col-span-2 rounded-lg border {{ $weekBorderColor }} {{ $weekBgColor }} cursor-pointer weekly-cell hover:bg-gray-300/50 dark:hover:bg-gray-700/50"
                                     data-week="{{ $weekNumber }}"
                                     data-week-start="{{ $currentWeekStart->format('Y-m-d') }}"
                                     data-week-end="{{ $currentWeekStart->copy()->endOfWeek()->format('Y-m-d') }}"
                                     data-week-profit="{{ $weekTotalProfit }}" data-week-trades="{{ $weekTotalTrades }}">
                                     <div class="flex justify-between items-start mb-1">
-                                        <strong class="text-sm text-gray-200">
+                                        <strong class="text-sm text-gray-600 dark:text-gray-200">
                                             {{ __('calendar.week_label', ['week' => $weekNumber]) }}
                                         </strong>
                                         @if ($isCurrentWeek)
@@ -385,14 +386,17 @@
                                                 class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">{{ __('calendar.now') }}</span>
                                         @endif
                                     </div>
-                                    <div class="text-xs text-gray-400 mb-1">{{ $weekRange }}</div>
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ $weekRange }}</div>
                                     <div class="space-y-1">
                                         <div class="flex justify-between items-center">
-                                            <span class="text-xs text-gray-400">{{ __('calendar.trades') }}:</span>
-                                            <span class="text-xs font-medium text-gray-300">{{ $weekTotalTrades }}</span>
+                                            <span
+                                                class="text-xs text-gray-600 dark:text-gray-400">{{ __('calendar.trades') }}:</span>
+                                            <span
+                                                class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ $weekTotalTrades }}</span>
                                         </div>
                                         <div class="flex justify-between items-center">
-                                            <span class="text-xs text-gray-400">{{ __('calendar.pl') }}:</span>
+                                            <span
+                                                class="text-xs text-gray-600 dark:text-gray-400">{{ __('calendar.pl') }}:</span>
                                             <span class="text-xs font-bold {{ $weekProfitColor }}">
                                                 ${{ number_format($weekTotalProfit, 2) }}
                                             </span>
@@ -401,13 +405,15 @@
                                             <div class="pt-1 border-t border-gray-600/50 mt-1">
                                                 <div class="flex justify-center">
                                                     @if ($weekTotalProfit > 0)
-                                                        <i class="fas fa-arrow-up text-green-500 text-xs"></i>
+                                                        <i
+                                                            class="fas fa-arrow-up text-green-600 dark:text-green-500 text-xs"></i>
                                                         <span
-                                                            class="text-xs text-green-400 ml-1">{{ __('calendar.profit') }}</span>
+                                                            class="text-xs text-green-600 dark:text-green-400 ml-1">{{ __('calendar.profit') }}</span>
                                                     @elseif ($weekTotalProfit < 0)
-                                                        <i class="fas fa-arrow-down text-red-500 text-xs"></i>
+                                                        <i
+                                                            class="fas fa-arrow-down text-red-600 darktext-red-500 text-xs"></i>
                                                         <span
-                                                            class="text-xs text-red-400 ml-1">{{ __('calendar.loss') }}</span>
+                                                            class="text-xs text-red-600 darktext-red-400 ml-1">{{ __('calendar.loss') }}</span>
                                                     @else
                                                         <span
                                                             class="text-xs text-gray-400">{{ __('calendar.even') }}</span>
@@ -435,7 +441,7 @@
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Weekly Summary -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h3 class="text-lg font-bold text-primary-300">{{ __('calendar.profit_loss_trend') }}</h3>
@@ -444,23 +450,23 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <!-- Period Selector -->
-                        <div class="flex bg-gray-750 rounded-lg p-1 border border-gray-600">
+                        <div class="flex bg-gray-750 rounded-lg p-1 border border-gray-300 dark:border-gray-600 gap-1">
                             <button type="button" data-period="weekly"
-                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-primary-600 text-white">
+                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium  bg-primary-600 text-white">
                                 {{ __('calendar.weekly') }}
                             </button>
                             <button type="button" data-period="monthly"
-                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-700">
+                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium  text-gray-300 hover:text-white hover:bg-gray-700">
                                 {{ __('calendar.monthly') }}
                             </button>
                             <button type="button" data-period="yearly"
-                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-700">
+                                class="period-btn px-3 py-1.5 rounded-md text-sm font-medium  text-gray-300 hover:text-white hover:bg-gray-700">
                                 {{ __('calendar.yearly') }}
                             </button>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <div class="text-xs text-gray-400 hidden md:block" id="dataCountInfo">
+                            <div class="text-xs text-gray-600 dark:text-gray-400 hidden md:block" id="dataCountInfo">
                                 {{ $weekly->count() }}
                                 {{ __('calendar.weeks') }}</div>
                             <div class="bg-blue-500/20 p-1.5 rounded-lg">
@@ -474,11 +480,11 @@
                 <div class="relative">
                     <!-- Loading State -->
                     <div id="chartLoading"
-                        class="hidden absolute inset-0 bg-gray-800/80 flex items-center justify-center z-10 rounded-lg">
+                        class="hidden absolute inset-0 bg-gray-400/20 dark:bg-gray-800/80 flex items-center justify-center z-10 rounded-lg">
                         <div class="flex flex-col items-center">
                             <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-500 mb-2">
                             </div>
-                            <p class="text-sm text-gray-400">{{ __('calendar.loading_chart') }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('calendar.loading_chart') }}</p>
                         </div>
                     </div>
 
@@ -499,31 +505,32 @@
                 <div class="mt-4 flex flex-wrap gap-4 justify-center">
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">{{ __('calendar.profit_loss_currency') }}</span>
+                        <span
+                            class="text-sm text-gray-600 dark:text-gray-300">{{ __('calendar.profit_loss_currency') }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">{{ __('calendar.trades_count') }}</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-300">{{ __('calendar.trades_count') }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-primary-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">{{ __('calendar.profit_legend') }}</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-300">{{ __('calendar.profit_legend') }}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                        <span class="text-sm text-gray-300">{{ __('calendar.loss_legend') }}</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-300">{{ __('calendar.loss_legend') }}</span>
                     </div>
                 </div>
             </div>
 
             <!-- Monthly Summary -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold text-primary-300">
                         {{ __('calendar.monthly_calendar', ['year' => $year]) }}
                     </h3>
                     <div class="flex items-center gap-2">
-                        <div class="text-xs text-gray-400">{{ $monthly->count() }}
+                        <div class="text-xs text-gray-600 dark:text-gray-400">{{ $monthly->count() }}
                             {{ __('calendar.months_with_trades') }}</div>
                         <div class="bg-green-500/20 p-1.5 rounded-lg">
                             <i class="fas fa-calendar-alt text-green-500 text-sm"></i>
@@ -547,27 +554,29 @@
                                 $totalProfit = $m->total_profit ?? 0;
                                 $totalTrades = $m->total_trades ?? 0;
 
-                                $profitColor = 'text-gray-400';
+                                $profitColor = 'text-green-600 dark:text-gray-400';
                                 $profitBg = '';
 
                                 if ($totalProfit > 0) {
-                                    $profitColor = 'text-green-400';
-                                    $profitBg = 'bg-green-900/10';
+                                    $profitColor = 'text-green-600 dark:text-green-400';
+                                    $profitBg = 'bg-green-400/40 dark:bg-green-900/10';
                                 } elseif ($totalProfit < 0) {
-                                    $profitColor = 'text-red-400';
-                                    $profitBg = 'bg-red-900/10';
+                                    $profitColor = 'text-red-600 dark:text-red-400';
+                                    $profitBg = 'bg-red-400/40 bg-red-900/10';
                                 }
 
                                 $isCurrentMonth = $m->month == $currentMonth && $m->year == $currentYear;
-                                $borderClass = $isCurrentMonth ? 'ring-1 ring-primary-500' : 'border border-gray-700';
+                                $borderClass = $isCurrentMonth
+                                    ? 'ring-1 ring-primary-500'
+                                    : 'border border-gray-500 dark:border-gray-700';
                             @endphp
 
-                            <div
-                                class="{{ $profitBg }} {{ $borderClass }} rounded-lg p-2 hover:bg-gray-750/30 transition-colors">
+                            <div class="{{ $profitBg }} {{ $borderClass }} rounded-lg p-2 hover:bg-gray-750/30 ">
                                 <!-- Month Header -->
                                 <div class="mb-1">
                                     <div class="flex justify-between items-center">
-                                        <h4 class="font-semibold text-gray-200 text-sm">{{ $monthName }}</h4>
+                                        <h4 class="font-semibold text-gray-700 dark:text-gray-200 text-sm">
+                                            {{ $monthName }}</h4>
                                         @if ($isCurrentMonth)
                                             <span
                                                 class="text-xs bg-primary-500 text-white px-1.5 py-0.5 rounded">{{ __('calendar.now') }}</span>
@@ -579,8 +588,9 @@
                                 <div class="space-y-1 flex items-center justify-between">
                                     <!-- Trades -->
                                     <div>
-                                        <div class="text-xs text-gray-400 mb-0.5">{{ __('calendar.trades') }}</div>
-                                        <div class="font-bold text-gray-200 text-base">
+                                        <div class="text-xs text-gray-600 dark:text-gray-400 mb-0.5">
+                                            {{ __('calendar.trades') }}</div>
+                                        <div class="font-bold text-gray-600 dark:text-gray-200 text-base">
                                             {{ $totalTrades }}
                                         </div>
                                     </div>
@@ -592,9 +602,11 @@
                                             ${{ number_format($totalProfit, 0) }}
                                             @if ($totalProfit != 0)
                                                 @if ($totalProfit > 0)
-                                                    <i class="fas fa-arrow-up text-green-500 text-xs mr-1"></i>
+                                                    <i
+                                                        class="fas fa-arrow-up text-green-700 dark:text-green-500 text-xs mr-1"></i>
                                                 @else
-                                                    <i class="fas fa-arrow-down text-red-500 text-xs mr-1"></i>
+                                                    <i
+                                                        class="fas fa-arrow-down text-red-700 dark:text-red-500 text-xs mr-1"></i>
                                                 @endif
                                             @endif
                                         </div>
@@ -617,10 +629,11 @@
 
     <!-- Trade Details Modal -->
     <div id="tradeModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-        <div class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-md mx-auto" id="modalContentContainer">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl w-full max-w-md mx-auto"
+            id="modalContentContainer">
             <div class="flex justify-between items-center p-4 border-b border-gray-700">
                 <h4 id="modalTitle" class="text-lg font-bold text-primary-400">{{ __('calendar.trade_details') }}</h4>
-                <button id="closeModal" class="text-gray-400 hover:text-white transition-colors p-2">
+                <button id="closeModal" class="text-gray-400 hover:text-black dark:hover:text-white  p-2">
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
@@ -631,7 +644,7 @@
         </div>
     </div>
 
-    <!-- Scripts Section -->
+    <!-- Scripts Khusus menangani modal -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // === HELPER FUNCTION UNTUK FORMAT TANGGAL ===
@@ -671,7 +684,8 @@
                 click_days_detail: "{{ __('calendar.click_days_detail') }}",
                 week_range: "{{ __('calendar.week_range') }}",
                 to: "{{ __('calendar.to') }}",
-                total_pl: "{{ __('calendar.total_pl') }}"
+                total_pl: "{{ __('calendar.total_pl') }}",
+                total_weekly: "{{ __('calendar.total_weekly') }}",
             };
 
             // Navigate to selected month/year
@@ -721,22 +735,22 @@
                         content += `
                         <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}">
                             <div class="flex justify-between items-center mb-1">
-                                <p class="font-medium text-gray-300">${translations.total_pl}:</p>
+                                <p class="font-medium text-gray-600 dark:text-gray-300">${translations.total_pl}:</p>
                                 <span class="${profit > 0 ? 'text-green-400' : 'text-red-400'} font-bold">$${profit.toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-400">
-                                <span>${translations.winning}: <span class="text-green-400">${winningTrades}</span></span>
-                                <span>${translations.losing}: <span class="text-red-400">${losingTrades}</span></span>
-                                <span>${translations.total}: <span class="text-gray-300">${trades.length}</span></span>
+                                <span class="text-gray-600 dark:text-gray-300">${translations.winning}: <span class="text-green-400">${winningTrades}</span></span>
+                                <span class="text-gray-600 dark:text-gray-300">${translations.losing}: <span class="text-red-400">${losingTrades}</span></span>
+                                <span class="text-gray-600 dark:text-gray-300">${translations.total}: <span class="text-gray-600 dark:text-gray-300">${trades.length}</span></span>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm">
                                 <thead>
-                                    <tr class="border-b border-gray-600">
-                                        <th class="text-left py-2 text-gray-400 font-medium">${translations.symbol}</th>
-                                        <th class="text-left py-2 text-gray-400 font-medium">${translations.type}</th>
-                                        <th class="text-right py-2 text-gray-400 font-medium">P/L ($)</th>
+                                    <tr class="border-b border-gray-300 dark:border-gray-600">
+                                        <th class="text-left py-2 text-gray-600 dark:text-gray-400 font-medium">${translations.symbol}</th>
+                                        <th class="text-left py-2 text-gray-600 dark:text-gray-400 font-medium">${translations.type}</th>
+                                        <th class="text-right py-2 text-gray-600 dark:text-gray-400 font-medium">P/L ($)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -744,8 +758,8 @@
 
                         trades.forEach(trade => {
                             content += `
-                            <tr class="border-b border-gray-700/50 hover:bg-gray-750/50 transition-colors">
-                                <td class="py-2 text-gray-300">${trade.symbol_name}</td>
+                            <tr class="border-b border-gray-300 dark:border-gray-700/50 hover:bg-gray-300/60 dark:hover:bg-gray-750/50 ">
+                                <td class="py-2 text-gray-600 dark:text-gray-300">${trade.symbol_name}</td>
                                 <td class="py-2">
                                     <span class="px-2 py-1 rounded text-xs ${trade.type === 'buy' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">
                                         ${trade.type.toUpperCase()}
@@ -810,22 +824,22 @@
 
                     // Create modal content for weekly summary
                     let content = `
-                        <div class="mb-4 p-3 rounded-lg ${weekProfit > 0 ? 'bg-green-500/10 border border-green-500/30' : weekProfit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
+                        <div class="mb-4 p-3 rounded-lg ${weekProfit > 0 ? 'bg-green-500/10 border border-green-500/30' : weekProfit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-300/50 dark:bg-gray-700/50 border border-gray-600'}">
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <div class="text-sm text-gray-400 mb-1">${translations.total} ${translations.trades}</div>
-                                    <div class="text-2xl font-bold text-gray-200">${weekTrades}</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">${translations.total_weekly}</div>
+                                    <div class="text-2xl font-bold text-gray-600 dark:text-gray-200">${weekTrades}</div>
                                 </div>
                                 <div>
-                                    <div class="text-sm text-gray-400 mb-1">${translations.total_pl}</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">${translations.total_pl}</div>
                                     <div class="text-2xl font-bold ${weekProfit > 0 ? 'text-green-400' : weekProfit < 0 ? 'text-red-400' : 'text-gray-400'}">
                                         $${weekProfit.toFixed(2)}
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-3 pt-3 border-t border-gray-600">
-                                <div class="text-sm text-gray-400">${translations.week_range}</div>
-                                <div class="text-gray-300">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">${translations.week_range}</div>
+                                <div class="text-gray-400 dark:text-gray-300">
                                     ${formatDate(weekStart, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} 
                                     ${translations.to} 
                                     ${formatDate(weekEnd, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -836,7 +850,7 @@
 
                     content += `
                         <div class="text-center py-4">
-                            <p class="text-gray-400">${translations.click_days_detail}</p>
+                            <p class="text-gray-600 dark:text-gray-400">${translations.click_days_detail}</p>
                         </div>
                     `;
 

@@ -16,7 +16,7 @@
                 <div class="flex flex-wrap gap-3 items-center">
                     <!-- Toggle Button -->
                     <button id="navToggle"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-all duration-300  active:scale-95"
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 active:scale-95"
                         data-nav-state-save="true">
                         <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
                     </button>
@@ -24,11 +24,12 @@
                     <!-- Navigation Items Container -->
                     <div id="navItems"
                         class="hidden nav-items-container opacity-0 scale-95 transform transition-all duration-300">
-                        <div class="flex items-center space-x-1 bg-gray-800 rounded-lg p-1 border border-gray-700">
+                        <div
+                            class="flex items-center space-x-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                             <!-- Dashboard Link -->
                             @if (!request()->routeIs('dashboard'))
                                 <a href="{{ route('dashboard') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}"
                                     title="Dashboard" data-nav-state-save="true">
                                     <i
                                         class="fas fa-home text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -41,7 +42,7 @@
                             <!-- Calendar Link -->
                             @if (!request()->routeIs('reports.calendar'))
                                 <a href="{{ route('reports.calendar') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('reports.calendar') ? 'bg-gray-700' : '' }}"
                                     title="Calendar" data-nav-state-save="true">
                                     <i
                                         class="fas fa-calendar text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -54,7 +55,7 @@
                             <!-- Analysis Link -->
                             @if (!request()->routeIs('analysis.*'))
                                 <a href="{{ route('analysis.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('analisys.*') ? 'bg-gray-700' : '' }}"
                                     title="Analysis" data-nav-state-save="true">
                                     <i
                                         class="fa-solid fa-magnifying-glass-chart text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -69,7 +70,7 @@
                             <!-- Trades Link -->
                             @if (!request()->routeIs('trades.*'))
                                 <a href="{{ route('trades.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trades.*') ? 'bg-gray-700' : '' }}"
                                     title="Trades" data-nav-state-save="true">
                                     <i
                                         class="fas fa-chart-line text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -82,7 +83,7 @@
                             <!-- Sessions Link -->
                             @if (!request()->routeIs('sessions.*'))
                                 <a href="{{ route('sessions.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('sessions.*') ? 'bg-gray-700' : '' }}"
                                     title="Sessions" data-nav-state-save="true">
                                     <i
                                         class="fas fa-clock text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -95,7 +96,7 @@
                             <!-- Symbols Link -->
                             @if (!request()->routeIs('symbols.*'))
                                 <a href="{{ route('symbols.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('simbols.*') ? 'bg-gray-700' : '' }}"
                                     title="Symbols" data-nav-state-save="true">
                                     <i
                                         class="fas fa-money-bill-transfer text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -108,7 +109,7 @@
                             <!-- Rules Link -->
                             @if (!request()->routeIs('trading-rules.*'))
                                 <a href="{{ route('trading-rules.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('trading-rules.*') ? 'bg-gray-700' : '' }}"
                                     title="Rules" data-nav-state-save="true">
                                     <i
                                         class="fas fa-list text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -121,7 +122,7 @@
                             <!-- Account Link - Ditambahkan setelah Rules Link -->
                             @if (!request()->routeIs('accounts.*'))
                                 <a href="{{ route('accounts.index') }}"
-                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-700 transition-all duration-200 group relative"
+                                    class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 group relative {{ request()->routeIs('accounts.*') ? 'bg-gray-700' : '' }}"
                                     title="Account" data-nav-state-save="true">
                                     <i
                                         class="fas fa-user text-primary-500 transition-transform duration-200 group-hover:scale-110"></i>
@@ -135,7 +136,7 @@
 
                     <!-- Trader Item dengan animasi muncul -->
                     <div
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 transition-all duration-300 hover:border-primary-500 ">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500">
                         <i class="fas fa-user text-primary-500 mr-2 transition-transform duration-200 hover:scale-110"></i>
                         <span class="transition-all duration-200">Trader</span>
                     </div>
@@ -158,49 +159,49 @@
         <!-- Quick Stats -->
         @if ($trades->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
                         <div class="bg-green-500/20 p-2 rounded-lg mr-3">
                             <i class="fas fa-trophy text-green-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('trades.win_rate') }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.win_rate') }}</p>
                             <p class="text-base font-semibold">{{ $winrate }}%</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
                         <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
                             <i class="fas fa-chart-line text-primary-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('trades.total_trades') }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.total_trades') }}</p>
                             <p class="text-base font-semibold">{{ $trades->total() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
                         <div class="bg-blue-500/20 p-2 rounded-lg mr-3">
                             <i class="fas fa-coins text-blue-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('trades.active_trades') }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.active_trades') }}</p>
                             <p class="text-base font-semibold">{{ $trades->where('exit', null)->count() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
                         <div class="bg-amber-500/20 p-2 rounded-lg mr-3">
                             <i class="fas fa-clock text-amber-500"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('trades.pending_trades') }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.pending_trades') }}</p>
                             <p class="text-lg font-semibold">
                                 {{ $trades->where('hasil', null)->where('exit', '==', null)->count() }}</p>
                         </div>
@@ -210,13 +211,13 @@
         @endif
 
         <!-- Table Container -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">{{ __('trades.trade_list') }}</h2>
-                        <p class="text-gray-500 text-sm mt-1">
+                        <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                             {{ __('trades.total_trades_count', ['count' => $trades->total()]) }}</p>
                     </div>
 
@@ -232,7 +233,7 @@
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                 <div class="py-2">
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'desc']) }}"
                                         class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
@@ -283,11 +284,12 @@
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-64 bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[80vh]">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-64 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[50vh]">
                                 <div class="p-2 sm:p-3 space-y-3 sm:space-y-4">
                                     <!-- Import Section -->
                                     <div>
-                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                        <div
+                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                                             <i class="fas fa-file-import mr-2 text-purple-400 text-sm"></i>
                                             {{ __('trades.import_data') }}
                                         </div>
@@ -295,7 +297,7 @@
                                             enctype="multipart/form-data" class="space-y-2">
                                             @csrf
                                             <input type="file" name="file" accept=".xlsx,.xls,.csv" required
-                                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-purple-600 file:border-0 file:text-white file:rounded file:px-2 sm:file:px-3 file:py-1 file:text-xs sm:file:text-sm file:hover:bg-purple-700">
+                                                class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-purple-600 file:border-0 file:text-white file:rounded file:px-2 sm:file:px-3 file:py-1 file:text-xs sm:file:text-sm file:hover:bg-purple-700">
                                             <button type="submit"
                                                 class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
                                                 <i class="fas fa-upload mr-2"></i>
@@ -306,7 +308,8 @@
 
                                     <!-- Export Section -->
                                     <div class="pt-2 sm:pt-3 border-t border-gray-700">
-                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                        <div
+                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                                             <i class="fas fa-file-export mr-2 text-green-400 text-sm"></i>
                                             {{ __('trades.export_data') }}
                                         </div>
@@ -321,7 +324,8 @@
 
                                     <!-- PDF Reports Section -->
                                     <div class="pt-2 sm:pt-3 border-t border-gray-700">
-                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                        <div
+                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                                             <i class="fas fa-file-pdf mr-2 text-red-400 text-sm"></i>
                                             {{ __('trades.pdf_reports') }}
                                         </div>
@@ -346,7 +350,8 @@
 
                                     <!-- Date Range Report Section -->
                                     <div class="pt-2 sm:pt-3 border-t border-gray-700">
-                                        <div class="flex items-center text-sm font-medium text-gray-300 mb-2">
+                                        <div
+                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                                             <i class="fas fa-calendar-alt mr-2 text-green-400 text-sm"></i>
                                             {{ __('trades.date_range_report') }}
                                         </div>
@@ -357,13 +362,13 @@
                                                 <label
                                                     class="block text-xs text-gray-400">{{ __('trades.start_date') }}</label>
                                                 <input type="date" name="start_date" required
-                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
                                             </div>
                                             <div class="space-y-1">
                                                 <label
                                                     class="block text-xs text-gray-400">{{ __('trades.end_date') }}</label>
                                                 <input type="date" name="end_date" required
-                                                    class="w-full bg-gray-700 border border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
                                             </div>
                                             <button type="submit"
                                                 class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
@@ -387,10 +392,10 @@
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-gray-800 rounded-lg border border-gray-600 shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
                                 <div class="py-2">
                                     <a href="{{ route('trades.create') }}"
-                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-blue-300/20 dark:hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
                                         <i
                                             class="fas fa-plus-circle mr-2 sm:mr-3 text-blue-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
@@ -399,7 +404,7 @@
                                         </div>
                                     </a>
                                     <button onclick="quickClearAll()"
-                                        class="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-red-500/20 hover:text-red-300 flex items-center">
+                                        class="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-red-300/20 dark:hover:bg-red-500/20 hover:text-red-300 flex items-center">
                                         <i class="fas fa-trash-alt mr-2 sm:mr-3 text-red-400 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
                                             <div class="font-medium">{{ __('trades.clear_all_trades') }}</div>
@@ -418,51 +423,63 @@
                 <table class="w-full min-w-max">
                     <thead>
                         <tr class="bg-gray-750 border-b border-gray-600">
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">#</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.symbol') }}
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">#</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.symbol') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.type') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.entry') }}
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.type') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.entry') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">SL</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">TP</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.timestamp') }}
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">SL</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">TP</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.timestamp') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.exit') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">P/L ($)</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.session') }}
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.exit') }}</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">P/L ($)
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.result') }}
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.session') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">{{ __('trades.actions') }}
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.result') }}
+                            </th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('trades.actions') }}
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700/50">
                         @forelse($trades as $trade)
-                            <tr class="hover:bg-gray-750 cursor-pointer"
+                            <tr class="hover:bg-gray-200/40 dark:hover:bg-gray-750 cursor-pointer"
                                 onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                 <td class="py-3 px-4">
                                     <span
-                                        class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                        class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                         {{ ($trades->currentPage() - 1) * $trades->perPage() + $loop->iteration }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 font-medium text-xs">{{ $trade->symbol->name }}</td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="px-2 py-1 rounded-full text-xs font-semibold {{ $trade->type == 'buy' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
+                                        class="px-2 py-1 rounded-full text-xs font-semibold {{ $trade->type == 'buy' ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30' }}">
                                         {{ strtoupper($trade->type) }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 font-mono text-sm">{{ format_price($trade->entry) }}</td>
                                 <td class="py-3 px-4 font-mono">
-                                    <div class="text-sm text-red-400">{{ format_price($trade->stop_loss) }}</div>
-                                    <div class="text-xs text-red-400">({{ $trade->sl_pips }} pips)</div>
+                                    <div class="text-sm text-red-600 dark:text-red-400">
+                                        {{ format_price($trade->stop_loss) }}</div>
+                                    <div class="text-xs text-red-600 dark:text-red-400">({{ $trade->sl_pips }} pips)</div>
                                 </td>
                                 <td class="py-3 px-4 font-mono">
-                                    <div class="text-sm text-green-400">{{ format_price($trade->take_profit) }}</div>
-                                    <div class="text-xs text-green-400">({{ $trade->tp_pips }} pips)</div>
+                                    <div class="text-sm text-green-600 dark:text-green-400">
+                                        {{ format_price($trade->take_profit) }}</div>
+                                    <div class="text-xs text-green-600 dark:text-green-400">({{ $trade->tp_pips }} pips)
+                                    </div>
                                 </td>
                                 <td class="py-3 px-4 text-sm">
                                     {{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}</td>
@@ -476,7 +493,7 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="font-mono font-semibold px-2 py-1 rounded-lg text-sm {{ $trade->profit_loss >= 0 ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
+                                        class="font-mono font-semibold px-2 py-1 rounded-lg text-sm {{ $trade->profit_loss >= 0 ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30' }}">
                                         {{ $trade->profit_loss ?? '-' }}
                                     </span>
                                 </td>
@@ -489,7 +506,7 @@
                                 <td class="py-3 px-4">
                                     @if ($trade->hasil)
                                         <span
-                                            class="px-2 py-1 rounded-full text-xs font-semibold {{ $trade->hasil == 'win' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
+                                            class="px-2 py-1 rounded-full text-xs font-semibold {{ $trade->hasil == 'win' ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30' }}">
                                             {{ strtoupper($trade->hasil) }}
                                         </span>
                                     @else

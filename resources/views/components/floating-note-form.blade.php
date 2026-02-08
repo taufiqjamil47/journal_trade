@@ -2,7 +2,6 @@
     class="fixed right-0 top-1/2 transform -translate-y-1/2 z-50 transition-all duration-300 ease-in-out"
     style="right: -400px;"> <!-- Default hidden -->
 
-
     <!-- Floating Button untuk Toggle -->
     <button id="toggleNoteForm"
         class="absolute origin-right left-0 top-1/2 transform -translate-y-1/2 -translate-x-full bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-l-xl shadow-lg transition-all duration-300">
@@ -359,6 +358,7 @@
                 container.style.right = '-400px';
                 toggleIcon.classList.remove('fa-chevron-right');
                 toggleIcon.classList.add('fa-chevron-left', 'mr-3');
+                toggleIcon.classList.remove('-scale-x-100');
                 toggleBtn.classList.remove('-scale-x-100');
 
                 // Save state to localStorage
@@ -368,6 +368,7 @@
                 container.style.right = '0';
                 toggleIcon.classList.remove('fa-chevron-left', 'mr-3');
                 toggleIcon.classList.add('fa-chevron-right', 'lg:mr-3');
+                toggleIcon.classList.add('-scale-x-100');
                 toggleBtn.classList.add('-scale-x-100', 'lg:scale-x-100');
 
                 // Save state to localStorage
