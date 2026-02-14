@@ -9,11 +9,11 @@
                     <h1 class="text-2xl font-bold text-primary-500">
                         {{ __('trades.update_exit_trade') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ __('trades.step2_description') }}</p>
+                    <p class="text-gray-600 dark:text-gray-500 mt-1">{{ __('trades.step2_description') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('trades.index') }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>{{ __('trades.back_to_list') }}</span>
                     </a>
@@ -22,39 +22,41 @@
         </header>
 
         <!-- Progress Steps -->
-        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
             <div class="flex items-center justify-between max-w-2xl mx-auto">
                 <!-- Step 1 -->
                 <div class="flex flex-col items-center relative">
                     <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
                         <i class="fas fa-check text-sm"></i>
                     </div>
-                    <span class="text-sm font-medium mt-2 text-green-400">{{ __('trades.step_entry') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-green-500 dark:text-green-400">{{ __('trades.step_entry') }}</span>
                 </div>
 
                 <!-- Step 2 -->
                 <div class="flex flex-col items-center relative">
-                    <div
-                        class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
+                    <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold">
                         2
                     </div>
-                    <span class="text-sm font-medium mt-2 text-primary-400">{{ __('trades.step_exit') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-amber-500 dark:text-amber-400">{{ __('trades.step_exit') }}</span>
                 </div>
 
                 <!-- Step 3 -->
                 <div class="flex flex-col items-center">
                     <div
-                        class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
+                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-300 dark:text-gray-500 font-bold border border-none dark:border-gray-600">
                         3
                     </div>
-                    <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_evaluation') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-gray-300 dark:text-gray-500">{{ __('trades.step_evaluation') }}</span>
                 </div>
             </div>
         </div>
 
         <div class="max-w-5xl mx-auto">
             <!-- Trade Summary Card -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
                 <!-- Header -->
                 <div class="px-6 py-4 border-b border-gray-700 bg-gray-850">
                     <div class="flex items-center">
@@ -65,7 +67,7 @@
                             <h2 class="text-xl font-bold text-primary-300">
                                 {{ __('trades.trade_summary') }}
                             </h2>
-                            <p class="text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                                 {{ __('trades.current_position_details') }}
                             </p>
                         </div>
@@ -75,66 +77,69 @@
                 <!-- Content -->
                 <div class="p-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.symbol') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.symbol') }}</p>
                             <p class="text-base font-bold font-mono">{{ $trade->symbol->name }}</p>
                         </div>
 
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.type') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.type') }}</p>
                             <p class="text-base font-bold {{ $trade->type == 'buy' ? 'text-green-400' : 'text-red-400' }}">
                                 {{ strtoupper($trade->type) }}
                             </p>
                         </div>
 
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.entry_price') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.entry_price') }}</p>
                             <p class="text-base font-bold font-mono">{{ format_price($trade->entry) }}</p>
                         </div>
 
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.sl_pips') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.sl_pips') }}</p>
                             <p class="text-base font-bold text-red-400">{{ $trade->sl_pips ?? '0' }}</p>
                         </div>
                     </div>
 
                     <!-- Additional Info -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.stop_loss') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.stop_loss') }}</p>
                             <p class="text-base font-semibold font-mono text-amber-400">
                                 {{ format_price($trade->stop_loss) }}</p>
                         </div>
 
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.take_profit') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.take_profit') }}</p>
                             <p class="text-base font-semibold font-mono text-green-400">
                                 {{ format_price($trade->take_profit) }}</p>
                         </div>
 
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
                             <p class="text-base font-semibold text-cyan-400">{{ $trade->rr ?? '0' }}</p>
                         </div>
 
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.commission_per_lot') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.commission_per_lot') }}
+                            </p>
                             <p class="text-base font-semibold text-orange-400">
                                 ${{ number_format($account->commission_per_lot, 2) }}</p>
                         </div>
                     </div>
 
                     <!-- Account Info -->
-                    <div class="mt-4 p-3 bg-gray-750 rounded-lg border border-gray-600">
+                    <div
+                        class="mt-4 p-3 bg-blue-100/40 dark:bg-gray-750 rounded-lg border border-none dark:border-gray-600">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm text-gray-400">{{ __('trades.account') }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.account') }}</p>
                                 <p class="text-base font-semibold text-primary-400">{{ $account->currency }} Account (ID:
                                     {{ $account->id }})</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm text-gray-400">{{ __('trades.current_balance') }}</p>
-                                <p class="text-base font-semibold text-green-400">${{ number_format($balance, 2) }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.current_balance') }}</p>
+                                <p class="text-base font-semibold text-green-500 dark:text-green-400">
+                                    ${{ number_format($balance, 2) }}</p>
                             </div>
                         </div>
                     </div>
@@ -142,18 +147,18 @@
             </div>
 
             <!-- Form Container -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <!-- Form Header -->
                 <div class="px-6 py-4 border-b border-gray-700 bg-gray-850">
                     <div class="flex items-center">
-                        <div class="bg-green-900/30 p-3 rounded-xl mr-4">
-                            <i class="fas fa-edit text-green-400 text-xl"></i>
+                        <div class="bg-green-200 dark:bg-green-900/30 p-3 rounded-xl mr-4">
+                            <i class="fas fa-edit text-green-500 dark:text-green-400 text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-green-300">
+                            <h2 class="text-xl font-bold text-green-500 dark:text-green-300">
                                 {{ __('trades.update_exit_details') }}
                             </h2>
-                            <p class="text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                                 {{ __('trades.complete_exit_info') }}
                             </p>
                         </div>
@@ -168,49 +173,52 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Left Column -->
                         <div class="space-y-6">
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-amber-300">
-                                    <i class="fas fa-shield-alt text-amber-400 mr-3"></i>
+                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-amber-500 dark:text-amber-300">
+                                    <i class="fas fa-shield-alt text-amber-500 dark:text-amber-400 mr-3"></i>
                                     {{ __('trades.risk_management') }}
                                 </h3>
 
                                 <div class="space-y-4">
                                     <!-- Risk Percent -->
                                     <div class="space-y-2">
-                                        <label for="risk_percent" class="block text-sm font-semibold text-gray-300">
+                                        <label for="risk_percent"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.risk_percentage') }}
                                         </label>
                                         <div class="relative">
                                             <input type="number" step="0.1" id="risk_percent" name="risk_percent"
-                                                class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent"
+                                                class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent"
                                                 value="{{ $trade->risk_percent }}" placeholder="1.0">
                                             <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                                <span class="text-amber-400">%</span>
+                                                <span class="text-amber-600 dark:text-amber-400">%</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Lot Size -->
                                     <div class="space-y-2">
-                                        <label for="lot_size" class="block text-sm font-semibold text-gray-300">
+                                        <label for="lot_size"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.lot_size') }}
                                         </label>
                                         <input type="number" step="0.01" id="lot_size" name="lot_size"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
                                             value="{{ $trade->lot_size }}" placeholder="0.10">
                                     </div>
 
                                     <!-- Risk USD -->
                                     <div class="space-y-2">
-                                        <label for="risk_usd" class="block text-sm font-semibold text-gray-300">
+                                        <label for="risk_usd"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.risk_amount_usd') }}
                                         </label>
                                         <div class="relative">
                                             <input type="number" step="0.01" id="risk_usd" name="risk_usd"
-                                                class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                                                class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
                                                 value="{{ $trade->risk_usd }}" placeholder="0.00">
                                             <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                                <span class="text-green-400">USD</span>
+                                                <span class="text-green-600 dark:text-green-400">USD</span>
                                             </div>
                                         </div>
                                     </div>
@@ -220,41 +228,48 @@
 
                         <!-- Right Column -->
                         <div class="space-y-6">
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-green-300">
-                                    <i class="fas fa-door-open text-green-400 mr-3"></i>
+                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-green-600 dark:text-green-300">
+                                    <i class="fas fa-door-open text-green-600 dark:text-green-400 mr-3"></i>
                                     {{ __('trades.exit_details') }}
                                 </h3>
 
                                 <div class="space-y-4">
                                     <!-- Exit Price -->
                                     <div class="space-y-2">
-                                        <label for="exit" class="block text-sm font-semibold text-gray-300">
+                                        <label for="exit"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.exit_price') }}
                                         </label>
                                         <input type="number" step="0.00001" name="exit" id="exit"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent"
                                             value="{{ format_price($trade->exit) }}" placeholder="0.00000">
                                     </div>
 
                                     <!-- Calculation Preview -->
                                     <div class="bg-gray-750 rounded-lg p-4 border border-gray-600">
-                                        <h4 class="font-semibold text-gray-300 mb-3 flex items-center">
-                                            <i class="fas fa-calculator text-purple-400 mr-2"></i>
+                                        <h4 class="font-semibold text-gray-600 dark:text-gray-300 mb-3 flex items-center">
+                                            <i class="fas fa-calculator text-purple-600 dark:text-purple-400 mr-2"></i>
                                             {{ __('trades.calculation_preview') }}
                                         </h4>
                                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                             <div class="text-center">
-                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.risk_amount') }}</p>
-                                                <p class="text-base font-bold text-amber-400" id="riskAmount">-</p>
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                                    {{ __('trades.risk_amount') }}</p>
+                                                <p class="text-base font-bold text-amber-600 dark:text-amber-400"
+                                                    id="riskAmount">-</p>
                                             </div>
                                             <div class="text-center">
-                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.gross_pl') }}</p>
-                                                <p class="text-base font-bold text-blue-400" id="grossPL">-</p>
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                                    {{ __('trades.gross_pl') }}</p>
+                                                <p class="text-base font-bold text-blue-600 dark:text-blue-400"
+                                                    id="grossPL">-</p>
                                             </div>
                                             <div class="text-center">
-                                                <p class="text-sm text-gray-400 mb-1">{{ __('trades.commission') }}</p>
-                                                <p class="text-base font-bold text-orange-400" id="commissionAmount">
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                                    {{ __('trades.commission') }}</p>
+                                                <p class="text-base font-bold text-orange-600 dark:text-orange-400"
+                                                    id="commissionAmount">
                                                     -${{ number_format($account->commission_per_lot * $trade->lot_size, 2) }}
                                                 </p>
                                             </div>
@@ -271,20 +286,20 @@
 
                     <!-- Quick Actions -->
                     <div class="mt-6 bg-gray-750 rounded-xl p-4 border border-gray-600">
-                        <h3 class="text-lg font-bold mb-4 flex items-center text-purple-300">
-                            <i class="fas fa-bolt text-purple-400 mr-3"></i>
+                        <h3 class="text-lg font-bold mb-4 flex items-center text-purple-600 dark:text-purple-300">
+                            <i class="fas fa-bolt text-purple-600 dark:text-purple-400 mr-3"></i>
                             {{ __('trades.quick_actions') }}
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <button type="button" onclick="setExitPrice('{{ $trade->stop_loss }}')"
-                                class="bg-gray-800 hover:bg-red-900/30 text-red-400 py-3 px-4 rounded-lg transition-colors border border-red-700/30 flex flex-col items-center">
+                                class="bg-red-200/30 dark:bg-gray-800 hover:bg-red-300/40 dark:hover:bg-red-900/30 text-red-500 dark:text-red-400 py-3 px-4 rounded-lg border border-red-700/30 flex flex-col items-center">
                                 <i class="fas fa-times text-lg mb-1"></i>
                                 <span>{{ __('trades.set_to_sl') }}</span>
                                 <span class="text-xs text-red-400/70 mt-1">{{ format_price($trade->stop_loss) }}</span>
                             </button>
 
                             <button type="button" onclick="setExitPrice('{{ $trade->take_profit }}')"
-                                class="bg-gray-800 hover:bg-green-900/30 text-green-400 py-3 px-4 rounded-lg transition-colors border border-green-700/30 flex flex-col items-center">
+                                class="bg-green-200/30 dark:bg-gray-800 hover:bg-green-300/40 dark:hover:bg-green-900/30 text-green-500 dark:text-green-400 py-3 px-4 rounded-lg border border-green-700/30 flex flex-col items-center">
                                 <i class="fas fa-trophy text-lg mb-1"></i>
                                 <span>{{ __('trades.set_to_tp') }}</span>
                                 <span
@@ -292,7 +307,7 @@
                             </button>
 
                             <button type="button" onclick="calculateBreakEven()"
-                                class="bg-gray-800 hover:bg-blue-900/30 text-blue-400 py-3 px-4 rounded-lg transition-colors border border-blue-700/30 flex flex-col items-center">
+                                class="bg-blue-200/30 dark:bg-gray-800 hover:bg-blue-300/40 dark:hover:bg-blue-900/30 text-blue-500 dark:text-blue-400 py-3 px-4 rounded-lg border border-blue-700/30 flex flex-col items-center">
                                 <i class="fas fa-balance-scale text-lg mb-1"></i>
                                 <span>{{ __('trades.break_even') }}</span>
                                 <span class="text-xs text-blue-400/70 mt-1">{{ __('trades.cover_spread') }}</span>
@@ -302,26 +317,24 @@
 
                     <!-- Partial Close Section -->
                     <div class="mt-6 bg-gray-750 rounded-xl p-4 border border-gray-600">
-                        <h3 class="text-lg font-bold mb-4 flex items-center text-purple-300">
-                            <i class="fas fa-layer-group text-purple-400 mr-3"></i>
+                        <h3 class="text-lg font-bold mb-4 flex items-center text-purple-600 dark:text-purple-300">
+                            <i class="fas fa-layer-group text-purple-600 dark:text-purple-400 mr-3"></i>
                             {{ __('trades.partial_close') }}
                         </h3>
 
                         <!-- Toggle Switch -->
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <p class="font-medium text-gray-300">{{ __('trades.enable_partial_close') }}</p>
-                                <p class="text-sm text-gray-500">{{ __('trades.close_portion_position') }}</p>
+                                <p class="font-medium text-gray-600 dark:text-gray-300">
+                                    {{ __('trades.enable_partial_close') }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-500">
+                                    {{ __('trades.close_portion_position') }}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="use_partial_close" name="use_partial_close"
                                     class="sr-only peer" value="1">
                                 <div
-                                    class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 
-                peer-focus:ring-purple-800 rounded-full peer peer-checked:after:translate-x-full 
-                peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] 
-                after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
-                after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+                                    class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
                                 </div>
                             </label>
                         </div>
@@ -330,7 +343,8 @@
                         <div id="partialCloseOptions" class="hidden space-y-4">
                             <!-- Fixed Percentages -->
                             <div>
-                                <p class="text-sm font-semibold text-gray-300 mb-2">{{ __('trades.fixed_percentages') }}
+                                <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                                    {{ __('trades.fixed_percentages') }}
                                 </p>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     @foreach ([20, 50, 75, 100] as $percent)
@@ -339,9 +353,7 @@
                                                 value="{{ $percent }}" class="peer hidden partial-percent-radio"
                                                 onclick="document.getElementById('partial_close_custom').value = ''">
                                             <div
-                                                class="bg-gray-800 border border-gray-600 rounded-lg p-3 
-                            text-center cursor-pointer transition-all hover:border-purple-500 
-                            peer-checked:border-purple-500 peer-checked:bg-purple-900/20">
+                                                class="bg-gray-100 dark:bg-gray-800 border border-gray-600 rounded-lg p-3 text-center cursor-pointer transition-all hover:border-purple-500 peer-checked:border-purple-500 peer-checked:bg-purple-900/10 dark:peer-checked:bg-purple-900/20">
                                                 <span
                                                     class="block text-lg font-bold {{ $percent == 100 ? 'text-green-400' : 'text-purple-400' }}">
                                                     {{ $percent }}%
@@ -361,43 +373,50 @@
 
                             <!-- Custom Percentage -->
                             <div>
-                                <p class="text-sm font-semibold text-gray-300 mb-2">{{ __('trades.custom_percentage') }}
+                                <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                                    {{ __('trades.custom_percentage') }}
                                 </p>
                                 <div class="relative">
                                     <input type="number" step="0.1" min="0" max="100"
                                         id="partial_close_custom" name="partial_close_custom"
-                                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
+                                        class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
                                         placeholder="0.0"
                                         oninput="document.querySelectorAll('.partial-percent-radio').forEach(radio => radio.checked = false)">
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                        <span class="text-purple-400">%</span>
+                                        <span class="text-purple-600 dark:text-purple-400">%</span>
                                     </div>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-1">{{ __('trades.enter_any_percentage') }}</p>
                             </div>
 
                             <!-- Preview -->
-                            <div class="bg-gray-800 rounded-lg p-4 border border-gray-600">
-                                <h4 class="font-semibold text-gray-300 mb-3 flex items-center">
-                                    <i class="fas fa-eye text-cyan-400 mr-2"></i>
+                            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-600">
+                                <h4 class="font-semibold text-cyan-600 dark:text-gray-300 mb-3 flex items-center">
+                                    <i class="fas fa-eye text-cyan-600 dark:text-cyan-400 mr-2"></i>
                                     {{ __('trades.partial_close_preview') }}
                                 </h4>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                     <div class="text-center">
-                                        <p class="text-sm text-gray-400 mb-1">{{ __('trades.original_lot_size') }}</p>
-                                        <p class="text-base font-bold text-gray-300" id="originalLotSize">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                            {{ __('trades.original_lot_size') }}</p>
+                                        <p class="text-base font-bold text-gray-600 dark:text-gray-300"
+                                            id="originalLotSize">
                                             {{ number_format($trade->lot_size ?? 0, 2) }}
                                         </p>
                                     </div>
                                     <div class="text-center">
-                                        <p class="text-sm text-gray-400 mb-1">{{ __('trades.after_partial_close') }}</p>
-                                        <p class="text-base font-bold text-purple-400" id="partialLotSize">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                            {{ __('trades.after_partial_close') }}</p>
+                                        <p class="text-base font-bold text-purple-600 dark:text-purple-400"
+                                            id="partialLotSize">
                                             {{ number_format($trade->lot_size ?? 0, 2) }}
                                         </p>
                                     </div>
                                     <div class="text-center">
-                                        <p class="text-sm text-gray-400 mb-1">{{ __('trades.remaining_position') }}</p>
-                                        <p class="text-base font-bold text-amber-400" id="remainingPosition">
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                            {{ __('trades.remaining_position') }}</p>
+                                        <p class="text-base font-bold text-amber-600 dark:text-amber-400"
+                                            id="remainingPosition">
                                             {{ number_format(0, 2) }}
                                         </p>
                                     </div>

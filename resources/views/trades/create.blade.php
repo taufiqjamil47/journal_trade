@@ -36,19 +36,21 @@
                 <!-- Step 2 -->
                 <div class="flex flex-col items-center relative">
                     <div
-                        class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
+                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-300 dark:text-gray-500 font-bold border border-none dark:border-gray-600">
                         2
                     </div>
-                    <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_exit') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-gray-300 dark:text-gray-500">{{ __('trades.step_exit') }}</span>
                 </div>
 
                 <!-- Step 3 -->
                 <div class="flex flex-col items-center">
                     <div
-                        class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 font-bold border border-gray-600">
+                        class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-300 dark:text-gray-500 font-bold border border-none dark:border-gray-600">
                         3
                     </div>
-                    <span class="text-sm font-medium mt-2 text-gray-500">{{ __('trades.step_evaluation') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-gray-300 dark:text-gray-500">{{ __('trades.step_evaluation') }}</span>
                 </div>
             </div>
         </div>

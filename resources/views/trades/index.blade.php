@@ -146,12 +146,13 @@
 
         <!-- Success Alert -->
         @if (session('success'))
-            <div class="bg-green-900/30 rounded-lg p-4 border border-green-700/30 mb-6">
+            <div
+                class="bg-green-700/50 dark:bg-green-900/30 rounded-lg p-4 border border-green-900 dark:border-green-700/30 mb-6">
                 <div class="flex items-center">
-                    <div class="bg-green-500/20 p-2 rounded-lg mr-3">
-                        <i class="fas fa-check-circle text-green-500"></i>
+                    <div class="bg-green-600 dark:bg-green-500/20 p-2 rounded-lg mr-3">
+                        <i class="fas fa-check-circle text-white dark:text-green-500"></i>
                     </div>
-                    <span class="text-green-300">{{ session('success') }}</span>
+                    <span class="text-white dark:text-green-300">asd{{ session('success') }}</span>
                 </div>
             </div>
         @endif
@@ -454,7 +455,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-700/50">
                         @forelse($trades as $trade)
-                            <tr class="hover:bg-gray-200/40 dark:hover:bg-gray-750 cursor-pointer"
+                            <tr class="hover:bg-gray-200/50 dark:hover:bg-gray-750 cursor-pointer"
                                 onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                 <td class="py-3 px-4">
                                     <span
@@ -541,6 +542,7 @@
                                                 title="{{ __('trades.delete_trade') }}">
                                                 <i class="fas fa-trash text-sm"></i>
                                             </button>
+
                                             <!-- Duplicate Button (Overlay di kiri) -->
                                             <button onclick="duplicateTrade(event, {{ $trade->id }})"
                                                 class="duplicate-btn absolute -left-9 top-0 bottom-0 bg-gray-500/90 hover:bg-gray-600 text-white px-2 rounded-lg flex items-center justify-center transition-all duration-300 opacity-0 transform -translate-x-2 w-auto h-auto z-20 shadow-lg"
@@ -628,6 +630,7 @@
         };
     </script>
 
+    <!-- Dropdown Functionality -->
     <script>
         // Basic Dropdown functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -674,6 +677,7 @@
         });
     </script>
 
+    <!-- Quick Clear All Trades Function -->
     <script>
         function quickClearAll() {
             // Get current trade count for display
@@ -878,6 +882,7 @@
         });
     </script>
 
+    <!-- Dropdown Function -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const actionsDropdownButton = document.getElementById('actionsDropdownButton');
@@ -899,6 +904,7 @@
         });
     </script>
 
+    <!-- Delete Trade Function -->
     <script>
         function confirmDeleteTrade(event, tradeId, symbol, type) {
             // Hentikan event bubbling
@@ -1092,6 +1098,7 @@
         });
     </script>
 
+    <!-- Duplicate Trade Function -->
     <script>
         // Fungsi untuk duplicate trade
         function duplicateTrade(event, tradeId) {
@@ -1110,7 +1117,7 @@
                 cancelButtonText: '<i class="fas fa-times mr-2"></i>{{ __('trades.cancel_btn') }}',
                 showLoaderOnConfirm: true,
                 customClass: {
-                    popup: 'bg-gray-800 border border-purple-700/30',
+                    popup: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-purple-700/30',
                     title: 'text-purple-300',
                 },
                 preConfirm: () => {
@@ -1214,6 +1221,7 @@
         });
     </script>
 
+    <!-- Delete Trade Style -->
     <style>
         /* SweetAlert Custom Styles */
         .swal2-popup {
@@ -1269,6 +1277,7 @@
         }
     </style>
 
+    <!-- Dropdown Style -->
     <style>
         .group:hover .group-hover\:rotate-180 {
             transform: rotate(180deg);
@@ -1284,32 +1293,15 @@
         }
     </style>
 
+    <!-- Duplicate Trade Style -->
     <style>
-        /* Hover effect untuk tombol duplicate */
-        tr:hover .duplicate-btn {
-            opacity: 1 !important;
-        }
-
-        /* Transisi halus untuk hover */
-        .duplicate-btn {
-            transition: opacity 0.2s ease-in-out, background-color 0.2s ease;
-        }
-
-        .duplicate-btn:hover {
-            background-color: rgba(168, 85, 247, 0.3) !important;
-            transform: scale(1.05);
-        }
-    </style>
-
-    <style>
-        /* Pastikan kolom aksi memiliki lebar tetap */
+        /* Container untuk kolom aksi */
         td:last-child {
             width: 150px;
             min-width: 150px;
             max-width: 150px;
         }
 
-        /* Container untuk tombol aksi */
         td .relative {
             position: relative;
         }
@@ -1320,40 +1312,46 @@
             width: 100%;
             z-index: 1;
             background: transparent;
+            transition: transform 0.1s ease;
         }
 
-        /* Styling untuk duplicate button */
+        /* Mencegah overflow pada row */
+        tr {
+            overflow: hidden;
+        }
+
+        /* ===== TOMBOL DUPLICATE ===== */
+
+        /* Base style untuk tombol duplicate */
         .duplicate-btn {
             transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
             will-change: opacity, transform;
             pointer-events: none;
+            opacity: 0;
+            /* Default tersembunyi */
         }
 
-        /* Ketika hover pada row, enable pointer events */
-        tr:hover .duplicate-btn {
-            pointer-events: auto;
-        }
-
-        /* Efek hover pada duplicate button */
+        /* Efek hover untuk tombol duplicate */
         .duplicate-btn:hover {
             background-color: rgba(139, 92, 246, 0.95) !important;
         }
 
-        /* Transisi untuk tombol utama saat duplicate muncul (geser ke kanan) */
+        /* ===== HOVER EFFECTS ===== */
+
+        /* Menampilkan tombol duplicate saat row di-hover */
+        tr:hover .duplicate-btn {
+            opacity: 1 !important;
+            pointer-events: auto;
+        }
+
+        /* Menggeser tombol utama ke kanan saat duplicate muncul */
         tr:hover td .grid {
             transform: translateX(8px);
-            transition: transform 0.1s ease;
         }
 
-        /* Reset untuk row yang tidak di-hover */
+        /* Reset posisi untuk row yang tidak di-hover */
         tr:not(:hover) td .grid {
             transform: translateX(0);
-            transition: transform 0.1s ease;
-        }
-
-        /* Pastikan row tidak overflow */
-        tr {
-            overflow: hidden;
         }
     </style>
 @endsection

@@ -13,7 +13,7 @@
                 </div>
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('trades.index') }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>{{ __('trades.back_to_list') }}</span>
                     </a>
@@ -22,7 +22,7 @@
         </header>
 
         <!-- Progress Steps -->
-        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
             <div class="flex items-center justify-between max-w-2xl mx-auto">
                 <!-- Step 1 -->
                 <div class="flex flex-col items-center relative">
@@ -30,7 +30,8 @@
                         class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold relative z-10">
                         <i class="fas fa-check text-sm"></i>
                     </div>
-                    <span class="text-sm font-medium mt-2 text-green-400">{{ __('trades.step_entry') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-green-500 dark:text-green-400">{{ __('trades.step_entry') }}</span>
                 </div>
 
                 <!-- Step 2 -->
@@ -39,13 +40,14 @@
                         class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold relative z-10">
                         <i class="fas fa-check text-sm"></i>
                     </div>
-                    <span class="text-sm font-medium mt-2 text-green-400">{{ __('trades.step_exit') }}</span>
+                    <span
+                        class="text-sm font-medium mt-2 text-green-500 dark:text-green-400">{{ __('trades.step_exit') }}</span>
                 </div>
 
                 <!-- Step 3 -->
                 <div class="flex flex-col items-center">
                     <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
-                        <i class="fas fa-chart-bar text-sm"></i>
+                        3
                     </div>
                     <span class="text-sm font-medium mt-2 text-purple-400">{{ __('trades.step_evaluation') }}</span>
                 </div>
@@ -54,30 +56,30 @@
 
         <div class="max-w-7xl mx-auto">
             <!-- Trade Info Card -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
                 <!-- Header -->
                 <div class="px-6 py-4 border-b border-gray-700 bg-gray-850">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <div class="bg-purple-900/30 p-3 rounded-xl mr-4">
-                                <i class="fas fa-chart-bar text-purple-400 text-xl"></i>
+                            <div class="bg-purple-200 dark:bg-purple-900/30 p-3 rounded-xl mr-4">
+                                <i class="fas fa-chart-bar text-purple-500 dark:text-purple-400 text-xl"></i>
                             </div>
                             <div>
-                                <h2 class="text-xl font-bold text-purple-300">
+                                <h2 class="text-xl font-bold text-purple-500 dark:text-purple-300">
                                     {{ __('trades.trade_number', ['id' => $trade->id, 'symbol' => $trade->symbol->name]) }}
                                 </h2>
-                                <p class="text-gray-500 text-sm mt-1">
+                                <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                                     {{ __('trades.evaluation_details') }}
                                 </p>
                             </div>
                         </div>
                         <div class="text-right">
                             <div
-                                class="text-xl font-bold {{ $trade->profit_loss >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                class="text-xl font-bold {{ $trade->profit_loss >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400' }}">
                                 ${{ number_format($trade->profit_loss ?? 0, 2) }}
                             </div>
                             <div
-                                class="text-sm {{ $trade->hasil == 'win' ? 'text-green-400' : ($trade->hasil == 'loss' ? 'text-red-400' : 'text-gray-400') }} font-medium">
+                                class="text-sm {{ $trade->hasil == 'win' ? 'text-green-500 dark:text-green-400' : ($trade->hasil == 'loss' ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400') }} font-medium">
                                 {{ strtoupper($trade->hasil ?? 'PENDING') }}
                             </div>
                         </div>
@@ -86,57 +88,50 @@
 
                 <!-- Content -->
                 <div class="p-4">
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.type') }}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.type') }}</p>
                             <p class="text-base font-bold {{ $trade->type == 'buy' ? 'text-green-400' : 'text-red-400' }}">
                                 {{ strtoupper($trade->type) }}
                             </p>
                         </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.entry_price') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.entry_price') }}</p>
                             <p class="text-base font-bold font-mono text-green-400">{{ format_price($trade->entry) }}</p>
                         </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.exit_price') }}</p>
-                            <p class="text-base font-bold font-mono text-red-400">{{ format_price($trade->exit) ?? '-' }}
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.stop_loss') }}</p>
+                            <p class="text-base font-semibold font-mono text-red-400">{{ format_price($trade->stop_loss) }}
                             </p>
                         </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.lot_size') }}</p>
-                            <p class="text-base font-bold text-amber-400">{{ $trade->lot_size ?? '0.00' }}</p>
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.take_profit') }}</p>
+                            <p class="text-base font-semibold font-mono text-green-400">
+                                {{ format_price($trade->take_profit) }}</p>
                         </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.session') }}</p>
-                            <p class="text-base font-bold text-cyan-400">{{ $trade->session }}</p>
-                        </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
-                            <p class="text-base font-bold text-purple-400">{{ $trade->rr ?? '0' }}</p>
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.exit_price') }}</p>
+                            <p class="text-base font-bold font-mono text-red-400">{{ format_price($trade->exit) ?? '-' }}
+                            </p>
                         </div>
                     </div>
 
                     <!-- Additional Metrics -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.stop_loss') }}</p>
-                            <p class="text-base font-semibold font-mono text-red-400">{{ format_price($trade->stop_loss) }}
-                            </p>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.session') }}</p>
+                            <p class="text-base font-bold text-cyan-400">{{ $trade->session }}</p>
                         </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.take_profit') }}</p>
-                            <p class="text-base font-semibold font-mono text-green-400">
-                                {{ format_price($trade->take_profit) }}</p>
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.lot_size') }}</p>
+                            <p class="text-base font-bold text-amber-400">{{ $trade->lot_size ?? '0.00' }}</p>
                         </div>
-
-                        <div class="bg-gray-750 rounded-lg p-3 border border-gray-600">
-                            <p class="text-xs text-gray-400 mb-1">{{ __('trades.risk_amount_usd') }}</p>
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.rr_ratio') }}</p>
+                            <p class="text-base font-bold text-purple-400">{{ $trade->rr ?? '0' }}</p>
+                        </div>
+                        <div class="rounded-lg p-3 border border-gray-300 dark:border-gray-600">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.risk_amount_usd') }}</p>
                             <p class="text-base font-semibold text-blue-400">${{ number_format($trade->risk_usd ?? 0, 2) }}
                             </p>
                         </div>
@@ -145,9 +140,9 @@
             </div>
 
             <!-- Form Container -->
-            <div class="bg-gray-800 rounded-xl border border-gray-700">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <!-- Form Header -->
-                <div class="px-6 py-4 border-b border-gray-700 bg-gray-850">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-850">
                     <div class="flex items-center">
                         <div class="bg-purple-900/30 p-3 rounded-xl mr-4">
                             <i class="fas fa-chart-area text-purple-400 text-xl"></i>

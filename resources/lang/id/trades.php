@@ -138,7 +138,7 @@ return [
     'back_to_list' => 'Kembali ke Daftar Trade',
     'save_trade' => 'Simpan Trade',
     'risk_tips_title' => 'Tip Manajemen Risiko',
-    'tip_equity' => 'Ekuitas Aktual: $:ekuitas - Ukuran lot disesuaikan secara otomatis',
+    'tip_equity' => 'Ekuitas Aktual: $:equity - Ukuran lot disesuaikan secara otomatis',
     'tip_risk_levels' => 'Risiko 1-2% untuk konservatif, 3-5% untuk agresif',
     'tip_rr_ratio' => 'Rasio Risiko/Hadiah minimal 1:1,5 untuk perdagangan yang menguntungkan',
     'hide_balance' => 'Sembunyikan Saldo & Ekuitas',

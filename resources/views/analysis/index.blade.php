@@ -147,20 +147,21 @@
         <!-- Summary Alert -->
         @if ($summary)
             <!-- Summary Alert -->
-            <div class="bg-primary-900/30 rounded-xl p-4 border border-primary-700/30 mb-6">
+            <div
+                class="bg-blue-600/30 dark:bg-primary-900/30 rounded-xl p-4 border border-blue-900 dark:border-primary-700/30 mb-6">
                 <div class="flex items-center">
-                    <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
-                        <i class="fas fa-chart-pie text-primary-500"></i>
+                    <div class="bg-blue-700/70 dark:bg-primary-500/20 p-2 rounded-lg mr-3">
+                        <i class="fas fa-chart-pie text-white dark:text-primary-500"></i>
                     </div>
                     <div>
                         <h3 class="font-bold text-primary-300">{{ $summary['entry_type'] }}
-                            <span class="text-gray-400 font-normal">({{ $summary['session'] }})</span>
+                            <span class="text-gray-600 dark:text-gray-400 font-normal">({{ $summary['session'] }})</span>
                         </h3>
-                        <p class="text-gray-300 text-sm mt-1">
-                            {{ $summary['trades'] }} {{ __('analysis.stats.trades') }} ·
-                            {{ __('analysis.stats.winrate') }}: <span
-                                class="font-semibold">{{ $summary['winrate'] }}%</span> ·
-                            <span class="{{ $summary['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} font-bold">
+                        <p class="text-gray600 dark:text-gray-300 text-sm mt-1">
+                            {{ $summary['trades'] }} trades ·
+                            Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
+                            <span
+                                class="{{ $summary['profit_loss'] >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
                         </p>
@@ -1037,7 +1038,7 @@
                                 <tbody>
                                     @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
                                         <tr
-                                            class="border-b border-gray-200 dark:border-gray-700/50 hover-gray-500/50 dark:hover:bg-gray-750/50">
+                                            class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
                                             <td class="py-2 px-2 text-sm">
                                                 {{ __("analysis.days_short.{$day['short_name']}") }}</td>
                                             <td class="py-2 px-2 text-center text-sm">{{ $day['trades'] }}</td>
@@ -1106,7 +1107,7 @@
                                 <tbody>
                                     @foreach ($quarterlyPerformance->sortDesc() as $quarter)
                                         <tr
-                                            class="border-b border-gray-200 dark:border-gray-700/50 hover-gray-500/50 dark:hover:bg-gray-750/50">
+                                            class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
                                             <td class="py-2 px-2 text-sm">{{ $quarter['quarter_name'] }}</td>
                                             <td class="py-2 px-2 text-center text-sm">{{ $quarter['trades'] }}</td>
                                             <td class="py-2 px-2 text-center text-sm">
@@ -1163,7 +1164,7 @@
                                     class="year-group bg-gray-400/59 dark:bg-gray-700/30 rounded border border-gray-200 dark:border-gray-600">
                                     <!-- Year Header (Expandable) -->
                                     <button
-                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-500/50 dark:hover:bg-gray-700/50"
+                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50"
                                         data-year="{{ $year }}">
                                         <div class="flex items-center gap-2">
                                             <i
@@ -1188,7 +1189,7 @@
                                         <div class="p-2">
                                             @foreach ($months->sortDesc() as $month)
                                                 <div
-                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-700/30 rounded text-xs border-b border-gray-600/30 last:border-0">
+                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-200/50 dark:hover:bg-gray-700/30 rounded text-xs border-b border-gray-600/30 last:border-0">
                                                     <span
                                                         class="text-gray-600 dark:text-gray-300">{{ $month['month_name'] }}</span>
                                                     <div class="flex items-center gap-2">
@@ -1277,7 +1278,7 @@
                             <tbody>
                                 @forelse ($sessionAnalysis as $session => $data)
                                     <tr
-                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-500/50 dark:hover:bg-gray-750/50">
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
                                         <td class="py-3 px-2 font-medium text-white">
                                             <span
                                                 class="inline-block px-3 py-1 bg-primary-500/80 dark:bg-primary-500/20 text-primary-300 rounded-full text-xs">
@@ -1365,7 +1366,7 @@
                                 @endphp
                                 @foreach ($sortedPairs as $symbol => $pl)
                                     <tr
-                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-500/50 dark:hover:bg-gray-750/50">
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
                                         <td class="py-2 px-2 text-sm font-medium">{{ $symbol }}</td>
                                         <td
                                             class="py-2 px-2 text-right font-bold {{ $pl >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
@@ -1428,7 +1429,7 @@
                             <tbody>
                                 @foreach ($entryTypeData as $type => $data)
                                     <tr
-                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-500/50 dark:hover:bg-gray-750/50">
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
                                         <td class="py-2 px-2 text-sm font-medium">{{ $type ?? 'N/A' }}</td>
                                         <td class="py-2 px-2 text-center text-green-400 font-semibold">
                                             {{ $data['wins'] }}</td>
@@ -2207,17 +2208,74 @@
                 const profits = Object.values(sessionData).map(d => d.profit_loss);
                 const avgRR = Object.values(sessionData).map(d => d.avg_rr);
 
-                // Generate colors based on winrate
-                const colors = winrates.map(wr => {
-                    if (wr >= 60) return 'rgba(16, 185, 129, 0.7)'; // Green for > 60%
-                    if (wr >= 50) return 'rgba(59, 130, 246, 0.7)'; // Blue for > 50%
-                    return 'rgba(239, 68, 68, 0.7)'; // Red for < 50%
+                // Function to generate a unique color shade for duplicate values
+                const getShadedColor = (baseColor, index, duplicateCount) => {
+                    if (duplicateCount <= 1) return baseColor;
+
+                    // Calculate shade variation (0.8 to 1.2) based on index
+                    const shadeFactor = 0.8 + (index / duplicateCount) * 0.4;
+
+                    // Parse the base color
+                    const rgba = baseColor.match(/[\d.]+/g);
+                    if (!rgba) return baseColor;
+
+                    const r = Math.min(255, Math.round(parseInt(rgba[0]) * shadeFactor));
+                    const g = Math.min(255, Math.round(parseInt(rgba[1]) * shadeFactor));
+                    const b = Math.min(255, Math.round(parseInt(rgba[2]) * shadeFactor));
+                    const a = parseFloat(rgba[3]);
+
+                    return `rgba(${r}, ${g}, ${b}, ${a})`;
+                };
+
+                // Find duplicate values and their positions
+                const valueGroups = {};
+                winrates.forEach((wr, index) => {
+                    const key = wr.toString();
+                    if (!valueGroups[key]) {
+                        valueGroups[key] = [];
+                    }
+                    valueGroups[key].push(index);
                 });
 
-                const borderColors = winrates.map(wr => {
-                    if (wr >= 60) return 'rgba(16, 185, 129, 1)';
-                    if (wr >= 50) return 'rgba(59, 130, 246, 1)';
-                    return 'rgba(239, 68, 68, 1)';
+                // Generate colors based on winrate with variation for duplicates
+                const colors = winrates.map((wr, index) => {
+                    // Get base color
+                    let baseColor;
+                    if (wr >= 60) baseColor = 'rgba(16, 185, 129, 0.7)';
+                    else if (wr >= 50) baseColor = 'rgba(59, 130, 246, 0.7)';
+                    else baseColor = 'rgba(239, 68, 68, 0.7)';
+
+                    // Check if this value has duplicates
+                    const key = wr.toString();
+                    const duplicateIndices = valueGroups[key];
+
+                    if (duplicateIndices.length > 1) {
+                        // Find position in duplicates
+                        const positionInDuplicates = duplicateIndices.indexOf(index);
+                        return getShadedColor(baseColor, positionInDuplicates, duplicateIndices.length);
+                    }
+
+                    return baseColor;
+                });
+
+                const borderColors = winrates.map((wr, index) => {
+                    // Get base border color
+                    let baseColor;
+                    if (wr >= 60) baseColor = 'rgba(16, 185, 129, 1)';
+                    else if (wr >= 50) baseColor = 'rgba(59, 130, 246, 1)';
+                    else baseColor = 'rgba(239, 68, 68, 1)';
+
+                    // Check if this value has duplicates
+                    const key = wr.toString();
+                    const duplicateIndices = valueGroups[key];
+
+                    if (duplicateIndices.length > 1) {
+                        // Find position in duplicates
+                        const positionInDuplicates = duplicateIndices.indexOf(index);
+                        return getShadedColor(baseColor, positionInDuplicates, duplicateIndices.length);
+                    }
+
+                    return baseColor;
                 });
 
                 new Chart(sessionCtx, {
