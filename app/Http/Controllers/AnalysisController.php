@@ -17,8 +17,9 @@ class AnalysisController extends Controller
 
     public function index(Request $request)
     {
-        // Get account and initial balance
-        $account = Account::first();
+        // Get selected account from session
+        $selectedAccountId = session('selected_account_id');
+        $account = Account::find($selectedAccountId);
         $initialBalance = $account ? $account->initial_balance : 10000;
 
         // Get filtered trades

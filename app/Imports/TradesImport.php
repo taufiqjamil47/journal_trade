@@ -16,6 +16,13 @@ class TradesImport implements ToModel, WithHeadingRow
     private $headings = [];
     private $symbolCache = [];  // Cache symbols to prevent N+1 queries
     private $ruleCache = [];    // Cache rules to prevent N+1 queries
+    protected $accountId;
+
+    public function __construct($accountId = null)
+    {
+        // If no account ID provided, use selected account from session
+        $this->accountId = $accountId ?? session('selected_account_id');
+    }
 
     public function headingRow(): int
     {
@@ -82,7 +89,7 @@ class TradesImport implements ToModel, WithHeadingRow
 
         // Simpan trade pertama tanpa rules di pivot table
         $trade = new Trade([
-            'account_id'        => 1,
+            'account_id'        => $this->accountId,
             'symbol_id'         => $symbol->id,
             'timestamp'         => $timestamp,
             'exit_timestamp'    => $this->determineExitTimestamp($normalizedRow, $timestamp),

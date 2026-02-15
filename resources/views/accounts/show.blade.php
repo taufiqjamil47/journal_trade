@@ -141,9 +141,11 @@
                                             {{ ucfirst($trade->type) }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-2 text-sm text-gray-500 dark:text-gray-300">{{ $trade->lots }}</td>
+                                    <td class="px-4 py-2 text-sm text-gray-500 dark:text-gray-300">{{ $trade->lot_size }}
+                                    </td>
                                     <td class="px-4 py-2 text-sm text-gray-500 dark:text-gray-300">
-                                        {{ $trade->entry_date->format('M d, Y') }}</td>
+                                        {{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}
+                                    </td>
                                     <td class="px-4 py-2 text-sm">
                                         <a href="{{ route('trades.show', $trade) }}"
                                             class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300">

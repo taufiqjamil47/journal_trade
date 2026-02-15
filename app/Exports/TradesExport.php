@@ -10,13 +10,24 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class TradesExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $accountId;
+
+    public function __construct($accountId = null)
+    {
+        // If no account ID provided, use selected account from session
+        $this->accountId = $accountId ?? session('selected_account_id');
+    }
+
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
     {
-        // PASTIKAN eager loading untuk tradingRules
-        return Trade::with(['symbol', 'tradingRules'])->get();
+        // Filter trades by account and eager load relationships
+        return Trade::where('account_id', $this->accountId)
+            ->with(['symbol', 'tradingRules'])
+            ->orderBy('date', 'desc')
+            ->get();
     }
 
     public function headings(): array

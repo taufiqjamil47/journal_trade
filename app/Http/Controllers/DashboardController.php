@@ -19,10 +19,11 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         try {
-            // Get account and initial balance
-            $account = Account::first();
+            // Get selected account from session
+            $selectedAccountId = session('selected_account_id');
+            $account = Account::find($selectedAccountId);
             if (!$account) {
-                Log::warning('No account found in dashboard');
+                Log::warning('Selected account not found in dashboard');
                 $initialBalance = 10000;
             } else {
                 $initialBalance = $account->initial_balance;

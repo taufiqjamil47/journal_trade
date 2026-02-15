@@ -9,9 +9,20 @@
                     <h1 class="text-2xl font-bold text-primary-500">
                         {{ __('trades.add_new_trade') }}
                     </h1>
-                    <p class="text-gray-600 dark:text-gray-500 mt-1">{{ __('trades.step1_description') }}</p>
+                    <p class="text-gray-600 dark:text-gray-500 mt-1">
+                        {{ __('trades.step1_description') }}
+                        @if ($selectedAccount)
+                            <span
+                                class="ml-2 inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm rounded-full">
+                                <i class="fas fa-check-circle mr-1"></i>Account: {{ $selectedAccount->name }}
+                            </span>
+                        @endif
+                    </p>
                 </div>
                 <div class="flex items-center space-x-3">
+                    <!-- Account Selector Component -->
+                    @include('components.account-selector')
+
                     <a href="{{ route('trades.index') }}"
                         class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>

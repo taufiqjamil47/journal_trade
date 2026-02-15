@@ -10,21 +10,25 @@ use Illuminate\Support\Facades\Storage;
 
 class PdfReportService
 {
-    /**
-     * Generate cover report (Summary)
-     */
+    protected $accountId;
+
+    public function __construct($accountId = null)
+    {
+        // If no account ID provided, use selected account from session
+        $this->accountId = $accountId ?? session('selected_account_id');
+    }
     public function generateCoverReport()
     {
-        // Hitung statistik seperti di VBA
-        $totalTrades = Trade::count();
-        $winTrades = Trade::where('hasil', 'win')->count();
-        $lossTrades = Trade::where('hasil', 'loss')->count();
+        // Hitung statistik seperti di VBA - filter by account
+        $totalTrades = Trade::where('account_id', $this->accountId)->count();
+        $winTrades = Trade::where('account_id', $this->accountId)->where('hasil', 'win')->count();
+        $lossTrades = Trade::where('account_id', $this->accountId)->where('hasil', 'loss')->count();
 
-        $account = Account::first();
+        $account = Account::find($this->accountId);
         $startBalance = $account->initial_balance ?? 0;
 
-        // Hitung current balance (initial + total profit_loss)
-        $totalProfitLoss = Trade::whereNotNull('exit')->sum('profit_loss');
+        // Hitung current balance (initial + total profit_loss) - dari account ini
+        $totalProfitLoss = Trade::where('account_id', $this->accountId)->whereNotNull('exit')->sum('profit_loss');
         $currentBalance = $startBalance + $totalProfitLoss;
         $profit = $totalProfitLoss;
 
@@ -34,19 +38,20 @@ class PdfReportService
         // Hitung win rate
         $winRate = $totalTrades > 0 ? ($winTrades / $totalTrades) * 100 : 0;
 
-        // Hitung average RR
-        $avgRR = Trade::whereNotNull('rr')->average('rr') ?? 0;
+        // Hitung average RR - dari account ini
+        $avgRR = Trade::where('account_id', $this->accountId)->whereNotNull('rr')->average('rr') ?? 0;
 
-        // Ambil bulan pertama dan terakhir
-        $firstTrade = Trade::orderBy('date')->first();
-        $lastTrade = Trade::orderBy('date', 'desc')->first();
+        // Ambil bulan pertama dan terakhir - dari account ini
+        $firstTrade = Trade::where('account_id', $this->accountId)->orderBy('date')->first();
+        $lastTrade = Trade::where('account_id', $this->accountId)->orderBy('date', 'desc')->first();
 
         $firstMonth = $firstTrade ? Carbon::parse($firstTrade->date)->locale('id')->monthName : '-';
         $lastMonth = $lastTrade ? Carbon::parse($lastTrade->date)->locale('id')->monthName : '-';
         $tradeYear = $firstTrade ? Carbon::parse($firstTrade->date)->format('Y') : date('Y');
 
-        // Ambil unique symbols
-        $symbols = Trade::with('symbol')
+        // Ambil unique symbols - dari account ini
+        $symbols = Trade::where('account_id', $this->accountId)
+            ->with('symbol')
             ->select('symbol_id')
             ->distinct()
             ->get()
@@ -68,6 +73,7 @@ class PdfReportService
             'firstMonth' => $firstMonth,
             'lastMonth' => $lastMonth,
             'symbolReport' => $symbols,
+            'accountName' => $account ? $account->name : 'Unknown',
             'byFX1' => 'Trader', // Bisa diganti dengan nama user
             'byFX2' => 'Trading Journal System',
             'generatedDate' => now()->format('d F Y H:i:s'),
@@ -127,7 +133,7 @@ class PdfReportService
      */
     public function generateAllTradesReport($tradeIds = null)
     {
-        $query = Trade::with(['symbol', 'account', 'tradingRules']);
+        $query = Trade::where('account_id', $this->accountId)->with(['symbol', 'account', 'tradingRules']);
 
         if ($tradeIds) {
             $query->whereIn('id', $tradeIds);
@@ -157,7 +163,7 @@ class PdfReportService
 
         // NOTE: DomPDF tidak bisa merge PDF secara native
         // Alternatif: Buat satu view besar yang include cover dan semua trades
-        $trades = Trade::with(['symbol', 'account', 'tradingRules'])->orderBy('id')->get();
+        $trades = Trade::where('account_id', $this->accountId)->with(['symbol', 'account', 'tradingRules'])->orderBy('id')->get();
 
         $data = [
             'cover' => $this->getCoverData(),
@@ -172,7 +178,8 @@ class PdfReportService
      */
     public function generateDateRangeReport($startDate, $endDate)
     {
-        $trades = Trade::with(['symbol', 'account', 'tradingRules'])
+        $trades = Trade::where('account_id', $this->accountId)
+            ->with(['symbol', 'account', 'tradingRules'])
             ->whereBetween('date', [$startDate, $endDate])
             ->orderBy('date')
             ->get();
@@ -226,24 +233,24 @@ class PdfReportService
 
     private function getCoverData()
     {
-        // Reuse logic from generateCoverReport but return array
-        $totalTrades = Trade::count();
-        $winTrades = Trade::where('hasil', 'win')->count();
-        $lossTrades = Trade::where('hasil', 'loss')->count();
+        // Reuse logic from generateCoverReport but return array - filter by account
+        $totalTrades = Trade::where('account_id', $this->accountId)->count();
+        $winTrades = Trade::where('account_id', $this->accountId)->where('hasil', 'win')->count();
+        $lossTrades = Trade::where('account_id', $this->accountId)->where('hasil', 'loss')->count();
 
-        $account = Account::first();
+        $account = Account::find($this->accountId);
         $startBalance = $account->initial_balance ?? 0;
 
-        $totalProfitLoss = Trade::whereNotNull('exit')->sum('profit_loss');
+        $totalProfitLoss = Trade::where('account_id', $this->accountId)->whereNotNull('exit')->sum('profit_loss');
         $currentBalance = $startBalance + $totalProfitLoss;
         $profit = $totalProfitLoss;
 
         $equityGrowth = $startBalance > 0 ? ($profit / $startBalance) * 100 : 0;
         $winRate = $totalTrades > 0 ? ($winTrades / $totalTrades) * 100 : 0;
-        $avgRR = Trade::whereNotNull('rr')->average('rr') ?? 0;
+        $avgRR = Trade::where('account_id', $this->accountId)->whereNotNull('rr')->average('rr') ?? 0;
 
-        $firstTrade = Trade::orderBy('date')->first();
-        $lastTrade = Trade::orderBy('date', 'desc')->first();
+        $firstTrade = Trade::where('account_id', $this->accountId)->orderBy('date')->first();
+        $lastTrade = Trade::where('account_id', $this->accountId)->orderBy('date', 'desc')->first();
 
         return [
             'totalTrades' => $totalTrades,
@@ -265,7 +272,8 @@ class PdfReportService
 
     private function getCoverDataForRange($startDate, $endDate)
     {
-        $trades = Trade::whereBetween('date', [$startDate, $endDate])->get();
+        $trades = Trade::where('account_id', $this->accountId)
+            ->whereBetween('date', [$startDate, $endDate])->get();
 
         $totalTrades = $trades->count();
         $winTrades = $trades->where('hasil', 'win')->count();
@@ -275,11 +283,12 @@ class PdfReportService
         $profit = $totalProfitLoss;
 
         // Untuk range, kita perlu initial balance sebelum range
-        $account = Account::first();
+        $account = Account::find($this->accountId);
         $balanceBeforeRange = $account->initial_balance ?? 0;
 
         // Tambahkan profit/loss dari trades sebelum range
-        $profitBeforeRange = Trade::where('date', '<', $startDate)
+        $profitBeforeRange = Trade::where('account_id', $this->accountId)
+            ->where('date', '<', $startDate)
             ->whereNotNull('exit')
             ->sum('profit_loss');
 

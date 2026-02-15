@@ -13,14 +13,18 @@ class TradeReportController extends Controller
 {
     public function calendar(Request $request)
     {
+        // Get selected account from session
+        $selectedAccountId = session('selected_account_id');
+
         // Use Indonesia timezone (Asia/Jakarta)
         $now = Carbon::now('Asia/Jakarta');
         $month = $request->input('month', $now->month);
         $year = $request->input('year', $now->year);
 
-        // DAILY
+        // DAILY - Filter by selected account
         $daily = DB::table('trades')
             ->selectRaw('date, SUM(profit_loss) as total_profit, COUNT(*) as total_trades')
+            ->where('account_id', $selectedAccountId)
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->groupBy('date')
@@ -28,13 +32,14 @@ class TradeReportController extends Controller
             ->get()
             ->keyBy('date');
 
-        // TRADES DETAIL
+        // TRADES DETAIL - Filter by selected account
         $trades = DB::table('trades')
             ->join('symbols', 'symbols.id', '=', 'trades.symbol_id')
             ->select(
                 'trades.*',
                 'symbols.name as symbol_name'
             )
+            ->where('trades.account_id', $selectedAccountId)
             ->whereYear('trades.date', $year)
             ->whereMonth('trades.date', $month)
             ->orderBy('trades.date')
@@ -42,18 +47,20 @@ class TradeReportController extends Controller
             ->groupBy('date');
 
 
-        // WEEKLY SUMMARY
+        // WEEKLY SUMMARY - Filter by selected account
         $weekly = DB::table('trades')
             ->selectRaw('YEAR(date) as year, WEEK(date, 1) as week, SUM(profit_loss) as total_profit, COUNT(*) as total_trades')
+            ->where('account_id', $selectedAccountId)
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->groupBy('year', 'week')
             ->orderBy('week')
             ->get();
 
-        // MONTHLY SUMMARY
+        // MONTHLY SUMMARY - Filter by selected account
         $monthly = DB::table('trades')
             ->selectRaw('YEAR(date) as year, MONTH(date) as month, SUM(profit_loss) as total_profit, COUNT(*) as total_trades')
+            ->where('account_id', $selectedAccountId)
             ->whereYear('date', $year)
             ->groupBy('year', 'month')
             ->orderBy('month')

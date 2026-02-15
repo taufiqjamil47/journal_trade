@@ -25,16 +25,20 @@ class TradeController extends Controller
 
         $sortBy = $request->get('sort_by', 'id');
         $order  = $request->get('order', 'desc');
+        $selectedAccountId = session('selected_account_id');
 
-        // Eager load relationships untuk avoid N+1 queries
-        $query = Trade::with('symbol', 'tradingRules');
+        // Eager load relationships untuk avoid N+1 queries - FILTER BY SELECTED ACCOUNT
+        $query = Trade::with('symbol', 'tradingRules')
+            ->where('account_id', $selectedAccountId);
         $perf->checkpoint('eager_load_initialized');
 
         $trades = $query->orderBy($sortBy, $order)->paginate(10);
         $perf->checkpoint('trades_fetched');
 
-        // HITUNG WINRATE DARI SEMUA TRADE - Use selective columns to minimize data transfer
-        $allTrades = Trade::select('id', 'hasil')->get();
+        // HITUNG WINRATE DARI TRADE DI ACCOUNT YANG DIPILIH
+        $allTrades = Trade::where('account_id', $selectedAccountId)
+            ->select('id', 'hasil')
+            ->get();
         $totalTrades = $allTrades->count();
         $wins = $allTrades->where('hasil', 'win')->count();
         $winrate = $totalTrades > 0 ? round(($wins / $totalTrades) * 100, 2) : 0;
@@ -64,12 +68,15 @@ class TradeController extends Controller
                 Log::warning('No active symbols available');
             }
 
-            $currentEquity = $this->getCurrentEquity();
+            // Get selected account from session
+            $selectedAccountId = session('selected_account_id');
+            $selectedAccount = Account::findOrFail($selectedAccountId);
+            $currentEquity = $this->getCurrentEquity($selectedAccountId);
             $tradingRules = TradingRule::where('is_active', true)
                 ->orderBy('order')
                 ->get();
 
-            return view('trades.create', compact('symbols', 'currentEquity', 'tradingRules'));
+            return view('trades.create', compact('symbols', 'currentEquity', 'tradingRules', 'selectedAccount'));
         } catch (\Exception $e) {
             Log::error('Error loading create trade form: ' . $e->getMessage());
             return back()->with('error', 'Gagal memuat form pembuatan trade');
@@ -345,13 +352,13 @@ class TradeController extends Controller
                 $data['rr'] = 0;
             }
 
-            // sementara account_id fix dulu (nanti bisa pilih kalau multi akun)
-            $data['account_id'] = 1;
+            // Get account_id dari session (selected account)
+            $data['account_id'] = session('selected_account_id');
 
             // Jalankan transaction dan dapatkan hasilnya
             $trade = DB::transaction(function () use ($data, $request, $perf) {
                 $trade = new Trade($data);
-                $trade->account_id = 1;
+                $trade->account_id = session('selected_account_id');
 
                 // Set session otomatis
                 $trade->setSessionFromTimestamp();
@@ -380,7 +387,7 @@ class TradeController extends Controller
             });
 
             $perf->end('Trade created successfully');
-            Log::info('Trade created successfully', ['trade_id' => $trade->id, 'symbol_id' => $data['symbol_id']]);
+            Log::info('Trade created successfully', ['trade_id' => $trade->id, 'symbol_id' => $data['symbol_id'], 'account_id' => $data['account_id']]);
             return redirect()->route('trades.index')->with('success', 'Trade berhasil ditambahkan');
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::warning('Validation error when creating trade', ['errors' => $e->errors()]);
@@ -771,11 +778,17 @@ class TradeController extends Controller
             $perf->checkpoint('export_started');
             Log::info('Exporting trades to Excel');
 
-            $fileName = 'trades_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+            // Get selected account from session
+            $selectedAccountId = session('selected_account_id');
+            $account = Account::find($selectedAccountId);
+            $accountName = $account ? $account->name : 'Unknown';
+
+            $fileName = 'trades_' . $accountName . '_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
             $perf->checkpoint('filename_prepared');
 
             $perf->end('Excel export generated');
-            return Excel::download(new TradesExport, $fileName);
+            // Pass account ID to export class
+            return Excel::download(new TradesExport($selectedAccountId), $fileName);
         } catch (\Exception $e) {
             $perf->end('Excel export failed');
             Log::error('Error exporting trades: ' . $e->getMessage());
@@ -794,17 +807,24 @@ class TradeController extends Controller
             ]);
             $perf->checkpoint('file_validated');
 
-            Log::info('Starting trade import', ['file' => $request->file('file')->getClientOriginalName()]);
+            // Get selected account from session
+            $selectedAccountId = session('selected_account_id');
+
+            Log::info('Starting trade import', [
+                'file' => $request->file('file')->getClientOriginalName(),
+                'account_id' => $selectedAccountId
+            ]);
             $perf->checkpoint('import_started');
 
-            DB::transaction(function () use ($request, $perf) {
-                Excel::import(new TradesImport, $request->file('file'));
+            DB::transaction(function () use ($request, $perf, $selectedAccountId) {
+                // Pass account ID to import class
+                Excel::import(new TradesImport($selectedAccountId), $request->file('file'));
                 $perf->checkpoint('excel_import_completed');
             });
 
             $perf->end('Trade import completed successfully');
-            Log::info('Trade import completed successfully');
-            return redirect()->route('trades.index')->with('success', 'Trades berhasil diimpor!');
+            Log::info('Trade import completed successfully', ['account_id' => $selectedAccountId]);
+            return redirect()->route('trades.index')->with('success', 'Trades berhasil diimpor ke account yang dipilih!');
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::warning('File validation failed for import');
             return back()->withInput()->withErrors(['file' => 'File harus berupa Excel atau CSV']);
@@ -820,7 +840,9 @@ class TradeController extends Controller
 
     public function generatePdfReport(Request $request)
     {
-        $service = new PdfReportService();
+        // Get selected account from session
+        $selectedAccountId = session('selected_account_id');
+        $service = new PdfReportService($selectedAccountId);
 
         $type = $request->get('type', 'complete');
         $tradeId = $request->get('trade_id');
@@ -919,20 +941,25 @@ class TradeController extends Controller
         }
     }
 
-    // Hitung current equity dari initial balance + total profit/loss semua trade selesai
-    private function getCurrentEquity()
+    // Hitung current equity dari selected account
+    private function getCurrentEquity($accountId = null)
     {
         try {
-            $account = Account::first();
+            if (!$accountId) {
+                $accountId = session('selected_account_id');
+            }
+
+            $account = Account::find($accountId);
             if (!$account) {
-                Log::error('No account found when calculating current equity');
+                Log::error('Account not found when calculating current equity');
                 return 0;
             }
 
             $initialBalance = $account->initial_balance;
 
             // Eager load & select specific columns to avoid N+1 queries
-            $completedTrades = Trade::whereNotNull('exit')
+            $completedTrades = Trade::where('account_id', $accountId)
+                ->whereNotNull('exit')
                 ->select('id', 'profit_loss')
                 ->get();
             $totalProfitLoss = $completedTrades->sum('profit_loss');

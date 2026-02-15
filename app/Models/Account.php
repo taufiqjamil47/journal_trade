@@ -10,6 +10,8 @@ class Account extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
+        'description',
         'initial_balance',
         'currency',
         'commission_per_lot',

@@ -18,6 +18,12 @@ class TradeAnalysisService
     {
         $query = Trade::query();
 
+        // Filter by selected account from session
+        $selectedAccountId = session('selected_account_id');
+        if ($selectedAccountId) {
+            $query->where('account_id', $selectedAccountId);
+        }
+
         // Eager load relationships to prevent N+1 queries
         if ($withRelations) {
             $query->with(['symbol', 'account', 'tradingRules']);

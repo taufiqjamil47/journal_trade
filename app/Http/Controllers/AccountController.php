@@ -30,6 +30,8 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'initial_balance' => 'required|numeric',
             'currency' => 'required|string',
             'commission_per_lot' => 'nullable|numeric',
@@ -65,6 +67,8 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
 
         $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
             'initial_balance' => 'sometimes|numeric',
             'currency' => 'sometimes|string',
             'commission_per_lot' => 'sometimes|numeric',

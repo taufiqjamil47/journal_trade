@@ -43,6 +43,9 @@ class Kernel extends HttpKernel
             \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
             \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
             \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
+
+            // Account Selection Middleware
+            \App\Http\Middleware\SetSelectedAccount::class,
         ],
 
         'api' => [
