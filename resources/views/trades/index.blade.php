@@ -97,7 +97,7 @@
 
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
                         <!-- Sorting Dropdown -->
-                        <div class="relative group flex-1 sm:flex-none min-w-[120px]">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px] z-40">
                             <button
                                 class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
                                 <i class="fas fa-sort mr-1 sm:mr-2"></i>
@@ -107,7 +107,7 @@
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
                                 <div class="py-2">
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'desc']) }}"
                                         class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
@@ -147,7 +147,7 @@
                         </div>
 
                         <!-- Import/Export Group -->
-                        <div class="relative group flex-1 sm:flex-none min-w-[120px]">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px] z-40">
                             <button
                                 class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
                                 <i class="fas fa-exchange-alt mr-1 sm:mr-2"></i>
@@ -157,7 +157,7 @@
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-[14vh] lg:top-full mt-1 w-full sm:w-64 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[50vh]">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-64 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[50vh] pointer-events-none group-hover:pointer-events-auto">
                                 <div class="p-2 sm:p-3 space-y-3 sm:space-y-4">
                                     <!-- Account Info Badge -->
                                     @if ($selectedAccount)

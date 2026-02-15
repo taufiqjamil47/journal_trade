@@ -1,7 +1,7 @@
 <!-- Account Selector Component -->
 <div class="flex items-center">
     <button id="accountToggle"
-        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 active:scale-95 group relative"
+        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 active:scale-95 group relative z-[60]"
         title="Switch Account">
         <i class="fas fa-building text-primary-500 mr-2"></i>
         <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -19,7 +19,7 @@
 
         <!-- Account List Dropdown -->
         <div id="accountDropdown"
-            class="hidden absolute top-full mt-2 right-0 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg z-50 min-w-[280px]">
+            class="hidden absolute top-full mt-2 right-0 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg z-[60] min-w-[280px]">
             <div class="p-3 border-b border-gray-200 dark:border-gray-700">
                 <p class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Trading Accounts</p>
             </div>
@@ -28,7 +28,7 @@
                 @foreach ($allAccounts as $account)
                     <a href="?account_id={{ $account->id }}"
                         class="flex flex-col px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0
-                        {{ $selectedAccount?->id === $account->id ? 'bg-primary-50 dark:bg-primary-900/30 border-l-4 border-l-primary-500' : '' }}">
+                        {{ $selectedAccount?->id === $account->id ? 'bg-primary-50 dark:bg-primary-900/30 border-l-4 border-l-primary-500 dark:border-l-green-500' : '' }}">
                         <div class="flex items-center justify-between mb-1">
                             <span
                                 class="font-semibold text-sm text-gray-900 dark:text-white">{{ $account->name }}</span>
