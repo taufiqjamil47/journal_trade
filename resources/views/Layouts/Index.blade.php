@@ -38,7 +38,6 @@
     <style>
         .risk-level-card {
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .risk-level-card:hover .risk-level-content {
@@ -49,7 +48,6 @@
         .risk-level-content {
             border-radius: 12px;
             padding: 12px 8px;
-            transition: all 0.3s ease;
             text-align: center;
         }
 
@@ -74,50 +72,6 @@
             100% {
                 transform: translateX(-50%);
             }
-        }
-    </style>
-
-    <style>
-        .tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 8px;
-            padding: 4px 8px;
-            background-color: rgba(17, 24, 39, 0.95);
-            color: white;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-            z-index: 10;
-        }
-
-        .dark .tooltip {
-            background-color: rgba(255, 255, 255, 0.95);
-            color: black;
-        }
-
-        .group:hover .tooltip {
-            opacity: 1;
-            transform: translateX(-50%) translateY(-2px);
-        }
-
-        .nav-items-container {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Smooth scaling for toggle button */
-        button {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Smooth icon rotation */
-        .nav-toggle-icon {
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
     </style>
 

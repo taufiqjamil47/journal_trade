@@ -143,6 +143,7 @@ return [
     'tip_rr_ratio' => 'Minimum Risk/Reward Ratio of 1:1.5 for profitable trades',
     'hide_balance' => 'Hide Balance & Equity',
     'show_balance' => 'Show Balance & Equity',
+    'equity' => 'Equity',
 
     // Edit Trade Exit Form
     'edit_trade_exit' => 'Edit Trade (Exit)',

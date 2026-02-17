@@ -6,10 +6,10 @@
         <header class="mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-primary-500">
+                    <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
                         {{ __('trades.header_title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ __('trades.header_subtitle') }}</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('trades.header_subtitle') }}</p>
                 </div>
 
                 <!-- Navigation and Trader Info -->
@@ -17,174 +17,191 @@
             </div>
         </header>
 
-        <!-- Success Alert -->
+        <!-- Success Alert - Improved contrast -->
         @if (session('success'))
             <div
-                class="bg-green-700/50 dark:bg-green-900/30 rounded-lg p-4 border border-green-900 dark:border-green-700/30 mb-6">
+                class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 border border-green-200 dark:border-green-700/50 mb-6">
                 <div class="flex items-center">
-                    <div class="bg-green-600 dark:bg-green-500/20 p-2 rounded-lg mr-3">
-                        <i class="fas fa-check-circle text-white dark:text-green-500"></i>
+                    <div class="bg-green-100 dark:bg-green-500/20 p-2 rounded-lg mr-3">
+                        <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
                     </div>
-                    <span class="text-white dark:text-green-300">{{ session('success') }}</span>
+                    <span class="text-green-800 dark:text-green-300 font-medium">{{ session('success') }}</span>
                 </div>
             </div>
         @endif
 
-        <!-- Quick Stats -->
+        <!-- Quick Stats - Improved contrast -->
         @if ($trades->count() > 0)
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- Win Rate Card -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center">
-                        <div class="bg-green-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-trophy text-green-500"></i>
+                        <div class="bg-green-100 dark:bg-green-500/20 p-3 rounded-lg mr-3">
+                            <i class="fas fa-trophy text-green-600 dark:text-green-400 text-lg"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.win_rate') }}</p>
-                            <p class="text-base font-semibold">{{ $winrate }}%</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('trades.win_rate') }}</p>
+                            <p class="text-xl font-bold text-gray-900 dark:text-white">{{ $winrate }}%</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                <!-- Total Trades Card -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center">
-                        <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-chart-line text-primary-500"></i>
+                        <div class="bg-blue-100 dark:bg-blue-500/20 p-3 rounded-lg mr-3">
+                            <i class="fas fa-chart-line text-blue-600 dark:text-blue-400 text-lg"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.total_trades') }}</p>
-                            <p class="text-base font-semibold">{{ $trades->total() }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('trades.total_trades') }}</p>
+                            <p class="text-xl font-bold text-gray-900 dark:text-white">{{ $trades->total() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                <!-- Active Trades Card -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center">
-                        <div class="bg-blue-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-coins text-blue-500"></i>
+                        <div class="bg-indigo-100 dark:bg-indigo-500/20 p-3 rounded-lg mr-3">
+                            <i class="fas fa-coins text-indigo-600 dark:text-indigo-400 text-lg"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.active_trades') }}</p>
-                            <p class="text-base font-semibold">{{ $trades->where('exit', null)->count() }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('trades.active_trades') }}</p>
+                            <p class="text-xl font-bold text-gray-900 dark:text-white">
+                                {{ $trades->where('exit', null)->count() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                <!-- Pending Trades Card -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center">
-                        <div class="bg-amber-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-clock text-amber-500"></i>
+                        <div class="bg-amber-100 dark:bg-amber-500/20 p-3 rounded-lg mr-3">
+                            <i class="fas fa-clock text-amber-600 dark:text-amber-400 text-lg"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.pending_trades') }}</p>
-                            <p class="text-lg font-semibold">
-                                {{ $trades->where('hasil', null)->where('exit', '==', null)->count() }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('trades.pending_trades') }}</p>
+                            <p class="text-xl font-bold text-gray-900 dark:text-white">
+                                {{ $trades->where('hasil', null)->where('exit', '==', null)->count() }}
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         @endif
 
-        <!-- Table Container -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <!-- Table Container - Improved contrast -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
             <!-- Table Header -->
-            <div class="px-6 py-4 border-b border-gray-700">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold">{{ __('trades.trade_list') }}</h2>
-                        <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('trades.trade_list') }}</h2>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
                             {{ __('trades.total_trades_count', ['count' => $trades->total()]) }}</p>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <!-- Sorting Dropdown -->
+                        <!-- Sorting Dropdown - Improved -->
                         <div class="relative group flex-1 sm:flex-none min-w-[120px] z-40">
                             <button
-                                class="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
-                                <i class="fas fa-sort mr-1 sm:mr-2"></i>
+                                class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base">
+                                <i class="fas fa-sort mr-1 sm:mr-2 text-gray-500 dark:text-gray-400"></i>
                                 <span>{{ __('trades.sort') }}</span>
-                                <i
-                                    class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                                <i class="fas fa-chevron-down ml-1 sm:ml-2 text-xs text-gray-500 dark:text-gray-400"></i>
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                 <div class="py-2">
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'desc']) }}"
-                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-300 flex items-center border-b border-gray-100 dark:border-gray-700">
                                         <i
-                                            class="fas fa-calendar-alt mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                            class="fas fa-calendar-alt mr-2 sm:mr-3 text-primary-500 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">{{ __('trades.date') }}</div>
-                                            <div class="text-xs text-gray-400">{{ __('trades.newest_first') }}</div>
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">
+                                                {{ __('trades.date') }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.newest_first') }}</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'date', 'order' => 'asc']) }}"
-                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
-                                        <i class="fas fa-calendar mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-300 flex items-center border-b border-gray-100 dark:border-gray-700">
+                                        <i class="fas fa-calendar mr-2 sm:mr-3 text-primary-500 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">{{ __('trades.date') }}</div>
-                                            <div class="text-xs text-gray-400">{{ __('trades.lowest_first') }}</div>
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">
+                                                {{ __('trades.date') }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.oldest_first') }}</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'desc']) }}"
-                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center border-b border-gray-700/50">
-                                        <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-300 flex items-center border-b border-gray-100 dark:border-gray-700">
+                                        <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-500 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">{{ __('trades.id') }}</div>
-                                            <div class="text-xs text-gray-400">{{ __('trades.highest_first') }}</div>
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">{{ __('trades.id') }}
+                                            </div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.newest_first') }}</div>
                                         </div>
                                     </a>
                                     <a href="{{ route('trades.index', ['sort_by' => 'id', 'order' => 'asc']) }}"
-                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center">
-                                        <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-400 w-4 sm:w-5 text-center"></i>
+                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-700 dark:hover:text-primary-300 flex items-center">
+                                        <i class="fas fa-hashtag mr-2 sm:mr-3 text-primary-500 w-4 sm:w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">{{ __('trades.id') }}</div>
-                                            <div class="text-xs text-gray-400">{{ __('trades.lowest_first') }}</div>
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">{{ __('trades.id') }}
+                                            </div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.oldest_first') }}</div>
                                         </div>
                                     </a>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Import/Export Group -->
+                        <!-- Import/Export Group - Improved -->
                         <div class="relative group flex-1 sm:flex-none min-w-[120px] z-40">
                             <button
-                                class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
+                                class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base transition-all shadow-md">
                                 <i class="fas fa-exchange-alt mr-1 sm:mr-2"></i>
                                 <span>{{ __('trades.data') }}</span>
-                                <i
-                                    class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                                <i class="fas fa-chevron-down ml-1 sm:ml-2 text-xs"></i>
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-64 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[50vh] pointer-events-none group-hover:pointer-events-auto">
-                                <div class="p-2 sm:p-3 space-y-3 sm:space-y-4">
-                                    <!-- Account Info Badge -->
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-80 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl z-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-y-auto max-h-[80vh]">
+                                <div class="p-4 space-y-4">
                                     @if ($selectedAccount)
                                         <div
-                                            class="bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-700 rounded-lg p-2 text-xs sm:text-sm">
-                                            <p class="text-primary-700 dark:text-primary-300">
+                                            class="bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+                                            <p class="text-purple-800 dark:text-purple-300 text-sm flex items-center">
                                                 <i class="fas fa-info-circle mr-2"></i>
-                                                Import/Export untuk: <span
-                                                    class="font-semibold">{{ $selectedAccount->name }}</span>
+                                                <span>Account :
+                                                    <strong>{{ $selectedAccount->name }}</strong></span>
                                             </p>
                                         </div>
                                     @endif
 
                                     <!-- Import Section -->
                                     <div>
-                                        <div
-                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                                            <i class="fas fa-file-import mr-2 text-purple-400 text-sm"></i>
+                                        <h4
+                                            class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                                            <i class="fas fa-file-import mr-2 text-purple-500"></i>
                                             {{ __('trades.import_data') }}
-                                        </div>
+                                        </h4>
                                         <form action="{{ route('trades.import.excel') }}" method="POST"
-                                            enctype="multipart/form-data" class="space-y-2">
+                                            enctype="multipart/form-data" class="space-y-3">
                                             @csrf
-                                            <input type="file" name="file" accept=".xlsx,.xls,.csv" required
-                                                class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 file:bg-purple-600 file:border-0 file:text-white file:rounded file:px-2 sm:file:px-3 file:py-1 file:text-xs sm:file:text-sm file:hover:bg-purple-700">
+                                            <div>
+                                                <input type="file" name="file" accept=".xlsx,.xls,.csv" required
+                                                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 dark:file:bg-purple-900/30 dark:file:text-purple-300 dark:hover:file:bg-purple-900/50">
+                                            </div>
                                             <button type="submit"
-                                                class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
+                                                class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center text-sm">
                                                 <i class="fas fa-upload mr-2"></i>
                                                 {{ __('trades.upload_file') }}
                                             </button>
@@ -192,71 +209,69 @@
                                     </div>
 
                                     <!-- Export Section -->
-                                    <div class="pt-2 sm:pt-3 border-t border-gray-700">
-                                        <div
-                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                                            <i class="fas fa-file-export mr-2 text-green-400 text-sm"></i>
+                                    <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+                                        <h4
+                                            class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                                            <i class="fas fa-file-export mr-2 text-green-500"></i>
                                             {{ __('trades.export_data') }}
-                                        </div>
-                                        <div class="space-y-2">
-                                            <a href="{{ route('trades.export.excel') }}"
-                                                class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
-                                                <i class="fas fa-file-excel mr-2"></i>
-                                                {{ __('trades.export_to_excel') }}
-                                            </a>
-                                        </div>
+                                        </h4>
+                                        <a href="{{ route('trades.export.excel') }}"
+                                            class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center text-sm">
+                                            <i class="fas fa-file-excel mr-2"></i>
+                                            {{ __('trades.export_to_excel') }}
+                                        </a>
                                     </div>
 
                                     <!-- PDF Reports Section -->
-                                    <div class="pt-2 sm:pt-3 border-t border-gray-700">
-                                        <div
-                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                                            <i class="fas fa-file-pdf mr-2 text-red-400 text-sm"></i>
+                                    <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+                                        <h4
+                                            class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                                            <i class="fas fa-file-pdf mr-2 text-red-500"></i>
                                             {{ __('trades.pdf_reports') }}
-                                        </div>
-                                        <div class="space-y-2">
+                                        </h4>
+                                        <div class="grid grid-cols-2 gap-2">
                                             <a href="{{ route('trades.generate.pdf', ['type' => 'cover']) }}"
-                                                class="block w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
-                                                <i class="fas fa-file-alt mr-2"></i>
+                                                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg flex items-center justify-center text-sm">
+                                                <i class="fas fa-file-alt mr-1"></i>
                                                 {{ __('trades.cover_report') }}
                                             </a>
                                             <a href="{{ route('trades.generate.pdf', ['type' => 'complete']) }}"
-                                                class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
-                                                <i class="fas fa-book mr-2"></i>
+                                                class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg flex items-center justify-center text-sm">
+                                                <i class="fas fa-book mr-1"></i>
                                                 {{ __('trades.complete_report') }}
                                             </a>
                                             <a href="{{ route('trades.preview.pdf') }}" target="_blank"
-                                                class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
-                                                <i class="fas fa-eye mr-2"></i>
+                                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg flex items-center justify-center text-sm col-span-2">
+                                                <i class="fas fa-eye mr-1"></i>
                                                 {{ __('trades.preview_report') }}
                                             </a>
                                         </div>
                                     </div>
 
                                     <!-- Date Range Report Section -->
-                                    <div class="pt-2 sm:pt-3 border-t border-gray-700">
-                                        <div
-                                            class="flex items-center text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                                            <i class="fas fa-calendar-alt mr-2 text-green-400 text-sm"></i>
+                                    <div class="pt-2 border-t border-gray-200 dark:border-gray-700">
+                                        <h4
+                                            class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                                            <i class="fas fa-calendar-alt mr-2 text-green-500"></i>
                                             {{ __('trades.date_range_report') }}
-                                        </div>
+                                        </h4>
                                         <form action="{{ route('trades.generate.pdf') }}" method="GET"
-                                            class="space-y-2 sm:space-y-3">
+                                            class="space-y-3">
                                             <input type="hidden" name="type" value="range">
-                                            <div class="space-y-1">
+                                            <div>
                                                 <label
-                                                    class="block text-xs text-gray-400">{{ __('trades.start_date') }}</label>
+                                                    class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.start_date') }}</label>
                                                 <input type="date" name="start_date" required
-                                                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500">
                                             </div>
-                                            <div class="space-y-1">
+                                            <div>
                                                 <label
-                                                    class="block text-xs text-gray-400">{{ __('trades.end_date') }}</label>
+                                                    class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('trades.end_date') }}</label>
                                                 <input type="date" name="end_date" required
-                                                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500">
+                                                    class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500">
                                             </div>
                                             <button type="submit"
-                                                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center transition-colors text-sm">
+                                                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center text-sm">
                                                 <i class="fas fa-file-pdf mr-2"></i>
                                                 {{ __('trades.generate_report') }}
                                             </button>
@@ -266,34 +281,36 @@
                             </div>
                         </div>
 
-                        <!-- Management Actions -->
+                        <!-- Management Actions - Improved -->
                         <div class="relative group flex-1 sm:flex-none min-w-[120px] z-50">
                             <button
-                                class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start group text-sm sm:text-base">
+                                class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base transition-all shadow-md">
                                 <i class="fas fa-tools mr-1 sm:mr-2"></i>
                                 <span>{{ __('trades.manage') }}</span>
-                                <i
-                                    class="fas fa-chevron-down ml-1 sm:ml-2 text-xs transition-transform group-hover:rotate-180"></i>
+                                <i class="fas fa-chevron-down ml-1 sm:ml-2 text-xs"></i>
                             </button>
                             <!-- Dropdown -->
                             <div
-                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[12rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                                class="absolute left-0 sm:left-auto sm:right-0 top-full mt-1 w-full sm:w-[14rem] bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                 <div class="py-2">
                                     <a href="{{ route('trades.create') }}"
-                                        class="block px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-blue-300/20 dark:hover:bg-blue-500/20 hover:text-blue-300 flex items-center border-b border-gray-700/50">
-                                        <i
-                                            class="fas fa-plus-circle mr-2 sm:mr-3 text-blue-400 w-4 sm:w-5 text-center"></i>
+                                        class="block px-4 py-3 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-700 dark:hover:text-blue-300 flex items-center border-b border-gray-100 dark:border-gray-700">
+                                        <i class="fas fa-plus-circle mr-3 text-blue-500 w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">{{ __('trades.add_new_trade') }}</div>
-                                            <div class="text-xs text-gray-400">{{ __('trades.create_new_entry') }}</div>
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">
+                                                {{ __('trades.add_new_trade') }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.create_new_entry') }}</div>
                                         </div>
                                     </a>
                                     <button onclick="quickClearAll()"
-                                        class="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm hover:bg-red-300/20 dark:hover:bg-red-500/20 hover:text-red-300 flex items-center">
-                                        <i class="fas fa-trash-alt mr-2 sm:mr-3 text-red-400 w-4 sm:w-5 text-center"></i>
+                                        class="w-full text-left px-4 py-3 text-sm hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-700 dark:hover:text-red-300 flex items-center">
+                                        <i class="fas fa-trash-alt mr-3 text-red-500 w-5 text-center"></i>
                                         <div class="flex-1">
-                                            <div class="font-medium">{{ __('trades.clear_all_trades') }}</div>
-                                            <div class="text-xs text-gray-400">{{ __('trades.remove_all_data') }}</div>
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">
+                                                {{ __('trades.clear_all_trades') }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.remove_all_data') }}</div>
                                         </div>
                                     </button>
                                 </div>
@@ -303,154 +320,167 @@
                 </div>
             </div>
 
-            <!-- Table -->
+            <!-- Table - Improved contrast -->
             <div class="overflow-x-auto">
                 <table class="w-full min-w-max">
                     <thead>
-                        <tr class="bg-gray-750 border-b border-gray-600">
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">#</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {{ __('trades.symbol') }}
-                            </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                        <tr class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                #</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                {{ __('trades.symbol') }}</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('trades.type') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {{ __('trades.entry') }}
-                            </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">SL</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">TP</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {{ __('trades.timestamp') }}
-                            </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                {{ __('trades.entry') }}</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                SL</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                TP</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                {{ __('trades.timestamp') }}</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('trades.exit') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">P/L ($)
-                            </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {{ __('trades.session') }}
-                            </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {{ __('trades.result') }}
-                            </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {{ __('trades.actions') }}
-                            </th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                P/L ($)</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                {{ __('trades.session') }}</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                {{ __('trades.result') }}</th>
+                            <th
+                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                {{ __('trades.actions') }}</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-700/50">
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($trades as $trade)
-                            <tr class="hover:bg-gray-200/50 dark:hover:bg-gray-750 cursor-pointer"
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
                                 onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
-                                <td class="py-3 px-4">
+                                <td class="py-4 px-4">
                                     <span
-                                        class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                        class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                         {{ ($trades->currentPage() - 1) * $trades->perPage() + $loop->iteration }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 font-medium text-xs">{{ $trade->symbol->name }}</td>
-                                <td class="py-3 px-4">
+                                <td class="py-4 px-4 font-medium text-sm text-gray-900 dark:text-white">
+                                    {{ $trade->symbol->name }}</td>
+                                <td class="py-4 px-4">
                                     <span
-                                        class="px-2 py-1 rounded-full text-xs font-semibold {{ $trade->type == 'buy' ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30' }}">
+                                        class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $trade->type == 'buy' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
                                         {{ strtoupper($trade->type) }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 font-mono text-sm">{{ format_price($trade->entry) }}</td>
-                                <td class="py-3 px-4 font-mono">
-                                    <div class="text-sm text-red-600 dark:text-red-400">
+                                <td class="py-4 px-4 font-mono text-sm text-gray-900 dark:text-white">
+                                    {{ format_price($trade->entry) }}</td>
+                                <td class="py-4 px-4">
+                                    <div class="font-mono text-sm text-red-600 dark:text-red-400">
                                         {{ format_price($trade->stop_loss) }}</div>
-                                    <div class="text-xs text-red-600 dark:text-red-400">({{ $trade->sl_pips }} pips)</div>
-                                </td>
-                                <td class="py-3 px-4 font-mono">
-                                    <div class="text-sm text-green-600 dark:text-green-400">
-                                        {{ format_price($trade->take_profit) }}</div>
-                                    <div class="text-xs text-green-600 dark:text-green-400">({{ $trade->tp_pips }} pips)
+                                    <div class="text-xs text-red-500 dark:text-red-400/70">{{ $trade->sl_pips }} pips
                                     </div>
                                 </td>
-                                <td class="py-3 px-4 text-sm">
+                                <td class="py-4 px-4">
+                                    <div class="font-mono text-sm text-green-600 dark:text-green-400">
+                                        {{ format_price($trade->take_profit) }}</div>
+                                    <div class="text-xs text-green-500 dark:text-green-400/70">{{ $trade->tp_pips }} pips
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 text-sm text-gray-700 dark:text-gray-300">
                                     {{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}</td>
-                                <td class="py-3 px-4 font-mono">
+                                <td class="py-4 px-4 font-mono">
                                     @if ($trade->exit)
-                                        <div class="text-sm">{{ format_price($trade->exit) }}</div>
-                                        <div class="text-xs">({{ $trade->exit_pips }} pips)</div>
+                                        <div class="text-sm text-gray-900 dark:text-white">
+                                            {{ format_price($trade->exit) }}</div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">{{ $trade->exit_pips }} pips
+                                        </div>
                                     @else
-                                        <span class="text-gray-500 italic">-</span>
+                                        <span class="text-gray-400 dark:text-gray-500 italic">-</span>
                                     @endif
                                 </td>
-                                <td class="py-3 px-4">
+                                <td class="py-4 px-4">
                                     <span
-                                        class="font-mono font-semibold px-2 py-1 rounded-lg text-sm {{ $trade->profit_loss >= 0 ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30' }}">
+                                        class="font-mono font-semibold px-2.5 py-1 rounded-lg text-sm {{ $trade->profit_loss >= 0 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
                                         {{ $trade->profit_loss ?? '-' }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4">
+                                <td class="py-4 px-4">
                                     <span
-                                        class="px-2 py-1 rounded-lg text-xs font-medium bg-primary-500/20 text-primary-300 border border-primary-500/30">
+                                        class="px-2.5 py-1 rounded-lg text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
                                         {{ $trade->session }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4">
+                                <td class="py-4 px-4">
                                     @if ($trade->hasil)
                                         <span
-                                            class="px-2 py-1 rounded-full text-xs font-semibold {{ $trade->hasil == 'win' ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30' }}">
+                                            class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $trade->hasil == 'win' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
                                             {{ strtoupper($trade->hasil) }}
                                         </span>
                                     @else
                                         <span
-                                            class="px-2 py-1 rounded-lg text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                            class="px-2.5 py-1 rounded-lg text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
                                             {{ __('trades.pending') }}
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-3 px-3 w-auto">
-                                    <div class="relative">
-                                        <!-- Container utama dengan grid -->
-                                        <div class="grid grid-cols-3 gap-2 relative z-10">
-                                            <!-- Edit Button -->
+                                <td class="py-4 px-4 w-[180px] min-w-[180px] max-w-[180px]">
+                                    <div class="relative flex items-center h-10" onclick="event.stopPropagation()">
+                                        <!-- Tombol utama dalam grid -->
+                                        <div class="grid grid-cols-3 gap-2 w-full transition-transform duration-200">
                                             <a href="{{ route('trades.edit', $trade->id) }}"
-                                                class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-1 rounded-lg flex items-center justify-center transition-all duration-200"
+                                                class="bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 p-2 rounded-lg flex items-center justify-center"
                                                 title="{{ __('trades.update_exit') }}">
                                                 <i class="fas fa-edit text-sm"></i>
                                             </a>
 
-                                            <!-- Evaluate Button -->
                                             <a href="{{ route('trades.evaluate', $trade->id) }}"
-                                                class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 p-1 rounded-lg flex items-center justify-center transition-all duration-200"
+                                                class="bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-400 p-2 rounded-lg flex items-center justify-center"
                                                 title="{{ __('trades.evaluate') }}">
                                                 <i class="fas fa-chart-bar text-sm"></i>
                                             </a>
 
-                                            <!-- Delete Button -->
                                             <button
                                                 onclick="confirmDeleteTrade(event, '{{ $trade->id }}', '{{ $trade->symbol->name }}', '{{ $trade->type }}')"
-                                                class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-1 rounded-lg flex items-center justify-center transition-all duration-200"
+                                                class="bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 p-2 rounded-lg flex items-center justify-center"
                                                 title="{{ __('trades.delete_trade') }}">
                                                 <i class="fas fa-trash text-sm"></i>
                                             </button>
-
-                                            <!-- Duplicate Button (Overlay di kiri) -->
-                                            <button onclick="duplicateTrade(event, {{ $trade->id }})"
-                                                class="duplicate-btn absolute -left-9 top-0 bottom-0 bg-gray-500/90 hover:bg-gray-600 text-white px-2 rounded-lg flex items-center justify-center transition-all duration-300 opacity-0 transform -translate-x-2 w-auto h-auto z-20 shadow-lg"
-                                                title="{{ __('trades.duplicate_trade') }}">
-                                                <i class="fas fa-copy text-sm"></i>
-                                            </button>
                                         </div>
 
+                                        <!-- Tombol Duplicate - Sekarang akan selalu berfungsi -->
+                                        <button onclick="duplicateTrade(event, {{ $trade->id }})"
+                                            class="duplicate-btn absolute -left-8 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-2 py-2 rounded-lg flex items-center justify-center transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:translate-x-0"
+                                            title="{{ __('trades.duplicate_trade') }}">
+                                            <i class="fas fa-copy text-sm mr-1"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="12" class="py-12 text-center">
-                                    <div class="flex flex-col items-center justify-center text-gray-400 space-y-3">
-                                        <div class="bg-gray-700 rounded-full p-4">
-                                            <i class="fas fa-chart-line text-2xl opacity-50"></i>
+                                <td colspan="12" class="py-16 text-center">
+                                    <div
+                                        class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 space-y-4">
+                                        <div class="bg-gray-100 dark:bg-gray-700 rounded-full p-6">
+                                            <i class="fas fa-chart-line text-4xl text-gray-400 dark:text-gray-500"></i>
                                         </div>
-                                        <div class="space-y-1">
-                                            <p class="text-base font-medium">{{ __('trades.no_trades_yet') }}</p>
-                                            <p class="text-sm">{{ __('trades.start_by_adding_first_trade') }}</p>
+                                        <div class="space-y-2">
+                                            <p class="text-lg font-medium text-gray-900 dark:text-white">
+                                                {{ __('trades.no_trades_yet') }}</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                                {{ __('trades.start_by_adding_first_trade') }}</p>
                                         </div>
                                         <a href="{{ route('trades.create') }}"
-                                            class="mt-2 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg flex items-center">
+                                            class="mt-4 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-6 rounded-lg flex items-center shadow-md">
                                             <i class="fas fa-plus mr-2"></i>
                                             {{ __('trades.add_first_trade') }}
                                         </a>
@@ -464,7 +494,7 @@
 
             <!-- Pagination -->
             @if ($trades->hasPages())
-                <div class="px-6 py-4 border-t border-gray-700 bg-gray-750">
+                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                     {{ $trades->links('vendor.pagination.tailwind') }}
                 </div>
             @endif
@@ -1049,12 +1079,12 @@
                                     <p class="text-gray-400 text-sm mb-4">{{ __('trades.trade_duplicated_success') }}</p>
                                     <div class="flex justify-center space-x-3">
                                         <a href="${data.data.edit_url}" 
-                                        class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                                        class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg">
                                             <i class="fas fa-edit mr-2"></i>
                                             {{ __('trades.edit_new_trade') }}
                                         </a>
                                         <button onclick="location.reload()" 
-                                                class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">
+                                                class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg">
                                             <i class="fas fa-sync-alt mr-2"></i>
                                             {{ __('trades.refresh_page') }}
                                         </button>

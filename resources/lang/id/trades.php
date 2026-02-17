@@ -143,6 +143,7 @@ return [
     'tip_rr_ratio' => 'Rasio Risiko/Hadiah minimal 1:1,5 untuk perdagangan yang menguntungkan',
     'hide_balance' => 'Sembunyikan Saldo & Ekuitas',
     'show_balance' => 'Tunjukkan Saldo & Ekuitas',
+    'equity' => 'Ekuitas',
 
     // Edit Trade Exit Form
     'edit_trade_exit' => 'Edit Perdagangan (Keluar)',

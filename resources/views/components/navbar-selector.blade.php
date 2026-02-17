@@ -1,7 +1,7 @@
 <div class="flex flex-wrap gap-3 items-center">
     <!-- Toggle Button -->
     <button id="navToggle"
-        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 active:scale-95 transition-all duration-200 focus:outline-none"
+        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 active:scale-95 focus:outline-none"
         data-nav-state-save="true">
         <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
     </button>
@@ -119,10 +119,42 @@
     </div>
     @include('components.account-selector')
 
-    <!-- Trader Item dengan animasi muncul -->
-    {{-- <div
-        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500">
-        <i class="fas fa-user text-primary-500 mr-2 transition-transform duration-200 hover:scale-110"></i>
-        <span class="transition-all duration-200">Trader</span>
-    </div> --}}
+    <style>
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            padding: 4px 8px;
+            background-color: rgba(17, 24, 39, 0.95);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+            z-index: 10;
+        }
+
+        .dark .tooltip {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: black;
+        }
+
+        .group:hover .tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        .nav-items-container {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Smooth icon rotation */
+        .nav-toggle-icon {
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+    </style>
 </div>

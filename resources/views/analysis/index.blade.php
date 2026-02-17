@@ -6,10 +6,10 @@
         <header class="mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-primary-500">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                         {{ __('analysis.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ __('analysis.subtitle') }}</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('analysis.subtitle') }}</p>
                 </div>
 
                 <!-- Navigation and Trader Info -->
@@ -19,22 +19,21 @@
 
         <!-- Summary Alert -->
         @if ($summary)
-            <!-- Summary Alert -->
             <div
-                class="bg-blue-600/30 dark:bg-primary-900/30 rounded-xl p-4 border border-blue-900 dark:border-primary-700/30 mb-6">
+                class="bg-indigo-50 dark:bg-indigo-900/30 rounded-xl p-4 border border-indigo-200 dark:border-indigo-800/30 mb-6 shadow-sm">
                 <div class="flex items-center">
-                    <div class="bg-blue-700/70 dark:bg-primary-500/20 p-2 rounded-lg mr-3">
-                        <i class="fas fa-chart-pie text-white dark:text-primary-500"></i>
+                    <div class="bg-indigo-200 dark:bg-indigo-800/50 p-2 rounded-lg mr-3">
+                        <i class="fas fa-chart-pie text-indigo-700 dark:text-indigo-300"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-primary-300">{{ $summary['entry_type'] }}
+                        <h3 class="font-bold text-gray-900 dark:text-white">{{ $summary['entry_type'] }}
                             <span class="text-gray-600 dark:text-gray-400 font-normal">({{ $summary['session'] }})</span>
                         </h3>
-                        <p class="text-gray600 dark:text-gray-300 text-sm mt-1">
+                        <p class="text-gray-700 dark:text-gray-300 text-sm mt-1">
                             {{ $summary['trades'] }} trades ·
                             Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
                             <span
-                                class="{{ $summary['profit_loss'] >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400' }} font-bold">
+                                class="{{ $summary['profit_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
                         </p>
@@ -46,51 +45,59 @@
         <!-- Basic Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-3">
             <!-- Balance -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.balance') }}</p>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('analysis.stats.balance') }}
+                        </p>
                         <div class="flex items-center gap-2">
-                            <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
-                            <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
+                            <h3 id="balanceText" class="text-2xl font-bold text-gray-900 dark:text-white mt-2">******</h3>
+                            <h3 id="balanceValue" class="text-2xl font-bold text-gray-900 dark:text-white mt-2 hidden">
+                                ${{ number_format($balance, 2) }}
                             </h3>
-                            <button id="toggleBalance" type="button" class="mt-2 px-2 rounded-lg hover:bg-primary-500/30"
+                            <button id="toggleBalance" type="button"
+                                class="mt-2 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                                 title="{{ __('analysis.stats.toggle_balance') }}">
-                                <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
+                                <i id="balanceIcon" class="fas fa-eye-slash text-gray-500 dark:text-gray-400 text-lg"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="bg-primary-500/20 p-2 rounded-lg">
-                        <i class="fas fa-wallet text-primary-500"></i>
+                    <div class="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
+                        <i class="fas fa-wallet text-indigo-600 dark:text-indigo-400"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Win Rate -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.win_rate') }}</p>
-                        <h3 class="text-xl font-bold mt-1">{{ $winrate }}%</h3>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('analysis.stats.win_rate') }}
+                        </p>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-2">{{ $winrate }}%</h3>
                     </div>
-                    <div class="bg-green-500/20 p-2 rounded-lg">
-                        <i class="fas fa-trophy text-green-500"></i>
+                    <div class="bg-emerald-100 dark:bg-emerald-900/30 p-2 rounded-lg">
+                        <i class="fas fa-trophy text-emerald-600 dark:text-emerald-400"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Net Profit -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.net_profit') }}</p>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                            {{ __('analysis.stats.net_profit') }}</p>
                         <h3
-                            class="text-xl font-bold mt-1 {{ $netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                            class="text-2xl font-bold mt-2 {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                             ${{ number_format($netProfit, 2) }}
                         </h3>
                     </div>
-                    <div class="bg-blue-500/20 p-2 rounded-lg">
-                        <i class="fas fa-chart-line text-blue-500"></i>
+                    <div class="bg-sky-100 dark:bg-sky-900/30 p-2 rounded-lg">
+                        <i class="fas fa-chart-line text-sky-600 dark:text-sky-400"></i>
                     </div>
                 </div>
             </div>
@@ -99,14 +106,15 @@
         <!-- Expectancy Card (Full Width) -->
         <div class="mb-6">
             <div
-                class="dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-white rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('analysis.stats.expectancy') }}</p>
-                        <h3 class="text-2xl font-bold mt-1">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                            {{ __('analysis.stats.expectancy') }}</p>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                             ${{ number_format($expectancy, 2) }}
                             <span
-                                class="text-lg text-gray-600 dark:text-gray-400">{{ __('analysis.stats.per_trade') }}</span>
+                                class="text-lg font-normal text-gray-600 dark:text-gray-400">{{ __('analysis.stats.per_trade') }}</span>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-500 text-sm mt-2">
                             {{ __('analysis.stats.expectancy_description') }}
@@ -114,25 +122,25 @@
                     </div>
                     <div class="mt-4 md:mt-0">
                         <div
-                            class="bg-gradient-to-tl from-sky-500/10 via-orange-200/10 to-yellow-600/10 dark:bg-none dark:bg-gray-700/50 rounded-lg p-4">
+                            class="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-8 text-center">
                                 <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-500">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ __('analysis.stats.total_profit') }}</p>
-                                    <p class="text-lg font-bold text-green-500 dark:text-green-400">
+                                    <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                                         ${{ number_format($totalProfit, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-500">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ __('analysis.stats.total_loss') }}</p>
-                                    <p class="text-lg font-bold text-red-500 dark:text-red-400">
+                                    <p class="text-lg font-bold text-rose-600 dark:text-rose-400">
                                         ${{ number_format($totalLoss, 2) }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-500">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ __('analysis.stats.net_profit') }}</p>
                                     <p
-                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400' }}">
+                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                                         ${{ number_format($netProfit, 2) }}
                                     </p>
                                 </div>
@@ -144,14 +152,14 @@
         </div>
 
         <!-- Filters -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <form method="GET" action="{{ route('analysis.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Period Filter -->
                 <div>
                     <label for="period"
-                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('analysis.filters.period') }}</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('analysis.filters.period') }}</label>
                     <select name="period" onchange="this.form.submit()"
-                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                         <option value="all" {{ $period === 'all' ? 'selected' : '' }}>
                             {{ __('analysis.filters.all_time') }}</option>
                         <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
@@ -164,9 +172,9 @@
                 <!-- Session Filter -->
                 <div>
                     <label for="session"
-                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('analysis.filters.session') }}</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('analysis.filters.session') }}</label>
                     <select name="session" onchange="this.form.submit()"
-                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                         <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>
                             {{ __('analysis.filters.all_sessions') }}</option>
                         @foreach ($availableSessions as $sessionName)
@@ -180,9 +188,9 @@
                 <!-- Entry Type Filter -->
                 <div>
                     <label for="entry_type"
-                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('analysis.filters.entry_type') }}</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('analysis.filters.entry_type') }}</label>
                     <select name="entry_type" onchange="this.form.submit()"
-                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                         <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>
                             {{ __('analysis.filters.all_types') }}</option>
                         @foreach ($availableEntryTypes as $entryType)
@@ -198,9 +206,9 @@
         <!-- Risk Management Metrics -->
         <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.risk_management.title') }}</h2>
-                <div class="text-sm text-gray-600 dark:text-gray-300">
-                    <i class="fas fa-shield mr-1"></i>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('analysis.risk_management.title') }}</h2>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <i class="fas fa-shield mr-1 text-indigo-600 dark:text-indigo-400"></i>
                     {{ __('analysis.risk_management.subtitle') }}
                 </div>
             </div>
@@ -208,12 +216,13 @@
             <!-- Advanced Stats -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
                 <!-- Profit Factor -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.profit_factor') }}</p>
-                            <h3 class="text-xl font-bold mt-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                                 @if (is_numeric($profitFactor))
                                     {{ number_format($profitFactor, 2) }}
                                 @else
@@ -221,21 +230,25 @@
                                 @endif
                             </h3>
                         </div>
-                        <div class="bg-purple-500/20 p-2 rounded-lg">
-                            <i class="fas fa-scale-balanced text-purple-500"></i>
+                        <div class="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
+                            <i class="fas fa-scale-balanced text-purple-600 dark:text-purple-400"></i>
                         </div>
                     </div>
                     <div class="mt-3">
-                        <div class="text-xs text-gray-500">
+                        <div class="text-xs">
                             @if (is_numeric($profitFactor))
                                 @if ($profitFactor > 2)
-                                    <span class="text-green-400">{{ __('analysis.risk_management.excellent') }}</span>
+                                    <span
+                                        class="text-emerald-600 dark:text-emerald-400 font-medium">{{ __('analysis.risk_management.excellent') }}</span>
                                 @elseif($profitFactor > 1.5)
-                                    <span class="text-yellow-400">{{ __('analysis.risk_management.good') }}</span>
+                                    <span
+                                        class="text-amber-600 dark:text-amber-400 font-medium">{{ __('analysis.risk_management.good') }}</span>
                                 @elseif($profitFactor > 1)
-                                    <span class="text-orange-400">{{ __('analysis.risk_management.marginal') }}</span>
+                                    <span
+                                        class="text-orange-600 dark:text-orange-400 font-medium">{{ __('analysis.risk_management.marginal') }}</span>
                                 @else
-                                    <span class="text-red-400">{{ __('analysis.risk_management.unprofitable') }}</span>
+                                    <span
+                                        class="text-rose-600 dark:text-rose-400 font-medium">{{ __('analysis.risk_management.unprofitable') }}</span>
                                 @endif
                             @endif
                         </div>
@@ -243,83 +256,98 @@
                 </div>
 
                 <!-- Average Win/Loss -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.avg_win_loss') }}</p>
-                            <h3 class="text-xl font-bold mt-1">{{ number_format($averageRR, 2) }}:1</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                                {{ number_format($averageRR, 2) }}:1</h3>
                         </div>
-                        <div class="bg-blue-500/20 p-2 rounded-lg">
-                            <i class="fas fa-arrows-left-right text-blue-500"></i>
+                        <div class="bg-sky-100 dark:bg-sky-900/30 p-2 rounded-lg">
+                            <i class="fas fa-arrows-left-right text-sky-600 dark:text-sky-400"></i>
                         </div>
                     </div>
                     <div class="mt-3 grid grid-cols-2 gap-2">
-                        <div class="text-center">
-                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.avg_win') }}</p>
-                            <p class="text-sm font-medium text-green-400">${{ number_format($averageWin, 2) }}</p>
+                        <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
+                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.avg_win') }}</p>
+                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                                ${{ number_format($averageWin, 2) }}</p>
                         </div>
-                        <div class="text-center">
-                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.avg_loss') }}</p>
-                            <p class="text-sm font-medium text-red-400">${{ number_format($averageLoss, 2) }}</p>
+                        <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
+                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.avg_loss') }}</p>
+                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400">
+                                ${{ number_format($averageLoss, 2) }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Largest Trades -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.largest_trades') }}</p>
-                            <h3 class="text-xl font-bold mt-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                                 ${{ number_format(abs($largestWin) + abs($largestLoss), 2) }}
                             </h3>
                         </div>
-                        <div class="bg-yellow-500/20 p-2 rounded-lg">
-                            <i class="fas fa-chart-simple text-yellow-500"></i>
+                        <div class="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg">
+                            <i class="fas fa-chart-simple text-amber-600 dark:text-amber-400"></i>
                         </div>
                     </div>
                     <div class="mt-3 grid grid-cols-2 gap-2">
-                        <div class="text-center">
-                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.largest_win') }}</p>
-                            <p class="text-sm font-medium text-green-400">${{ number_format($largestWin, 2) }}</p>
+                        <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
+                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.largest_win') }}</p>
+                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                                ${{ number_format($largestWin, 2) }}</p>
                         </div>
-                        <div class="text-center">
-                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.largest_loss') }}</p>
-                            <p class="text-sm font-medium text-red-400">${{ number_format($largestLoss, 2) }}</p>
+                        <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
+                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.largest_loss') }}</p>
+                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400">
+                                ${{ number_format($largestLoss, 2) }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Win/Loss Streaks -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-700 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.win_loss_streaks') }}</p>
-                            <h3 class="text-xl font-bold mt-1">
+                            <h3 class="text-2xl font-bold mt-1">
                                 @if ($currentStreakType == 'win')
-                                    <span class="text-green-400">{{ $currentStreak }}W</span>
+                                    <span class="text-emerald-600 dark:text-emerald-400">{{ $currentStreak }}W</span>
                                 @elseif($currentStreakType == 'loss')
-                                    <span class="text-red-400">{{ $currentStreak }}L</span>
+                                    <span class="text-rose-600 dark:text-rose-400">{{ $currentStreak }}L</span>
                                 @else
-                                    -
+                                    <span class="text-gray-600 dark:text-gray-400">-</span>
                                 @endif
                             </h3>
                         </div>
-                        <div class="bg-indigo-500/20 p-2 rounded-lg">
-                            <i class="fas fa-fire-flame-curved text-indigo-500"></i>
+                        <div class="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
+                            <i class="fas fa-fire-flame-curved text-indigo-600 dark:text-indigo-400"></i>
                         </div>
                     </div>
                     <div class="mt-3 grid grid-cols-2 gap-2">
-                        <div class="text-center">
-                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.best_win_streak') }}</p>
-                            <p class="text-sm font-medium text-green-400">{{ $longestWinStreak }}</p>
+                        <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
+                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.best_win_streak') }}</p>
+                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">{{ $longestWinStreak }}
+                            </p>
                         </div>
-                        <div class="text-center">
-                            <p class="text-xs text-gray-500">{{ __('analysis.risk_management.worst_loss_streak') }}</p>
-                            <p class="text-sm font-medium text-red-400">{{ $longestLossStreak }}</p>
+                        <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
+                            <p class="text-xs text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.worst_loss_streak') }}</p>
+                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400">{{ $longestLossStreak }}</p>
                         </div>
                     </div>
                 </div>
@@ -328,79 +356,79 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Max Drawdown -->
                 <div
-                    class="bg-gradient-to-r from-indigo-200/40 via-red-200/40 to-yellow-100/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-full -translate-y-6 translate-x-6">
-                    </div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm">
-                                    {{ __('analysis.risk_management.max_drawdown') }}</p>
-                                <h3 class="text-2xl font-bold mt-1 text-red-400">
-                                    {{ number_format($maxDrawdownPercentage, 1) }}%
-                                </h3>
-                                <p class="text-gray-500 text-sm">${{ number_format($maxDrawdown, 2) }}</p>
-                            </div>
-                            <div class="bg-red-500/20 p-3 rounded-lg">
-                                <i class="fas fa-arrow-down text-red-500 text-lg"></i>
-                            </div>
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.risk_management.max_drawdown') }}</p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                                {{ number_format($maxDrawdownPercentage, 1) }}%
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">${{ number_format($maxDrawdown, 2) }}</p>
                         </div>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-xs text-gray-500 mb-1">
-                                <span>{{ __('analysis.risk_management.current_dd') }}:
-                                    {{ number_format($currentDrawdownPercentage, 1) }}%</span>
-                                <span>{{ $currentDrawdownPercentage <= 10 ? __('analysis.risk_management.low') : ($currentDrawdownPercentage <= 20 ? __('analysis.risk_management.medium') : __('analysis.risk_management.high')) }}</span>
-                            </div>
-                            <div class="w-full bg-white dark:bg-gray-700 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full"
-                                    style="width: {{ min($currentDrawdownPercentage, 100) }}%"></div>
-                            </div>
+                        <div class="bg-rose-100 dark:bg-rose-900/30 p-3 rounded-lg">
+                            <i class="fas fa-arrow-down text-rose-600 dark:text-rose-400 text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
+                            <span>{{ __('analysis.risk_management.current_dd') }}:
+                                {{ number_format($currentDrawdownPercentage, 1) }}%</span>
+                            <span
+                                class="{{ $currentDrawdownPercentage <= 10 ? 'text-emerald-600 dark:text-emerald-400' : ($currentDrawdownPercentage <= 20 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400') }}">
+                                {{ $currentDrawdownPercentage <= 10 ? __('analysis.risk_management.low') : ($currentDrawdownPercentage <= 20 ? __('analysis.risk_management.medium') : __('analysis.risk_management.high')) }}
+                            </span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-rose-500 to-orange-500 h-2 rounded-full transition-all duration-500"
+                                style="width: {{ min($currentDrawdownPercentage, 100) }}%"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Recovery Factor -->
                 <div
-                    class="bg-gradient-to-r from-yellow-200/40 via-green-200/40 to-green-500/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.recovery_factor') }}</p>
-                            <h3 class="text-2xl font-bold mt-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                                 @if (is_numeric($recoveryFactor))
                                     {{ number_format($recoveryFactor, 2) }}
                                 @else
                                     {{ $recoveryFactor }}
                                 @endif
                             </h3>
-                            <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.recovery_factor_desc') }}
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.recovery_factor_desc') }}
                             </p>
                         </div>
-                        <div class="bg-green-500/20 p-3 rounded-lg">
-                            <i class="fas fa-arrow-up-from-bracket text-green-500 text-lg"></i>
+                        <div class="bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-lg">
+                            <i class="fas fa-arrow-up-from-bracket text-emerald-600 dark:text-emerald-400 text-lg"></i>
                         </div>
                     </div>
                     <div class="mt-4">
                         <div class="flex items-center text-sm">
                             @if (is_numeric($recoveryFactor))
                                 @if ($recoveryFactor > 2)
-                                    <span class="text-green-400">
+                                    <span class="text-emerald-600 dark:text-emerald-400">
                                         <i class="fas fa-check-circle mr-1"></i>
                                         {{ __('analysis.risk_management.excellent_recovery') }}
                                     </span>
                                 @elseif($recoveryFactor > 1)
-                                    <span class="text-yellow-400">
+                                    <span class="text-amber-600 dark:text-amber-400">
                                         <i class="fas fa-exclamation-circle mr-1"></i>
                                         {{ __('analysis.risk_management.moderate_recovery') }}
                                     </span>
                                 @else
-                                    <span class="text-red-400">
+                                    <span class="text-rose-600 dark:text-rose-400">
                                         <i class="fas fa-times-circle mr-1"></i>
                                         {{ __('analysis.risk_management.poor_recovery') }}
                                     </span>
                                 @endif
                             @else
-                                <span class="text-green-400">
+                                <span class="text-emerald-600 dark:text-emerald-400">
                                     <i class="fas fa-infinity mr-1"></i> {{ __('analysis.risk_management.no_drawdown') }}
                                 </span>
                             @endif
@@ -410,37 +438,38 @@
 
                 <!-- Sharpe Ratio -->
                 <div
-                    class="bg-gradient-to-r from-blue-100/40 via-blue-300/40 to-blue-500/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.sharpe_ratio') }}</p>
-                            <h3 class="text-2xl font-bold mt-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                                 {{ number_format($sharpeRatio, 2) }}
                             </h3>
-                            <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.sharpe_ratio_desc') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.sharpe_ratio_desc') }}</p>
                         </div>
-                        <div class="bg-blue-500/20 p-3 rounded-lg">
-                            <i class="fas fa-chart-line text-blue-500 text-lg"></i>
+                        <div class="bg-sky-100 dark:bg-sky-900/30 p-3 rounded-lg">
+                            <i class="fas fa-chart-line text-sky-600 dark:text-sky-400 text-lg"></i>
                         </div>
                     </div>
                     <div class="mt-4">
                         <div class="flex items-center text-sm">
                             @if ($sharpeRatio > 1.5)
-                                <span class="text-green-400">
+                                <span class="text-emerald-600 dark:text-emerald-400">
                                     <i class="fas fa-star mr-1"></i> {{ __('analysis.risk_management.excellent') }}
                                 </span>
                             @elseif($sharpeRatio > 1)
-                                <span class="text-yellow-400">
+                                <span class="text-amber-600 dark:text-amber-400">
                                     <i class="fas fa-star-half-alt mr-1"></i> {{ __('analysis.risk_management.good') }}
                                 </span>
                             @elseif($sharpeRatio > 0)
-                                <span class="text-orange-400">
+                                <span class="text-orange-600 dark:text-orange-400">
                                     <i class="fas fa-chart-line mr-1"></i>
                                     {{ __('analysis.risk_management.acceptable') }}
                                 </span>
                             @else
-                                <span class="text-red-400">
+                                <span class="text-rose-600 dark:text-rose-400">
                                     <i class="fas fa-exclamation-triangle mr-1"></i>
                                     {{ __('analysis.risk_management.risky') }}
                                 </span>
@@ -451,26 +480,27 @@
 
                 <!-- Risk Consistency -->
                 <div
-                    class="bg-gradient-to-r from-pink-300/40 via-purple-300/40 to-indigo-400/30 dark:bg-gradient-to-br dark:from-gray-800 dark:via-orange-none dark:to-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 relative overflow-hidden">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.consistency_score') }}</p>
-                            <h3 class="text-2xl font-bold mt-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                                 {{ $consistencyScore }}%
                             </h3>
-                            <p class="text-gray-500 text-sm">{{ __('analysis.risk_management.profitable_months') }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                {{ __('analysis.risk_management.profitable_months') }}</p>
                         </div>
-                        <div class="bg-purple-500/20 p-3 rounded-lg">
-                            <i class="fas fa-chart-pie text-purple-500 text-lg"></i>
+                        <div class="bg-purple-100 dark:bg-purple-900/30 p-3 rounded-lg">
+                            <i class="fas fa-chart-pie text-purple-600 dark:text-purple-400 text-lg"></i>
                         </div>
                     </div>
                     <div class="mt-4">
-                        <div class="w-full bg-white dark:bg-gray-700 rounded-full h-2 mb-2">
-                            <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
+                            <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500"
                                 style="width: {{ $consistencyScore }}%"></div>
                         </div>
-                        <div class="flex justify-between text-xs text-gray-500">
+                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
                             <span>{{ $monthlyReturns->filter(fn($m) => $m['profit'] > 0)->count() }}
                                 {{ __('analysis.risk_management.profitable') }}</span>
                             <span>{{ $monthlyReturns->count() }}
@@ -483,17 +513,17 @@
             <!-- Detailed Risk Metrics (Expanded on click) -->
             <div class="mt-2">
                 <button id="toggleRiskDetails"
-                    class="flex items-center justify-center w-full py-2 text-gray-600 dark:text-gray-400 hover:text-purple-500 dark:hover:text-white">
-                    <i class="fas fa-chevron-down mr-2"></i>
-                    <span class="text-sm">{{ __('analysis.risk_management.show_details') }}</span>
+                    class="flex items-center justify-center w-full py-2 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+                    <i class="fas fa-chevron-down mr-2 transition-transform duration-300" id="riskToggleIcon"></i>
+                    <span class="text-sm" id="riskToggleText">{{ __('analysis.risk_management.show_details') }}</span>
                 </button>
 
                 <div id="riskDetails" class="hidden mt-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- Risk per Trade -->
                         <div
-                            class="bg-white/20 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-3">
+                            class="bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 p-4">
+                            <h4 class="font-medium text-gray-900 dark:text-white mb-3">
                                 {{ __('analysis.risk_management.risk_per_trade') }}</h4>
                             <div class="space-y-3">
                                 <div>
@@ -501,12 +531,12 @@
                                         <span
                                             class="text-gray-600 dark:text-gray-400">{{ __('analysis.risk_management.average_risk') }}</span>
                                         <span
-                                            class="{{ $averageRiskPerTrade <= 2 ? 'text-green-400' : ($averageRiskPerTrade <= 5 ? 'text-yellow-400' : 'text-red-400') }}">
+                                            class="{{ $averageRiskPerTrade <= 2 ? 'text-emerald-600 dark:text-emerald-400' : ($averageRiskPerTrade <= 5 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400') }}">
                                             {{ $averageRiskPerTrade }}%
                                         </span>
                                     </div>
-                                    <div class="w-full bg-white dark:bg-gray-700 rounded-full h-1.5">
-                                        <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-1.5 rounded-full"
+                                    <div class="w-full bg-gray-300 dark:bg-gray-600 rounded-full h-1.5">
+                                        <div class="bg-gradient-to-r from-sky-500 to-cyan-500 h-1.5 rounded-full transition-all duration-500"
                                             style="width: {{ min($averageRiskPerTrade * 10, 100) }}%"></div>
                                     </div>
                                 </div>
@@ -514,15 +544,16 @@
                                     <div class="flex justify-between text-sm mb-1">
                                         <span
                                             class="text-gray-600 dark:text-gray-400">{{ __('analysis.risk_management.max_risk') }}</span>
-                                        <span class="text-red-600 dark:text-red-400">{{ $maxRiskPerTrade }}%</span>
+                                        <span class="text-rose-600 dark:text-rose-400">{{ $maxRiskPerTrade }}%</span>
                                     </div>
-                                    <div class="w-full bg-white dark:bg-gray-700 rounded-full h-1.5">
-                                        <div class="bg-gradient-to-r from-red-500 to-orange-500 h-1.5 rounded-full"
+                                    <div class="w-full bg-gray-300 dark:bg-gray-600 rounded-full h-1.5">
+                                        <div class="bg-gradient-to-r from-rose-500 to-orange-500 h-1.5 rounded-full transition-all duration-500"
                                             style="width: {{ min($maxRiskPerTrade * 5, 100) }}%"></div>
                                     </div>
                                 </div>
-                                <div class="text-xs text-gray-500 mt-2">
-                                    <i class="fas fa-info-circle mr-1"></i>
+                                <div
+                                    class="text-xs text-gray-600 dark:text-gray-400 mt-2 bg-gray-200 dark:bg-gray-600 p-2 rounded">
+                                    <i class="fas fa-info-circle mr-1 text-indigo-500"></i>
                                     {{ __('analysis.risk_management.recommended_risk') }}
                                 </div>
                             </div>
@@ -530,27 +561,28 @@
 
                         <!-- Risk/Reward Distribution -->
                         <div
-                            class="bg-white/20 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-3">
+                            class="bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 p-4">
+                            <h4 class="font-medium text-gray-900 dark:text-white mb-3">
                                 {{ __('analysis.risk_management.risk_reward_profile') }}</h4>
-                            <div class="space-y-2">
+                            <div class="space-y-3">
                                 <div class="flex justify-between text-sm">
                                     <span
                                         class="text-gray-600 dark:text-gray-400">{{ __('analysis.risk_management.avg_rr_ratio') }}</span>
                                     <span
-                                        class="{{ $averageRiskReward >= 2 ? 'text-green-400' : ($averageRiskReward >= 1 ? 'text-yellow-400' : 'text-red-400') }}">
+                                        class="text-lg font-bold {{ $averageRiskReward >= 2 ? 'text-emerald-600 dark:text-emerald-400' : ($averageRiskReward >= 1 ? 'text-amber-600 dark:text-amber-400' : 'text-rose-600 dark:text-rose-400') }}">
                                         {{ $averageRiskReward }}:1
                                     </span>
                                 </div>
-                                <div class="text-xs text-gray-500">
+                                <div
+                                    class="text-xs text-gray-600 dark:text-gray-400 mt-2 bg-gray-200 dark:bg-gray-600 p-2 rounded">
                                     @if ($averageRiskReward >= 2)
-                                        <i class="fas fa-check-circle text-green-400 mr-1"></i>
+                                        <i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mr-1"></i>
                                         {{ __('analysis.risk_management.good_rr_management') }}
                                     @elseif($averageRiskReward >= 1)
-                                        <i class="fas fa-exclamation-circle text-yellow-400 mr-1"></i>
+                                        <i class="fas fa-exclamation-circle text-amber-600 dark:text-amber-400 mr-1"></i>
                                         {{ __('analysis.risk_management.equal_rr') }}
                                     @else
-                                        <i class="fas fa-times-circle text-red-400 mr-1"></i>
+                                        <i class="fas fa-times-circle text-rose-600 dark:text-rose-400 mr-1"></i>
                                         {{ __('analysis.risk_management.poor_rr') }}
                                     @endif
                                 </div>
@@ -559,21 +591,23 @@
 
                         <!-- Position Size Analysis -->
                         <div
-                            class="bg-white/20 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                            <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-3">
+                            class="bg-gray-100 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 p-4">
+                            <h4 class="font-medium text-gray-900 dark:text-white mb-3">
                                 {{ __('analysis.risk_management.position_size_performance') }}</h4>
                             @if ($positionSizes->count() > 0)
-                                <div class="space-y-2 max-h-32 overflow-y-auto pr-2">
+                                <div
+                                    class="space-y-2 max-h-32 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                                     @foreach ($positionSizes as $size => $data)
-                                        <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-600 dark:text-gray-400">{{ $size }}</span>
-                                            <div class="flex items-center">
+                                        <div
+                                            class="flex justify-between items-center text-sm p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors duration-150">
+                                            <span class="text-gray-700 dark:text-gray-300">{{ $size }}</span>
+                                            <div class="flex items-center gap-2">
                                                 <span
-                                                    class="{{ $data['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} mr-2">
+                                                    class="{{ $data['profit'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                                                     ${{ number_format($data['profit'], 2) }}
                                                 </span>
                                                 <span
-                                                    class="text-xs {{ $data['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                    class="text-xs px-1.5 py-0.5 rounded {{ $data['winrate'] >= 50 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' }}">
                                                     {{ $data['winrate'] }}%
                                                 </span>
                                             </div>
@@ -581,7 +615,7 @@
                                     @endforeach
                                 </div>
                             @else
-                                <p class="text-gray-600 dark:text-gray-500 text-sm">
+                                <p class="text-gray-600 dark:text-gray-400 text-sm text-center py-4">
                                     {{ __('analysis.risk_management.no_position_data') }}
                                 </p>
                             @endif
@@ -595,9 +629,9 @@
         <div class="my-4">
             <!-- Section Header -->
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.time_analysis.title') }}</h2>
-                <div class="text-sm text-gray-600 dark:text-gray-300">
-                    <i class="fas fa-clock mr-1"></i>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('analysis.time_analysis.title') }}</h2>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <i class="fas fa-clock mr-1 text-indigo-600 dark:text-indigo-400"></i>
                     {{ __('analysis.time_analysis.subtitle') }}
                 </div>
             </div>
@@ -606,78 +640,79 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <!-- Best Trading Hour -->
                 <div
-                    class="bg-gradient-to-br from-green-200/20 via-green-400/20 to-green-500/20 dark:from-green-900/20 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.time_analysis.best_hour') }}</p>
-                            <h3 class="text-2xl font-bold mt-1 text-green-400">
+                            <h3 class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
                                 @if ($bestHour && $bestHour['hour'] !== 'Unknown')
                                     {{ str_pad($bestHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $bestHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
                                 @else
                                     N/A
                                 @endif
                             </h3>
-                            <p class="text-gray-500 text-sm mt-2">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
                                 @if ($bestHour && $bestHour['hour'] !== 'Unknown')
-                                    ${{ number_format($bestHour['profit'] ?? 0, 2) }} · {{ $bestHour['winrate'] ?? 0 }}%
+                                    ${{ number_format($bestHour['profit'] ?? 0, 2) }} · <span
+                                        class="text-emerald-600 dark:text-emerald-400">{{ $bestHour['winrate'] ?? 0 }}%</span>
                                     {{ __('analysis.stats.winrate_short') }}
                                 @else
                                     {{ __('analysis.time_analysis.no_data') }}
                                 @endif
                             </p>
                         </div>
-                        <div class="bg-green-500/20 p-3 rounded-lg">
-                            <i class="fas fa-crown text-green-500 text-lg"></i>
+                        <div class="bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-lg">
+                            <i class="fas fa-crown text-emerald-600 dark:text-emerald-400 text-lg"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Worst Trading Hour -->
                 <div
-                    class="bg-gradient-to-br from-red-200/20 to-red-600/20 dark:from-red-900/20 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.time_analysis.worst_hour') }}</p>
-                            <h3 class="text-2xl font-bold mt-1 text-red-400">
+                            <h3 class="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1">
                                 @if ($worstHour && $worstHour['hour'] !== 'Unknown')
                                     {{ str_pad($worstHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $worstHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
                                 @else
                                     N/A
                                 @endif
                             </h3>
-                            <p class="text-gray-500 text-sm mt-2">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
                                 @if ($worstHour && $worstHour['hour'] !== 'Unknown')
-                                    ${{ number_format($worstHour['profit'] ?? 0, 2) }} ·
-                                    {{ $worstHour['winrate'] ?? 0 }}%
+                                    ${{ number_format($worstHour['profit'] ?? 0, 2) }} · <span
+                                        class="text-rose-600 dark:text-rose-400">{{ $worstHour['winrate'] ?? 0 }}%</span>
                                     {{ __('analysis.stats.winrate_short') }}
                                 @else
                                     {{ __('analysis.time_analysis.no_data') }}
                                 @endif
                             </p>
                         </div>
-                        <div class="bg-red-500/20 p-3 rounded-lg">
-                            <i class="fas fa-skull-crossbones text-red-500 text-lg"></i>
+                        <div class="bg-rose-100 dark:bg-rose-900/30 p-3 rounded-lg">
+                            <i class="fas fa-skull-crossbones text-rose-600 dark:text-rose-400 text-lg"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Busiest Trading Hour -->
                 <div
-                    class="bg-gradient-to-br from-green-200/20 via-green-300/20 to-blue-500/20 dark:from-blue-900/20 dark:to-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.time_analysis.busiest_hour') }}</p>
-                            <h3 class="text-2xl font-bold mt-1 text-blue-400">
+                            <h3 class="text-2xl font-bold text-sky-600 dark:text-sky-400 mt-1">
                                 @if ($busiestHour && $busiestHour['hour'] !== 'Unknown')
                                     {{ str_pad($busiestHour['hour'], 2, '0', STR_PAD_LEFT) }}:00-{{ str_pad((int) $busiestHour['hour'] + 1, 2, '0', STR_PAD_LEFT) }}:00
                                 @else
                                     N/A
                                 @endif
                             </h3>
-                            <p class="text-gray-500 text-sm mt-2">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
                                 @if ($busiestHour && $busiestHour['hour'] !== 'Unknown')
                                     {{ $busiestHour['trades'] ?? 0 }} {{ __('analysis.stats.trades') }} ·
                                     ${{ number_format($busiestHour['profit'] ?? 0, 2) }}
@@ -686,23 +721,26 @@
                                 @endif
                             </p>
                         </div>
-                        <div class="bg-blue-500/20 p-3 rounded-lg">
-                            <i class="fas fa-bullseye text-blue-500 text-lg"></i>
+                        <div class="bg-sky-100 dark:bg-sky-900/30 p-3 rounded-lg">
+                            <i class="fas fa-bullseye text-sky-600 dark:text-sky-400 text-lg"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Hourly Performance Chart dengan Loading -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-primary-300">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">
                             {{ __('analysis.time_analysis.hourly_performance') }}</h3>
-                        <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.hourly_description') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                            {{ __('analysis.time_analysis.hourly_description') }}</p>
                     </div>
-                    <div class="text-sm text-gray-400">
-                        <i class="fas fa-chart-bar mr-1"></i>
+                    <div
+                        class="text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                        <i class="fas fa-chart-bar mr-1 text-indigo-500"></i>
                         {{ $tradingTimeStats['trading_frequency'] ?? __('analysis.time_analysis.low') }}
                         {{ __('analysis.time_analysis.frequency') }}
                     </div>
@@ -710,14 +748,15 @@
 
                 <!-- Chart Container dengan Loading State -->
                 <div id="hourlyChartContainer" class="h-64 relative">
-                    <div id="hourlyChartLoading" class="chart-loading">
+                    <div id="hourlyChartLoading" class="chart-loading" style="display: none;">
                         <div class="chart-loading-spinner"></div>
                         <p class="chart-loading-text">{{ __('analysis.loading.hourly_performance') }}</p>
                     </div>
                     <div id="hourlyChartNoData" class="chart-no-data" style="display: none;">
-                        <div class="flex flex-col items-center justify-center h-full text-gray-500">
-                            <i class="fas fa-clock text-3xl mb-3"></i>
-                            <p class="text-base">{{ __('analysis.time_analysis.no_hourly_data') }}</p>
+                        <div class="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-clock text-3xl mb-3 opacity-50"></i>
+                            <p class="text-base font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('analysis.time_analysis.no_hourly_data') }}</p>
                             <p class="text-sm">{{ __('analysis.time_analysis.start_trading') }}</p>
                         </div>
                     </div>
@@ -725,31 +764,32 @@
                 </div>
             </div>
 
-            <!-- Session-Time Heatmap (Collapsible) -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
+            <!-- Session-Time Heatmap -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-primary-300">{{ __('analysis.time_analysis.heatmap_title') }}
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                            {{ __('analysis.time_analysis.heatmap_title') }}
                         </h3>
-                        <p class="text-gray-500 text-sm mt-1">{{ __('analysis.time_analysis.heatmap_description') }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                            {{ __('analysis.time_analysis.heatmap_description') }}</p>
                     </div>
-                    {{-- <button id="toggleHeatmap" class="text-gray-400 hover:text-white">
-                        <i class="fas fa-expand"></i>
-                    </button> --}}
                 </div>
 
-                {{-- <div id="heatmapContainer" class="verflow-visible relative z-0"> --}}
                 <div id="heatmapContainer" class="overflow-x-auto lg:overflow-visible relative z-0">
                     <div class="min-w-max">
                         <!-- Header row with times (columns) -->
                         <div class="grid grid-cols-25 gap-1 mb-1">
-                            <div class="text-xs text-gray-500 text-center py-1">{{ __('analysis.time_analysis.day') }}
+                            <div class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center py-1">
+                                {{ __('analysis.time_analysis.day') }}
                             </div>
                             @for ($hour = 0; $hour < 24; $hour++)
                                 @php
                                     $hourStr = str_pad($hour, 2, '0', STR_PAD_LEFT);
                                 @endphp
-                                <div class="text-xs text-gray-500 text-center py-1">{{ $hourStr }}:00</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400 text-center py-1">
+                                    {{ $hourStr }}:00</div>
                             @endfor
                         </div>
 
@@ -757,7 +797,8 @@
                         @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $dayIndex => $dayName)
                             <div class="grid grid-cols-25 gap-1 mb-1">
                                 <!-- Day label -->
-                                <div class="text-xs text-gray-400 text-center py-1 font-medium">
+                                <div
+                                    class="text-xs text-gray-700 dark:text-gray-300 text-center py-1 font-medium bg-gray-100 dark:bg-gray-700 rounded">
                                     {{ __("analysis.days_short.$dayName") }}
                                 </div>
 
@@ -772,9 +813,9 @@
 
                                         // Determine color intensity
                                         if ($trades == 0) {
-                                            $bgColor = 'bg-gray-200/70 dark:bg-gray-900';
-                                            $textColor = 'text-gray-600 dark:text-gray-700';
-                                            $intensity = 'No Trades';
+                                            $bgColor = 'bg-gray-200 dark:bg-gray-700';
+                                            $textColor = 'text-gray-500 dark:text-gray-400';
+                                            $borderColor = 'border-gray-300 dark:border-gray-600';
                                         } else {
                                             $maxProfit = max(array_column(array_merge(...$heatmapData), 'profit'));
                                             $minProfit = min(array_column(array_merge(...$heatmapData), 'profit'));
@@ -787,22 +828,23 @@
                                             }
 
                                             if ($profit > 0) {
-                                                $greenIntensity = min(100, 50 + $intensity / 2);
-                                                $bgColor = 'bg-green-300 dark:bg-green-900';
-                                                $textColor = 'text-green-700 dark:text-green-400';
+                                                $bgColor = 'bg-emerald-200 dark:bg-emerald-900/50';
+                                                $textColor = 'text-emerald-700 dark:text-emerald-400';
+                                                $borderColor = 'border-emerald-500 dark:border-emerald-600';
                                             } elseif ($profit < 0) {
-                                                $redIntensity = min(100, 50 + $intensity / 2);
-                                                $bgColor = 'bg-red-300 dark:bg-red-900';
-                                                $textColor = 'text-red-700 dark:text-red-400';
+                                                $bgColor = 'bg-rose-200 dark:bg-rose-900/50';
+                                                $textColor = 'text-rose-700 dark:text-rose-400';
+                                                $borderColor = 'border-rose-500 dark:border-rose-600';
                                             } else {
-                                                $bgColor = 'bg-gray-300 dark:bg-gray-800';
-                                                $textColor = 'text-gray-700 dark:text-gray-400';
+                                                $bgColor = 'bg-gray-200 dark:bg-gray-700';
+                                                $textColor = 'text-gray-600 dark:text-gray-400';
+                                                $borderColor = 'border-gray-300 dark:border-gray-600';
                                             }
                                         }
                                     @endphp
 
                                     <div class="relative group">
-                                        <div class="w-11 h-8 {{ $bgColor }} rounded {{ $trades > 0 ? 'cursor-pointer hover:opacity-80' : '' }} transition-all"
+                                        <div class="w-11 h-8 {{ $bgColor }} rounded border {{ $borderColor }} {{ $trades > 0 ? 'cursor-pointer hover:opacity-80 hover:scale-105 transition-transform duration-200' : '' }}"
                                             data-day="{{ $dayIndex }}" data-hour="{{ $hourStr }}"
                                             data-profit="{{ $profit }}" data-trades="{{ $trades }}">
                                             <div class="flex items-center justify-center h-full">
@@ -811,14 +853,12 @@
                                                         // Hitung jumlah digit (termasuk tanda minus)
                                                         $profitLength = strlen((string) $profit);
                                                         $fontSizeClass = match (true) {
-                                                            $profitLength >= 6
-                                                                => 'text-[9px]', // 100000+ (6 digit atau lebih)
-                                                            $profitLength == 5 => 'text-[10px]', // 10000-99999
-                                                            $profitLength == 4 => 'text-[11px]', // 1000-9999
-                                                            $profitLength == 3 => 'text-[12px]', // 100-999
-                                                            $profitLength == 2
-                                                                => 'text-xs', // 10-99 (termasuk minus 1 digit: -1)
-                                                            default => 'text-xs', // 0-9 atau minus 1 digit
+                                                            $profitLength >= 6 => 'text-[9px]',
+                                                            $profitLength == 5 => 'text-[10px]',
+                                                            $profitLength == 4 => 'text-[11px]',
+                                                            $profitLength == 3 => 'text-[12px]',
+                                                            $profitLength == 2 => 'text-xs',
+                                                            default => 'text-xs',
                                                         };
                                                     @endphp
 
@@ -830,7 +870,7 @@
                                             </div>
                                         </div>
                                         @if ($trades > 0)
-                                            <div class="absolute z-50 hidden group-hover:block bg-white/80 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-xs shadow-xl min-w-32"
+                                            <div class="absolute z-50 hidden group-hover:block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 text-xs shadow-xl min-w-32"
                                                 style="left: -100%; bottom: calc(100% + 8px);">
                                                 <div class="font-medium {{ $textColor }}">
                                                     {{ $hourStr }}:00-{{ $nextHour }}:00
@@ -855,18 +895,27 @@
                 </div>
 
                 <!-- Legend -->
-                <div class="flex justify-center items-center mt-4 text-xs text-gray-500">
+                <div class="flex justify-center items-center mt-4 text-xs">
                     <div class="flex items-center mr-4">
-                        <div class="w-4 h-4 bg-green-300 dark:bg-green-900 rounded mr-1"></div>
-                        <span>{{ __('analysis.time_analysis.profitable') }}</span>
+                        <div
+                            class="w-4 h-4 bg-emerald-200 dark:bg-emerald-900/50 rounded border border-emerald-500 dark:border-emerald-600 mr-1">
+                        </div>
+                        <span
+                            class="text-gray-700 dark:text-gray-300">{{ __('analysis.time_analysis.profitable') }}</span>
                     </div>
                     <div class="flex items-center mr-4">
-                        <div class="w-4 h-4 bg-red-300 dark:bg-red-900 rounded mr-1"></div>
-                        <span>{{ __('analysis.time_analysis.unprofitable') }}</span>
+                        <div
+                            class="w-4 h-4 bg-rose-200 dark:bg-rose-900/50 rounded border border-rose-500 dark:border-rose-600 mr-1">
+                        </div>
+                        <span
+                            class="text-gray-700 dark:text-gray-300">{{ __('analysis.time_analysis.unprofitable') }}</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-4 h-4 bg-gray-300 dark:bg-gray-900 rounded mr-1"></div>
-                        <span>{{ __('analysis.time_analysis.no_trades') }}</span>
+                        <div
+                            class="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600 mr-1">
+                        </div>
+                        <span
+                            class="text-gray-700 dark:text-gray-300">{{ __('analysis.time_analysis.no_trades') }}</span>
                     </div>
                 </div>
             </div>
@@ -877,13 +926,13 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 mb-0">
                     <!-- Day of Week Chart (Left) -->
                     <div
-                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
-                        <h3 class="text-lg font-bold text-primary-300 mb-4">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
                             {{ __('analysis.time_analysis.day_of_week_performance') }}</h3>
 
                         <!-- Chart Container dengan Loading State -->
                         <div id="dayOfWeekChartContainer" class="h-56 relative">
-                            <div id="dayOfWeekChartLoading" class="chart-loading">
+                            <div id="dayOfWeekChartLoading" class="chart-loading" style="display: none;">
                                 <div class="chart-loading-spinner"></div>
                                 <p class="chart-loading-text">{{ __('analysis.loading.day_of_week_chart') }}</p>
                             </div>
@@ -893,36 +942,38 @@
 
                     <!-- Day of Week Table (Right) -->
                     <div
-                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
-                        <div class="overflow-y-auto h-80">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden shadow-sm">
+                        <div
+                            class="overflow-y-auto h-80 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                             <table class="w-full text-sm">
                                 <thead class="sticky top-0 bg-white dark:bg-gray-800">
-                                    <tr class="border-b border-gray-200 dark:border-gray-600">
-                                        <th class="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                        <th class="text-left py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.time_analysis.day') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.stats.trades') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.stats.winrate') }}</th>
-                                        <th class="text-right py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                        <th class="text-right py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.time_analysis.pl') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($dayOfWeekPerformance->sortBy('day_number') as $day)
                                         <tr
-                                            class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
-                                            <td class="py-2 px-2 text-sm">
+                                            class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                            <td class="py-2 px-2 text-sm text-gray-900 dark:text-gray-300">
                                                 {{ __("analysis.days_short.{$day['short_name']}") }}</td>
-                                            <td class="py-2 px-2 text-center text-sm">{{ $day['trades'] }}</td>
+                                            <td class="py-2 px-2 text-center text-sm text-gray-900 dark:text-gray-300">
+                                                {{ $day['trades'] }}</td>
                                             <td class="py-2 px-2 text-center text-sm">
                                                 <span
-                                                    class="{{ $day['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                    class="{{ $day['winrate'] >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                                                     {{ $day['winrate'] }}%
                                                 </span>
                                             </td>
                                             <td
-                                                class="py-2 px-2 text-right font-medium {{ $day['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                                class="py-2 px-2 text-right font-medium {{ $day['profit'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} text-sm">
                                                 ${{ number_format($day['profit'], 2) }}
                                             </td>
                                         </tr>
@@ -937,22 +988,22 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 mb-0">
                     <!-- Quarterly Chart (Left) -->
                     <div
-                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80 shadow-sm">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <h3 class="text-lg font-bold text-primary-300">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">
                                     {{ __('analysis.time_analysis.quarterly_trends') }}</h3>
-                                <p class="text-gray-500 text-sm mt-1">
+                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
                                     {{ __('analysis.time_analysis.quarterly_description') }}</p>
                             </div>
-                            <div class="bg-amber-500/20 p-2 rounded-lg">
-                                <i class="fas fa-chart-line text-amber-500"></i>
+                            <div class="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg">
+                                <i class="fas fa-chart-line text-amber-600 dark:text-amber-400"></i>
                             </div>
                         </div>
 
                         <!-- Chart Container dengan Loading State -->
                         <div id="quarterlyChartContainer" class="h-56 relative">
-                            <div id="quarterlyChartLoading" class="chart-loading">
+                            <div id="quarterlyChartLoading" class="chart-loading" style="display: none;">
                                 <div class="chart-loading-spinner"></div>
                                 <p class="chart-loading-text">{{ __('analysis.loading.quarterly_trends') }}</p>
                             </div>
@@ -962,35 +1013,38 @@
 
                     <!-- Quarterly Table (Right) -->
                     <div
-                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
-                        <div class="overflow-y-auto h-80">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden shadow-sm">
+                        <div
+                            class="overflow-y-auto h-80 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                             <table class="w-full text-sm">
                                 <thead class="sticky top-0 bg-white dark:bg-gray-800">
-                                    <tr class="border-b border-gray-200 dark:border-gray-600">
-                                        <th class="text-left py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                        <th class="text-left py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.time_analysis.quarter') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.stats.trades') }}</th>
-                                        <th class="text-center py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                        <th class="text-center py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.stats.winrate') }}</th>
-                                        <th class="text-right py-2 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                        <th class="text-right py-2 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                             {{ __('analysis.time_analysis.pl') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($quarterlyPerformance->sortDesc() as $quarter)
                                         <tr
-                                            class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
-                                            <td class="py-2 px-2 text-sm">{{ $quarter['quarter_name'] }}</td>
-                                            <td class="py-2 px-2 text-center text-sm">{{ $quarter['trades'] }}</td>
+                                            class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                            <td class="py-2 px-2 text-sm text-gray-900 dark:text-gray-300">
+                                                {{ $quarter['quarter_name'] }}</td>
+                                            <td class="py-2 px-2 text-center text-sm text-gray-900 dark:text-gray-300">
+                                                {{ $quarter['trades'] }}</td>
                                             <td class="py-2 px-2 text-center text-sm">
                                                 <span
-                                                    class="{{ $quarter['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                    class="{{ $quarter['winrate'] >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                                                     {{ $quarter['winrate'] }}%
                                                 </span>
                                             </td>
                                             <td
-                                                class="py-2 px-2 text-right font-medium {{ $quarter['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                                class="py-2 px-2 text-right font-medium {{ $quarter['profit'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} text-sm">
                                                 ${{ number_format($quarter['profit'], 2) }}
                                             </td>
                                         </tr>
@@ -1005,13 +1059,13 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <!-- Monthly Chart (Left) -->
                     <div
-                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80">
-                        <h3 class="text-lg font-bold text-primary-300 mb-4">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-t-xl lg:rounded-tr-none lg:rounded-bl-xl border-r lg:border-r-0 border-t border-l border-b-0 lg:border-b p-5 min-h-80 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
                             {{ __('analysis.time_analysis.monthly_trends') }}</h3>
 
                         <!-- Chart Container dengan Loading State -->
                         <div id="monthlyChartContainer" class="h-56 relative">
-                            <div id="monthlyChartLoading" class="chart-loading">
+                            <div id="monthlyChartLoading" class="chart-loading" style="display: none;">
                                 <div class="chart-loading-spinner"></div>
                                 <p class="chart-loading-text">{{ __('analysis.loading.monthly_trends') }}</p>
                             </div>
@@ -1021,9 +1075,10 @@
 
                     <!-- Monthly Table (Right) -->
                     <div
-                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden">
+                        class="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-b-xl lg:rounded-bl-none lg:rounded-tr-xl border-r border-l lg:border-l-0 border-t-0 lg:border-t border-b p-5 min-h-80 overflow-hidden shadow-sm">
                         <!-- Grouped by Year with Collapsible Months -->
-                        <div class="space-y-1 overflow-y-auto h-80">
+                        <div
+                            class="space-y-1 overflow-y-auto h-80 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                             @php
                                 $monthsByYear = $monthlyPerformance
                                     ->groupBy(function ($month) {
@@ -1034,48 +1089,50 @@
 
                             @foreach ($monthsByYear as $year => $months)
                                 <div
-                                    class="year-group bg-gray-400/59 dark:bg-gray-700/30 rounded border border-gray-200 dark:border-gray-600">
+                                    class="year-group bg-gray-100 dark:bg-gray-700/30 rounded border border-gray-200 dark:border-gray-600">
                                     <!-- Year Header (Expandable) -->
                                     <button
-                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50"
+                                        class="year-toggle w-full flex items-center justify-between p-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
                                         data-year="{{ $year }}">
                                         <div class="flex items-center gap-2">
                                             <i
-                                                class="fas fa-chevron-down text-primary-400 year-toggle-icon transition-transform duration-300 text-sm"></i>
-                                            <span class="font-bold text-primary-300 text-sm">{{ $year }}</span>
+                                                class="fas fa-chevron-down text-indigo-500 dark:text-indigo-400 year-toggle-icon transition-transform duration-300 text-sm"></i>
+                                            <span
+                                                class="font-bold text-gray-900 dark:text-white text-sm">{{ $year }}</span>
                                             <span class="text-xs text-gray-600 dark:text-gray-400">
                                                 ({{ $months->sum('trades') }} trades,
                                                 <span
-                                                    class="{{ $months->sum('profit') >= 0 ? 'text-green-400' : 'text-red-400' }}">
+                                                    class="{{ $months->sum('profit') >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                                                     ${{ number_format($months->sum('profit'), 2) }}
                                                 </span>)
                                             </span>
                                         </div>
-                                        <div class="text-xs bg-primary-500/20 px-1.5 py-0.5 rounded text-primary-300">
+                                        <div
+                                            class="text-xs bg-indigo-100 dark:bg-indigo-900/30 px-1.5 py-0.5 rounded text-indigo-700 dark:text-indigo-400">
                                             {{ round(($months->sum('wins') / $months->sum('trades')) * 100, 1) }}%
                                         </div>
                                     </button>
 
                                     <!-- Month Details (Collapsible) -->
                                     <div
-                                        class="year-content border-t border-gray-600 max-h-0 overflow-hidden transition-all duration-300">
+                                        class="year-content border-t border-gray-200 dark:border-gray-600 max-h-0 overflow-hidden transition-all duration-300">
                                         <div class="p-2">
                                             @foreach ($months->sortDesc() as $month)
                                                 <div
-                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-200/50 dark:hover:bg-gray-700/30 rounded text-xs border-b border-gray-600/30 last:border-0">
+                                                    class="flex items-center justify-between py-1.5 px-1.5 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-xs border-b border-gray-200 dark:border-gray-600 last:border-0 transition-colors duration-150">
                                                     <span
-                                                        class="text-gray-600 dark:text-gray-300">{{ $month['month_name'] }}</span>
-                                                    <div class="flex items-center gap-2">
+                                                        class="text-gray-700 dark:text-gray-300">{{ $month['month_name'] }}</span>
+                                                    <div class="flex items-center gap-3">
                                                         <span
                                                             class="text-gray-600 dark:text-gray-400 w-10 text-center">{{ $month['trades'] }}</span>
-                                                        <span class="text-gray-600 dark:text-gray-400 w-10 text-center">
+                                                        <span class="w-10 text-center">
                                                             <span
-                                                                class="{{ $month['winrate'] >= 50 ? 'text-green-400' : 'text-red-400' }}">
+                                                                class="{{ $month['winrate'] >= 50 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
                                                                 {{ $month['winrate'] }}%
                                                             </span>
                                                         </span>
                                                         <span
-                                                            class="font-medium {{ $month['profit'] >= 0 ? 'text-green-400' : 'text-red-400' }} w-16 text-right">
+                                                            class="font-medium {{ $month['profit'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} w-16 text-right">
                                                             ${{ number_format($month['profit'], 2) }}
                                                         </span>
                                                     </div>
@@ -1095,22 +1152,23 @@
         <div class="my-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Session Polar Chart -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h3 class="text-lg font-semibold text-primary-300">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                 {{ __('analysis.time_analysis.session_performance') }}</h3>
-                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
                                 {{ __('analysis.time_analysis.distribution') }}</p>
                         </div>
-                        <div class="bg-purple-500/20 p-2 rounded-lg">
-                            <i class="fas fa-chart-pie text-purple-500"></i>
+                        <div class="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
+                            <i class="fas fa-chart-pie text-purple-600 dark:text-purple-400"></i>
                         </div>
                     </div>
 
                     <!-- Chart Container dengan Loading State -->
                     <div id="sessionPolarChartContainer" class="h-80 relative">
-                        <div id="sessionPolarChartLoading" class="chart-loading">
+                        <div id="sessionPolarChartLoading" class="chart-loading" style="display: none;">
                             <div class="chart-loading-spinner"></div>
                             <p class="chart-loading-text">{{ __('analysis.time_analysis.session_polar_chart') }}</p>
                         </div>
@@ -1119,65 +1177,68 @@
                 </div>
 
                 <!-- Session Stats Table -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h3 class="text-lg font-semibold text-primary-300">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                 {{ __('analysis.time_analysis.metrics.label1') }}</h3>
-                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
                                 {{ __('analysis.time_analysis.metrics.label2') }}</p>
                         </div>
-                        <div class="bg-indigo-500/20 p-2 rounded-lg">
-                            <i class="fas fa-table text-indigo-500"></i>
+                        <div class="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
+                            <i class="fas fa-table text-indigo-600 dark:text-indigo-400"></i>
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto max-h-80 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-700">
+                    <div
+                        class="overflow-x-auto max-h-80 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                         <table class="w-full text-sm">
-                            <thead class="sticky top-0">
-                                <tr class="border-b border-gray-600">
-                                    <th class="text-left py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                            <thead class="sticky top-0 bg-white dark:bg-gray-800">
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <th class="text-left py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.time_analysis.metrics.session') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.time_analysis.metrics.trades') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.time_analysis.metrics.winrate') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.time_analysis.metrics.avg_rr') }}</th>
-                                    <th class="text-right py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-right py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.time_analysis.metrics.profit_loss') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($sessionAnalysis as $session => $data)
                                     <tr
-                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
-                                        <td class="py-3 px-2 font-medium text-white">
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                        <td class="py-3 px-2">
                                             <span
-                                                class="inline-block px-3 py-1 bg-primary-500/80 dark:bg-primary-500/20 text-primary-300 rounded-full text-xs">
+                                                class="inline-block px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-full text-xs font-medium">
                                                 {{ $session ?? 'N/A' }}
                                             </span>
                                         </td>
-                                        <td class="py-3 px-2 text-center text-gray-600 dark:text-white font-semibold">
+                                        <td class="py-3 px-2 text-center text-gray-900 dark:text-gray-300 font-semibold">
                                             {{ $data['trades'] }}
                                         </td>
                                         <td class="py-3 px-2 text-center">
                                             <span
-                                                class="inline-block px-2 py-1 rounded {{ $data['winrate'] >= 50 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }} font-medium">
+                                                class="inline-block px-2 py-1 rounded {{ $data['winrate'] >= 50 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' }} font-medium">
                                                 {{ $data['winrate'] }}%
                                             </span>
                                         </td>
-                                        <td class="py-3 px-2 text-center text-blue-400 font-medium">{{ $data['avg_rr'] }}
+                                        <td class="py-3 px-2 text-center text-sky-600 dark:text-sky-400 font-medium">
+                                            {{ $data['avg_rr'] }}
                                         </td>
                                         <td
-                                            class="py-3 px-2 text-right font-semibold {{ $data['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }}">
-                                            {{ number_format($data['profit_loss'], 2) }}
+                                            class="py-3 px-2 text-right font-semibold {{ $data['profit_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
+                                            ${{ number_format($data['profit_loss'], 2) }}
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="py-6 text-center text-gray-500">No session data
-                                            available</td>
+                                        <td colspan="5" class="py-6 text-center text-gray-500 dark:text-gray-400">No
+                                            session data available</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -1190,44 +1251,46 @@
         <!-- Two Column Charts -->
         <div class="my-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-primary-300">{{ __('analysis.pair_analysis.title') }}</h2>
-                <div class="text-sm text-gray-600 dark:text-gray-500">
-                    <i class="fas fa-dollar mr-1"></i>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('analysis.pair_analysis.title') }}</h2>
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <i class="fas fa-dollar mr-1 text-indigo-600 dark:text-indigo-400"></i>
                     {{ __('analysis.pair_analysis.subtitle') }}
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Profit/Loss per Symbol dengan Loading -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h2 class="text-xl font-bold text-primary-300">
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                                 {{ __('analysis.pair_analysis.profit_loss_symbol') }}</h2>
-                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
                                 {{ __('analysis.pair_analysis.profit_loss_description') }}</p>
                         </div>
-                        <div class="bg-blue-500/20 p-2 rounded-lg">
-                            <i class="fas fa-coins text-blue-500"></i>
+                        <div class="bg-sky-100 dark:bg-sky-900/30 p-2 rounded-lg">
+                            <i class="fas fa-coins text-sky-600 dark:text-sky-400"></i>
                         </div>
                     </div>
 
                     <!-- Chart Container dengan Loading State -->
                     <div id="pairChartContainer" class="h-80 mb-4 relative">
-                        <div id="pairChartLoading" class="chart-loading">
+                        <div id="pairChartLoading" class="chart-loading" style="display: none;">
                             <div class="chart-loading-spinner"></div>
                             <p class="chart-loading-text">{{ __('analysis.loading.pair_chart') }}</p>
                         </div>
                         <canvas id="pairChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
 
-                    <div class="overflow-x-auto max-h-80">
+                    <div
+                        class="overflow-x-auto max-h-80 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                         <table class="w-full text-sm">
-                            <thead class="sticky top-0">
-                                <tr class="border-b border-gray-200 dark:border-gray-600">
-                                    <th class="text-left py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                            <thead class="sticky top-0 bg-white dark:bg-gray-800">
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <th class="text-left py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.pair_analysis.symbol') }}</th>
-                                    <th class="text-right py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-right py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.pair_analysis.total_pl') }}</th>
                                 </tr>
                             </thead>
@@ -1239,10 +1302,11 @@
                                 @endphp
                                 @foreach ($sortedPairs as $symbol => $pl)
                                     <tr
-                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
-                                        <td class="py-2 px-2 text-sm font-medium">{{ $symbol }}</td>
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                        <td class="py-2 px-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                            {{ $symbol }}</td>
                                         <td
-                                            class="py-2 px-2 text-right font-bold {{ $pl >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                            class="py-2 px-2 text-right font-bold {{ $pl >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} text-sm">
                                             {{ $pl >= 0 ? '+' : '' }}${{ number_format($pl, 2) }}
                                         </td>
                                     </tr>
@@ -1253,75 +1317,69 @@
                 </div>
 
                 <!-- Performance per Entry Type dengan Loading -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
                     <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h2 class="text-xl font-bold text-primary-300">
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                                 {{ __('analysis.pair_analysis.performance_entry_type') }}</h2>
-                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
                                 {{ __('analysis.pair_analysis.performance_description') }}</p>
                         </div>
-                        <div class="bg-green-500/20 p-2 rounded-lg">
-                            <i class="fas fa-chart-bar text-green-500"></i>
+                        <div class="bg-emerald-100 dark:bg-emerald-900/30 p-2 rounded-lg">
+                            <i class="fas fa-chart-bar text-emerald-600 dark:text-emerald-400"></i>
                         </div>
                     </div>
 
                     <!-- Chart Container dengan Loading State -->
                     <div id="entryTypeChartContainer" class="h-56 mb-4 relative">
-                        <div id="entryTypeChartLoading" class="chart-loading">
+                        <div id="entryTypeChartLoading" class="chart-loading" style="display: none;">
                             <div class="chart-loading-spinner"></div>
                             <p class="chart-loading-text">{{ __('analysis.loading.entry_type_chart') }}</p>
                         </div>
                         <canvas id="entryTypeChart" class="chart-canvas" style="display: none;"></canvas>
                     </div>
 
-                    <div class="overflow-x-auto max-h-80">
+                    <div
+                        class="overflow-x-auto max-h-80 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                         <table class="w-full text-sm">
-                            <thead class="sticky top-0">
-                                <tr class="border-b border-gray-200 dark:border-gray-600">
-                                    <th class="text-left py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                            <thead class="sticky top-0 bg-white dark:bg-gray-800">
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <th class="text-left py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.pair_analysis.entry_type') }}</th>
-                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
-                                        <span class="text-green-400">{{ __('analysis.stats.wins') }}</span>
+                                    <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
+                                        <span
+                                            class="text-emerald-600 dark:text-emerald-400">{{ __('analysis.stats.wins') }}</span>
                                     </th>
-                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
-                                        <span class="text-red-400">{{ __('analysis.stats.losses') }}</span>
+                                    <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
+                                        <span
+                                            class="text-rose-600 dark:text-rose-400">{{ __('analysis.stats.losses') }}</span>
                                     </th>
-                                    <th class="text-center py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.stats.winrate') }}</th>
-                                    {{-- <th class="text-right py-3 px-2 text-gray-400 font-medium">
-                                        <span class="text-green-400">Profit</span>
-                                    </th>
-                                    <th class="text-right py-3 px-2 text-gray-400 font-medium">
-                                        <span class="text-red-400">Loss</span>
-                                    </th> --}}
-                                    <th class="text-right py-3 px-2 text-gray-600 dark:text-gray-400 font-medium">
+                                    <th class="text-right py-3 px-2 text-gray-700 dark:text-gray-300 font-medium">
                                         {{ __('analysis.pair_analysis.pl') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($entryTypeData as $type => $data)
                                     <tr
-                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-750/50">
-                                        <td class="py-2 px-2 text-sm font-medium">{{ $type ?? 'N/A' }}</td>
-                                        <td class="py-2 px-2 text-center text-green-400 font-semibold">
+                                        class="border-b border-gray-200 dark:border-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                        <td class="py-2 px-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                            {{ $type ?? 'N/A' }}</td>
+                                        <td
+                                            class="py-2 px-2 text-center text-emerald-600 dark:text-emerald-400 font-semibold">
                                             {{ $data['wins'] }}</td>
-                                        <td class="py-2 px-2 text-center text-red-400 font-semibold">
+                                        <td class="py-2 px-2 text-center text-rose-600 dark:text-rose-400 font-semibold">
                                             {{ $data['losses'] }}</td>
                                         <td class="py-2 px-2 text-center">
                                             <span
-                                                class="inline-block px-2 py-1 rounded {{ $data['winrate'] >= 50 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' }} font-semibold text-xs">
+                                                class="inline-block px-2 py-1 rounded {{ $data['winrate'] >= 50 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' }} font-semibold text-xs">
                                                 {{ $data['winrate'] }}%
                                             </span>
                                         </td>
-                                        {{-- <td class="py-2 px-2 text-right text-green-400 font-semibold">
-                                            +${{ number_format($data['total_profit_wins'], 2) }}
-                                        </td>
-                                        <td class="py-2 px-2 text-right text-red-400 font-semibold">
-                                            -${{ number_format(abs($data['total_loss_losses']), 2) }}
-                                        </td> --}}
                                         <td
-                                            class="py-2 px-2 text-right font-bold {{ $data['profit_loss'] >= 0 ? 'text-green-400' : 'text-red-400' }} text-sm">
+                                            class="py-2 px-2 text-right font-bold {{ $data['profit_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} text-sm">
                                             {{ $data['profit_loss'] >= 0 ? '+' : '' }}${{ number_format($data['profit_loss'], 2) }}
                                         </td>
                                     </tr>
@@ -1334,18 +1392,21 @@
         </div>
 
         <!-- Session-Time Heatmap Modal -->
-        <div id="sessionModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+        <div id="sessionModal"
+            class="hidden fixed inset-0 bg-black/50 dark:bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
             <div
-                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl w-full max-w-2xl mx-auto max-h-[80vh] overflow-hidden">
-                <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                    <h4 id="sessionModalTitle" class="text-lg font-bold text-primary-400">
+                class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl w-full max-w-2xl mx-auto max-h-[80vh] overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h4 id="sessionModalTitle" class="text-lg font-bold text-gray-900 dark:text-white">
                         {{ __('analysis.modal.session_details') }}</h4>
-                    <button id="closeSessionModal" class="text-gray-400 hover:text-black dark:hover:text-white p-2">
+                    <button id="closeSessionModal"
+                        class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                         <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
 
-                <div id="sessionModalContent" class="p-4 overflow-y-auto max-h-[60vh]">
+                <div id="sessionModalContent"
+                    class="p-4 overflow-y-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                     <!-- Content will be filled by JavaScript -->
                 </div>
             </div>
@@ -1354,17 +1415,16 @@
 
     <!-- Scripts Section -->
     <script>
-        // Chart Lazy Loading Manager
+        // Chart Lazy Loading Manager (same as before but with updated color classes)
         class ChartLoader {
             constructor() {
                 this.charts = [];
                 this.loadedCharts = new Set();
                 this.isLoading = false;
-                this.loadDelay = 300; // ms delay between chart loads
+                this.loadDelay = 300;
                 this.currentIndex = 0;
-                this.maxChartsToLoad = 1; // Load one chart at a time
+                this.maxChartsToLoad = 1;
 
-                // Chart loading order priority
                 this.chartPriority = [
                     'sessionPolarChart',
                     'hourlyChart',
@@ -1377,7 +1437,6 @@
             }
 
             init() {
-                // Collect all chart containers
                 const chartIds = this.chartPriority.filter(id => document.getElementById(id));
 
                 chartIds.forEach(chartId => {
@@ -1389,10 +1448,7 @@
                     });
                 });
 
-                // Start loading charts
                 this.startLazyLoading();
-
-                // Also load charts when scrolling into view
                 this.setupIntersectionObserver();
             }
 
@@ -1411,7 +1467,6 @@
                     rootMargin: '50px'
                 });
 
-                // Observe each chart container
                 this.charts.forEach(chart => {
                     const container = document.getElementById(chart.containerId);
                     if (container) {
@@ -1427,19 +1482,16 @@
             }
 
             startLazyLoading() {
-                // Load first chart immediately
                 if (this.charts.length > 0) {
                     this.loadChart(this.charts[0].id);
                 }
 
-                // Setup scroll-based loading for the rest
                 window.addEventListener('scroll', () => this.handleScroll());
             }
 
             handleScroll() {
                 if (this.isLoading || this.currentIndex >= this.charts.length) return;
 
-                // Check if next chart container is in viewport
                 const nextChart = this.charts[this.currentIndex];
                 const container = document.getElementById(nextChart.containerId);
 
@@ -1464,7 +1516,6 @@
 
                 this.isLoading = true;
 
-                // Show loading state
                 const loadingEl = document.getElementById(chartInfo.loadingId);
                 const canvasEl = document.getElementById(chartId);
                 const containerEl = document.getElementById(chartInfo.containerId);
@@ -1473,20 +1524,15 @@
                 if (canvasEl) canvasEl.style.display = 'none';
 
                 try {
-                    // Simulate loading delay for better UX
                     await new Promise(resolve => setTimeout(resolve, this.loadDelay));
 
-                    // Render the chart
                     this.renderChart(chartId);
 
-                    // Mark as loaded
                     this.loadedCharts.add(chartId);
 
-                    // Hide loading, show chart
                     if (loadingEl) loadingEl.style.display = 'none';
                     if (canvasEl) canvasEl.style.display = 'block';
 
-                    // Load next chart after delay
                     this.currentIndex++;
                     if (this.currentIndex < this.charts.length) {
                         setTimeout(() => {
@@ -1499,10 +1545,9 @@
 
                 } catch (error) {
                     console.error(`Error loading chart ${chartId}:`, error);
-                    // Show error state
                     if (loadingEl) {
                         loadingEl.innerHTML = `
-                            <div class="text-red-400 text-center">
+                            <div class="text-rose-600 dark:text-rose-400 text-center">
                                 <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
                                 <p>{{ __('analysis.loading.chart_error') }}</p>
                             </div>
@@ -1513,8 +1558,8 @@
                 }
             }
 
-            // Render chart based on ID
             renderChart(chartId) {
+                // These methods remain the same as in your original code
                 switch (chartId) {
                     case 'hourlyChart':
                         this.renderHourlyChart();
@@ -1553,7 +1598,6 @@
                 const hourlyProfits = Object.values(hourlyData).map(data => data.profit);
                 const hourlyTrades = Object.values(hourlyData).map(data => data.trades);
 
-                // Check if there's data to show
                 if (hourlyProfits.length === 0 || hourlyProfits.every(p => p === 0)) {
                     document.getElementById('hourlyChartNoData').style.display = 'block';
                     document.getElementById('hourlyChartLoading').style.display = 'none';
@@ -1571,7 +1615,7 @@
                                 p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
                             ),
                             borderColor: hourlyProfits.map(p =>
-                                p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                                p >= 0 ? 'rgb(16, 185, 129)' : 'rgb(239, 68, 68)'
                             ),
                             borderWidth: 1,
                             borderRadius: 4,
@@ -1580,7 +1624,7 @@
                             label: '{{ __('analysis.charts.trades') }}',
                             data: hourlyTrades,
                             type: 'line',
-                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: 'rgb(59, 130, 246)',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderWidth: 2,
                             fill: true,
@@ -1599,13 +1643,48 @@
                             mode: 'index',
                             intersect: false,
                         },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.datasetIndex === 0) {
+                                            label += '$' + context.parsed.y.toFixed(2);
+                                        } else {
+                                            label += context.parsed.y + ' trades';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
                         scales: {
                             x: {
                                 grid: {
-                                    color: 'rgba(75, 85, 99, 0.3)'
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
                                 },
                                 ticks: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     maxRotation: 45
                                 }
                             },
@@ -1614,10 +1693,12 @@
                                 display: true,
                                 position: 'left',
                                 grid: {
-                                    color: 'rgba(75, 85, 99, 0.3)'
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
                                 },
                                 ticks: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     callback: function(value) {
                                         return '$' + value;
                                     }
@@ -1631,31 +1712,8 @@
                                     drawOnChartArea: false,
                                 },
                                 ticks: {
-                                    color: '#9ca3af'
-                                }
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                                titleColor: '#f3f4f6',
-                                bodyColor: '#f3f4f6',
-                                borderColor: 'rgba(75, 85, 99, 0.5)',
-                                borderWidth: 1,
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.datasetIndex === 0) {
-                                            label += '$' + context.parsed.y.toFixed(2);
-                                        } else {
-                                            label += context.parsed.y +
-                                                ' {{ __('analysis.stats.trades') }}';
-                                        }
-                                        return label;
-                                    }
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280'
                                 }
                             }
                         }
@@ -1672,7 +1730,6 @@
 
                 if (pairLabels.length === 0) return;
 
-                // Sort by value (descending)
                 const sortedPairs = pairLabels
                     .map((label, idx) => ({
                         label,
@@ -1692,14 +1749,14 @@
                             data: sortedValues,
                             backgroundColor: sortedValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' :
                                 'rgba(239, 68, 68, 0.7)'),
-                            borderColor: sortedValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 1)' :
-                                'rgba(239, 68, 68, 1)'),
+                            borderColor: sortedValues.map(v => v >= 0 ? 'rgb(16, 185, 129)' :
+                                'rgb(239, 68, 68)'),
                             borderWidth: 1,
                             borderRadius: 4,
                         }]
                     },
                     options: {
-                        indexAxis: 'y', // Horizontal bar
+                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: {
@@ -1711,10 +1768,14 @@
                                 display: false
                             },
                             tooltip: {
-                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                                titleColor: '#f3f4f6',
-                                bodyColor: '#f3f4f6',
-                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb',
                                 borderWidth: 1,
                                 callbacks: {
                                     label: function(context) {
@@ -1728,10 +1789,12 @@
                             x: {
                                 beginAtZero: true,
                                 grid: {
-                                    color: 'rgba(75, 85, 99, 0.3)'
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
                                 },
                                 ticks: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     callback: function(value) {
                                         return '$' + value.toLocaleString();
                                     }
@@ -1742,7 +1805,8 @@
                                     display: false
                                 },
                                 ticks: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     font: {
                                         size: 12,
                                         weight: 'bold'
@@ -1762,7 +1826,6 @@
 
                 if (entryLabels.length === 0) return;
 
-                // Extract wins and losses for grouped bars
                 const winsData = entryLabels.map(label => entryData[label].wins);
                 const lossesData = entryLabels.map(label => entryData[label].losses);
                 const profitData = entryLabels.map(label => entryData[label].profit_loss);
@@ -1777,7 +1840,7 @@
                                 label: '{{ __('analysis.stats.wins') }}',
                                 data: winsData,
                                 backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                                borderColor: 'rgba(16, 185, 129, 1)',
+                                borderColor: 'rgb(16, 185, 129)',
                                 borderWidth: 1,
                                 borderRadius: 4,
                                 order: 2
@@ -1786,7 +1849,7 @@
                                 label: '{{ __('analysis.stats.losses') }}',
                                 data: lossesData,
                                 backgroundColor: 'rgba(239, 68, 68, 0.7)',
-                                borderColor: 'rgba(239, 68, 68, 1)',
+                                borderColor: 'rgb(239, 68, 68)',
                                 borderWidth: 1,
                                 borderRadius: 4,
                                 order: 2
@@ -1805,7 +1868,8 @@
                                 display: true,
                                 position: 'top',
                                 labels: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151',
                                     font: {
                                         size: 12
                                     },
@@ -1813,10 +1877,14 @@
                                 }
                             },
                             tooltip: {
-                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                                titleColor: '#f3f4f6',
-                                bodyColor: '#f3f4f6',
-                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb',
                                 borderWidth: 1,
                                 callbacks: {
                                     afterLabel: function(context) {
@@ -1826,12 +1894,12 @@
                                         const profitWins = totalProfitWins[dataIndex];
                                         const lossLosses = totalLossLosses[dataIndex];
 
-                                        let tooltip = 'Total P/L: ' + (profit >= 0 ? '+' : '') + '$' +
-                                            profit.toFixed(2);
-                                        tooltip += '\nProfit $: +$' + profitWins.toFixed(2);
-                                        tooltip += '\nLoss $: -$' + Math.abs(lossLosses).toFixed(2);
-
-                                        return tooltip;
+                                        return [
+                                            'Total P/L: ' + (profit >= 0 ? '+' : '') + '$' + profit
+                                            .toFixed(2),
+                                            'Profit $: +$' + profitWins.toFixed(2),
+                                            'Loss $: -$' + Math.abs(lossLosses).toFixed(2)
+                                        ];
                                     }
                                 }
                             }
@@ -1843,7 +1911,8 @@
                                     display: false
                                 },
                                 ticks: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     font: {
                                         size: 12,
                                         weight: 'bold'
@@ -1854,10 +1923,12 @@
                                 stacked: false,
                                 beginAtZero: true,
                                 grid: {
-                                    color: 'rgba(75, 85, 99, 0.3)'
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
                                 },
                                 ticks: {
-                                    color: '#9ca3af'
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280'
                                 }
                             }
                         }
@@ -1886,14 +1957,14 @@
                                 p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
                             ),
                             borderColor: dowProfits.map(p =>
-                                p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                                p >= 0 ? 'rgb(16, 185, 129)' : 'rgb(239, 68, 68)'
                             ),
                             borderWidth: 1,
                             borderRadius: 4,
                         }]
                     },
                     options: {
-                        indexAxis: 'y', // Ubah menjadi horizontal chart
+                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         animation: {
@@ -1902,15 +1973,25 @@
                         },
                         plugins: {
                             legend: {
-                                display: true,
-                                position: 'top',
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151'
+                                }
                             },
                             tooltip: {
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb',
                                 callbacks: {
                                     afterLabel: function(context) {
                                         const dataIndex = context.dataIndex;
                                         const winrate = dowWinrates[dataIndex];
-                                        return `{{ __('analysis.stats.winrate') }}: ${winrate}%`;
+                                        return `Winrate: ${winrate}%`;
                                     }
                                 }
                             }
@@ -1919,22 +2000,24 @@
                             x: {
                                 beginAtZero: true,
                                 grid: {
-                                    display: true,
-                                    drawBorder: false
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
                                 },
                                 ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     callback: function(value) {
-                                        return '$' + value
-                                            .toLocaleString(); // Sesuaikan dengan mata uang Anda
+                                        return '$' + value.toLocaleString();
                                     }
                                 }
                             },
                             y: {
                                 grid: {
-                                    display: false,
-                                    drawBorder: false
+                                    display: false
                                 },
                                 ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     font: {
                                         size: 12
                                     }
@@ -1966,14 +2049,14 @@
                                 p >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)'
                             ),
                             borderColor: quarterlyProfits.map(p =>
-                                p >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)'
+                                p >= 0 ? 'rgb(16, 185, 129)' : 'rgb(239, 68, 68)'
                             ),
                             borderRadius: 4,
                             yAxisID: 'y',
                         }, {
                             label: '{{ __('analysis.stats.winrate') }} (%)',
                             data: quarterlyWinrates,
-                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: 'rgb(59, 130, 246)',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderWidth: 2,
                             fill: false,
@@ -1993,18 +2076,45 @@
                             intersect: false,
                         },
                         plugins: {
+                            legend: {
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151'
+                                }
+                            },
                             tooltip: {
-                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                                titleColor: '#f3f4f6',
-                                bodyColor: '#f3f4f6'
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb'
                             }
                         },
                         scales: {
+                            x: {
+                                grid: {
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+                                },
+                                ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280'
+                                }
+                            },
                             y: {
                                 type: 'linear',
                                 display: true,
                                 position: 'left',
+                                grid: {
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+                                },
                                 ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     callback: function(value) {
                                         return '$' + value.toLocaleString();
                                     }
@@ -2018,6 +2128,8 @@
                                     drawOnChartArea: false
                                 },
                                 ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     callback: function(value) {
                                         return value + '%';
                                     }
@@ -2044,7 +2156,7 @@
                         datasets: [{
                             label: '{{ __('analysis.charts.monthly_profit') }}',
                             data: monthlyProfits,
-                            borderColor: 'rgba(139, 92, 246, 0.8)',
+                            borderColor: 'rgb(139, 92, 246)',
                             backgroundColor: 'rgba(139, 92, 246, 0.1)',
                             borderWidth: 2,
                             fill: true,
@@ -2059,10 +2171,46 @@
                             easing: 'easeOutQuart'
                         },
                         plugins: {
+                            legend: {
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151'
+                                }
+                            },
                             tooltip: {
-                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                                titleColor: '#f3f4f6',
-                                bodyColor: '#f3f4f6'
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+                                },
+                                ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+                                },
+                                ticks: {
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
                             }
                         }
                     }
@@ -2081,26 +2229,6 @@
                 const profits = Object.values(sessionData).map(d => d.profit_loss);
                 const avgRR = Object.values(sessionData).map(d => d.avg_rr);
 
-                // Function to generate a unique color shade for duplicate values
-                const getShadedColor = (baseColor, index, duplicateCount) => {
-                    if (duplicateCount <= 1) return baseColor;
-
-                    // Calculate shade variation (0.8 to 1.2) based on index
-                    const shadeFactor = 0.8 + (index / duplicateCount) * 0.4;
-
-                    // Parse the base color
-                    const rgba = baseColor.match(/[\d.]+/g);
-                    if (!rgba) return baseColor;
-
-                    const r = Math.min(255, Math.round(parseInt(rgba[0]) * shadeFactor));
-                    const g = Math.min(255, Math.round(parseInt(rgba[1]) * shadeFactor));
-                    const b = Math.min(255, Math.round(parseInt(rgba[2]) * shadeFactor));
-                    const a = parseFloat(rgba[3]);
-
-                    return `rgba(${r}, ${g}, ${b}, ${a})`;
-                };
-
-                // Find duplicate values and their positions
                 const valueGroups = {};
                 winrates.forEach((wr, index) => {
                     const key = wr.toString();
@@ -2110,20 +2238,28 @@
                     valueGroups[key].push(index);
                 });
 
-                // Generate colors based on winrate with variation for duplicates
+                const getShadedColor = (baseColor, index, duplicateCount) => {
+                    if (duplicateCount <= 1) return baseColor;
+                    const shadeFactor = 0.8 + (index / duplicateCount) * 0.4;
+                    const rgba = baseColor.match(/[\d.]+/g);
+                    if (!rgba) return baseColor;
+                    const r = Math.min(255, Math.round(parseInt(rgba[0]) * shadeFactor));
+                    const g = Math.min(255, Math.round(parseInt(rgba[1]) * shadeFactor));
+                    const b = Math.min(255, Math.round(parseInt(rgba[2]) * shadeFactor));
+                    const a = parseFloat(rgba[3]);
+                    return `rgba(${r}, ${g}, ${b}, ${a})`;
+                };
+
                 const colors = winrates.map((wr, index) => {
-                    // Get base color
                     let baseColor;
                     if (wr >= 60) baseColor = 'rgba(16, 185, 129, 0.7)';
                     else if (wr >= 50) baseColor = 'rgba(59, 130, 246, 0.7)';
                     else baseColor = 'rgba(239, 68, 68, 0.7)';
 
-                    // Check if this value has duplicates
                     const key = wr.toString();
                     const duplicateIndices = valueGroups[key];
 
                     if (duplicateIndices.length > 1) {
-                        // Find position in duplicates
                         const positionInDuplicates = duplicateIndices.indexOf(index);
                         return getShadedColor(baseColor, positionInDuplicates, duplicateIndices.length);
                     }
@@ -2132,18 +2268,15 @@
                 });
 
                 const borderColors = winrates.map((wr, index) => {
-                    // Get base border color
                     let baseColor;
-                    if (wr >= 60) baseColor = 'rgba(16, 185, 129, 1)';
-                    else if (wr >= 50) baseColor = 'rgba(59, 130, 246, 1)';
-                    else baseColor = 'rgba(239, 68, 68, 1)';
+                    if (wr >= 60) baseColor = 'rgb(16, 185, 129)';
+                    else if (wr >= 50) baseColor = 'rgb(59, 130, 246)';
+                    else baseColor = 'rgb(239, 68, 68)';
 
-                    // Check if this value has duplicates
                     const key = wr.toString();
                     const duplicateIndices = valueGroups[key];
 
                     if (duplicateIndices.length > 1) {
-                        // Find position in duplicates
                         const positionInDuplicates = duplicateIndices.indexOf(index);
                         return getShadedColor(baseColor, positionInDuplicates, duplicateIndices.length);
                     }
@@ -2175,17 +2308,22 @@
                                 display: true,
                                 position: 'top',
                                 labels: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151',
                                     font: {
                                         size: 12
                                     }
                                 }
                             },
                             tooltip: {
-                                backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                                titleColor: '#f3f4f6',
-                                bodyColor: '#f3f4f6',
-                                borderColor: 'rgba(75, 85, 99, 0.5)',
+                                backgroundColor: document.documentElement.classList.contains('dark') ?
+                                    '#1f2937' : '#ffffff',
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                    '#111827',
+                                borderColor: document.documentElement.classList.contains('dark') ? '#374151' :
+                                    '#e5e7eb',
                                 borderWidth: 1,
                                 padding: 12,
                                 displayColors: true,
@@ -2214,9 +2352,9 @@
                                 beginAtZero: true,
                                 max: 100,
                                 ticks: {
-                                    color: '#9ca3af',
+                                    color: document.documentElement.classList.contains('dark') ? '#9ca3af' :
+                                        '#6b7280',
                                     backdropColor: 'transparent',
-                                    // Hapus stepSize untuk otomatis
                                     font: {
                                         size: 11
                                     },
@@ -2225,7 +2363,8 @@
                                     }
                                 },
                                 pointLabels: {
-                                    color: '#e5e7eb',
+                                    color: document.documentElement.classList.contains('dark') ? '#e5e7eb' :
+                                        '#374151',
                                     font: {
                                         size: 13,
                                         weight: 'bold'
@@ -2233,12 +2372,15 @@
                                     padding: 8
                                 },
                                 grid: {
-                                    color: 'rgba(75, 85, 99, 0.3)',
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)',
                                     drawBorder: true,
-                                    borderColor: 'rgba(75, 85, 99, 0.4)'
+                                    borderColor: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.4)' : 'rgba(209, 213, 219, 0.6)'
                                 },
                                 angleLines: {
-                                    color: 'rgba(75, 85, 99, 0.2)'
+                                    color: document.documentElement.classList.contains('dark') ?
+                                        'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.3)'
                                 }
                             }
                         }
@@ -2266,37 +2408,11 @@
                 });
             });
 
-            // Tambahkan di script section
-            document.querySelectorAll('.stat-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    // Toggle detail view atau tooltip
-                    const tooltip = this.querySelector('.stat-tooltip');
-                    if (tooltip) {
-                        tooltip.classList.toggle('hidden');
-                    }
-                });
-            });
-
-            // Animate number counters
-            function animateCounter(element, start, end, duration) {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const value = Math.floor(progress * (end - start) + start);
-                    element.textContent = formatNumber(value);
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    }
-                };
-                window.requestAnimationFrame(step);
-            }
-
-            // Tambahkan di script section (setelah animasi counter)
             // Risk Metrics Toggle
             const toggleRiskDetails = document.getElementById('toggleRiskDetails');
             const riskDetails = document.getElementById('riskDetails');
-            const toggleRiskIcon = toggleRiskDetails?.querySelector('i');
+            const toggleRiskIcon = document.getElementById('riskToggleIcon');
+            const toggleRiskText = document.getElementById('riskToggleText');
 
             if (toggleRiskDetails && riskDetails) {
                 toggleRiskDetails.addEventListener('click', function() {
@@ -2305,42 +2421,17 @@
                         if (riskDetails.classList.contains('hidden')) {
                             toggleRiskIcon.classList.remove('fa-chevron-up');
                             toggleRiskIcon.classList.add('fa-chevron-down');
-                            toggleRiskDetails.querySelector('span').textContent =
+                            toggleRiskText.textContent =
                                 '{{ __('analysis.risk_management.show_details') }}';
                         } else {
                             toggleRiskIcon.classList.remove('fa-chevron-down');
                             toggleRiskIcon.classList.add('fa-chevron-up');
-                            toggleRiskDetails.querySelector('span').textContent =
+                            toggleRiskText.textContent =
                                 '{{ __('analysis.risk_management.hide_details') }}';
                         }
                     }
                 });
             }
-
-            // Drawdown Gauge Chart (jika mau lebih fancy)
-            function createDrawdownGauge(currentDD, maxDD) {
-                const ctx = document.createElement('canvas');
-                ctx.width = 100;
-                ctx.height = 100;
-
-                // ... kode untuk gauge chart ...
-            }
-
-            function formatNumber(num) {
-                if (num >= 1000) {
-                    return '$' + (num / 1000).toFixed(1) + 'k';
-                }
-                return '$' + num.toFixed(2);
-            }
-
-            // Jalankan animasi saat halaman load
-            const stats = document.querySelectorAll('.stat-number');
-            stats.forEach(stat => {
-                const value = parseFloat(stat.textContent.replace(/[^0-9.-]+/g, ""));
-                if (!isNaN(value)) {
-                    animateCounter(stat, 0, value, 1000);
-                }
-            });
 
             // Session Heatmap Modal Functionality
             const sessionModal = document.getElementById('sessionModal');
@@ -2348,24 +2439,21 @@
             const sessionModalContent = document.getElementById('sessionModalContent');
             const closeSessionModalBtn = document.getElementById('closeSessionModal');
 
-            // Function to get day name from index
             function getDayName(dayIndex) {
                 const days = ['{{ __('analysis.days.Mon') }}', '{{ __('analysis.days.Tue') }}',
                     '{{ __('analysis.days.Wed') }}', '{{ __('analysis.days.Thu') }}',
                     '{{ __('analysis.days.Fri') }}', '{{ __('analysis.days.Sat') }}',
                     '{{ __('analysis.days.Sun') }}'
                 ];
-                return days[dayIndex] || '{{ __('analysis.unknown') }}';
+                return days[dayIndex] || 'Unknown';
             }
 
-            // Function to format hour range
             function getHourRange(hour) {
                 const startHour = hour.padStart(2, '0');
                 const endHour = String((parseInt(hour) + 1) % 24).padStart(2, '0');
                 return `${startHour}:00-${endHour}:00`;
             }
 
-            // Heatmap Cell Click Handler
             document.querySelectorAll('#heatmapContainer [data-trades]').forEach(cell => {
                 cell.addEventListener('click', function() {
                     const hour = this.getAttribute('data-hour');
@@ -2377,42 +2465,40 @@
                         const dayName = getDayName(day);
                         const hourRange = getHourRange(hour);
 
-                        // Set modal title
                         sessionModalTitle.textContent = `${dayName}, ${hourRange}`;
 
-                        // Create modal content
                         let content = `
-                            <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-green-500/10 border border-green-500/30' : profit < 0 ? 'bg-red-500/10 border border-red-500/30' : 'bg-gray-700/50 border border-gray-600'}">
+                            <div class="mb-4 p-3 rounded-lg ${profit > 0 ? 'bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-600/30 dark:border-emerald-500/30' : profit < 0 ? 'bg-rose-100 dark:bg-rose-900/30 border border-rose-600/30 dark:border-rose-500/30' : 'bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600'}">
                                 <div class="flex justify-between items-center mb-2">
                                     <div>
-                                        <div class="text-sm text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.total_performance') }}'}</div>
-                                        <div class="text-2xl font-bold ${profit > 0 ? 'text-green-400' : profit < 0 ? 'text-red-400' : 'text-gray-400'}">
+                                        <div class="text-sm text-gray-600 dark:text-gray-400">{{ __('analysis.modal.total_performance') }}</div>
+                                        <div class="text-2xl font-bold ${profit > 0 ? 'text-emerald-600 dark:text-emerald-400' : profit < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-gray-600 dark:text-gray-400'}">
                                             $${profit.toFixed(2)}
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <div class="text-sm text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.total_trades') }}'}</div>
-                                        <div class="text-2xl font-bold text-gray-500 dark:text-gray-200">${trades}</div>
+                                        <div class="text-sm text-gray-600 dark:text-gray-400">{{ __('analysis.modal.total_trades') }}</div>
+                                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${trades}</div>
                                     </div>
                                 </div>
-                                <div class="mt-2 pt-2 border-t border-gray-400 dark:border-gray-600">
-                                    <div class="text-xs text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.time_slot') }}'}</div>
-                                    <div class="text-sm text-gray-600 dark:text-gray-300">${hourRange} (GMT)</div>
+                                <div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                                    <div class="text-xs text-gray-600 dark:text-gray-400">{{ __('analysis.modal.time_slot') }}</div>
+                                    <div class="text-sm text-gray-700 dark:text-gray-300">${hourRange} (GMT)</div>
                                 </div>
                             </div>
                             
                             <div class="mb-4">
-                                <h5 class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">${'{{ __('analysis.modal.performance_insights') }}'}</h5>
+                                <h5 class="text-sm font-medium text-gray-900 dark:text-white mb-2">{{ __('analysis.modal.performance_insights') }}</h5>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div class="bg-gray-200/50 dark:bg-gray-900 rounded-lg p-3">
-                                        <div class="text-xs text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.avg_pl_per_trade') }}'}</div>
-                                        <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">{{ __('analysis.modal.avg_pl_per_trade') }}</div>
+                                        <div class="text-lg font-bold ${(profit/trades) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
                                             $${(profit/trades).toFixed(2)}
                                         </div>
                                     </div>
-                                    <div class="bg-gray-750 rounded-lg p-3">
-                                        <div class="text-xs text-gray-600 dark:text-gray-400">${'{{ __('analysis.modal.win_loss_ratio') }}'}</div>
-                                        <div class="text-lg font-bold text-gray-600 dark:text-gray-200">
+                                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">{{ __('analysis.modal.win_loss_ratio') }}</div>
+                                        <div class="text-lg font-bold ${profit > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
                                             ${profit > 0 ? '{{ __('analysis.modal.profitable') }}' : '{{ __('analysis.modal.unprofitable') }}'}
                                         </div>
                                     </div>
@@ -2420,28 +2506,28 @@
                             </div>
                             
                             <div>
-                                <h5 class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">${'{{ __('analysis.modal.recommendations') }}'}</h5>
-                                <div class="bg-gray-300/30 dark:bg-gray-900/50 rounded-lg p-3 border border-gray-700">
+                                <h5 class="text-sm font-medium text-gray-900 dark:text-white mb-2">{{ __('analysis.modal.recommendations') }}</h5>
+                                <div class="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                                     <div class="flex items-start gap-2">
-                                        <i class="fas ${profit > 0 ? 'fa-thumbs-up text-green-500' : 'fa-thumbs-down text-red-500'} mt-0.5"></i>
+                                        <i class="fas ${profit > 0 ? 'fa-thumbs-up text-emerald-600' : 'fa-thumbs-down text-rose-600'} mt-0.5"></i>
                                         <div>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                            <p class="text-sm text-gray-700 dark:text-gray-300">
                                                 ${profit > 0 
                                                     ? '{{ __('analysis.modal.positive_recommendation') }}'
                                                     : '{{ __('analysis.modal.negative_recommendation') }}'}
                                             </p>
-                                            <p class="text-xs text-gray-600 dark:text-gray-500 mt-1">
-                                                ${'{{ __('analysis.modal.based_on') }}'} ${trades} ${'{{ __('analysis.stats.trades') }}'}${trades !== 1 ? '' : ''} ${'{{ __('analysis.modal.at_this_time') }}'}.
+                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                                {{ __('analysis.modal.based_on') }} ${trades} {{ __('analysis.modal.at_this_time') }}.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="mt-4 pt-4 border-t border-gray-700">
+                            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                                 <p class="text-xs text-gray-600 dark:text-gray-400 text-center">
-                                    <i class="fas fa-lightbulb mr-1"></i>
-                                    ${'{{ __('analysis.modal.click_other_slots') }}'}
+                                    <i class="fas fa-lightbulb mr-1 text-amber-500"></i>
+                                    {{ __('analysis.modal.click_other_slots') }}
                                 </p>
                             </div>
                         `;
@@ -2453,14 +2539,11 @@
                 });
             });
 
-
-            // Close Session Modal
             closeSessionModalBtn.addEventListener('click', function() {
                 sessionModal.classList.add('hidden');
                 document.body.style.overflow = 'auto';
             });
 
-            // Close modal when clicking outside
             sessionModal.addEventListener('click', function(e) {
                 if (e.target === sessionModal) {
                     sessionModal.classList.add('hidden');
@@ -2468,7 +2551,6 @@
                 }
             });
 
-            // Close modal with Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && !sessionModal.classList.contains('hidden')) {
                     sessionModal.classList.add('hidden');
@@ -2476,21 +2558,18 @@
                 }
             });
 
-            // Balance & Equity Toggle Script
+            // Balance Toggle Script
             const toggleBalanceBtn = document.getElementById('toggleBalance');
             const balanceText = document.getElementById('balanceText');
             const balanceValue = document.getElementById('balanceValue');
             const balanceIcon = document.getElementById('balanceIcon');
 
-            // Load state from localStorage
             const isVisible = localStorage.getItem('balanceVisible') === 'true';
 
-            // Apply saved state
             if (isVisible) {
                 showValues();
             }
 
-            // Toggle function untuk keduanya
             toggleBalanceBtn.addEventListener('click', function() {
                 if (balanceText.classList.contains('hidden')) {
                     hideValues();
@@ -2499,41 +2578,43 @@
                 }
             });
 
-            // Helper functions
             function showValues() {
-                // Show Balance
                 balanceText.classList.add('hidden');
                 balanceValue.classList.remove('hidden');
                 balanceIcon.classList.remove('fa-eye-slash');
                 balanceIcon.classList.add('fa-eye');
-
-                // Save state
                 localStorage.setItem('balanceVisible', 'true');
-
-                // Update tooltip
                 toggleBalanceBtn.title = "{{ __('analysis.stats.hide_balance') }}";
             }
 
             function hideValues() {
-                // Hide Balance
                 balanceText.classList.remove('hidden');
                 balanceValue.classList.add('hidden');
                 balanceIcon.classList.remove('fa-eye');
                 balanceIcon.classList.add('fa-eye-slash');
-
-                // Save state
                 localStorage.setItem('balanceVisible', 'false');
-
-                // Update tooltip
                 toggleBalanceBtn.title = "{{ __('analysis.stats.show_balance') }}";
             }
 
-            // Optional: Keyboard shortcut untuk toggle keduanya
             document.addEventListener('keydown', function(e) {
                 if (e.ctrlKey && (e.key === 'b' || e.key === 'B' || e.key === 'h' || e.key === 'H')) {
                     e.preventDefault();
                     toggleBalanceBtn.click();
                 }
+            });
+
+            // Listen for theme changes to update chart colors
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'class') {
+                        // Reload charts with new theme colors if needed
+                        // This is handled by the chart renderers checking dark mode on each render
+                    }
+                });
+            });
+
+            observer.observe(document.documentElement, {
+                attributes: true
             });
         });
     </script>
@@ -2551,10 +2632,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(17, 24, 39, 0.7);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(4px);
             z-index: 10;
             border-radius: 0.5rem;
+        }
+
+        .dark .chart-loading {
+            background: rgba(17, 24, 39, 0.8);
         }
 
         .chart-loading-spinner {
@@ -2568,9 +2653,13 @@
         }
 
         .chart-loading-text {
-            color: #9ca3af;
+            color: #4b5563;
             font-size: 0.875rem;
             text-align: center;
+        }
+
+        .dark .chart-loading-text {
+            color: #9ca3af;
         }
 
         .chart-canvas {
@@ -2599,7 +2688,6 @@
             }
         }
 
-        /* Fade in animation for charts */
         .chart-canvas {
             animation: chart-fade-in 0.5s ease-out;
         }
@@ -2616,205 +2704,72 @@
             }
         }
 
-        /* Loading progress indicator */
-        .chart-loading-progress {
-            width: 100%;
-            height: 3px;
-            background: rgba(59, 130, 246, 0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 10px;
+        /* Scrollbar styles */
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
 
-        .chart-loading-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            animation: chart-progress 2s ease-in-out infinite;
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        @keyframes chart-progress {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            50% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
-        }
-    </style>
-
-    <!-- Stats Card Styles -->
-    <style>
-        /* Tambahkan di style section */
-        .gradient-border {
-            border: 2px solid transparent;
-            background: linear-gradient(135deg, #1f2937, #374151) padding-box,
-                linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
         }
 
-        .stat-card {
-            transition: all 0.3s ease;
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
         }
 
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #4b5563;
         }
 
-        /* Tambahkan di style section */
-        .risk-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-width: 1px;
-            border-style: solid;
+        .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
         }
 
-        .risk-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.1);
-        }
-
-        .risk-card:nth-child(1):hover {
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .risk-card:nth-child(2):hover {
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-
-        .risk-card:nth-child(3):hover {
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-
-        .risk-card:nth-child(4):hover {
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        /* Progress bar animation */
-        .progress-bar {
-            transition: width 1.5s ease-in-out;
-        }
-
-        /* Scrollbar untuk position size */
-        .max-h-32::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .max-h-32::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .max-h-32::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-        }
-    </style>
-
-    <!-- Heatmap Styles -->
-    <style>
-        /* Tambahkan di style section */
+        /* Grid layout for heatmap */
         .grid-cols-25 {
             grid-template-columns: repeat(25, minmax(0, 1fr));
         }
 
-        /* Heatmap cell styles */
-        .heatmap-cell {
-            transition: all 0.2s ease;
-            min-width: 2rem;
-            min-height: 2rem;
+        /* Year group transitions */
+        .year-content {
+            transition: max-height 0.3s ease-in-out;
         }
 
-        .heatmap-cell:hover {
-            transform: scale(1.05);
-            z-index: 10;
+        .year-toggle-icon {
+            transition: transform 0.3s ease;
         }
 
-        /* Scrollbar untuk heatmap */
-        #heatmapContainer.max-h-96 {
-            max-height: 24rem;
+        .rotate-180 {
+            transform: rotate(180deg);
         }
 
-        #heatmapContainer::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        /* Card hover effects */
+        .hover\:shadow-md:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        #heatmapContainer::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+        .dark .hover\:shadow-md:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
         }
 
-        #heatmapContainer::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        /* Tooltip styles */
-        .group:hover .group-hover\:block {
-            animation: fadeIn 0.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Session Heatmap Modal Styles */
-        #sessionModalContent::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #sessionModalContent::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        #sessionModalContent::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-        }
-
-        /* Smooth transition for modal */
+        /* Modal backdrop */
         #sessionModal {
-            opacity: 0;
             transition: opacity 0.2s ease;
+            opacity: 0;
         }
 
         #sessionModal:not(.hidden) {
             opacity: 1;
         }
 
-        /* Heatmap cell hover effects */
-        #heatmapContainer [data-trades] {
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        #heatmapContainer [data-trades]:hover {
-            transform: scale(1.05);
-            z-index: 20;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #heatmapContainer [data-trades]:hover::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 2px solid currentColor;
-            border-radius: 4px;
-            pointer-events: none;
-            opacity: 0.3;
+        #sessionModalContent {
+            scrollbar-width: thin;
         }
     </style>
 @endsection

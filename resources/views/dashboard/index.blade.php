@@ -6,10 +6,10 @@
         <header class="mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-primary-500">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                         {{ __('dashboard.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ __('dashboard.subtitle') }}</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('dashboard.subtitle') }}</p>
                 </div>
 
                 <!-- Navigation and Trader Info -->
@@ -20,17 +20,20 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <!-- Balance Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400">{{ __('dashboard.balance') }}</p>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('dashboard.balance') }}</p>
                         <div class="flex items-center gap-2">
-                            <h3 id="balanceText" class="text-2xl font-bold mt-2">******</h3>
-                            <h3 id="balanceValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($balance, 2) }}
+                            <h3 id="balanceText" class="text-2xl font-bold text-gray-900 dark:text-white mt-2">******</h3>
+                            <h3 id="balanceValue" class="text-2xl font-bold text-gray-900 dark:text-white mt-2 hidden">
+                                ${{ number_format($balance, 2) }}
                             </h3>
-                            <button id="toggleBalance" type="button" class="mt-2 px-2 rounded-lg hover:bg-primary-500/30 "
+                            <button id="toggleBalance" type="button"
+                                class="mt-2 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                                 title="Show/Hide Balance & Equity">
-                                <i id="balanceIcon" class="fas fa-eye-slash text-primary-500 text-lg"></i>
+                                <i id="balanceIcon" class="fas fa-eye-slash text-gray-500 dark:text-gray-400 text-lg"></i>
                             </button>
                         </div>
                         <div class="text-sm mt-1 text-gray-500 dark:text-gray-400">
@@ -38,25 +41,27 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="bg-primary-500/20 p-3 rounded-lg">
-                            <i class="fas fa-wallet text-primary-500 text-lg"></i>
+                        <div class="bg-indigo-50 dark:bg-indigo-900/30 p-3 rounded-lg">
+                            <i class="fas fa-wallet text-indigo-600 dark:text-indigo-400 text-lg"></i>
                         </div>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                    <span class="text-green-400">{{ __('dashboard.active') }}</span>
+                    <i class="fas fa-arrow-trend-up text-emerald-600 dark:text-emerald-400 mr-1"></i>
+                    <span class="text-emerald-600 dark:text-emerald-400">{{ __('dashboard.active') }}</span>
                 </div>
             </div>
 
             <!-- Equity Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400">{{ __('dashboard.equity') }}</p>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('dashboard.equity') }}</p>
                         <div class="flex items-center gap-2">
-                            <h3 id="equityText" class="text-2xl font-bold mt-2">******</h3>
-                            <h3 id="equityValue" class="text-2xl font-bold mt-2 hidden">${{ number_format($equity, 2) }}
+                            <h3 id="equityText" class="text-2xl font-bold text-gray-900 dark:text-white mt-2">******</h3>
+                            <h3 id="equityValue" class="text-2xl font-bold text-gray-900 dark:text-white mt-2 hidden">
+                                ${{ number_format($equity, 2) }}
                             </h3>
                         </div>
                         <!-- TAMBAHKAN DISPLAY PERSENTASE DI SINI -->
@@ -69,16 +74,17 @@
                             <!-- Persentase dari initial balance -->
                             <div class="flex items-center">
                                 @if ($equityChange > 0)
-                                    <i class="fas fa-arrow-up text-green-500 text-xs mr-1"></i>
-                                    <span class="text-green-400">+{{ number_format($equityChange, 2) }}%
+                                    <i class="fas fa-arrow-up text-emerald-600 dark:text-emerald-400 text-xs mr-1"></i>
+                                    <span
+                                        class="text-emerald-600 dark:text-emerald-400">+{{ number_format($equityChange, 2) }}%
                                         {{ __('dashboard.from_initial') }}</span>
                                 @elseif($equityChange < 0)
-                                    <i class="fas fa-arrow-down text-red-500 text-xs mr-1"></i>
-                                    <span class="text-red-400">{{ number_format($equityChange, 2) }}%
+                                    <i class="fas fa-arrow-down text-rose-600 dark:text-rose-400 text-xs mr-1"></i>
+                                    <span class="text-rose-600 dark:text-rose-400">{{ number_format($equityChange, 2) }}%
                                         {{ __('dashboard.from_initial') }}</span>
                                 @else
-                                    <i class="fas fa-minus text-gray-500 text-xs mr-1"></i>
-                                    <span class="text-gray-400">0% {{ __('dashboard.change') }}</span>
+                                    <i class="fas fa-minus text-gray-500 dark:text-gray-400 text-xs mr-1"></i>
+                                    <span class="text-gray-500 dark:text-gray-400">0% {{ __('dashboard.change') }}</span>
                                 @endif
                             </div>
 
@@ -86,63 +92,68 @@
                             @if ($vsBalanceChange != 0)
                                 <div class="flex items-center mt-1">
                                     @if ($vsBalanceChange > 0)
-                                        <i class="fas fa-arrow-up text-blue-400 text-xs mr-1"></i>
-                                        <span class="text-blue-300">+{{ number_format($vsBalanceChange, 2) }}% vs
+                                        <i class="fas fa-arrow-up text-sky-600 dark:text-sky-400 text-xs mr-1"></i>
+                                        <span
+                                            class="text-sky-600 dark:text-sky-400">+{{ number_format($vsBalanceChange, 2) }}%
+                                            vs
                                             balance</span>
                                     @else
-                                        <i class="fas fa-arrow-down text-yellow-500 text-xs mr-1"></i>
-                                        <span class="text-yellow-400">{{ number_format($vsBalanceChange, 2) }}% vs
+                                        <i class="fas fa-arrow-down text-amber-600 dark:text-amber-400 text-xs mr-1"></i>
+                                        <span
+                                            class="text-amber-600 dark:text-amber-400">{{ number_format($vsBalanceChange, 2) }}%
+                                            vs
                                             balance</span>
                                     @endif
                                 </div>
                             @endif
                         </div>
                     </div>
-                    <div class="bg-blue-500/20 p-3 rounded-lg">
-                        <i class="fas fa-chart-line text-blue-500 text-lg"></i>
+                    <div class="bg-sky-50 dark:bg-sky-900/30 p-3 rounded-lg">
+                        <i class="fas fa-chart-line text-sky-600 dark:text-sky-400 text-lg"></i>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
                     @if ($equity_change_percentage > 0)
-                        <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                        <span class="text-green-400">{{ __('dashboard.growing') }}</span>
+                        <i class="fas fa-arrow-trend-up text-emerald-600 dark:text-emerald-400 mr-1"></i>
+                        <span class="text-emerald-600 dark:text-emerald-400">{{ __('dashboard.growing') }}</span>
                     @elseif($equity_change_percentage < 0)
-                        <i class="fas fa-arrow-trend-down text-red-500 mr-1"></i>
-                        <span class="text-red-400">{{ __('dashboard.declining') }}</span>
+                        <i class="fas fa-arrow-trend-down text-rose-600 dark:text-rose-400 mr-1"></i>
+                        <span class="text-rose-600 dark:text-rose-400">{{ __('dashboard.declining') }}</span>
                     @else
-                        <i class="fas fa-minus text-gray-500 mr-1"></i>
-                        <span class="text-gray-400">{{ __('dashboard.stable') }}</span>
+                        <i class="fas fa-minus text-gray-500 dark:text-gray-400 mr-1"></i>
+                        <span class="text-gray-500 dark:text-gray-400">{{ __('dashboard.stable') }}</span>
                     @endif
                 </div>
             </div>
 
             <!-- Win Rate Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 p-5">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400">{{ __('dashboard.win_rate') }}</p>
-                        <h3 class="text-2xl font-bold mt-2">{{ $winrate }}%</h3>
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('dashboard.win_rate') }}</p>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-2">{{ $winrate }}%</h3>
                     </div>
-                    <div class="bg-green-500/20 p-3 rounded-lg">
-                        <i class="fas fa-trophy text-green-500 text-lg"></i>
+                    <div class="bg-emerald-50 dark:bg-emerald-900/30 p-3 rounded-lg">
+                        <i class="fas fa-trophy text-emerald-600 dark:text-emerald-400 text-lg"></i>
                     </div>
                 </div>
                 <div class="mt-4 flex items-center text-sm">
-                    <i class="fas fa-arrow-trend-up text-green-500 mr-1"></i>
-                    <span class="text-green-400">{{ __('dashboard.profitable') }}</span>
+                    <i class="fas fa-arrow-trend-up text-emerald-600 dark:text-emerald-400 mr-1"></i>
+                    <span class="text-emerald-600 dark:text-emerald-400">{{ __('dashboard.profitable') }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Filters -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Period Filter -->
                 <div>
                     <label for="period"
-                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('dashboard.period') }}</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('dashboard.period') }}</label>
                     <select name="period" onchange="this.form.submit()"
-                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                         <option value="all" {{ $period === 'all' ? 'selected' : '' }}>{{ __('dashboard.all_time') }}
                         </option>
                         <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
@@ -155,9 +166,9 @@
                 <!-- Session Filter -->
                 <div>
                     <label for="session"
-                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('dashboard.session') }}</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('dashboard.session') }}</label>
                     <select name="session" onchange="this.form.submit()"
-                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                         <option value="all" {{ $sessionFilter === 'all' ? 'selected' : '' }}>
                             {{ __('dashboard.all_sessions') }}</option>
                         @foreach ($availableSessions as $sessionName)
@@ -171,9 +182,9 @@
                 <!-- Entry Type Filter -->
                 <div>
                     <label for="entry_type"
-                        class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{{ __('dashboard.entry_type') }}</label>
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('dashboard.entry_type') }}</label>
                     <select name="entry_type" onchange="this.form.submit()"
-                        class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                        class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                         <option value="all" {{ $entryFilter === 'all' ? 'selected' : '' }}>
                             {{ __('dashboard.all_types') }}</option>
                         @foreach ($availableEntryTypes as $entryType)
@@ -189,20 +200,20 @@
         @if ($summary)
             <!-- Summary Alert -->
             <div
-                class="bg-blue-600/30 dark:bg-primary-900/30 rounded-xl p-4 border border-blue-900 dark:border-primary-700/30 mb-6">
+                class="bg-indigo-50 dark:bg-indigo-900/30 rounded-xl p-4 border border-indigo-200 dark:border-indigo-800/30 mb-6">
                 <div class="flex items-center">
-                    <div class="bg-blue-700/70 dark:bg-primary-500/20 p-2 rounded-lg mr-3">
-                        <i class="fas fa-chart-pie text-white dark:text-primary-500"></i>
+                    <div class="bg-indigo-200 dark:bg-indigo-800/50 p-2 rounded-lg mr-3">
+                        <i class="fas fa-chart-pie text-indigo-700 dark:text-indigo-300"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-primary-300">{{ $summary['entry_type'] }}
+                        <h3 class="font-bold text-gray-900 dark:text-white">{{ $summary['entry_type'] }}
                             <span class="text-gray-600 dark:text-gray-400 font-normal">({{ $summary['session'] }})</span>
                         </h3>
-                        <p class="text-gray600 dark:text-gray-300 text-sm mt-1">
+                        <p class="text-gray-700 dark:text-gray-300 text-sm mt-1">
                             {{ $summary['trades'] }} trades ·
                             Winrate: <span class="font-semibold">{{ $summary['winrate'] }}%</span> ·
                             <span
-                                class="{{ $summary['profit_loss'] >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400' }} font-bold">
+                                class="{{ $summary['profit_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} font-bold">
                                 ${{ number_format($summary['profit_loss'], 2) }}
                             </span>
                         </p>
@@ -212,16 +223,16 @@
         @endif
 
         <!-- Equity Curve Chart -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
-                    <h2 class="text-xl font-bold text-primary-300">{{ __('dashboard.equity_curve') }}</h2>
-                    <p class="text-gray-500 text-sm mt-1">{{ __('dashboard.equity_subtitle') }}</p>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('dashboard.equity_curve') }}</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">{{ __('dashboard.equity_subtitle') }}</p>
                 </div>
                 <div class="mt-2 md:mt-0">
                     <form method="GET" action="{{ route('dashboard') }}">
                         <select name="period" onchange="this.form.submit()"
-                            class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-transparent">
+                            class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow duration-200">
                             <option value="all" {{ $period === 'all' ? 'selected' : '' }}>
                                 {{ __('dashboard.all_time') }}</option>
                             <option value="weekly" {{ $period === 'weekly' ? 'selected' : '' }}>
@@ -234,27 +245,29 @@
             </div>
 
             <!-- Range Slider -->
-            <div class="mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+            <div class="mb-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
                 <div class="flex items-center justify-between mb-2">
                     <label
-                        class="text-sm font-medium text-gray-600 dark:text-gray-300">{{ __('dashboard.range') }}</label>
+                        class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('dashboard.range') }}</label>
                     <div class="flex gap-2">
-                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.from') }}: <span
-                                id="rangeStartLabel" class="text-primary-400">-</span></span>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('dashboard.to') }}: <span
-                                id="rangeEndLabel" class="text-primary-400">-</span></span>
+                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ __('dashboard.from') }}: <span
+                                id="rangeStartLabel"
+                                class="font-semibold text-indigo-600 dark:text-indigo-400">-</span></span>
+                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ __('dashboard.to') }}: <span
+                                id="rangeEndLabel"
+                                class="font-semibold text-indigo-600 dark:text-indigo-400">-</span></span>
                         <button id="resetRange"
-                            class="ml-2 px-3 py-1 text-xs bg-primary-500 dark:bg-primary-500/20 text-white dark:text-primary-400 rounded hover:bg-primary-500/30 ">
+                            class="ml-2 px-3 py-1 text-xs bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors duration-200">
                             {{ __('dashboard.reset') }}
                         </button>
                     </div>
                 </div>
                 <div class="flex gap-2">
                     <input type="range" id="rangeStart" min="0" max="100" value="0"
-                        class="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        class="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-indigo-600 dark:accent-indigo-400"
                         style="z-index: 5;">
                     <input type="range" id="rangeEnd" min="0" max="100" value="100"
-                        class="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        class="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer accent-indigo-600 dark:accent-indigo-400"
                         style="z-index: 6;">
                 </div>
             </div>
@@ -272,38 +285,55 @@
         let chartInstance = null;
         let allData = {};
 
-        // Define colors for different sessions
+        // Enhanced colors for better visibility in both themes
         const sessionColors = {
             'Asia': {
-                border: '#f97316',
-                background: 'rgba(249, 115, 22, 0.1)'
+                border: '#f97316', // Orange
+                background: 'rgba(249, 115, 22, 0.1)',
+                darkBorder: '#fb923c',
+                darkBackground: 'rgba(251, 146, 60, 0.15)'
             },
             'London': {
-                border: '#3b82f6',
-                background: 'rgba(59, 130, 246, 0.1)'
+                border: '#3b82f6', // Blue
+                background: 'rgba(59, 130, 246, 0.1)',
+                darkBorder: '#60a5fa',
+                darkBackground: 'rgba(96, 165, 250, 0.15)'
             },
             'New York': {
-                border: '#10b981',
-                background: 'rgba(16, 185, 129, 0.1)'
+                border: '#10b981', // Emerald
+                background: 'rgba(16, 185, 129, 0.1)',
+                darkBorder: '#34d399',
+                darkBackground: 'rgba(52, 211, 153, 0.15)'
             },
             'Sydney': {
-                border: '#8b5cf6',
-                background: 'rgba(139, 92, 246, 0.1)'
+                border: '#8b5cf6', // Violet
+                background: 'rgba(139, 92, 246, 0.1)',
+                darkBorder: '#a78bfa',
+                darkBackground: 'rgba(167, 139, 250, 0.15)'
             },
             'Non-Session': {
-                border: '#6b7280',
-                background: 'rgba(107, 114, 128, 0.1)'
+                border: '#6b7280', // Gray
+                background: 'rgba(107, 114, 128, 0.1)',
+                darkBorder: '#9ca3af',
+                darkBackground: 'rgba(156, 163, 175, 0.15)'
             },
             'Other': {
-                border: '#eab308',
-                background: 'rgba(234, 179, 8, 0.1)'
+                border: '#eab308', // Yellow
+                background: 'rgba(234, 179, 8, 0.1)',
+                darkBorder: '#facc15',
+                darkBackground: 'rgba(250, 204, 21, 0.15)'
             }
         };
 
         const defaultColors = {
             border: '#94a3b8',
-            background: 'rgba(148, 163, 184, 0.1)'
+            background: 'rgba(148, 163, 184, 0.1)',
+            darkBorder: '#cbd5e1',
+            darkBackground: 'rgba(203, 213, 225, 0.15)'
         };
+
+        // Detect dark mode
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
         // Store original data
         allData = JSON.parse(JSON.stringify(equityData));
@@ -363,16 +393,23 @@
                 const sessionData = filteredData[session] || [];
                 const colors = sessionColors[session] || defaultColors;
 
+                // Use appropriate colors based on theme
+                const isDark = document.documentElement.classList.contains('dark');
+                const borderColor = isDark ? (colors.darkBorder || colors.border) : colors.border;
+                const backgroundColor = isDark ? (colors.darkBackground || colors.background) : colors.background;
+
                 datasets.push({
                     label: session,
                     data: sessionData.map(d => d.balance || 0),
-                    borderColor: colors.border,
-                    backgroundColor: colors.background,
+                    borderColor: borderColor,
+                    backgroundColor: backgroundColor,
                     fill: true,
                     tension: 0.4,
-                    borderWidth: 2,
+                    borderWidth: 2.5,
                     pointRadius: 0,
-                    pointHoverRadius: 4
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: borderColor,
+                    pointHoverBorderColor: '#ffffff'
                 });
             });
 
@@ -381,7 +418,7 @@
                 chartInstance.data.labels = availableSessions.length > 0 && filteredData[availableSessions[0]] ?
                     filteredData[availableSessions[0]].map(d => d.date) : [];
                 chartInstance.data.datasets = datasets;
-                chartInstance.update('none'); // Update without animation for smoother interaction
+                chartInstance.update('none');
             }
         }
 
@@ -412,16 +449,22 @@
                 const sessionData = equityData[session] || [];
                 const colors = sessionColors[session] || defaultColors;
 
+                const isDark = document.documentElement.classList.contains('dark');
+                const borderColor = isDark ? (colors.darkBorder || colors.border) : colors.border;
+                const backgroundColor = isDark ? (colors.darkBackground || colors.background) : colors.background;
+
                 datasets.push({
                     label: session,
                     data: sessionData.map(d => d.balance || 0),
-                    borderColor: colors.border,
-                    backgroundColor: colors.background,
+                    borderColor: borderColor,
+                    backgroundColor: backgroundColor,
                     fill: true,
                     tension: 0.4,
-                    borderWidth: 2,
+                    borderWidth: 2.5,
                     pointRadius: 0,
-                    pointHoverRadius: 4
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: borderColor,
+                    pointHoverBorderColor: '#ffffff'
                 });
             });
 
@@ -439,38 +482,60 @@
                         legend: {
                             position: 'top',
                             labels: {
-                                color: '#9ca3af',
+                                color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151',
                                 usePointStyle: true,
-                                padding: 15
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
                             }
                         },
                         tooltip: {
                             mode: 'index',
                             intersect: false,
-                            backgroundColor: 'rgba(31, 41, 55, 0.9)',
-                            titleColor: '#f3f4f6',
-                            bodyColor: '#f3f4f6',
-                            borderColor: 'rgba(75, 85, 99, 0.5)',
-                            borderWidth: 1
+                            backgroundColor: document.documentElement.classList.contains('dark') ? '#1f2937' :
+                                '#ffffff',
+                            titleColor: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                            bodyColor: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                            borderColor: document.documentElement.classList.contains('dark') ? '#4b5563' :
+                                '#e5e7eb',
+                            borderWidth: 1,
+                            padding: 10,
+                            cornerRadius: 8
                         }
                     },
                     scales: {
                         x: {
                             grid: {
-                                color: 'rgba(75, 85, 99, 0.3)'
+                                color: document.documentElement.classList.contains('dark') ?
+                                    'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)',
+                                drawBorder: false
                             },
                             ticks: {
-                                color: '#9ca3af'
+                                color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280',
+                                maxRotation: 45,
+                                minRotation: 45
                             }
                         },
                         y: {
                             grid: {
-                                color: 'rgba(75, 85, 99, 0.3)'
+                                color: document.documentElement.classList.contains('dark') ?
+                                    'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)',
+                                drawBorder: false
                             },
                             ticks: {
-                                color: '#9ca3af'
+                                color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280',
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
                             }
                         }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
                     }
                 }
             });
@@ -480,13 +545,50 @@
         } else {
             // Show message if no data
             document.getElementById('equityChart').parentElement.innerHTML = `
-                <div class="flex flex-col items-center justify-center h-64 text-gray-500">
-                    <i class="fas fa-chart-line text-3xl mb-3"></i>
-                    <p class="text-base">No equity data available</p>
+                <div class="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-chart-line text-3xl mb-3 opacity-50"></i>
+                    <p class="text-base font-medium">No equity data available</p>
                     <p class="text-sm">Start trading to see your equity curve</p>
                 </div>
             `;
         }
+
+        // Listen for theme changes
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    // Update chart colors when theme changes
+                    if (chartInstance) {
+                        const isDark = document.documentElement.classList.contains('dark');
+
+                        // Update dataset colors
+                        chartInstance.data.datasets.forEach(dataset => {
+                            const session = dataset.label;
+                            const colors = sessionColors[session] || defaultColors;
+                            dataset.borderColor = isDark ? (colors.darkBorder || colors.border) :
+                                colors.border;
+                            dataset.backgroundColor = isDark ? (colors.darkBackground || colors
+                                .background) : colors.background;
+                        });
+
+                        // Update chart options
+                        chartInstance.options.plugins.legend.labels.color = isDark ? '#e5e7eb' : '#374151';
+                        chartInstance.options.scales.x.grid.color = isDark ? 'rgba(75, 85, 99, 0.3)' :
+                            'rgba(209, 213, 219, 0.5)';
+                        chartInstance.options.scales.x.ticks.color = isDark ? '#9ca3af' : '#6b7280';
+                        chartInstance.options.scales.y.grid.color = isDark ? 'rgba(75, 85, 99, 0.3)' :
+                            'rgba(209, 213, 219, 0.5)';
+                        chartInstance.options.scales.y.ticks.color = isDark ? '#9ca3af' : '#6b7280';
+
+                        chartInstance.update();
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true
+        });
     </script>
 
     <script>
