@@ -13,7 +13,7 @@
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('sessions.index') }}"
-                        class="flex items-center bg-gray-800 rounded-lg px-4 py-2 border border-gray-700 hover:border-primary-500 transition-colors">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border-gray-200 dark:border border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
                         <span>{{ __('session.back_to_sessions') }}</span>
                     </a>
@@ -23,7 +23,7 @@
 
         <!-- Form Container -->
         <div class="max-w-2xl mx-auto">
-            <div class="bg-gray-800 rounded-xl border border-gray-700">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <!-- Form Header -->
                 <div class="px-6 py-4 border-b border-gray-700">
                     <div class="flex items-center">
@@ -42,11 +42,11 @@
                     @csrf @method('PUT')
                     <div class="space-y-6">
                         <div class="space-y-2">
-                            <label for="name" class="block text-sm font-medium text-gray-300">
+                            <label for="name" class="block text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-tag mr-2 text-primary-500"></i>{{ __('session.session_name') }}
                             </label>
                             <input type="text" name="name" value="{{ $session->name }}"
-                                class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
+                                class="w-full bg-gray-100 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg py-3 px-4 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
                                 placeholder="{{ __('session.name_placeholder') }}" required>
                             @error('name')
                                 <p class="text-red-400 text-sm mt-1 flex items-center">
@@ -58,12 +58,12 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
-                                <label for="start_hour" class="block text-sm font-medium text-gray-300">
+                                <label for="start_hour" class="block text-sm font-medium text-gray-600 dark:text-gray-300">
                                     <i class="fas fa-play-circle mr-2 text-green-500"></i>{{ __('session.start_hour') }}
                                 </label>
                                 <input type="number" name="start_hour" value="{{ $session->start_hour }}" min="0"
                                     max="23"
-                                    class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500/50 transition-all duration-200"
+                                    class="w-full bg-gray-100 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg py-3 px-4 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500/50 transition-all duration-200"
                                     required>
                                 @error('start_hour')
                                     <p class="text-red-400 text-sm mt-1 flex items-center">
@@ -79,7 +79,7 @@
                                 </label>
                                 <input type="number" name="end_hour" value="{{ $session->end_hour }}" min="0"
                                     max="23"
-                                    class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500/50 transition-all duration-200"
+                                    class="w-full bg-gray-100 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg py-3 px-4 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500/50 transition-all duration-200"
                                     required>
                                 @error('end_hour')
                                     <p class="text-red-400 text-sm mt-1 flex items-center">
@@ -103,7 +103,8 @@
                                     <i class="fas fa-clock text-primary-500"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-400">{{ __('session.session_duration') }}</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                        {{ __('session.session_duration') }}</p>
                                     <p class="text-base font-semibold">{{ $duration }} {{ __('session.hours') }}
                                     </p>
                                 </div>

@@ -6,10 +6,10 @@
         <header class="mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-primary-500">
+                    <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
                         {{ __('rules.header.title') }}
                     </h1>
-                    <p class="text-gray-500 mt-1">{{ __('rules.header.subtitle') }}</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('rules.header.subtitle') }}</p>
                 </div>
 
                 <!-- Navigation and Trader Info -->
@@ -20,50 +20,52 @@
         <!-- Stats Cards - Consistent with trades index -->
         @if ($rules->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
-                        <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-list text-primary-500"></i>
+                        <div class="bg-primary-100 dark:bg-primary-500/20 p-2 rounded-lg mr-3">
+                            <i class="fas fa-list text-primary-600 dark:text-primary-400"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('rules.stats.total_rules') }}</p>
-                            <p class="text-base font-semibold">{{ $rules->count() }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('rules.stats.total_rules') }}</p>
+                            <p class="text-base font-semibold text-gray-900 dark:text-white">{{ $rules->count() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
-                        <div class="bg-green-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-check-circle text-green-500"></i>
+                        <div class="bg-green-100 dark:bg-green-500/20 p-2 rounded-lg mr-3">
+                            <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('rules.stats.active_rules') }}</p>
-                            <p class="text-base font-semibold">{{ $rules->where('is_active', true)->count() }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('rules.stats.active_rules') }}</p>
+                            <p class="text-base font-semibold text-gray-900 dark:text-white">
+                                {{ $rules->where('is_active', true)->count() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
-                        <div class="bg-red-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-pause-circle text-red-500"></i>
+                        <div class="bg-red-100 dark:bg-red-500/20 p-2 rounded-lg mr-3">
+                            <i class="fas fa-pause-circle text-red-600 dark:text-red-400"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('rules.stats.inactive_rules') }}</p>
-                            <p class="text-base font-semibold">{{ $rules->where('is_active', false)->count() }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('rules.stats.inactive_rules') }}</p>
+                            <p class="text-base font-semibold text-gray-900 dark:text-white">
+                                {{ $rules->where('is_active', false)->count() }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
-                        <div class="bg-blue-500/20 p-2 rounded-lg mr-3">
-                            <i class="fas fa-history text-blue-500"></i>
+                        <div class="bg-blue-100 dark:bg-blue-500/20 p-2 rounded-lg mr-3">
+                            <i class="fas fa-history text-blue-600 dark:text-blue-400"></i>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-400">{{ __('rules.stats.last_updated') }}</p>
-                            <p class="text-base font-semibold">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('rules.stats.last_updated') }}</p>
+                            <p class="text-base font-semibold text-gray-900 dark:text-white">
                                 {{ $rules->sortByDesc('updated_at')->first()->updated_at->diffForHumans() ?? 'N/A' }}
                             </p>
                         </div>
@@ -73,13 +75,14 @@
         @endif
 
         <!-- Rules Table Container -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
             <!-- Table Header -->
-            <div class="px-6 py-4 border-b border-gray-700">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-semibold">{{ __('rules.table.title') }}</h2>
-                        <p class="text-gray-500 text-sm mt-1">{{ __('rules.table.total', ['count' => $rules->total()]) }}
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">{{ __('rules.table.title') }}</h2>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                            {{ __('rules.table.total', ['count' => $rules->total()]) }}
                         </p>
                     </div>
 
@@ -87,39 +90,40 @@
                         <!-- Search Input -->
                         <div class="relative">
                             <input type="text" id="searchInput" placeholder="{{ __('rules.table.search_placeholder') }}"
-                                class="bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 w-48">
-                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 w-48 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+                            <i
+                                class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
                         </div>
 
                         <!-- Sorting Dropdown -->
                         <div class="relative">
                             <button id="sortDropdownButton"
-                                class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                                class="bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-white font-medium py-2 px-4 rounded-lg flex items-center border border-gray-300 dark:border-gray-600">
                                 <i class="fas fa-sort mr-2"></i>
                                 {{ __('rules.table.sort_by') }}
                                 <i class="fas fa-chevron-down ml-2 text-xs"></i>
                             </button>
                             <div id="sortDropdown"
-                                class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg border border-gray-600 z-10 hidden">
+                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 z-10 hidden shadow-lg">
                                 <div class="py-1">
                                     <button onclick="sortTable('name', 'asc')"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
-                                        <i class="fas fa-font mr-2 text-primary-400"></i>
+                                        class="block px-4 py-2 text-sm hover:bg-primary-50 dark:hover:bg-primary-500/20 hover:text-primary-700 dark:hover:text-primary-300 flex items-center w-full text-left text-gray-700 dark:text-gray-300">
+                                        <i class="fas fa-font mr-2 text-primary-500 dark:text-primary-400"></i>
                                         {{ __('rules.table.sort_name_asc') }}
                                     </button>
                                     <button onclick="sortTable('name', 'desc')"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
-                                        <i class="fas fa-font mr-2 text-primary-400"></i>
+                                        class="block px-4 py-2 text-sm hover:bg-primary-50 dark:hover:bg-primary-500/20 hover:text-primary-700 dark:hover:text-primary-300 flex items-center w-full text-left text-gray-700 dark:text-gray-300">
+                                        <i class="fas fa-font mr-2 text-primary-500 dark:text-primary-400"></i>
                                         {{ __('rules.table.sort_name_desc') }}
                                     </button>
                                     <button onclick="sortTable('order', 'asc')"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
-                                        <i class="fas fa-sort-numeric-up mr-2 text-primary-400"></i>
+                                        class="block px-4 py-2 text-sm hover:bg-primary-50 dark:hover:bg-primary-500/20 hover:text-primary-700 dark:hover:text-primary-300 flex items-center w-full text-left text-gray-700 dark:text-gray-300">
+                                        <i class="fas fa-sort-numeric-up mr-2 text-primary-500 dark:text-primary-400"></i>
                                         {{ __('rules.table.sort_order_asc') }}
                                     </button>
                                     <button onclick="sortTable('order', 'desc')"
-                                        class="block px-4 py-2 text-sm hover:bg-primary-500/20 hover:text-primary-300 flex items-center w-full text-left">
-                                        <i class="fas fa-sort-numeric-down mr-2 text-primary-400"></i>
+                                        class="block px-4 py-2 text-sm hover:bg-primary-50 dark:hover:bg-primary-500/20 hover:text-primary-700 dark:hover:text-primary-300 flex items-center w-full text-left text-gray-700 dark:text-gray-300">
+                                        <i class="fas fa-sort-numeric-down mr-2 text-primary-500 dark:text-primary-400"></i>
                                         {{ __('rules.table.sort_order_desc') }}
                                     </button>
                                 </div>
@@ -128,7 +132,7 @@
 
                         <div class="flex flex-wrap gap-3">
                             <button onclick="openCreateModal()"
-                                class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                                class="bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                                 <i class="fas fa-plus mr-2"></i>
                                 {{ __('rules.table.add_new_rule') }}
                             </button>
@@ -141,48 +145,49 @@
             <div class="overflow-x-auto">
                 <table class="w-full min-w-max">
                     <thead>
-                        <tr class="bg-gray-750 border-b border-gray-600">
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">#</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                        <tr class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">#</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('rules.table.columns.name') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('rules.table.columns.description') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('rules.table.columns.status') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('rules.table.columns.order') }}</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('rules.table.columns.actions') }}</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-700/50" id="rulesTableBody">
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50" id="rulesTableBody">
                         @forelse($rules as $rule)
-                            <tr class="hover:bg-gray-750 transition-colors duration-150 rule-item draggable-row"
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors duration-150 rule-item draggable-row"
                                 data-id="{{ $rule->id }}" data-name="{{ strtolower($rule->name) }}"
                                 data-description="{{ strtolower($rule->description ?? '') }}"
                                 data-order="{{ $rule->order }}" draggable="true">
                                 <td class="py-3 px-4">
                                     <div class="flex items-center">
                                         <span
-                                            class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium mr-2">
+                                            class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium mr-2">
                                             {{ $loop->iteration }}
                                         </span>
-                                        <i class="fas fa-grip-vertical text-gray-500 cursor-move drag-handle"></i>
+                                        <i
+                                            class="fas fa-grip-vertical text-gray-400 dark:text-gray-500 cursor-move drag-handle"></i>
                                     </div>
                                 </td>
-                                <td class="py-3 px-4 font-medium">{{ $rule->name }}</td>
-                                <td class="py-3 px-4 text-sm text-gray-400">
+                                <td class="py-3 px-4 font-medium text-gray-900 dark:text-white">{{ $rule->name }}</td>
+                                <td class="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">
                                     {{ $rule->description ? Str::limit($rule->description, 50) : '-' }}
                                 </td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="px-2 py-1 rounded-full text-xs font-semibold {{ $rule->is_active ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30' }}">
+                                        class="px-2 py-1 rounded-full text-xs font-semibold {{ $rule->is_active ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-500/30' : 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-500/30' }}">
                                         {{ $rule->is_active ? __('rules.status.active') : __('rules.status.inactive') }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                        class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                         {{ $rule->order }}
                                     </span>
                                 </td>
@@ -190,12 +195,12 @@
                                     <div class="flex space-x-2">
                                         <button
                                             onclick="openEditModal({{ $rule->id }}, '{{ $rule->name }}', `{{ $rule->description }}`, {{ $rule->order }}, {{ $rule->is_active ? 'true' : 'false' }})"
-                                            class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 p-2 rounded-lg"
+                                            class="bg-amber-100 dark:bg-amber-500/20 hover:bg-amber-200 dark:hover:bg-amber-500/30 text-amber-700 dark:text-amber-400 p-2 rounded-lg"
                                             title="{{ __('rules.actions.edit') }}">
                                             <i class="fas fa-edit text-sm"></i>
                                         </button>
                                         <button onclick="deleteRule({{ $rule->id }}, '{{ $rule->name }}')"
-                                            class="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 rounded-lg"
+                                            class="bg-red-100 dark:bg-red-500/20 hover:bg-red-200 dark:hover:bg-red-500/30 text-red-700 dark:text-red-400 p-2 rounded-lg"
                                             title="{{ __('rules.actions.delete') }}">
                                             <i class="fas fa-trash text-sm"></i>
                                         </button>
@@ -206,17 +211,17 @@
                             <tr>
                                 <td colspan="6" class="py-8 px-4 text-center">
                                     <div class="flex flex-col items-center justify-center">
-                                        <div class="bg-gray-700/50 rounded-full p-4 mb-3">
-                                            <i class="fas fa-list text-gray-400 text-2xl"></i>
+                                        <div class="bg-gray-100 dark:bg-gray-700/50 rounded-full p-4 mb-3">
+                                            <i class="fas fa-list text-gray-400 dark:text-gray-500 text-2xl"></i>
                                         </div>
-                                        <h3 class="text-lg font-medium text-gray-300 mb-1">
+                                        <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-1">
                                             {{ __('rules.table.empty.title') }}
                                         </h3>
-                                        <p class="text-gray-500 mb-4">
+                                        <p class="text-gray-500 dark:text-gray-400 mb-4">
                                             {{ __('rules.table.empty.message') }}
                                         </p>
                                         <button onclick="openCreateModal()"
-                                            class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center">
+                                            class="bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                                             <i class="fas fa-plus mr-2"></i>
                                             {{ __('rules.table.empty.add_first_rule') }}
                                         </button>
@@ -230,35 +235,36 @@
 
             <!-- Pagination -->
             @if ($rules->hasPages())
-                <div class="px-6 py-4 border-t border-gray-700 bg-gray-750">
+                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-750">
                     {{ $rules->links('vendor.pagination.tailwind') }}
                 </div>
             @endif
         </div>
 
         <!-- Quick Tips -->
-        <div class="mt-6 bg-gray-800 rounded-xl border border-gray-700 p-6">
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
             <div class="flex items-center">
-                <div class="bg-amber-500/20 p-2 rounded-lg mr-3">
-                    <i class="fas fa-lightbulb text-amber-500"></i>
+                <div class="bg-amber-100 dark:bg-amber-500/20 p-2 rounded-lg mr-3">
+                    <i class="fas fa-lightbulb text-amber-600 dark:text-amber-400"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-200 mb-2">{{ __('rules.tips.title') }}</h3>
-                    <ul class="text-gray-500 text-sm space-y-1">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">{{ __('rules.tips.title') }}
+                    </h3>
+                    <ul class="text-gray-600 dark:text-gray-400 text-sm space-y-1">
                         <li class="flex items-center">
-                            <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
+                            <i class="fas fa-chevron-right text-amber-500 dark:text-amber-400 mr-2 text-xs"></i>
                             {{ __('rules.tips.tip1') }}
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
+                            <i class="fas fa-chevron-right text-amber-500 dark:text-amber-400 mr-2 text-xs"></i>
                             {{ __('rules.tips.tip2') }}
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
+                            <i class="fas fa-chevron-right text-amber-500 dark:text-amber-400 mr-2 text-xs"></i>
                             {{ __('rules.tips.tip3') }}
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-chevron-right text-amber-500 mr-2 text-xs"></i>
+                            <i class="fas fa-chevron-right text-amber-500 dark:text-amber-400 mr-2 text-xs"></i>
                             {{ __('rules.tips.tip4') }}
                         </li>
                     </ul>
@@ -268,23 +274,26 @@
     </div>
 
     <!-- Create/Edit Modal -->
-    <div id="ruleModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 overflow-y-auto">
+    <div id="ruleModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm hidden z-[70] overflow-y-auto">
         <div class="min-h-screen flex items-center justify-center p-4">
-            <div class="bg-gray-800 rounded-xl border border-gray-700 w-full max-w-2xl">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 w-full max-w-2xl">
                 <!-- Modal Header -->
-                <div class="px-6 py-4 border-b border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <div class="bg-primary-500/20 p-2 rounded-lg mr-3">
-                                <i class="fas fa-rules text-primary-500"></i>
+                            <div class="bg-primary-100 dark:bg-primary-500/20 p-2 rounded-lg mr-3">
+                                <i class="fas fa-rules text-primary-600 dark:text-primary-400"></i>
                             </div>
                             <div>
-                                <h2 id="modalTitle" class="text-xl font-semibold">{{ __('rules.modal.create_title') }}
+                                <h2 id="modalTitle" class="text-xl font-semibold text-gray-800 dark:text-white">
+                                    {{ __('rules.modal.create_title') }}
                                 </h2>
-                                <p class="text-gray-500 text-sm mt-1">{{ __('rules.modal.create_subtitle') }}</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                                    {{ __('rules.modal.create_subtitle') }}</p>
                             </div>
                         </div>
-                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-300">
+                        <button onclick="closeModal()"
+                            class="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -298,14 +307,15 @@
                     <div class="space-y-6">
                         <!-- Name -->
                         <div class="space-y-2">
-                            <label for="name" class="block text-sm font-medium text-gray-300">
-                                <i class="fas fa-tag mr-2 text-primary-500"></i>{{ __('rules.modal.fields.name.label') }}
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                <i
+                                    class="fas fa-tag mr-2 text-primary-500 dark:text-primary-400"></i>{{ __('rules.modal.fields.name.label') }}
                             </label>
                             <input type="text" id="name" name="name" required
-                                class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
+                                class="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-lg py-3 px-4 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500/50 transition-all duration-200"
                                 placeholder="{{ __('rules.modal.fields.name.placeholder') }}">
                             @error('name')
-                                <p class="text-red-400 text-sm mt-1 flex items-center">
+                                <p class="text-red-600 dark:text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
                                     {{ $message }}
                                 </p>
@@ -314,15 +324,15 @@
 
                         <!-- Description -->
                         <div class="space-y-2">
-                            <label for="description" class="block text-sm font-medium text-gray-300">
+                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <i
-                                    class="fas fa-align-left mr-2 text-blue-500"></i>{{ __('rules.modal.fields.description.label') }}
+                                    class="fas fa-align-left mr-2 text-blue-500 dark:text-blue-400"></i>{{ __('rules.modal.fields.description.label') }}
                             </label>
                             <textarea id="description" name="description" rows="3"
-                                class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500/50 transition-all duration-200 resize-none"
+                                class="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-lg py-3 px-4 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500/50 transition-all duration-200 resize-none"
                                 placeholder="{{ __('rules.modal.fields.description.placeholder') }}"></textarea>
                             @error('description')
-                                <p class="text-red-400 text-sm mt-1 flex items-center">
+                                <p class="text-red-600 dark:text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
                                     {{ $message }}
                                 </p>
@@ -331,15 +341,15 @@
 
                         <!-- Order -->
                         <div class="space-y-2">
-                            <label for="order" class="block text-sm font-medium text-gray-300">
+                            <label for="order" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <i
-                                    class="fas fa-sort-numeric-up mr-2 text-amber-500"></i>{{ __('rules.modal.fields.order.label') }}
+                                    class="fas fa-sort-numeric-up mr-2 text-amber-500 dark:text-amber-400"></i>{{ __('rules.modal.fields.order.label') }}
                             </label>
                             <input type="number" id="order" name="order" min="0"
-                                class="w-full bg-gray-700/50 border border-gray-600 rounded-lg py-3 px-4 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500/50 transition-all duration-200"
+                                class="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-lg py-3 px-4 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500/50 transition-all duration-200"
                                 placeholder="{{ __('rules.modal.fields.order.placeholder') }}">
                             @error('order')
-                                <p class="text-red-400 text-sm mt-1 flex items-center">
+                                <p class="text-red-600 dark:text-red-400 text-sm mt-1 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
                                     {{ $message }}
                                 </p>
@@ -348,30 +358,30 @@
 
                         <!-- Status -->
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium text-gray-300">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <i
-                                    class="fas fa-toggle-on mr-2 text-green-500"></i>{{ __('rules.modal.fields.status.label') }}
+                                    class="fas fa-toggle-on mr-2 text-green-500 dark:text-green-400"></i>{{ __('rules.modal.fields.status.label') }}
                             </label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="is_active" value="1" checked class="peer hidden">
                                     <div
-                                        class="bg-gray-700/50 border-2 border-gray-600 peer-checked:border-green-500 peer-checked:bg-green-500/20 rounded-lg p-3 text-center transition-all duration-200">
-                                        <i class="fas fa-check-circle text-green-500 mb-1"></i>
-                                        <div class="text-green-500 font-medium text-sm">
+                                        class="bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-300 dark:border-gray-600 peer-checked:border-green-500 peer-checked:bg-green-100 dark:peer-checked:bg-green-500/20 rounded-lg p-3 text-center transition-all duration-200">
+                                        <i class="fas fa-check-circle text-green-600 dark:text-green-400 mb-1"></i>
+                                        <div class="text-green-700 dark:text-green-400 font-medium text-sm">
                                             {{ __('rules.modal.fields.status.active') }}</div>
-                                        <div class="text-green-500/70 text-xs mt-1">
+                                        <div class="text-green-600/70 dark:text-green-400/70 text-xs mt-1">
                                             {{ __('rules.modal.fields.status.active_desc') }}</div>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="is_active" value="0" class="peer hidden">
                                     <div
-                                        class="bg-gray-700/50 border-2 border-gray-600 peer-checked:border-red-500 peer-checked:bg-red-500/20 rounded-lg p-3 text-center transition-all duration-200">
-                                        <i class="fas fa-pause-circle text-red-500 mb-1"></i>
-                                        <div class="text-red-500 font-medium text-sm">
+                                        class="bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-300 dark:border-gray-600 peer-checked:border-red-500 peer-checked:bg-red-100 dark:peer-checked:bg-red-500/20 rounded-lg p-3 text-center transition-all duration-200">
+                                        <i class="fas fa-pause-circle text-red-600 dark:text-red-400 mb-1"></i>
+                                        <div class="text-red-700 dark:text-red-400 font-medium text-sm">
                                             {{ __('rules.modal.fields.status.inactive') }}</div>
-                                        <div class="text-red-500/70 text-xs mt-1">
+                                        <div class="text-red-600/70 dark:text-red-400/70 text-xs mt-1">
                                             {{ __('rules.modal.fields.status.inactive_desc') }}</div>
                                     </div>
                                 </label>
@@ -381,14 +391,14 @@
 
                     <!-- Form Actions -->
                     <div
-                        class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-gray-700">
+                        class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                         <button type="button" onclick="closeModal()"
-                            class="flex items-center text-gray-400 hover:text-gray-300 transition-colors duration-200 w-full sm:w-auto justify-center sm:justify-start">
+                            class="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200 w-full sm:w-auto justify-center sm:justify-start">
                             <i class="fas fa-times mr-2"></i>
                             {{ __('rules.modal.buttons.cancel') }}
                         </button>
                         <button type="submit" id="submitBtn"
-                            class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
+                            class="bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center w-full sm:w-auto">
                             <i class="fas fa-save mr-2"></i>
                             <span id="submitText">{{ __('rules.modal.buttons.save') }}</span>
                         </button>
@@ -963,55 +973,232 @@
     </style>
 
     <style>
-        /* SweetAlert Custom Styles - Consistent with other pages */
+        /* SweetAlert Custom Styles - Optimized for both themes */
         .swal2-popup {
-            background: #1f2937 !important;
-            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            background: white !important;
+            border: 1px solid #e5e7eb !important;
             border-radius: 0.75rem !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
         }
 
+        .dark .swal2-popup {
+            background: #1f2937 !important;
+            border: 1px solid #374151 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* Title */
         .swal2-title {
-            color: #fca5a5 !important;
+            color: #1f2937 !important;
             font-weight: 600 !important;
+            font-size: 1.25rem !important;
+            padding-top: 1.5rem !important;
         }
 
-        .swal2-html-container {
-            color: #d1d5db !important;
-        }
-
-        .swal2-input {
-            background-color: rgba(31, 41, 55, 0.8) !important;
-            border: 1px solid rgba(239, 68, 68, 0.4) !important;
+        .dark .swal2-title {
             color: #f3f4f6 !important;
+        }
+
+        /* HTML Container */
+        .swal2-html-container {
+            color: #4b5563 !important;
+            font-size: 0.95rem !important;
+            line-height: 1.5 !important;
+            margin: 0.5rem 0 1rem !important;
+        }
+
+        .dark .swal2-html-container {
+            color: #9ca3af !important;
+        }
+
+        /* Input field */
+        .swal2-input {
+            background-color: #f9fafb !important;
+            border: 1px solid #d1d5db !important;
+            color: #1f2937 !important;
             border-radius: 0.5rem !important;
             padding: 0.75rem 1rem !important;
-            margin: 0 !important;
+            margin: 0.5rem 0 0 !important;
+            font-size: 0.95rem !important;
+            transition: all 0.2s ease !important;
         }
 
         .swal2-input:focus {
             border-color: #ef4444 !important;
-            box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+            outline: none !important;
         }
 
+        .swal2-input::placeholder {
+            color: #9ca3af !important;
+            opacity: 1 !important;
+        }
+
+        .dark .swal2-input {
+            background-color: #374151 !important;
+            border: 1px solid #4b5563 !important;
+            color: #f3f4f6 !important;
+        }
+
+        .dark .swal2-input::placeholder {
+            color: #6b7280 !important;
+        }
+
+        .dark .swal2-input:focus {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        /* Validation message */
+        .swal2-validation-message {
+            background: #fef2f2 !important;
+            color: #b91c1c !important;
+            border-radius: 0.5rem !important;
+            padding: 0.75rem !important;
+            margin-top: 0.75rem !important;
+            font-size: 0.9rem !important;
+            border: 1px solid #fecaca !important;
+        }
+
+        .dark .swal2-validation-message {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #fca5a5 !important;
+            border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        }
+
+        /* Buttons */
+        .swal2-actions {
+            margin-top: 1rem !important;
+            gap: 0.75rem !important;
+        }
+
+        /* Confirm button (Delete) */
         .swal2-confirm {
             background: #ef4444 !important;
             border: none !important;
             border-radius: 0.5rem !important;
-            padding: 0.5rem 1.5rem !important;
+            padding: 0.6rem 1.5rem !important;
             font-weight: 500 !important;
+            font-size: 0.95rem !important;
+            color: white !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2) !important;
         }
 
+        .swal2-confirm:hover {
+            background: #dc2626 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .swal2-confirm:active {
+            transform: translateY(0) !important;
+        }
+
+        .dark .swal2-confirm {
+            background: #ef4444 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dark .swal2-confirm:hover {
+            background: #f87171 !important;
+        }
+
+        /* Cancel button */
         .swal2-cancel {
+            background-color: white !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.5rem !important;
+            padding: 0.6rem 1.5rem !important;
+            font-weight: 500 !important;
+            font-size: 0.95rem !important;
+            color: #4b5563 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .swal2-cancel:hover {
+            background-color: #f9fafb !important;
+            border-color: #9ca3af !important;
+            color: #1f2937 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .swal2-cancel:active {
+            transform: translateY(0) !important;
+        }
+
+        .dark .swal2-cancel {
             background-color: #374151 !important;
             border: 1px solid #4b5563 !important;
-            border-radius: 0.5rem !important;
-            padding: 0.5rem 1.5rem !important;
-            font-weight: 500 !important;
+            color: #d1d5db !important;
         }
 
-        .swal2-validation-message {
-            background: rgba(239, 68, 68, 0.1) !important;
-            color: #fca5a5 !important;
+        .dark .swal2-cancel:hover {
+            background-color: #4b5563 !important;
+            border-color: #6b7280 !important;
+            color: #f3f4f6 !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* Icon styling */
+        .swal2-icon.swal2-warning {
+            border-color: #fbbf24 !important;
+            color: #f59e0b !important;
+        }
+
+        .dark .swal2-icon.swal2-warning {
+            border-color: #f59e0b !important;
+            color: #fbbf24 !important;
+        }
+
+        /* Timer progress bar */
+        .swal2-timer-progress-bar {
+            background: #ef4444 !important;
+        }
+
+        /* Loading spinner */
+        .swal2-loader {
+            border-color: #ef4444 transparent #ef4444 transparent !important;
+        }
+
+        /* Toast notifications (if used) */
+        .swal2-toast {
+            background: white !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .dark .swal2-toast {
+            background: #1f2937 !important;
+            border: 1px solid #374151 !important;
+        }
+
+        /* Toast title */
+        .swal2-toast .swal2-title {
+            color: #1f2937 !important;
+        }
+
+        .dark .swal2-toast .swal2-title {
+            color: #f3f4f6 !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .swal2-popup {
+                padding: 1rem !important;
+            }
+
+            .swal2-actions {
+                flex-direction: column-reverse !important;
+                width: 100% !important;
+            }
+
+            .swal2-confirm,
+            .swal2-cancel {
+                width: 100% !important;
+                margin: 0 !important;
+            }
         }
     </style>
 @endsection

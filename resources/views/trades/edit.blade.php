@@ -11,18 +11,9 @@
                     </h1>
                     <p class="text-gray-600 dark:text-gray-500 mt-1">
                         {{ __('trades.step2_description') }}
-                        @if ($account)
-                            <span
-                                class="ml-2 inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm rounded-full">
-                                <i class="fas fa-check-circle mr-1"></i>Account: {{ $account->name }}
-                            </span>
-                        @endif
                     </p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <!-- Account Selector Component -->
-                    @include('components.account-selector')
-
                     <a href="{{ route('trades.index') }}"
                         class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-colors">
                         <i class="fas fa-arrow-left text-primary-500 mr-2"></i>
@@ -78,8 +69,19 @@
                             <h2 class="text-xl font-bold text-primary-300">
                                 {{ __('trades.trade_summary') }}
                             </h2>
-                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
-                                {{ __('trades.current_position_details') }}
+                            <p
+                                class="text-gray-600 dark:text-gray-500 text-sm mt-1 gap-3 flex items-center justify-between">
+                                <span>
+                                    {{ __('trades.current_position_details') }}
+                                </span>
+                                <span
+                                    class="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm rounded-full">
+                                    @if ($selectedAccount)
+                                        <i class="fas fa-check-circle mr-1"></i>Account: {{ $selectedAccount->name }}
+                                    @else
+                                        <i class="fas fa-exclamation-circle mr-1"></i>No account selected
+                                    @endif
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -140,7 +142,7 @@
 
                     <!-- Account Info -->
                     <div
-                        class="mt-4 p-3 bg-blue-100/40 dark:bg-gray-750 rounded-lg border border-none dark:border-gray-600">
+                        class="mt-4 p-3 bg-blue-100/40 dark:bg-blue-700/10 rounded-lg border border-none dark:border-gray-600">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('trades.account') }}</p>

@@ -19,12 +19,13 @@
 
         <!-- Flash Messages -->
         @if (session('success'))
-            <div class="bg-green-900/30 rounded-lg p-4 border border-green-700/30 mb-6">
+            <div
+                class="bg-green-700/50 dark:bg-green-900/30 rounded-lg p-4 border border-green-900 dark:border-green-700/30 mb-6">
                 <div class="flex items-center">
-                    <div class="bg-green-500/20 p-2 rounded-lg mr-3">
-                        <i class="fas fa-check-circle text-green-500"></i>
+                    <div class="bg-green-600 dark:bg-green-500/20 p-2 rounded-lg mr-3">
+                        <i class="fas fa-check-circle text-white dark:text-green-500"></i>
                     </div>
-                    <span class="text-green-300">{{ session('success') }}</span>
+                    <span class="text-white dark:text-green-300">{{ session('success') }}</span>
                 </div>
             </div>
         @endif
@@ -41,13 +42,13 @@
         @endif
 
         <!-- Sessions Table Container -->
-        <div class="bg-gray-800 rounded-xl border border-gray-700">
+        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-700">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">{{ __('session.table.title') }}</h2>
-                        <p class="text-gray-500 text-sm mt-1">
+                        <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                             {{ __('session.table.total', ['total' => $sessions->total()]) }}</p>
                     </div>
                     <a href="{{ route('sessions.create') }}"
@@ -62,48 +63,48 @@
             <div class="overflow-x-auto">
                 <table class="w-full min-w-max">
                     <thead>
-                        <tr class="bg-gray-750 border-b border-gray-600">
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                        <tr class="border-b border-gray-600 hover:bg-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-hashtag mr-2"></i>{{ __('session.table.columns.id') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-tag mr-2"></i>{{ __('session.table.columns.name') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-play-circle mr-2"></i>{{ __('session.table.columns.start_hour') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-stop-circle mr-2"></i>{{ __('session.table.columns.end_hour') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-clock mr-2"></i>{{ __('session.table.columns.duration') }}
                             </th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 dark:text-gray-300">
                                 <i class="fas fa-cogs mr-2"></i>{{ __('session.table.columns.actions') }}
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700/50">
                         @forelse($sessions as $s)
-                            <tr class="hover:bg-gray-750 transition-colors duration-150">
+                            <tr class="hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors duration-150">
                                 <td class="py-3 px-4">
                                     <span
-                                        class="bg-gray-700 text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                        class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                         {{ $s->id }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 font-medium">
-                                    <span class="text-white">{{ $s->name }}</span>
+                                    <span class="text-gray-600 dark:text-white">{{ $s->name }}</span>
                                 </td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="bg-green-500/20 text-green-400 border border-green-500/30 py-1 px-3 rounded-lg text-xs font-medium">
+                                        class="bg-green-100 dark:bg-green-500/20 text-green-500 text-green-400 border border-green-500/30 py-1 px-3 rounded-lg text-xs font-medium">
                                         {{ $s->start_hour }}:00
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="bg-red-500/20 text-red-400 border border-red-500/30 py-1 px-3 rounded-lg text-xs font-medium">
+                                        class="bg-red-100 dark:bg-red-500/20 text-red-500 text-red-400 border border-red-500/30 py-1 px-3 rounded-lg text-xs font-medium">
                                         {{ $s->end_hour }}:00
                                     </span>
                                 </td>

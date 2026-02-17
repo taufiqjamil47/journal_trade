@@ -596,33 +596,32 @@ class TradeController extends Controller
         }
 
         try {
-            // SIMPLE APPROACH - tanpa transaction (karena TRUNCATE auto-commit)
+            // Get selected account
+            $selectedAccountId = session('selected_account_id');
 
-            // 1. Nonaktifkan foreign key check
-            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            // 1. Get all trade IDs for the selected account
+            $tradeIds = Trade::where('account_id', $selectedAccountId)->pluck('id');
 
-            // 2. Hapus semua data di pivot table terlebih dahulu
-            DB::table('trade_rule')->truncate();
-            Log::info('Pivot table cleared');
+            // 2. Delete pivot table entries for these trades
+            if ($tradeIds->isNotEmpty()) {
+                DB::table('trade_rule')->whereIn('trade_id', $tradeIds)->delete();
+                Log::info('Pivot table entries cleared for account', ['account_id' => $selectedAccountId, 'trade_count' => $tradeIds->count()]);
+            }
 
-            // 3. Hapus semua trades
-            DB::table('trades')->truncate();
-            Log::info('Trades table cleared');
+            // 3. Delete all trades for the selected account
+            $deletedCount = Trade::where('account_id', $selectedAccountId)->delete();
+            Log::info('Trades deleted for account', ['account_id' => $selectedAccountId, 'deleted_count' => $deletedCount]);
 
-            // 4. Reset auto increment
-            DB::statement('ALTER TABLE trades AUTO_INCREMENT = 1');
-            DB::statement('ALTER TABLE trade_rule AUTO_INCREMENT = 1');
-            Log::info('Auto-increment reset');
-
-            // 5. Aktifkan kembali foreign key check
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
-
-            // 6. Clear session/cache jika ada
+            // 4. Clear session/cache jika ada
             session()->forget('trade_stats');
-            Log::info('Session cleared');
+            Log::info('Session cleared for account', ['account_id' => $selectedAccountId]);
+
+            // Get account name for success message
+            $account = Account::find($selectedAccountId);
+            $accountName = $account->name ?? 'Unknown';
 
             // Success response
-            $successMessage = '✅ Semua perdagangan telah berhasil diselesaikan!';
+            $successMessage = "✅ Semua perdagangan untuk akun '{$accountName}' telah berhasil dihapus ({$deletedCount} trades)!";
             Log::info($successMessage);
 
             if ($request->expectsJson() || $request->ajax()) {
@@ -640,10 +639,7 @@ class TradeController extends Controller
         } catch (\Exception $e) {
             // ERROR HANDLING
 
-            // Pastikan foreign key check kembali aktif jika error
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
-
-            $errorMessage = '❌ Gagal menyelesaikan perdagangan: ' . $e->getMessage();
+            $errorMessage = '❌ Gagal menghapus perdagangan: ' . $e->getMessage();
             Log::error('Kesalahan Hapus Semua Perdagangan: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString()

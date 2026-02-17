@@ -68,8 +68,17 @@
                                 <h2 class="text-xl font-bold text-purple-500 dark:text-purple-300">
                                     {{ __('trades.trade_number', ['id' => $trade->id, 'symbol' => $trade->symbol->name]) }}
                                 </h2>
-                                <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
-                                    {{ __('trades.evaluation_details') }}
+                                <p
+                                    class="text-gray-600 dark:text-gray-500 text-sm mt-1 flex items-center gap-3 justify-between">
+                                    <span>{{ __('trades.evaluation_details') }}</span>
+                                    <span
+                                        class="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm rounded-full">
+                                        @if ($selectedAccount)
+                                            <i class="fas fa-check-circle mr-1"></i>Account: {{ $selectedAccount->name }}
+                                        @else
+                                            <i class="fas fa-exclamation-circle mr-1"></i>No account selected
+                                        @endif
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -142,16 +151,16 @@
             <!-- Form Container -->
             <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                 <!-- Form Header -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-850">
+                <div class="px-6 py-4 border-b border-gray-700">
                     <div class="flex items-center">
-                        <div class="bg-purple-900/30 p-3 rounded-xl mr-4">
-                            <i class="fas fa-chart-area text-purple-400 text-xl"></i>
+                        <div class="bg-purple-200 dark:bg-purple-900/30 p-3 rounded-xl mr-4">
+                            <i class="fas fa-chart-area text-purple-500 dark:text-purple-400 text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-purple-300">
+                            <h2 class="text-xl font-bold text-purple-500 dark:text-purple-300">
                                 {{ __('trades.analysis_evaluation') }}
                             </h2>
-                            <p class="text-gray-500 text-sm mt-1">
+                            <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">
                                 {{ __('trades.record_learnings') }}
                             </p>
                         </div>
@@ -166,19 +175,20 @@
                         <!-- Left Column -->
                         <div class="space-y-6">
                             <!-- Entry Setup -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-blue-300">
-                                    <i class="fas fa-sign-in-alt text-blue-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-blue-500 dark:text-blue-300">
+                                    <i class="fas fa-sign-in-alt text-blue-500 dark:text-blue-400 mr-3"></i>
                                     {{ __('trades.entry_setup_strategy') }}
                                 </h3>
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <label for="entry_type" class="block text-sm font-semibold text-gray-300">
+                                        <label for="entry_type"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.entry_type') }}
                                         </label>
                                         <select name="entry_type" id="entry_type"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent">
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent">
                                             <option value="">{{ __('trades.select_entry_type') }}</option>
                                             <option value="Limit Order"
                                                 {{ $trade->entry_type == 'Limit Order' ? 'selected' : '' }}>
@@ -196,7 +206,7 @@
                                     </div>
 
                                     <div class="space-y-2">
-                                        <label class="block text-sm font-semibold text-gray-300">
+                                        <label class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.follow_trading_rules') }}
                                         </label>
                                         <div class="grid grid-cols-2 gap-3">
@@ -204,7 +214,7 @@
                                                 <input type="radio" name="follow_rules" value="1"
                                                     {{ $trade->follow_rules ? 'checked' : '' }} class="hidden">
                                                 <div
-                                                    class="border-2 border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-green-500">
+                                                    class="border-2 border-gray-200 dark:border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-green-500">
                                                     <i class="fas fa-check-circle text-lg text-green-400 mb-1"></i>
                                                     <div class="text-green-400 font-semibold">{{ __('trades.yes') }}</div>
                                                 </div>
@@ -213,7 +223,7 @@
                                                 <input type="radio" name="follow_rules" value="0"
                                                     {{ !$trade->follow_rules ? 'checked' : '' }} class="hidden">
                                                 <div
-                                                    class="border-2 border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-red-500">
+                                                    class="border-2 border-gray-200 dark:border-gray-600 rounded-lg p-3 text-center cursor-pointer hover:border-red-500">
                                                     <i class="fas fa-times-circle text-lg text-red-400 mb-1"></i>
                                                     <div class="text-red-400 font-semibold">{{ __('trades.no') }}</div>
                                                 </div>
@@ -224,19 +234,20 @@
                             </div>
 
                             <!-- Market Analysis -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-amber-300">
-                                    <i class="fas fa-chart-area text-amber-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-amber-500 dark:text-amber-300">
+                                    <i class="fas fa-chart-area text-amber-500 dark:text-amber-400 mr-3"></i>
                                     {{ __('trades.market_analysis_context') }}
                                 </h3>
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <label for="market_condition" class="block text-sm font-semibold text-gray-300">
+                                        <label for="market_condition"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.market_condition_analysis') }}
                                         </label>
                                         <select name="market_condition" id="market_condition"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent">
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent">
                                             <option value="">{{ __('trades.select_market_condition') }}</option>
                                             <option value="Uptrend"
                                                 {{ $trade->market_condition == 'Uptrend' ? 'selected' : '' }}>
@@ -278,55 +289,59 @@
                                     </div>
 
                                     <div class="space-y-2">
-                                        <label for="entry_reason" class="block text-sm font-semibold text-gray-300">
+                                        <label for="entry_reason"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.entry_reasoning_conviction') }}
                                         </label>
                                         <textarea name="entry_reason" id="entry_reason" rows="3"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent resize-none"
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-transparent resize-none"
                                             placeholder="{{ __('trades.entry_reason_placeholder') }}">{{ $trade->entry_reason }}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Risk Management -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-red-300">
-                                    <i class="fas fa-shield-alt text-red-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-red-500 dark:text-red-300">
+                                    <i class="fas fa-shield-alt text-gray-500 dark:text-red-400 mr-3"></i>
                                     {{ __('trades.risk_management_review') }}
                                 </h3>
 
                                 <div class="space-y-2">
-                                    <label for="why_sl_tp" class="block text-sm font-semibold text-gray-300">
+                                    <label for="why_sl_tp"
+                                        class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                         {{ __('trades.sl_tp_placement_reasoning') }}
                                     </label>
                                     <textarea name="why_sl_tp" id="why_sl_tp" rows="3"
-                                        class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent resize-none"
+                                        class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent resize-none"
                                         placeholder="{{ __('trades.sl_tp_analysis_placeholder') }}">{{ $trade->why_sl_tp }}</textarea>
                                 </div>
                             </div>
 
                             <!-- Exit Timestamp -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-indigo-300">
-                                    <i class="fas fa-clock text-indigo-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-indigo-500 dark:text-indigo-300">
+                                    <i class="fas fa-clock text-indigo-600 dark:text-indigo-400 mr-3"></i>
                                     {{ __('trades.exit_timestamp') }}
                                 </h3>
 
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="space-y-2">
-                                        <label for="exit_time" class="block text-sm font-semibold text-gray-300">
+                                        <label for="exit_time"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.exit_time') }}
                                         </label>
                                         <input type="time" name="exit_time" id="exit_time"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
                                             value="{{ optional($trade->exit_timestamp)->format('H:i') }}">
                                     </div>
                                     <div class="space-y-2">
-                                        <label for="exit_date" class="block text-sm font-semibold text-gray-300">
+                                        <label for="exit_date"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.exit_date') }}
                                         </label>
                                         <input type="date" name="exit_date" id="exit_date"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-transparent"
                                             value="{{ optional($trade->exit_timestamp)->format('Y-m-d') }}">
                                     </div>
                                 </div>
@@ -336,9 +351,9 @@
                         <!-- Right Column -->
                         <div class="space-y-6">
                             <!-- Trading Rules -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-green-300">
-                                    <i class="fas fa-check-double text-green-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-green-500 dark:text-green-300">
+                                    <i class="fas fa-check-double text-green-500 dark:text-green-400 mr-3"></i>
                                     {{ __('trades.trading_rules_checklist') }}
                                 </h3>
 
@@ -352,11 +367,13 @@
                                     @endphp
 
                                     @foreach ($rulesList as $index => $rule)
-                                        <label class="flex items-center p-2 hover:bg-gray-700 rounded cursor-pointer">
+                                        <label
+                                            class="flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded cursor-pointer">
                                             <input type="checkbox" name="rules[]" value="{{ $rule->id }}"
                                                 {{ in_array($rule->id, $selectedRules) ? 'checked' : '' }}
                                                 class="mr-3 w-4 h-4 text-green-500 bg-gray-800 border-gray-600 rounded focus:ring-green-500">
-                                            <span class="text-sm text-gray-300 flex-1">{{ $rule->name }}</span>
+                                            <span
+                                                class="text-sm text-gray-600 dark:text-gray-300 flex-1">{{ $rule->name }}</span>
                                             @if ($rule->description)
                                                 <i class="fas fa-info-circle text-gray-500 ml-2 cursor-help"
                                                     title="{{ $rule->description }}"></i>
@@ -367,19 +384,20 @@
                             </div>
 
                             <!-- Psychology -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-purple-300">
-                                    <i class="fas fa-brain text-purple-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-purple-500 dark:text-purple-300">
+                                    <i class="fas fa-brain text-purple-500 dark:text-purple-400 mr-3"></i>
                                     {{ __('trades.trading_psychology') }}
                                 </h3>
 
                                 <div class="space-y-4">
                                     <div class="space-y-2">
-                                        <label for="entry_emotion" class="block text-sm font-semibold text-gray-300">
+                                        <label for="entry_emotion"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.entry_emotion') }}
                                         </label>
                                         <select name="entry_emotion" id="entry_emotion"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent">
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent">
                                             <option value="">{{ __('trades.select_entry_emotion') }}</option>
                                             <option value="Confident"
                                                 {{ $trade->entry_emotion == 'Confident' ? 'selected' : '' }}>
@@ -425,11 +443,12 @@
                                     </div>
 
                                     <div class="space-y-2">
-                                        <label for="close_emotion" class="block text-sm font-semibold text-gray-300">
+                                        <label for="close_emotion"
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                             {{ __('trades.close_emotion') }}
                                         </label>
                                         <select name="close_emotion" id="close_emotion"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent">
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent">
                                             <option value="">{{ __('trades.select_close_emotion') }}</option>
                                             <option value="Satisfied"
                                                 {{ $trade->close_emotion == 'Satisfied' ? 'selected' : '' }}>
@@ -481,9 +500,9 @@
                             </div>
 
                             <!-- Documentation -->
-                            <div class="bg-gray-750 rounded-xl p-4 border border-gray-600">
-                                <h3 class="text-lg font-bold mb-4 flex items-center text-cyan-300">
-                                    <i class="fas fa-camera text-cyan-400 mr-3"></i>
+                            <div class="rounded-xl p-4 border border-gray-600">
+                                <h3 class="text-lg font-bold mb-4 flex items-center text-cyan-500 dark:text-cyan-300">
+                                    <i class="fas fa-camera text-cyan-500 dark:text-cyan-400 mr-3"></i>
                                     {{ __('trades.trade_documentation') }}
                                 </h3>
 
@@ -491,12 +510,12 @@
                                     <!-- After Link -->
                                     <div class="space-y-2">
                                         <label for="after_link"
-                                            class="block text-sm font-semibold text-gray-300 flex items-center">
+                                            class="block text-sm font-semibold text-gray-600 dark:text-gray-300 flex items-center">
                                             <i class="fas fa-image mr-2 text-primary-400"></i>
                                             {{ __('trades.after_screenshot') }}
                                         </label>
                                         <input type="url" name="after_link" id="after_link"
-                                            class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
+                                            class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-transparent"
                                             value="{{ $trade->after_link }}"
                                             placeholder="{{ __('trades.after_screenshot_placeholder') }}">
                                         <p class="text-xs text-gray-500 mt-1">
@@ -523,29 +542,30 @@
                     </div>
 
                     <!-- Additional Notes -->
-                    <div class="mt-6 bg-gray-750 rounded-xl p-4 border border-gray-600">
-                        <h3 class="text-lg font-bold mb-4 flex items-center text-gray-300">
-                            <i class="fas fa-sticky-note text-gray-400 mr-3"></i>
+                    <div class="mt-6 rounded-xl p-4 border border-gray-600">
+                        <h3 class="text-lg font-bold mb-4 flex items-center text-gray-600 dark:text-gray-300">
+                            <i class="fas fa-sticky-note text-gray-600 dark:text-gray-400 mr-3"></i>
                             {{ __('trades.additional_notes') }}
                         </h3>
 
                         <div class="space-y-2">
-                            <label for="note" class="block text-sm font-semibold text-gray-300">
+                            <label for="note" class="block text-sm font-semibold text-gray-600 dark:text-gray-300">
                                 {{ __('trades.additional_notes_learnings') }}
                             </label>
 
                             <!-- Tombol Generate -->
                             <div class="mb-3">
                                 <button type="button" id="generateNoteBtn"
-                                    class="bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center text-sm">
+                                    class="bg-amber-500 dark:bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center text-sm">
                                     <i class="fas fa-magic mr-2"></i>
                                     {{ __('trades.generate_notes') }}
                                 </button>
-                                <p class="text-xs text-gray-400 mt-1">{{ __('trades.generate_notes_help') }}</p>
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                    {{ __('trades.generate_notes_help') }}</p>
                             </div>
 
                             <textarea name="note" id="note" rows="4"
-                                class="w-full bg-gray-800 border border-gray-600 rounded-lg py-2 px-3 text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-transparent resize-none"
+                                class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-600 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-transparent resize-none"
                                 placeholder="{{ __('trades.learnings_insight_placeholder') }}">{{ $trade->note }}</textarea>
                         </div>
                     </div>
@@ -906,28 +926,28 @@
         // CSS untuk animasi spinner
         const style = document.createElement('style');
         style.textContent = `
-    .animate-spin {
-        animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    
-    #generateNoteBtn {
-        transition: all 0.3s ease;
-    }
-    
-    #generateNoteBtn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-    }
-    
-    #generateNoteBtn:active {
-        transform: translateY(0);
-    }
-`;
+                .animate-spin {
+                    animation: spin 1s linear infinite;
+                }
+                
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                
+                #generateNoteBtn {
+                    transition: all 0.3s ease;
+                }
+                
+                #generateNoteBtn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+                }
+                
+                #generateNoteBtn:active {
+                    transform: translateY(0);
+                }
+            `;
         document.head.appendChild(style);
     </script>
 @endsection

@@ -1,5 +1,5 @@
 <div id="floatingNoteContainer"
-    class="fixed right-0 top-1/2 transform -translate-y-1/2 z-50 transition-all duration-300 ease-in-out"
+    class="fixed right-0 top-1/2 transform -translate-y-1/2 z-[70] transition-all duration-300 ease-in-out"
     style="right: -400px;"> <!-- Default hidden -->
 
     <!-- Floating Button untuk Toggle -->

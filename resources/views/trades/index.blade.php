@@ -564,8 +564,10 @@
     <!-- Quick Clear All Trades Function -->
     <script>
         function quickClearAll() {
-            // Get current trade count for display
-            const tradeCount = {{ \App\Models\Trade::count() }};
+            // Get current trade count for selected account only
+            const selectedAccountId = {{ session('selected_account_id') ?? 1 }};
+            const tradeCount = {{ $trades->total() }};
+            const selectedAccountName = "{{ $selectedAccount->name ?? 'Unknown' }}";
 
             if (tradeCount === 0) {
                 Swal.fire({
@@ -582,12 +584,15 @@
                 html: `
                         <div class="text-left text-sm">
                             <p class="text-red-400 mb-3 font-bold">${translations.cannot_be_undone}!</p>
+                            <div class="bg-blue-900/20 p-3 rounded mb-4 border border-blue-700/30">
+                                <p class="text-blue-300 text-xs"><i class="fas fa-info-circle mr-1"></i>Akun yang dipilih: <strong>${selectedAccountName}</strong></p>
+                            </div>
                             <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30">
                                 <p class="font-bold mb-2 text-red-300">${translations.will_be_deleted}:</p>
                                 <ul class="space-y-1 text-gray-300">
                                     <li class="flex items-center">
                                         <i class="fas fa-trash text-red-500 mr-2 text-xs"></i>
-                                        <span><strong>${tradeCount}</strong> ${translations.trading_records}</span>
+                                        <span><strong>${tradeCount}</strong> ${translations.trading_records} (akun ini saja)</span>
                                     </li>
                                     <li class="flex items-center">
                                         <i class="fas fa-chart-bar text-red-500 mr-2 text-xs"></i>
