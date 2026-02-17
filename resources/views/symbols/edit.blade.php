@@ -13,7 +13,7 @@
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('symbols.index') }}"
-                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 transition-colors text-gray-700 dark:text-gray-300">
+                        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 text-gray-700 dark:text-gray-300">
                         <i class="fas fa-arrow-left text-primary-500 dark:text-primary-400 mr-2"></i>
                         <span>{{ __('symbol.back_to_list') }}</span>
                     </a>
@@ -77,7 +77,7 @@
                         </label>
                         <div class="relative">
                             <input type="text" name="name" value="{{ old('name', $symbol->name) }}"
-                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none transition-colors"
+                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none"
                                 placeholder="{{ __('symbol.form_name_placeholder') }}" required>
                             @error('name')
                                 <div class="absolute right-3 top-3 text-red-500">
@@ -99,7 +99,7 @@
                         <div class="relative">
                             <input type="number" step="0.00001" name="pip_value"
                                 value="{{ old('pip_value', format_price($symbol->pip_value)) }}"
-                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none transition-colors"
+                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none"
                                 placeholder="{{ __('symbol.form_pip_value_placeholder') }}" required>
                             @error('pip_value')
                                 <div class="absolute right-3 top-3 text-red-500">
@@ -122,7 +122,7 @@
                         <div class="relative">
                             <input type="number" step="0.01" name="pip_worth"
                                 value="{{ old('pip_worth', $symbol->pip_worth ?? 10) }}"
-                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none transition-colors"
+                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none"
                                 placeholder="{{ __('symbol.form_pip_worth_placeholder') }}">
                             @error('pip_worth')
                                 <div class="absolute right-3 top-3 text-red-500">
@@ -145,7 +145,7 @@
                         <div class="relative">
                             <input type="text" name="pip_position"
                                 value="{{ old('pip_position', $symbol->pip_position) }}"
-                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none transition-colors"
+                                class="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-700 rounded-lg py-3 px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 focus:outline-none"
                                 placeholder="{{ __('symbol.form_pip_position_placeholder') }}">
                             @error('pip_position')
                                 <div class="absolute right-3 top-3 text-red-500">
@@ -239,19 +239,19 @@
                     class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between gap-4">
                     <div>
                         <a href="{{ route('symbols.index') }}"
-                            class="flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors">
+                            class="flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg border border-gray-200 dark:border-gray-700">
                             <i class="fas fa-times mr-2"></i>
                             {{ __('symbol.cancel_button') }}
                         </a>
                     </div>
                     <div class="flex gap-3">
                         <button type="button" onclick="window.location.href='{{ route('symbols.index') }}'"
-                            class="flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors">
+                            class="flex items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg border border-gray-200 dark:border-gray-700">
                             <i class="fas fa-arrow-left mr-2"></i>
                             {{ __('symbol.back_button') }}
                         </button>
                         <button type="submit"
-                            class="flex items-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-3 px-6 rounded-lg font-medium transition-colors">
+                            class="flex items-center bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white py-3 px-6 rounded-lg font-medium">
                             <i class="fas fa-save mr-2"></i>
                             {{ __('symbol.edit_submit_button') }}
                         </button>
