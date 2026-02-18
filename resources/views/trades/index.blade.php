@@ -409,7 +409,8 @@
                                 </td>
                                 <td class="py-4 px-4">
                                     <span
-                                        class="font-mono font-semibold px-2.5 py-1 rounded-lg text-sm {{ $trade->profit_loss >= 0 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
+                                        class="font-mono font-semibold px-2.5 py-1 rounded-lg text-sm pl-display {{ $trade->profit_loss >= 0 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}"
+                                        data-raw="{{ $trade->profit_loss ?? 0 }}">
                                         {{ $trade->profit_loss ?? '-' }}
                                     </span>
                                 </td>
@@ -1195,6 +1196,28 @@
             /* border-radius: 0.25rem !important; */
         }
     </style>
+
+    <!-- Format P/L Column with Abbreviation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function formatCurrencyAbbrev(value) {
+                const num = Number(value) || 0;
+                const abs = Math.abs(num);
+                if (abs >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+                if (abs >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+                return num.toFixed(0);
+            }
+
+            // Format all P/L display elements
+            document.querySelectorAll('.pl-display').forEach(el => {
+                const rawValue = parseFloat(el.dataset.raw);
+                if (!isNaN(rawValue) && rawValue !== 0) {
+                    const formatted = formatCurrencyAbbrev(rawValue);
+                    el.textContent = '$' + formatted;
+                }
+            });
+        });
+    </script>
 
     <!-- Dropdown Style -->
     <style>

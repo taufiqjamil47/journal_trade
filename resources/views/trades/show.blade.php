@@ -152,8 +152,8 @@
                     <div class="text-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
                         <span
                             class="text-sm text-gray-500 dark:text-gray-400 block mb-2">{{ __('trades.profit_loss') }}</span>
-                        <p
-                            class="text-3xl font-bold {{ $trade->profit_loss >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                        <p class="text-3xl font-bold pl-display-show {{ $trade->profit_loss >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}"
+                            data-raw="{{ $trade->profit_loss ?? 0 }}">
                             ${{ number_format($trade->profit_loss ?? 0, 2) }}
                         </p>
                     </div>
@@ -216,7 +216,8 @@
                                 class="text-center bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
                                 <span
                                     class="text-sm text-gray-500 dark:text-gray-400 block mb-2">{{ __('trades.risk_amount_usd') }}</span>
-                                <span class="font-bold text-xl text-gray-900 dark:text-white">
+                                <span class="font-bold text-xl text-gray-900 dark:text-white pl-display-show"
+                                    data-raw="{{ $trade->risk_usd ?? 0 }}">
                                     {{ $trade->risk_usd ? '$' . number_format($trade->risk_usd, 2) : '-' }}
                                 </span>
                             </div>
@@ -574,6 +575,28 @@
             </a>
         </div>
     </div>
+
+    <!-- Format Currency Values with Abbreviation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function formatCurrencyAbbrev(value) {
+                const num = Number(value) || 0;
+                const abs = Math.abs(num);
+                if (abs >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+                if (abs >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+                return num.toFixed(2);
+            }
+
+            // Format all currency display elements
+            document.querySelectorAll('.pl-display-show').forEach(el => {
+                const rawValue = parseFloat(el.dataset.raw);
+                if (!isNaN(rawValue) && rawValue !== 0) {
+                    const formatted = formatCurrencyAbbrev(rawValue);
+                    el.textContent = '$' + formatted;
+                }
+            });
+        });
+    </script>
 
     <!-- Image Zoom Modal - Improved -->
     <div id="imageZoomModal" class="fixed inset-0 z-50 hidden">

@@ -86,6 +86,10 @@
                                 class="bg-gray-500 hover:bg-gray-600 text-white rounded-lg px-4 py-2 text-sm md:text-base flex-1 md:flex-none text-center shadow-sm hover:shadow">
                                 {{ __('calendar.today') }}
                             </a>
+                            <button id="toggleValues" title="{{ __('calendar.toggle_values') }}"
+                                class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg px-3 py-2 text-sm md:text-base flex-1 md:flex-none shadow-sm hover:shadow">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -183,7 +187,8 @@
                                     @endif
                                 </div>
                                 <div class="mt-1 text-xs lg:text-base {{ $textColor }} font-semibold">
-                                    ${{ number_format($profit, 2) }}
+                                    <span class="currency-display"
+                                        data-raw="{{ $profit }}">${{ number_format($profit, 2) }}</span>
                                 </div>
                                 <div class="pt-3 border-t border-gray-200 dark:border-gray-600/50 mt-1">
                                     <div class="flex justify-center items-center">
@@ -275,7 +280,8 @@
                                             <span
                                                 class="text-xs text-gray-600 dark:text-gray-400">{{ __('calendar.pl') }}:</span>
                                             <span class="text-xs font-bold {{ $weekProfitColor }}">
-                                                ${{ number_format($weekTotalProfit, 2) }}
+                                                <span class="currency-display"
+                                                    data-raw="{{ $weekTotalProfit }}">${{ number_format($weekTotalProfit, 2) }}</span>
                                             </span>
                                         </div>
                                         @if ($weekTotalTrades > 0)
@@ -483,7 +489,8 @@
                                         <span
                                             class="text-xs text-gray-600 dark:text-gray-400">{{ __('calendar.pl') }}</span>
                                         <div class="font-bold {{ $profitColor }} text-base flex items-center gap-1">
-                                            ${{ number_format($totalProfit, 0) }}
+                                            <span class="currency-display"
+                                                data-raw="{{ $totalProfit }}">${{ number_format($totalProfit, 0) }}</span>
                                             @if ($totalProfit != 0)
                                                 @if ($totalProfit > 0)
                                                     <i
@@ -767,6 +774,65 @@
                     document.body.style.overflow = 'auto';
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const storageKey = 'calendarShowValues';
+            let showValues = localStorage.getItem(storageKey);
+            showValues = showValues === null ? true : (showValues === 'true');
+
+            const toggleBtn = document.getElementById('toggleValues');
+
+            function formatCurrencyValue(raw) {
+                const val = Number(raw) || 0;
+                const abs = Math.abs(val);
+                if (abs >= 1e9) return (val / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+                if (abs >= 1e6) return (val / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+                if (abs >= 1e3) return (val / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+                // For smaller numbers, preserve 2 decimals if fractional, otherwise show integer
+                if (Number.isInteger(val)) return val.toLocaleString();
+                return val.toFixed(2);
+            }
+
+            function applyFormatting() {
+                document.querySelectorAll('.currency-display').forEach(el => {
+                    const raw = parseFloat(el.dataset.raw) || 0;
+                    if (!showValues) {
+                        el.textContent = '—';
+                        return;
+                    }
+
+                    const abs = Math.abs(raw);
+                    let formatted = '';
+
+                    if (abs >= 1000) {
+                        formatted = formatCurrencyValue(raw);
+                    } else {
+                        // Keep decimals for small values
+                        formatted = Number.isInteger(raw) ? raw.toLocaleString() : raw.toFixed(2);
+                    }
+
+                    el.textContent = '$' + formatted;
+                });
+            }
+
+            // Initialize button icon and behavior
+            if (toggleBtn) {
+                toggleBtn.innerHTML = showValues ? '<i class="fas fa-eye"></i>' :
+                '<i class="fas fa-eye-slash"></i>';
+                toggleBtn.addEventListener('click', function() {
+                    showValues = !showValues;
+                    localStorage.setItem(storageKey, showValues);
+                    this.innerHTML = showValues ? '<i class="fas fa-eye"></i>' :
+                        '<i class="fas fa-eye-slash"></i>';
+                    applyFormatting();
+                });
+            }
+
+            // Apply on load
+            applyFormatting();
         });
     </script>
 

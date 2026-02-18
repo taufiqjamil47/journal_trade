@@ -91,8 +91,8 @@
                     <div>
                         <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                             {{ __('analysis.stats.net_profit') }}</p>
-                        <h3
-                            class="text-2xl font-bold mt-2 {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
+                        <h3 class="text-2xl font-bold mt-2 display-analysis {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}"
+                            data-raw="{{ $netProfit }}">
                             ${{ number_format($netProfit, 2) }}
                         </h3>
                     </div>
@@ -111,7 +111,8 @@
                     <div>
                         <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                             {{ __('analysis.stats.expectancy') }}</p>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1 display-analysis"
+                            data-raw="{{ $expectancy }}">
                             ${{ number_format($expectancy, 2) }}
                             <span
                                 class="text-lg font-normal text-gray-600 dark:text-gray-400">{{ __('analysis.stats.per_trade') }}</span>
@@ -127,20 +128,22 @@
                                 <div>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ __('analysis.stats.total_profit') }}</p>
-                                    <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                                    <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400 display-analysis"
+                                        data-raw="{{ $totalProfit }}">
                                         ${{ number_format($totalProfit, 2) }}</p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ __('analysis.stats.total_loss') }}</p>
-                                    <p class="text-lg font-bold text-rose-600 dark:text-rose-400">
+                                    <p class="text-lg font-bold text-rose-600 dark:text-rose-400 display-analysis"
+                                        data-raw="{{ $totalLoss }}">
                                         ${{ number_format($totalLoss, 2) }}</p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">
                                         {{ __('analysis.stats.net_profit') }}</p>
-                                    <p
-                                        class="text-lg font-bold {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
+                                    <p class="text-lg font-bold display-analysis {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}"
+                                        data-raw="{{ $netProfit }}">
                                         ${{ number_format($netProfit, 2) }}
                                     </p>
                                 </div>
@@ -273,13 +276,15 @@
                         <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
                             <p class="text-xs text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.avg_win') }}</p>
-                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400 display-analysis"
+                                data-raw="{{ $averageWin }}">
                                 ${{ number_format($averageWin, 2) }}</p>
                         </div>
                         <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
                             <p class="text-xs text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.avg_loss') }}</p>
-                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400">
+                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400 display-analysis"
+                                data-raw="{{ $averageLoss }}">
                                 ${{ number_format($averageLoss, 2) }}</p>
                         </div>
                     </div>
@@ -292,7 +297,8 @@
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.largest_trades') }}</p>
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1 display-analysis"
+                                data-raw="{{ abs($largestWin) + abs($largestLoss) }}">
                                 ${{ number_format(abs($largestWin) + abs($largestLoss), 2) }}
                             </h3>
                         </div>
@@ -304,13 +310,15 @@
                         <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
                             <p class="text-xs text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.largest_win') }}</p>
-                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                            <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400 display-analysis"
+                                data-raw="{{ $largestWin }}">
                                 ${{ number_format($largestWin, 2) }}</p>
                         </div>
                         <div class="text-center p-1 bg-gray-100 dark:bg-gray-700 rounded">
                             <p class="text-xs text-gray-600 dark:text-gray-400">
                                 {{ __('analysis.risk_management.largest_loss') }}</p>
-                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400">
+                            <p class="text-sm font-medium text-rose-600 dark:text-rose-400 display-analysis"
+                                data-raw="{{ $largestLoss }}">
                                 ${{ number_format($largestLoss, 2) }}</p>
                         </div>
                     </div>
@@ -863,7 +871,8 @@
                                                     @endphp
 
                                                     <span
-                                                        class="{{ $fontSizeClass }} {{ $textColor }} font-medium leading-none">
+                                                        class="{{ $fontSizeClass }} {{ $textColor }} font-medium leading-none heatmap-cell-profit"
+                                                        data-raw="{{ $profit }}">
                                                         {{ $profit >= 0 ? '+' : '' }}{{ number_format($profit, 0) }}
                                                     </span>
                                                 @endif
@@ -882,7 +891,8 @@
                                                 <div class="text-gray-600 dark:text-gray-400">
                                                     {{ __('analysis.stats.trades') }}: {{ $trades }}
                                                 </div>
-                                                <div class="{{ $textColor }} font-medium mt-1">
+                                                <div class="{{ $textColor }} font-medium mt-1 heatmap-profit"
+                                                    data-raw="{{ $profit }}">
                                                     P/L: ${{ number_format($profit, 2) }}
                                                 </div>
                                             </div>
@@ -2772,4 +2782,41 @@
             scrollbar-width: thin;
         }
     </style>
+
+    <script>
+        function formatCurrencyAbbrev(value) {
+            const num = Number(value) || 0;
+            const abs = Math.abs(num);
+            if (abs >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (abs >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+            return num.toFixed(2);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format main analysis metrics
+            document.querySelectorAll('.display-analysis').forEach(el => {
+                const rawValue = parseFloat(el.dataset.raw);
+                if (!isNaN(rawValue) && rawValue !== 0) {
+                    el.textContent = '$' + formatCurrencyAbbrev(rawValue);
+                }
+            });
+
+            // Format heatmap tooltip profit values
+            document.querySelectorAll('.heatmap-profit').forEach(el => {
+                const rawValue = parseFloat(el.dataset.raw);
+                if (!isNaN(rawValue)) {
+                    el.textContent = 'P/L: $' + formatCurrencyAbbrev(rawValue);
+                }
+            });
+
+            // Format heatmap cell profit values
+            document.querySelectorAll('.heatmap-cell-profit').forEach(el => {
+                const rawValue = parseFloat(el.dataset.raw);
+                if (!isNaN(rawValue)) {
+                    const formatted = formatCurrencyAbbrev(rawValue);
+                    el.textContent = (rawValue >= 0 ? '+' : '') + '$' + formatted;
+                }
+            });
+        });
+    </script>
 @endsection

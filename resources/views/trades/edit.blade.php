@@ -356,30 +356,28 @@
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">
                                                     {{ __('trades.risk_amount') }}</p>
                                                 <p class="text-lg font-bold text-amber-600 dark:text-amber-400"
-                                                    id="riskAmount">-</p>
+                                                    id="riskAmount" data-raw="0">-</p>
                                             </div>
                                             <!-- Gross P/L -->
                                             <div class="text-center">
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">
                                                     {{ __('trades.gross_pl') }}</p>
                                                 <p class="text-lg font-bold text-blue-600 dark:text-blue-400"
-                                                    id="grossPL">-</p>
+                                                    id="grossPL" data-raw="0">-</p>
                                             </div>
                                             <!-- Commission -->
                                             <div class="text-center">
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">
                                                     {{ __('trades.commission') }}</p>
                                                 <p class="text-lg font-bold text-orange-600 dark:text-orange-400"
-                                                    id="commissionAmount">
-                                                    -${{ number_format($account->commission_per_lot * $trade->lot_size, 2) }}
-                                                </p>
+                                                    id="commissionAmount" data-raw="0">-</p>
                                             </div>
                                             <!-- Net P/L -->
                                             <div class="text-center">
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">
                                                     {{ __('trades.net_pl') }}</p>
                                                 <p class="text-lg font-bold text-green-600 dark:text-green-400"
-                                                    id="netPL">-</p>
+                                                    id="netPL" data-raw="0">-</p>
                                             </div>
                                         </div>
                                     </div>
@@ -609,7 +607,7 @@
 
                         lotSizeEl.value = lotSize.toFixed(2);
                         riskUsdEl.value = riskUSD.toFixed(2);
-                        document.getElementById('riskAmount').textContent = `$${riskUSD.toFixed(2)}`;
+                        updatePreviewValue('riskAmount', riskUSD);
                         calculatePotentialPL();
                     }
                 });
@@ -630,7 +628,7 @@
                         if (slPips > 0) {
                             lotSizeEl.value = lotSize.toFixed(2);
                         }
-                        document.getElementById('riskAmount').textContent = `$${riskUSD.toFixed(2)}`;
+                        updatePreviewValue('riskAmount', riskUSD);
                         calculatePotentialPL();
                     }
                 });
@@ -657,6 +655,25 @@
             // Update commission amount initially
             updateCommissionAmount();
         });
+
+        // Format currency with abbreviation (K, M, B)
+        function formatCurrencyAbbrev(value) {
+            const num = Number(value) || 0;
+            const abs = Math.abs(num);
+            if (abs >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (abs >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+            return num.toFixed(2);
+        }
+
+        // Update calculation preview values with formatting
+        function updatePreviewValue(elementId, value, isNegative = false) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.dataset.raw = value;
+                const formatted = formatCurrencyAbbrev(Math.abs(value));
+                el.textContent = (isNegative ? '-' : '') + '$' + formatted;
+            }
+        }
 
         // Calculate potential P/L using the same logic as server
         function calculatePotentialPL() {
@@ -688,23 +705,22 @@
 
                 // Update gross P/L
                 const grossPLElement = document.getElementById('grossPL');
-                grossPLElement.textContent = `$${roundedGrossPL.toFixed(2)}`;
-                grossPLElement.className = `text-base font-bold ${roundedGrossPL >= 0 ? 'text-blue-400' : 'text-red-400'}`;
+                updatePreviewValue('grossPL', roundedGrossPL);
+                grossPLElement.className = `text-lg font-bold ${roundedGrossPL >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-red-600 dark:text-red-400'}`;
 
                 // Update commission
-                const commissionElement = document.getElementById('commissionAmount');
-                commissionElement.textContent = `-$${roundedCommission.toFixed(2)}`;
+                updatePreviewValue('commissionAmount', roundedCommission, true);
 
                 // Update net P/L
                 const netPLElement = document.getElementById('netPL');
-                netPLElement.textContent = `$${roundedNetPL.toFixed(2)}`;
-                netPLElement.className = `text-base font-bold ${roundedNetPL >= 0 ? 'text-green-400' : 'text-red-400'}`;
+                updatePreviewValue('netPL', roundedNetPL);
+                netPLElement.className = `text-lg font-bold ${roundedNetPL >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`;
             } else {
                 document.getElementById('grossPL').textContent = '-';
-                document.getElementById('grossPL').className = 'text-base font-bold text-gray-400';
+                document.getElementById('grossPL').className = 'text-lg font-bold text-gray-400';
                 document.getElementById('commissionAmount').textContent = '-';
                 document.getElementById('netPL').textContent = '-';
-                document.getElementById('netPL').className = 'text-base font-bold text-gray-400';
+                document.getElementById('netPL').className = 'text-lg font-bold text-gray-400';
             }
         }
 
