@@ -1203,9 +1203,15 @@
             function formatCurrencyAbbrev(value) {
                 const num = Number(value) || 0;
                 const abs = Math.abs(num);
+
+                // Untuk nilai jutaan
                 if (abs >= 1e6) return (num / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+
+                // Untuk nilai ribuan
                 if (abs >= 1e3) return (num / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
-                return num.toFixed(0);
+
+                // Untuk nilai di bawah 1000 - tampilkan nilai asli (dengan 2 desimal jika perlu)
+                return num.toFixed(2).replace(/\.00$/, '');
             }
 
             // Format all P/L display elements

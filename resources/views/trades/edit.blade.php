@@ -706,7 +706,8 @@
                 // Update gross P/L
                 const grossPLElement = document.getElementById('grossPL');
                 updatePreviewValue('grossPL', roundedGrossPL);
-                grossPLElement.className = `text-lg font-bold ${roundedGrossPL >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-red-600 dark:text-red-400'}`;
+                grossPLElement.className =
+                    `text-lg font-bold ${roundedGrossPL >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-red-600 dark:text-red-400'}`;
 
                 // Update commission
                 updatePreviewValue('commissionAmount', roundedCommission, true);
@@ -714,7 +715,8 @@
                 // Update net P/L
                 const netPLElement = document.getElementById('netPL');
                 updatePreviewValue('netPL', roundedNetPL);
-                netPLElement.className = `text-lg font-bold ${roundedNetPL >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`;
+                netPLElement.className =
+                    `text-lg font-bold ${roundedNetPL >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`;
             } else {
                 document.getElementById('grossPL').textContent = '-';
                 document.getElementById('grossPL').className = 'text-lg font-bold text-gray-400';
