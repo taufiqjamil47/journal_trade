@@ -223,6 +223,7 @@
         @endif
 
         <!-- Equity Curve Chart -->
+        <!-- disini menambahkan equitas chart baru -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
