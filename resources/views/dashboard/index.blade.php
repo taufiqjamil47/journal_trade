@@ -591,6 +591,160 @@
         });
     </script>
 
+    <!-- Overall Equity Chart -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('dashboard.overall_equity_curve') }}
+                </h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('dashboard.overall_equity_description') }}
+                </p>
+            </div>
+        </div>
+
+        <div class="h-64 lg:h-96">
+            <canvas id="overallEquityChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Overall Equity Chart
+        const overallCtx = document.getElementById('overallEquityChart').getContext('2d');
+        const overallEquityData = @json($overallEquityData);
+
+        let overallChartInstance = null;
+
+        // Colors for overall equity chart
+        const overallColors = {
+            border: '#10b981', // Emerald
+            background: 'rgba(16, 185, 129, 0.1)',
+            darkBorder: '#34d399',
+            darkBackground: 'rgba(52, 211, 153, 0.15)'
+        };
+
+        // Create overall equity chart if data exists
+        if (overallEquityData && overallEquityData.length > 0) {
+            const isDark = document.documentElement.classList.contains('dark');
+            const borderColor = isDark ? overallColors.darkBorder : overallColors.border;
+            const backgroundColor = isDark ? overallColors.darkBackground : overallColors.background;
+
+            overallChartInstance = new Chart(overallCtx, {
+                type: 'line',
+                data: {
+                    labels: overallEquityData.map(d => d.date),
+                    datasets: [{
+                        label: '{{ __('dashboard.equity') }}',
+                        data: overallEquityData.map(d => d.balance),
+                        borderColor: borderColor,
+                        backgroundColor: backgroundColor,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointBackgroundColor: borderColor,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '{{ __('dashboard.equity') }}: ' + context.parsed.y
+                                .toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: '{{ __('dashboard.date') }}'
+                            },
+                            grid: {
+                                color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+                            },
+                            ticks: {
+                                color: isDark ? '#9ca3af' : '#6b7280'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: '{{ __('dashboard.equity') }}'
+                            },
+                            grid: {
+                                color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+                            },
+                            ticks: {
+                                color: isDark ? '#9ca3af' : '#6b7280',
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Listen for theme changes for overall chart
+            const overallObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'class') {
+                        if (overallChartInstance) {
+                            const isDark = document.documentElement.classList.contains('dark');
+                            const borderColor = isDark ? overallColors.darkBorder : overallColors.border;
+                            const backgroundColor = isDark ? overallColors.darkBackground : overallColors
+                                .background;
+
+                            overallChartInstance.data.datasets[0].borderColor = borderColor;
+                            overallChartInstance.data.datasets[0].backgroundColor = backgroundColor;
+                            overallChartInstance.data.datasets[0].pointBackgroundColor = borderColor;
+
+                            overallChartInstance.options.scales.x.grid.color = isDark ?
+                                'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)';
+                            overallChartInstance.options.scales.x.ticks.color = isDark ? '#9ca3af' :
+                                '#6b7280';
+                            overallChartInstance.options.scales.y.grid.color = isDark ?
+                                'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)';
+                            overallChartInstance.options.scales.y.ticks.color = isDark ? '#9ca3af' :
+                                '#6b7280';
+
+                            overallChartInstance.update();
+                        }
+                    }
+                });
+            });
+
+            overallObserver.observe(document.documentElement, {
+                attributes: true
+            });
+        } else {
+            // Show message if no data
+            document.getElementById('overallEquityChart').parentElement.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-chart-line text-4xl mb-4"></i>
+                    <p class="text-base font-medium">No equity data available</p>
+                    <p class="text-sm">Start trading to see your overall equity curve</p>
+                </div>
+            `;
+        }
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle Button (hanya di Balance)

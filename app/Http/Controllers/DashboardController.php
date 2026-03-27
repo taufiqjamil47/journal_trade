@@ -92,7 +92,10 @@ class DashboardController extends Controller
                     $pairData = $query ? $this->analysisService->calculatePairAnalysis($query) : collect();
                     $entryTypeData = $query ? $this->analysisService->calculateEntryTypeAnalysis($query) : collect();
 
-                    return compact('basicMetrics', 'summary', 'availableSessions', 'availableEntryTypes', 'equityData', 'pairData', 'entryTypeData');
+                    // Calculate overall equity data for the new chart
+                    $overallEquityData = $this->analysisService->calculateOverallEquityData($trades, $initialBalance);
+
+                    return compact('basicMetrics', 'summary', 'availableSessions', 'availableEntryTypes', 'equityData', 'pairData', 'entryTypeData', 'overallEquityData');
                 });
 
                 $basicMetrics = $cached['basicMetrics'] ?? $this->getDefaultMetrics($initialBalance);
@@ -102,6 +105,7 @@ class DashboardController extends Controller
                 $equityData = $cached['equityData'] ?? [];
                 $pairData = $cached['pairData'] ?? collect();
                 $entryTypeData = $cached['entryTypeData'] ?? collect();
+                $overallEquityData = $cached['overallEquityData'] ?? [];
             } catch (\Exception $e) {
                 Log::error('Error calculating dashboard payload: ' . $e->getMessage());
                 $basicMetrics = $this->getDefaultMetrics($initialBalance);
@@ -133,6 +137,7 @@ class DashboardController extends Controller
                 'equityData' => $equityData,
                 'pairData' => $pairData,
                 'entryTypeData' => $entryTypeData,
+                'overallEquityData' => $overallEquityData,
                 'sessionNames' => $sessionNames,
             ]));
         } catch (\Exception $e) {
@@ -193,6 +198,7 @@ class DashboardController extends Controller
             'equityData' => [],
             'pairData' => [],
             'entryTypeData' => [],
+            'overallEquityData' => [],
         ]);
     }
 }

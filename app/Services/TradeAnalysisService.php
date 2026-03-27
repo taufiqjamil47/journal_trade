@@ -1000,4 +1000,33 @@ class TradeAnalysisService
             ->pluck('entry_type')
             ->toArray();
     }
+
+    /**
+     * Calculate overall equity curve data from start to current
+     */
+    public function calculateOverallEquityData($trades, $initialBalance)
+    {
+        $equityData = [];
+        $runningBalance = $initialBalance;
+
+        // Sort trades by date and time if available
+        $sortedTrades = $trades->sortBy(function ($trade) {
+            $date = $trade->date;
+            $time = $trade->timestamp ?? '00:00:00';
+            return $date . ' ' . $time;
+        });
+
+        foreach ($sortedTrades as $trade) {
+            $runningBalance += $trade->profit_loss ?? 0;
+
+            $equityData[] = [
+                'date' => $trade->date,
+                'time' => $trade->timestamp ?? null,
+                'balance' => $runningBalance,
+                'profit_loss' => $trade->profit_loss ?? 0
+            ];
+        }
+
+        return $equityData;
+    }
 }

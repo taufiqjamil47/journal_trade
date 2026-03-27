@@ -57,4 +57,10 @@ return [
     'from' => 'Dari',
     'to' => 'Sampai',
     'reset' => 'Atur Ulang',
+
+    // Overall Equity Chart
+    'overall_equity_curve' => 'Kurva Ekuitas Keseluruhan',
+    'overall_equity_description' => 'Performa ekuitas dari awal hingga sekarang',
+    'equity' => 'Ekuitas',
+    'date' => 'Tanggal',
 ];

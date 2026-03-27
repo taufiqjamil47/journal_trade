@@ -67,4 +67,10 @@ return [
     'from' => 'From',
     'to' => 'To',
     'reset' => 'Reset',
+
+    // Overall Equity Chart
+    'overall_equity_curve' => 'Overall Equity Curve',
+    'overall_equity_description' => 'Equity performance from start to current',
+    'equity' => 'Equity',
+    'date' => 'Date',
 ];
