@@ -662,7 +662,7 @@
                             callbacks: {
                                 label: function(context) {
                                     return '{{ __('dashboard.equity') }}: ' + context.parsed.y
-                                .toLocaleString();
+                                        .toLocaleString();
                                 }
                             }
                         }
