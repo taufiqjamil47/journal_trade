@@ -83,9 +83,10 @@ class TradeController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         try {
+            $page = $request->query('page', 1);
             $trade = Trade::with('tradingRules', 'account')->findOrFail($id);
 
             $account = $trade->account;
@@ -108,7 +109,7 @@ class TradeController extends Controller
                 ->orderBy('order')
                 ->get();
 
-            return view('trades.edit', compact('trade', 'balance', 'tradingRules', 'account'));
+            return view('trades.edit', compact('trade', 'balance', 'tradingRules', 'account', 'page'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::warning("Trade not found: ID {$id}");
             return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
@@ -303,7 +304,8 @@ class TradeController extends Controller
             ? "Trade berhasil diperbarui dengan Partial Close {$partialPercent}%"
             : 'Trade berhasil diperbarui dengan Exit, Risk%, dan Lot Size';
 
-        return redirect()->route('trades.index')->with('success', $message);
+        $page = $request->input('page', 1);
+        return redirect()->route('trades.index', ['page' => $page])->with('success', $message);
     }
 
     public function store(Request $request)
@@ -551,7 +553,8 @@ class TradeController extends Controller
                 ]);
             }
 
-            return redirect()->route('trades.index')
+            $page = $request->input('page', 1);
+            return redirect()->route('trades.index', ['page' => $page])
                 ->with('success', 'Trade berhasil dihapus');
         } catch (\Exception $e) {
             if ($request->ajax() || $request->wantsJson()) {
@@ -562,7 +565,8 @@ class TradeController extends Controller
                 ], 500);
             }
 
-            return redirect()->route('trades.index')
+            $page = $request->input('page', 1);
+            return redirect()->route('trades.index', ['page' => $page])
                 ->with('error', 'Gagal menghapus trade: ' . $e->getMessage());
         }
     }
@@ -676,14 +680,15 @@ class TradeController extends Controller
         return 0;
     }
 
-    public function evaluate($id)
+    public function evaluate(Request $request, $id)
     {
-        $trade = Trade::with('tradingRules')->findOrFail($id); // Update ini
-        $tradingRules = TradingRule::where('is_active', true) // Tambahkan ini
+        $page = $request->query('page', 1);
+        $trade = Trade::with('tradingRules')->findOrFail($id);
+        $tradingRules = TradingRule::where('is_active', true)
             ->orderBy('order')
             ->get();
 
-        return view('trades.evaluate', compact('trade', 'tradingRules'));
+        return view('trades.evaluate', compact('trade', 'tradingRules', 'page'));
     }
 
     public function saveEvaluation(Request $request, $id)
@@ -761,7 +766,8 @@ class TradeController extends Controller
             $trade->save();
         });
 
-        return redirect()->route('trades.index')
+        $page = $request->input('page', 1);
+        return redirect()->route('trades.index', ['page' => $page])
             ->with('success', 'Evaluasi trade berhasil disimpan');
     }
 

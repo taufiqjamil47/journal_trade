@@ -12,7 +12,7 @@
                     <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('trades.step3_description') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('trades.index') }}"
+                    <a href="{{ route('trades.index', ['page' => $page ?? request('page', 1)]) }}"
                         class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all shadow-sm">
                         <i class="fas fa-arrow-left text-primary-500 dark:text-primary-400 mr-2"></i>
                         <span>{{ __('trades.back_to_list') }}</span>
@@ -247,6 +247,7 @@
                 <!-- Form Content -->
                 <form action="{{ route('trades.saveEvaluation', $trade->id) }}" method="POST" class="p-6">
                     @csrf
+                    <input type="hidden" name="page" value="{{ $page ?? request('page', 1) }}">
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Left Column -->
@@ -665,7 +666,7 @@
                     <!-- Form Actions - Improved -->
                     <div
                         class="flex flex-col md:flex-row justify-between items-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-4 md:space-y-0">
-                        <a href="{{ route('trades.index') }}"
+                        <a href="{{ route('trades.index', ['page' => $page ?? request('page', 1)]) }}"
                             class="flex items-center text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors group">
                             <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
                             <span>{{ __('trades.back_to_list') }}</span>

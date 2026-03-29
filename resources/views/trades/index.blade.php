@@ -437,13 +437,13 @@
                                     <div class="relative flex items-center h-10" onclick="event.stopPropagation()">
                                         <!-- Tombol utama dalam grid -->
                                         <div class="grid grid-cols-3 gap-2 w-full transition-transform duration-200">
-                                            <a href="{{ route('trades.edit', $trade->id) }}"
+                                            <a href="{{ route('trades.edit', ['id' => $trade->id, 'page' => request('page', 1)]) }}"
                                                 class="bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 p-2 rounded-lg flex items-center justify-center"
                                                 title="{{ __('trades.update_exit') }}">
                                                 <i class="fas fa-edit text-sm"></i>
                                             </a>
 
-                                            <a href="{{ route('trades.evaluate', $trade->id) }}"
+                                            <a href="{{ route('trades.evaluate', ['id' => $trade->id, 'page' => request('page', 1)]) }}"
                                                 class="bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-400 p-2 rounded-lg flex items-center justify-center"
                                                 title="{{ __('trades.evaluate') }}">
                                                 <i class="fas fa-chart-bar text-sm"></i>
