@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Accounts')
+@section('title', __('account.page_title'))
 @section('content')
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
@@ -7,9 +7,9 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                        Accounts
+                        {{ __('account.page_title') }}
                     </h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">Manage your trading accounts</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('account.page_subtitle') }}</p>
                 </div>
 
                 <!-- Navigation and Trader Info -->
@@ -50,15 +50,16 @@
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Accounts List</h2>
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ __('account.list_title') }}
+                        </h2>
                         <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                            Total accounts: {{ $accounts->count() }}
+                            {{ __('account.total_accounts') }}: {{ $accounts->count() }}
                         </p>
                     </div>
                     <a href="{{ route('accounts.create') }}"
                         class="bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg flex items-center">
                         <i class="fas fa-plus mr-2"></i>
-                        Add Account
+                        {{ __('account.add_button') }}
                     </a>
                 </div>
             </div>
@@ -70,27 +71,27 @@
                         <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                             <th
                                 class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <i class="fas fa-hashtag mr-2"></i>ID
+                                <i class="fas fa-hashtag mr-2"></i>{{ __('account.table.id') }}
                             </th>
                             <th
                                 class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <i class="fas fa-coins mr-2"></i>Initial Balance
+                                <i class="fas fa-coins mr-2"></i>{{ __('account.table.initial_balance') }}
                             </th>
                             <th
                                 class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <i class="fas fa-currency mr-2"></i>Currency
+                                <i class="fas fa-currency mr-2"></i>{{ __('account.table.currency') }}
                             </th>
                             <th
                                 class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <i class="fas fa-percent mr-2"></i>Commission/Lot
+                                <i class="fas fa-percent mr-2"></i>{{ __('account.table.commission_per_lot') }}
                             </th>
                             <th
                                 class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <i class="fas fa-calendar mr-2"></i>Created
+                                <i class="fas fa-calendar mr-2"></i>{{ __('account.table.created') }}
                             </th>
                             <th
                                 class="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                <i class="fas fa-cogs mr-2"></i>Actions
+                                <i class="fas fa-cogs mr-2"></i>{{ __('account.table.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -128,18 +129,18 @@
                                     <div class="flex space-x-2">
                                         <a href="{{ route('accounts.show', $account) }}"
                                             class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-2 rounded-lg"
-                                            title="View Account">
+                                            title="{{ __('account.actions.view') }}">
                                             <i class="fas fa-eye text-sm"></i>
                                         </a>
                                         <a href="{{ route('accounts.edit', $account) }}"
                                             class="bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-600 dark:text-amber-400 p-2 rounded-lg"
-                                            title="Edit Account">
+                                            title="{{ __('account.actions.edit') }}">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                         <button
-                                            onclick="deleteAccount({{ $account->id }}, '{{ $account->currency }} Account')"
+                                            onclick="deleteAccount({{ $account->id }}, '{{ $account->currency }} {{ __('account.account_label') }}')"
                                             class="bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 p-2 rounded-lg"
-                                            title="Delete Account">
+                                            title="{{ __('account.actions.delete') }}">
                                             <i class="fas fa-trash text-sm"></i>
                                         </button>
                                     </div>
@@ -154,16 +155,16 @@
                                         </div>
                                         <div class="space-y-1">
                                             <p class="text-base font-medium text-gray-700 dark:text-gray-300">
-                                                No accounts found
+                                                {{ __('account.empty.title') }}
                                             </p>
                                             <p class="text-sm text-gray-500 dark:text-gray-400">
-                                                Get started by creating your first account
+                                                {{ __('account.empty.message') }}
                                             </p>
                                         </div>
                                         <a href="{{ route('accounts.create') }}"
                                             class="mt-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-medium py-2 px-5 rounded-lg flex items-center">
                                             <i class="fas fa-plus mr-2"></i>
-                                            Create Account
+                                            {{ __('account.empty.create_button') }}
                                         </a>
                                     </div>
                                 </td>
@@ -187,11 +188,11 @@
             const requiredCode = `DELETE_${id}`;
 
             Swal.fire({
-                title: 'Delete Account',
+                title: '{{ __('account.delete_modal.title') }}',
                 html: `
                     <div class="text-left text-sm">
                         <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg mb-4 border border-red-200 dark:border-red-800">
-                            <p class="font-bold mb-2 text-red-800 dark:text-red-300">Account to delete:</p>
+                            <p class="font-bold mb-2 text-red-800 dark:text-red-300">{{ __('account.delete_modal.account_to_delete') }}:</p>
                             <ul class="space-y-1 text-gray-700 dark:text-gray-300">
                                 <li class="flex items-center">
                                     <i class="fas fa-wallet text-red-600 dark:text-red-400 mr-2 text-xs"></i>
@@ -199,18 +200,18 @@
                                 </li>
                                 <li class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-amber-600 dark:text-amber-400 mr-2 text-xs"></i>
-                                    <span class="text-amber-800 dark:text-amber-300">This action cannot be undone. All related trades will also be deleted.</span>
+                                    <span class="text-amber-800 dark:text-amber-300">{{ __('account.delete_modal.warning_message') }}</span>
                                 </li>
                             </ul>
                         </div>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2">Please type the confirmation code below to delete:</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-2">{{ __('account.delete_modal.confirmation_instruction') }}:</p>
                         <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg mb-3">
                             <code class="text-red-600 dark:text-red-400 font-mono font-bold">${requiredCode}</code>
                         </div>
                         <input type="text" 
                                id="confirmDelete" 
                                class="swal2-input w-full" 
-                               placeholder="Type DELETE_${id}"
+                               placeholder="{{ __('account.delete_modal.input_placeholder', ['id' => '']) }}${id}"
                                autocomplete="off">
                     </div>
                 `,
@@ -219,8 +220,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Yes, delete it!',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Cancel',
+                confirmButtonText: '<i class="fas fa-trash mr-2"></i>{{ __('account.delete_modal.confirm_button') }}',
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>{{ __('account.delete_modal.cancel_button') }}',
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -239,7 +240,7 @@
                         Swal.showValidationMessage(
                             `<div class="text-red-600 dark:text-red-400 text-sm">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
-                                Please type <code class="bg-red-100 dark:bg-red-900/30 px-1 py-0.5 rounded text-red-700 dark:text-red-400">${requiredCode}</code> to confirm
+                                {{ __('account.delete_modal.validation_error') }} <code class="bg-red-100 dark:bg-red-900/30 px-1 py-0.5 rounded text-red-700 dark:text-red-400">${requiredCode}</code>
                             </div>`
                         );
                         return false;
@@ -250,11 +251,11 @@
                 if (result.isConfirmed) {
                     // Show loading
                     Swal.fire({
-                        title: 'Deleting Account',
+                        title: '{{ __('account.delete_modal.loading_title') }}',
                         html: `
                             <div class="text-center">
                                 <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600 dark:border-red-400 mb-4"></div>
-                                <p class="text-gray-700 dark:text-gray-300">Deleting ${name}...</p>
+                                <p class="text-gray-700 dark:text-gray-300">{{ __('account.delete_modal.loading_message') }} ${name}...</p>
                             </div>
                         `,
                         showConfirmButton: false,

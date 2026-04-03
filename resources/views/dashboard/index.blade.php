@@ -223,7 +223,6 @@
         @endif
 
         <!-- Equity Curve Chart -->
-        <!-- disini menambahkan equitas chart baru -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
@@ -275,6 +274,23 @@
 
             <div class="h-64 lg:h-96">
                 <canvas id="equityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Overall Equity Chart -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('dashboard.overall_equity_curve') }}
+                    </h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {{ __('dashboard.overall_equity_description') }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="h-64 lg:h-96">
+                <canvas id="overallEquityChart"></canvas>
             </div>
         </div>
     </div>
@@ -591,22 +607,6 @@
             attributes: true
         });
     </script>
-
-    <!-- Overall Equity Chart -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('dashboard.overall_equity_curve') }}
-                </h2>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('dashboard.overall_equity_description') }}
-                </p>
-            </div>
-        </div>
-
-        <div class="h-64 lg:h-96">
-            <canvas id="overallEquityChart"></canvas>
-        </div>
-    </div>
 
     <script>
         // Overall Equity Chart

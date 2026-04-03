@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Create Account')
+@section('title', __('account.create.page_title'))
 @section('content')
     <div class="container mx-auto px-4 py-6 max-w-2xl">
         <!-- Success Message -->
@@ -12,16 +12,17 @@
                 </button>
             </div>
         @endif
+
         <!-- Header -->
         <header class="mb-6">
             <div class="flex items-center gap-4">
                 <a href="{{ route('accounts.index') }}"
                     class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Accounts
+                    <i class="fas fa-arrow-left mr-2"></i>{{ __('account.create.back_button') }}
                 </a>
             </div>
             <h1 class="text-2xl font-bold text-primary-500 mt-4">
-                Create New Account
+                {{ __('account.create.page_title') }}
             </h1>
         </header>
 
@@ -34,10 +35,10 @@
                     <!-- Account Name -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Account Name *
+                            {{ __('account.create.account_name_label') }} *
                         </label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}"
-                            placeholder="e.g., Scalp Trading, Day Trade"
+                            placeholder="{{ __('account.create.account_name_placeholder') }}"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
                             required>
                         @error('name')
@@ -48,9 +49,10 @@
                     <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Description
+                            {{ __('account.create.description_label') }}
                         </label>
-                        <textarea name="description" id="description" rows="2" placeholder="e.g., For scalping EUR/USD on 5min timeframe"
+                        <textarea name="description" id="description" rows="2"
+                            placeholder="{{ __('account.create.description_placeholder') }}"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -61,7 +63,7 @@
                     <div>
                         <label for="initial_balance"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Initial Balance *
+                            {{ __('account.create.initial_balance_label') }} *
                         </label>
                         <input type="number" step="0.01" name="initial_balance" id="initial_balance"
                             value="{{ old('initial_balance') }}"
@@ -75,12 +77,12 @@
                     <!-- Currency -->
                     <div>
                         <label for="currency" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Currency *
+                            {{ __('account.create.currency_label') }} *
                         </label>
                         <select name="currency" id="currency"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
                             required>
-                            <option value="">Select Currency</option>
+                            <option value="">{{ __('account.create.currency_select_option') }}</option>
                             <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD</option>
                             <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR</option>
                             <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>GBP</option>
@@ -97,12 +99,13 @@
                     <div>
                         <label for="commission_per_lot"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Commission per Lot ($)
+                            {{ __('account.create.commission_label') }}
                         </label>
                         <input type="number" step="0.01" name="commission_per_lot" id="commission_per_lot"
                             value="{{ old('commission_per_lot', 1.0) }}"
                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Default is $1.00 per lot</p>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            {{ __('account.create.commission_help_text') }}</p>
                         @error('commission_per_lot')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -113,11 +116,11 @@
                 <div class="mt-8 flex justify-end space-x-3">
                     <a href="{{ route('accounts.index') }}"
                         class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        Cancel
+                        {{ __('account.create.cancel_button') }}
                     </a>
                     <button type="submit"
                         class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md transition-colors">
-                        Create Account
+                        {{ __('account.create.create_button') }}
                     </button>
                 </div>
             </form>

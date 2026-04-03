@@ -1,5 +1,5 @@
 @extends('Layouts.index')
-@section('title', 'Account Details')
+@section('title', __('account.show.page_title'))
 @section('content')
     <div class="container mx-auto px-4 py-6 max-w-4xl">
         <!-- Flash Messages -->
@@ -36,25 +36,26 @@
                 <div class="flex items-center gap-4">
                     <a href="{{ route('accounts.index') }}"
                         class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
-                        <i class="fas fa-arrow-left mr-2"></i>Back to Accounts
+                        <i class="fas fa-arrow-left mr-2"></i>{{ __('account.show.back_button') }}
                     </a>
                 </div>
 
                 <div class="flex gap-3">
                     <a href="{{ route('accounts.edit', $account) }}"
                         class="bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-edit mr-2"></i>Edit Account
+                        <i class="fas fa-edit mr-2"></i>{{ __('account.show.edit_button') }}
                     </a>
-                    <button onclick="deleteAccount({{ $account->id }}, 'Account #{{ $account->id }}')"
+                    <button
+                        onclick="deleteAccount({{ $account->id }}, '{{ __('account.account_label') }} #{{ $account->id }}')"
                         class="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-trash mr-2"></i>Delete Account
+                        <i class="fas fa-trash mr-2"></i>{{ __('account.show.delete_button') }}
                     </button>
                 </div>
             </div>
             <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400 mt-4">
-                Account #{{ $account->id }}
+                {{ __('account.show.account_header') }} : {{ $account->name }}
             </h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">View detailed information about this account</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('account.show.page_subtitle') }}</p>
         </header>
 
         <!-- Account Details -->
@@ -65,12 +66,13 @@
                     <div class="bg-primary-100 dark:bg-primary-900/30 p-2 rounded-lg mr-3">
                         <i class="fas fa-info-circle text-primary-600 dark:text-primary-400"></i>
                     </div>
-                    Basic Information
+                    {{ __('account.show.basic_info_title') }}
                 </h2>
 
                 <div class="space-y-4">
                     <div class="flex items-start">
-                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">Account ID</div>
+                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('account.show.account_id_label') }}</div>
                         <div class="flex-1">
                             <span
                                 class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full px-3 py-1 text-sm font-medium">
@@ -80,14 +82,16 @@
                     </div>
 
                     <div class="flex items-start">
-                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">Initial Balance</div>
+                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('account.show.initial_balance_label') }}</div>
                         <div class="flex-1 text-sm text-gray-900 dark:text-gray-100 font-medium">
                             {{ number_format($account->initial_balance, 2) }} {{ $account->currency }}
                         </div>
                     </div>
 
                     <div class="flex items-start">
-                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">Currency</div>
+                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('account.show.currency_label') }}</div>
                         <div class="flex-1">
                             <span
                                 class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 py-1 px-3 rounded-lg text-xs font-medium">
@@ -97,7 +101,8 @@
                     </div>
 
                     <div class="flex items-start">
-                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">Commission/Lot</div>
+                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('account.show.commission_label') }}</div>
                         <div class="flex-1">
                             <span
                                 class="bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800 py-1 px-3 rounded-lg text-xs font-medium">
@@ -114,12 +119,13 @@
                     <div class="bg-primary-100 dark:bg-primary-900/30 p-2 rounded-lg mr-3">
                         <i class="fas fa-clock text-primary-600 dark:text-primary-400"></i>
                     </div>
-                    Timestamps
+                    {{ __('account.show.timestamps_title') }}
                 </h2>
 
                 <div class="space-y-4">
                     <div class="flex items-start">
-                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">Created At</div>
+                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('account.show.created_at_label') }}</div>
                         <div class="flex-1 text-sm text-gray-900 dark:text-gray-100">
                             <i class="far fa-calendar-alt mr-1 text-gray-400"></i>
                             {{ $account->created_at->format('M d, Y H:i') }}
@@ -127,7 +133,8 @@
                     </div>
 
                     <div class="flex items-start">
-                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</div>
+                        <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('account.show.updated_at_label') }}</div>
                         <div class="flex-1 text-sm text-gray-900 dark:text-gray-100">
                             <i class="far fa-calendar-check mr-1 text-gray-400"></i>
                             {{ $account->updated_at->format('M d, Y H:i') }}
@@ -143,11 +150,11 @@
                 <div class="bg-primary-100 dark:bg-primary-900/30 p-2 rounded-lg mr-3">
                     <i class="fas fa-chart-line text-primary-600 dark:text-primary-400"></i>
                 </div>
-                Related Trades
+                {{ __('account.show.related_trades_title') }}
                 @if ($account->trades->count() > 0)
                     <span
                         class="ml-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs font-medium px-2.5 py-1 rounded-full">
-                        {{ $account->trades->count() }} total
+                        {{ $account->trades->count() }} {{ __('account.show.total_trades_label') }}
                     </span>
                 @endif
             </h2>
@@ -159,22 +166,22 @@
                             <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                                 <th
                                     class="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    ID</th>
+                                    {{ __('account.show.trades_table.id') }}</th>
                                 <th
                                     class="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Symbol</th>
+                                    {{ __('account.show.trades_table.symbol') }}</th>
                                 <th
                                     class="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Type</th>
+                                    {{ __('account.show.trades_table.type') }}</th>
                                 <th
                                     class="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Lots</th>
+                                    {{ __('account.show.trades_table.lots') }}</th>
                                 <th
                                     class="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Date</th>
+                                    {{ __('account.show.trades_table.date') }}</th>
                                 <th
                                     class="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Actions</th>
+                                    {{ __('account.show.trades_table.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -197,7 +204,7 @@
                                                 : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
                                             <i
                                                 class="fas {{ $trade->type === 'buy' ? 'fa-arrow-up' : 'fa-arrow-down' }} mr-1"></i>
-                                            {{ ucfirst($trade->type) }}
+                                            {{ $trade->type === 'buy' ? __('account.show.trades_table.buy_type') : __('account.show.trades_table.sell_type') }}
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
@@ -213,7 +220,7 @@
                                     <td class="py-3 px-4">
                                         <a href="{{ route('trades.show', $trade) }}"
                                             class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-2 rounded-lg inline-flex"
-                                            title="View Trade">
+                                            title="{{ __('account.show.trades_table.view_trade') }}">
                                             <i class="fas fa-eye text-sm"></i>
                                         </a>
                                     </td>
@@ -226,7 +233,7 @@
                 @if ($account->trades->count() > 10)
                     <div class="mt-4 text-center">
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Showing 10 of {{ $account->trades->count() }} trades
+                            {{ __('account.show.showing_trades', ['shown' => 10, 'total' => $account->trades->count()]) }}
                         </p>
                     </div>
                 @endif
@@ -235,8 +242,9 @@
                     <div class="bg-gray-100 dark:bg-gray-700 rounded-full p-4 mb-3">
                         <i class="fas fa-chart-line text-2xl text-gray-400 dark:text-gray-500"></i>
                     </div>
-                    <p class="text-gray-700 dark:text-gray-300 font-medium">No trades found</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">This account doesn't have any trades yet</p>
+                    <p class="text-gray-700 dark:text-gray-300 font-medium">{{ __('account.show.no_trades_title') }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('account.show.no_trades_message') }}
+                    </p>
                 </div>
             @endif
         </div>
@@ -247,11 +255,11 @@
             const requiredCode = `DELETE_${id}`;
 
             Swal.fire({
-                title: 'Delete Account',
+                title: '{{ __('account.delete_modal.title') }}',
                 html: `
                     <div class="text-left text-sm">
                         <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg mb-4 border border-red-200 dark:border-red-800">
-                            <p class="font-bold mb-2 text-red-800 dark:text-red-300">Account to delete:</p>
+                            <p class="font-bold mb-2 text-red-800 dark:text-red-300">{{ __('account.delete_modal.account_to_delete') }}:</p>
                             <ul class="space-y-1 text-gray-700 dark:text-gray-300">
                                 <li class="flex items-center">
                                     <i class="fas fa-wallet text-red-600 dark:text-red-400 mr-2 text-xs"></i>
@@ -259,18 +267,18 @@
                                 </li>
                                 <li class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-amber-600 dark:text-amber-400 mr-2 text-xs"></i>
-                                    <span class="text-amber-800 dark:text-amber-300">This action cannot be undone. All related trades will also be deleted.</span>
+                                    <span class="text-amber-800 dark:text-amber-300">{{ __('account.delete_modal.warning_message') }}</span>
                                 </li>
                             </ul>
                         </div>
-                        <p class="text-gray-700 dark:text-gray-300 mb-2">Please type the confirmation code below to delete:</p>
+                        <p class="text-gray-700 dark:text-gray-300 mb-2">{{ __('account.delete_modal.confirmation_instruction') }}:</p>
                         <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg mb-3">
                             <code class="text-red-600 dark:text-red-400 font-mono font-bold">${requiredCode}</code>
                         </div>
                         <input type="text" 
                                id="confirmDelete" 
                                class="swal2-input w-full" 
-                               placeholder="Type DELETE_${id}"
+                               placeholder="{{ __('account.delete_modal.input_placeholder', ['id' => '']) }}${id}"
                                autocomplete="off">
                     </div>
                 `,
@@ -279,8 +287,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash mr-2"></i>Yes, delete it!',
-                cancelButtonText: '<i class="fas fa-times mr-2"></i>Cancel',
+                confirmButtonText: '<i class="fas fa-trash mr-2"></i>{{ __('account.delete_modal.confirm_button') }}',
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>{{ __('account.delete_modal.cancel_button') }}',
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 reverseButtons: true,
@@ -299,7 +307,7 @@
                         Swal.showValidationMessage(
                             `<div class="text-red-600 dark:text-red-400 text-sm">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
-                                Please type <code class="bg-red-100 dark:bg-red-900/30 px-1 py-0.5 rounded text-red-700 dark:text-red-400">${requiredCode}</code> to confirm
+                                {{ __('account.delete_modal.validation_error') }} <code class="bg-red-100 dark:bg-red-900/30 px-1 py-0.5 rounded text-red-700 dark:text-red-400">${requiredCode}</code>
                             </div>`
                         );
                         return false;
@@ -310,11 +318,11 @@
                 if (result.isConfirmed) {
                     // Show loading
                     Swal.fire({
-                        title: 'Deleting Account',
+                        title: '{{ __('account.delete_modal.loading_title') }}',
                         html: `
                             <div class="text-center">
                                 <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600 dark:border-red-400 mb-4"></div>
-                                <p class="text-gray-700 dark:text-gray-300">Deleting ${name}...</p>
+                                <p class="text-gray-700 dark:text-gray-300">{{ __('account.delete_modal.loading_message') }} ${name}...</p>
                             </div>
                         `,
                         showConfirmButton: false,
