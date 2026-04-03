@@ -46,8 +46,13 @@ class AccountController extends Controller
      */
     public function show(string $id)
     {
-        $account = Account::with('trades')->findOrFail($id);
-        return view('accounts.show', compact('account'));
+        $account = Account::with(['trades', 'investors'])->findOrFail($id);
+
+        $totalInvestment = $account->investors->sum('investment');
+        $totalProfit = $account->trades->sum('profit_loss');
+        $roi = ($account->initial_balance > 0) ? ($totalProfit / $account->initial_balance) * 100 : 0;
+
+        return view('accounts.show', compact('account', 'totalInvestment', 'totalProfit', 'roi'));
     }
 
     /**

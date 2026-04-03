@@ -38,6 +38,10 @@ Route::group([
     Route::resource('notes', DashNoteController::class);
     Route::resource('accounts', App\Http\Controllers\AccountController::class);
 
+    Route::post('/accounts/{account}/investors', [App\Http\Controllers\InvestorController::class, 'store'])->name('accounts.investors.store');
+    Route::delete('/accounts/{account}/investors/{investor}', [App\Http\Controllers\InvestorController::class, 'destroy'])->name('accounts.investors.destroy');
+    Route::post('/accounts/{account}/investors/profit-share', [App\Http\Controllers\InvestorController::class, 'assignProfitShare'])->name('accounts.investors.profit-share');
+
     // Semua route yang sudah ada
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');

@@ -144,6 +144,101 @@
             </div>
         </div>
 
+        <!-- Hedge Fund Investor Management -->
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">💼 Hedge Fund Investor</h2>
+
+            @php $currency = strtoupper($account->currency ?? 'IDR'); @endphp
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Investor Modal</p>
+                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">{{ number_format($totalInvestment, 2) }}
+                        {{ $currency }}
+                    </p>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Profit (Account)</p>
+                    <p class="text-2xl font-bold text-green-600 dark:text-green-300">{{ number_format($totalProfit, 2) }}
+                    </p>
+                </div>
+                <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">ROI</p>
+                    <p class="text-2xl font-bold text-purple-600 dark:text-purple-300">{{ number_format($roi, 2) }}%</p>
+                </div>
+            </div>
+
+            <form action="{{ route('accounts.investors.store', $account) }}" method="POST"
+                class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                @csrf
+                <input type="text" name="name" required placeholder="Nama Investor" class="border rounded-lg p-2" />
+                <input type="number" step="0.01" name="investment" required
+                    placeholder="Modal (Rp), akan dikonversi ke USD jika akun currency USD" class="border rounded-lg p-2" />
+                <input type="date" name="join_date" class="border rounded-lg p-2"
+                    value="{{ old('join_date', now()->toDateString()) }}" />
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Tambah Investor</button>
+            </form>
+
+            <div class="mt-4">
+                <form action="{{ route('accounts.investors.profit-share', $account) }}" method="POST"
+                    class="inline-block">
+                    @csrf
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Hitung Bagi Hasil</button>
+                </form>
+            </div>
+
+            <div class="mt-4 overflow-x-auto">
+                <table class="w-full min-w-max border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 dark:bg-gray-900/40">
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Nama</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Investasi
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Persentase
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Bagi Hasil
+                            </th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Total</th>
+                            <th class="px-3 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($account->investors as $investor)
+                            @php
+                                $percentage =
+                                    $totalInvestment > 0 ? ($investor->investment / $totalInvestment) * 100 : 0;
+                                $allocatedProfit = ($percentage / 100) * $totalProfit;
+                            @endphp
+                            <tr class="border-t border-gray-200 dark:border-gray-700">
+                                <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-100">{{ $investor->name }}</td>
+                                <td class="px-3 py-2 text-sm">{{ number_format($investor->investment, 2) }}
+                                    {{ $currency }}</td>
+                                <td class="px-3 py-2 text-sm">{{ number_format($percentage, 2) }}%</td>
+                                <td class="px-3 py-2 text-sm text-green-600 dark:text-green-400">
+                                    {{ number_format($allocatedProfit, 2) }} {{ $currency }}</td>
+                                <td class="px-3 py-2 text-sm font-semibold">
+                                    {{ number_format($investor->investment + $allocatedProfit, 2) }} {{ $currency }}
+                                </td>
+                                <td class="px-3 py-2">
+                                    <form action="{{ route('accounts.investors.destroy', [$account, $investor]) }}"
+                                        method="POST" onsubmit="return confirm('Hapus investor ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="text-red-600 hover:text-red-800 text-sm">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-3 py-4 text-center text-gray-500">Belum ada investor</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Related Trades -->
         <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">

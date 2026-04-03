@@ -26,4 +26,19 @@ class Account extends Model
     {
         return $this->hasMany(Metric::class);
     }
+
+    public function investors()
+    {
+        return $this->hasMany(Investor::class);
+    }
+
+    public function getTotalInvestorInvestmentAttribute()
+    {
+        return $this->investors->sum('investment');
+    }
+
+    public function getTotalProfitAttribute()
+    {
+        return $this->trades->sum('profit_loss');
+    }
 }
