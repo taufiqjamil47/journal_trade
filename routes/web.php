@@ -41,6 +41,7 @@ Route::group([
     Route::post('/accounts/{account}/investors', [App\Http\Controllers\InvestorController::class, 'store'])->name('accounts.investors.store');
     Route::delete('/accounts/{account}/investors/{investor}', [App\Http\Controllers\InvestorController::class, 'destroy'])->name('accounts.investors.destroy');
     Route::post('/accounts/{account}/investors/profit-share', [App\Http\Controllers\InvestorController::class, 'assignProfitShare'])->name('accounts.investors.profit-share');
+    Route::get('/accounts/{account}/investor-report', [App\Http\Controllers\InvestorController::class, 'report'])->name('accounts.investors.report');
     Route::post('/currency/clear-cache', [App\Http\Controllers\InvestorController::class, 'clearCurrencyCache'])->name('currency.clear-cache');
 
     // Semua route yang sudah ada

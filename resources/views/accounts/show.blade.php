@@ -146,7 +146,8 @@
 
         <!-- Hedge Fund Investor Management -->
         <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">💼 Hedge Fund Investor</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">💼
+                {{ __('account.show.hedge_fund_investor') }}</h2>
 
             @php $currency = strtoupper($account->currency ?? 'IDR'); @endphp
 
@@ -155,16 +156,18 @@
                 <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                     <div class="flex justify-between items-center">
                         <div class="text-sm text-blue-800 dark:text-blue-300">
-                            <strong>💱 Currency Info:</strong> Input dalam Rupiah, otomatis dikonversi ke USD
+                            <strong>💱 {{ __('account.show.currency_info') }}:</strong>
+                            {{ __('account.show.currency_info_desc') }}
                             @if (app(\App\Services\CurrencyConverter::class)->getLastUpdate())
-                                <br>Last update: {{ app(\App\Services\CurrencyConverter::class)->getLastUpdate() }}
+                                <br>{{ __('account.show.last_update') }}:
+                                {{ app(\App\Services\CurrencyConverter::class)->getLastUpdate() }}
                             @endif
                         </div>
                         <form action="{{ route('currency.clear-cache') }}" method="POST" class="inline">
                             @csrf
                             <button type="submit"
                                 class="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">
-                                🔄 Refresh Rate
+                                🔄 {{ __('account.show.refresh_rate') }}
                             </button>
                         </form>
                     </div>
@@ -173,18 +176,18 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Investor Modal</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('account.show.total_investor_modal') }}</p>
                     <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">{{ number_format($totalInvestment, 2) }}
                         {{ $currency }}
                     </p>
                 </div>
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Total Profit (Account)</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('account.show.total_profit_account') }}</p>
                     <p class="text-2xl font-bold text-green-600 dark:text-green-300">{{ number_format($totalProfit, 2) }}
                     </p>
                 </div>
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">ROI</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('account.show.roi') }}</p>
                     <p class="text-2xl font-bold text-purple-600 dark:text-purple-300">{{ number_format($roi, 2) }}%</p>
                 </div>
             </div>
@@ -192,36 +195,46 @@
             <form action="{{ route('accounts.investors.store', $account) }}" method="POST"
                 class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                 @csrf
-                <input type="text" name="name" required placeholder="Nama Investor"
+                <input type="text" name="name" required
+                    placeholder="{{ __('account.show.investor_name_placeholder') }}"
                     class="border rounded-lg p-2 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700" />
-                <input type="number" step="0.01" name="investment" required placeholder="Modal (Rp)"
+                <input type="number" step="0.01" name="investment" required
+                    placeholder="{{ __('account.show.modal_placeholder') }}"
                     class="border rounded-lg p-2 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700" />
                 <input type="date" name="join_date"
                     class="border rounded-lg p-2 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
                     value="{{ old('join_date', now()->toDateString()) }}" />
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Tambah Investor</button>
+                <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg">{{ __('account.show.add_investor') }}</button>
             </form>
 
             <div class="mt-4">
                 <form action="{{ route('accounts.investors.profit-share', $account) }}" method="POST"
-                    class="inline-block">
+                    class="inline-block mr-4">
                     @csrf
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Hitung Bagi Hasil</button>
+                    <button type="submit"
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg">{{ __('account.show.calculate_profit_sharing') }}</button>
                 </form>
+                <a href="{{ route('accounts.investors.report', $account) }}"
+                    class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                    <i class="fas fa-chart-bar mr-2"></i>{{ __('account.show.report') }}
+                </a>
             </div>
 
             <div class="mt-4 overflow-x-auto">
                 <table class="w-full min-w-max border-collapse">
                     <thead>
                         <tr class="bg-gray-100 dark:bg-gray-900/40">
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Nama</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Investasi
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Persentase
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Bagi Hasil
-                            </th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Total</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+                                {{ __('account.show.name') }}</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+                                {{ __('account.show.investment') }}</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+                                {{ __('account.show.percentage') }}</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+                                {{ __('account.show.profit_share') }}</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+                                {{ __('account.show.total') }}</th>
                             <th class="px-3 py-2"></th>
                         </tr>
                     </thead>
@@ -244,17 +257,19 @@
                                 </td>
                                 <td class="px-3 py-2">
                                     <form action="{{ route('accounts.investors.destroy', [$account, $investor]) }}"
-                                        method="POST" onsubmit="return confirm('Hapus investor ini?')">
+                                        method="POST"
+                                        onsubmit="return confirm('{{ __('account.show.confirm_delete_investor') }}')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="text-red-600 hover:text-red-800 text-sm">Hapus</button>
+                                            class="text-red-600 hover:text-red-800 text-sm">{{ __('account.show.delete') }}</button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-3 py-4 text-center text-gray-500">Belum ada investor</td>
+                                <td colspan="6" class="px-3 py-4 text-center text-gray-500">
+                                    {{ __('account.show.no_investor') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
