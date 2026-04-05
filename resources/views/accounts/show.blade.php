@@ -150,6 +150,27 @@
 
             @php $currency = strtoupper($account->currency ?? 'IDR'); @endphp
 
+            <!-- Currency Info -->
+            @if ($currency === 'USD')
+                <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-blue-800 dark:text-blue-300">
+                            <strong>💱 Currency Info:</strong> Input dalam Rupiah, otomatis dikonversi ke USD
+                            @if (app(\App\Services\CurrencyConverter::class)->getLastUpdate())
+                                <br>Last update: {{ app(\App\Services\CurrencyConverter::class)->getLastUpdate() }}
+                            @endif
+                        </div>
+                        <form action="{{ route('currency.clear-cache') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">
+                                🔄 Refresh Rate
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Total Investor Modal</p>
@@ -171,10 +192,12 @@
             <form action="{{ route('accounts.investors.store', $account) }}" method="POST"
                 class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                 @csrf
-                <input type="text" name="name" required placeholder="Nama Investor" class="border rounded-lg p-2" />
-                <input type="number" step="0.01" name="investment" required
-                    placeholder="Modal (Rp), akan dikonversi ke USD jika akun currency USD" class="border rounded-lg p-2" />
-                <input type="date" name="join_date" class="border rounded-lg p-2"
+                <input type="text" name="name" required placeholder="Nama Investor"
+                    class="border rounded-lg p-2 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700" />
+                <input type="number" step="0.01" name="investment" required placeholder="Modal (Rp)"
+                    class="border rounded-lg p-2 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700" />
+                <input type="date" name="join_date"
+                    class="border rounded-lg p-2 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
                     value="{{ old('join_date', now()->toDateString()) }}" />
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Tambah Investor</button>
             </form>

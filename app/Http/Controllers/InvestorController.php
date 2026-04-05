@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Investor;
+use App\Services\CurrencyConverter;
 use Illuminate\Http\Request;
 
 class InvestorController extends Controller
 {
+    protected $currencyConverter;
+
+    public function __construct(CurrencyConverter $currencyConverter)
+    {
+        $this->currencyConverter = $currencyConverter;
+    }
+
     public function store(Request $request, Account $account)
     {
         $request->validate([
@@ -21,15 +29,15 @@ class InvestorController extends Controller
 
         // Konversi otomatis jika akun ber-currency USD (input Rp) => USD
         if (strtoupper($account->currency) === 'USD') {
-            $idrToUsdRate = config('finance.idr_to_usd_rate', 16000); // dapat diubah di config/finance.php
-            $investmentUsd = round($investment / $idrToUsdRate, 2);
+            $investmentUsd = $this->currencyConverter->convert($investment, 'IDR', 'USD');
+            $currentRate = $this->currencyConverter->getRate('IDR', 'USD');
 
             // simpan nilai USD sekaligus note mencatat nilai asli
             $note = trim($request->note ?? '');
             if ($note !== '') {
                 $note .= ' | ';
             }
-            $note .= "IDR {$investment} dikonversi ke USD {$investmentUsd} (rate {$idrToUsdRate})";
+            $note .= "IDR {$investment} dikonversi ke USD {$investmentUsd} (rate 1 USD = " . number_format(1 / $currentRate, 0) . " IDR)";
 
             $investment = $investmentUsd;
             $request->merge(['note' => $note]);
@@ -71,5 +79,11 @@ class InvestorController extends Controller
         }
 
         return redirect()->route('accounts.show', $account)->with('success', 'Bagi hasil investor berhasil dihitung dan tersimpan');
+    }
+
+    public function clearCurrencyCache()
+    {
+        $this->currencyConverter->clearCache();
+        return redirect()->back()->with('success', 'Cache currency rates berhasil dihapus. Rate akan diambil ulang dari API.');
     }
 }

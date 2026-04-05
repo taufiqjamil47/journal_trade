@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\DashNote;
+// use App\Models\DashNote;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TradeController;
 use App\Http\Controllers\ReportController;
@@ -41,6 +41,7 @@ Route::group([
     Route::post('/accounts/{account}/investors', [App\Http\Controllers\InvestorController::class, 'store'])->name('accounts.investors.store');
     Route::delete('/accounts/{account}/investors/{investor}', [App\Http\Controllers\InvestorController::class, 'destroy'])->name('accounts.investors.destroy');
     Route::post('/accounts/{account}/investors/profit-share', [App\Http\Controllers\InvestorController::class, 'assignProfitShare'])->name('accounts.investors.profit-share');
+    Route::post('/currency/clear-cache', [App\Http\Controllers\InvestorController::class, 'clearCurrencyCache'])->name('currency.clear-cache');
 
     // Semua route yang sudah ada
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
