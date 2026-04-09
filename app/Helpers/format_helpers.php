@@ -2,13 +2,12 @@
 
 if (! function_exists('format_price')) {
     /**
-     * Format a decimal price for display according to integer part length:
-     * - If integer part has 2 or more digits (>=10) -> show 3 decimals
-     * - Otherwise -> show 5 decimals
-     *
-     * Examples:
-     *  - 1.34325  -> 1.34325 (5 decimals)
-     *  - 134.87432 -> 134.874 (3 decimals)
+     * Format harga desimal untuk ditampilkan sesuai dengan panjang bagian bilangan bulat:
+     * - Jika bagian bilangan bulat memiliki 2 digit atau lebih (>=10) -> tampilkan 3 angka desimal
+     * - Jika tidak -> tampilkan 5 angka desimal
+     * * Contoh:
+     * - 1.34325 -> 1.34325 (5 angka desimal)
+     * - 134.87432 -> 134.874 (3 angka desimal)
      *
      * @param  float|string|null  $value
      * @return string
@@ -28,10 +27,10 @@ if (! function_exists('format_price')) {
         $abs = abs($float);
         $intPart = (int) floor($abs);
 
-        // If integer part has 2+ digits (>=10), use 3 decimals, else 5
+        // Jika bagian bilangan bulat memiliki 2 digit atau lebih (>=10), gunakan 3 angka desimal, jika tidak, gunakan 5 angka desimal
         $decimals = ($intPart >= 10) ? 3 : 5;
 
-        // Use dot as decimal separator and no thousands separator
+        // Gunakan titik sebagai pemisah desimal dan tanpa pemisah ribuan
         return number_format($float, $decimals, '.', '');
     }
 }

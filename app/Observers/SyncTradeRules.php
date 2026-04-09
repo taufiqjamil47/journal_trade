@@ -21,7 +21,7 @@ class SyncTradeRules extends Command
 
     protected function syncFromPivotToColumn()
     {
-        $this->info('🔄 Syncing from pivot table to rules column...');
+        $this->info('🔄 Sinkronisasi dari tabel pivot ke kolom aturan...');
 
         $trades = Trade::has('tradingRules')->with('tradingRules')->get();
 
@@ -39,12 +39,12 @@ class SyncTradeRules extends Command
 
         $bar->finish();
         $this->newLine();
-        $this->info('✅ Synced ' . $trades->count() . ' trades from pivot to column.');
+        $this->info('✅ Tersinkronisasi ' . $trades->count() . ' perdagangan dari pivot ke kolom.');
     }
 
     protected function syncFromColumnToPivot()
     {
-        $this->info('🔄 Syncing from rules column to pivot table...');
+        $this->info('🔄 Sinkronisasi dari kolom aturan ke tabel pivot...');
 
         $trades = Trade::whereNotNull('rules')->where('rules', '!=', '')->get();
 
@@ -63,6 +63,6 @@ class SyncTradeRules extends Command
 
         $bar->finish();
         $this->newLine();
-        $this->info('✅ Synced ' . $trades->count() . ' trades from column to pivot.');
+        $this->info('✅ Tersinkronisasi ' . $trades->count() . ' perdagangan dari kolom ke tabel pivot.');
     }
 }

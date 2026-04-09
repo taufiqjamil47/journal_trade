@@ -19,7 +19,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         try {
-            // Get selected account from session
+            // Dapatkan akun terpilih dari sesi
             $selectedAccountId = session('selected_account_id');
             $account = Account::find($selectedAccountId);
             if (!$account) {
@@ -29,33 +29,33 @@ class DashboardController extends Controller
                 $initialBalance = $account->initial_balance;
             }
 
-            // Get filtered trades query (don't fetch yet) so we can use DB aggregations
+            // Dapatkan kueri perdagangan yang difilter (jangan ambil dulu) agar kita dapat menggunakan agregasi basis data
             try {
                 $query = $this->analysisService->getFilteredTrades($request, true);
-                // Add eager loading for cases where collections are used
+                // Tambahkan eager loading untuk kasus di mana koleksi digunakan
                 $query = $query->with('symbol', 'account', 'tradingRules');
             } catch (\Exception $e) {
                 Log::error('Error building filtered trades query: ' . $e->getMessage());
                 $query = null;
             }
 
-            // Get filter values
+            // Dapatkan nilai filter
             $period = $request->get('period', 'all');
             $sessionFilter = $request->get('session', 'all');
             $entryFilter = $request->get('entry_type', 'all');
 
-            // Use caching for dashboard payload to reduce repeated heavy calculations
+            // Gunakan caching untuk payload dashboard untuk mengurangi perhitungan berat yang berulang
             try {
                 $period = $request->get('period', 'all');
                 $sessionFilter = $request->get('session', 'all');
                 $entryFilter = $request->get('entry_type', 'all');
 
-                // Use last trade updated timestamp to invalidate cache when trades change
+                // Gunakan timestamp pembaruan perdagangan terakhir untuk membatalkan cache ketika perdagangan berubah
                 $tradesMaxUpdated = \App\Models\Trade::max('updated_at') ?: now()->toDateTimeString();
                 $cacheKey = "dashboard:period={$period}:session={$sessionFilter}:entry={$entryFilter}:account={$account->id}:tmax={$tradesMaxUpdated}";
 
                 $cached = cache()->remember($cacheKey, 60, function () use ($query, $initialBalance, $sessionFilter, $entryFilter) {
-                    // Fetch collection only once for collection-based calculations
+                    // Ambil koleksi hanya sekali untuk perhitungan berbasis koleksi.
                     $trades = $query ? $query->get() : collect();
 
                     $basicMetrics = $this->analysisService->calculateBasicMetrics($trades, $initialBalance);
@@ -88,11 +88,11 @@ class DashboardController extends Controller
                     $availableEntryTypes = $this->analysisService->getAvailableEntryTypes();
                     $equityData = $this->analysisService->calculateEquityData($trades, $initialBalance, $availableSessions);
 
-                    // Use DB-backed aggregations where possible for speed
+                    // Gunakan agregasi berbasis basis data jika memungkinkan untuk kecepatan
                     $pairData = $query ? $this->analysisService->calculatePairAnalysis($query) : collect();
                     $entryTypeData = $query ? $this->analysisService->calculateEntryTypeAnalysis($query) : collect();
 
-                    // Calculate overall equity data for the new chart
+                    // Hitung data ekuitas keseluruhan untuk grafik baru
                     $overallEquityData = $this->analysisService->calculateOverallEquityData($trades, $initialBalance);
 
                     return compact('basicMetrics', 'summary', 'availableSessions', 'availableEntryTypes', 'equityData', 'pairData', 'entryTypeData', 'overallEquityData');
@@ -126,7 +126,7 @@ class DashboardController extends Controller
                 'Other' => __('dashboard.other'),
             ];
 
-            // Combine all data
+            // Gabungkan semua data
             return view('dashboard.index', array_merge($basicMetrics, [
                 'period' => $period,
                 'sessionFilter' => $sessionFilter,
@@ -150,7 +150,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get default metrics if calculation fails
+     * Gunakan metrik default jika perhitungan gagal.
      */
     private function getDefaultMetrics($initialBalance)
     {
@@ -184,7 +184,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get default dashboard data if critical error occurs
+     * Dapatkan data dasbor default jika terjadi kesalahan kritis.
      */
     private function getDefaultDashboardData()
     {

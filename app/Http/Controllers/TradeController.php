@@ -27,7 +27,7 @@ class TradeController extends Controller
         $order  = $request->get('order', 'desc');
         $selectedAccountId = session('selected_account_id');
 
-        // Eager load relationships untuk avoid N+1 queries - FILTER BY SELECTED ACCOUNT
+        // Relasi eager load untuk menghindari query N+1 - FILTER BERDASARKAN AKUN YANG DIPILIH
         $query = Trade::with('symbol', 'tradingRules')
             ->where('account_id', $selectedAccountId);
         $perf->checkpoint('eager_load_initialized');
@@ -68,7 +68,7 @@ class TradeController extends Controller
                 Log::warning('No active symbols available');
             }
 
-            // Get selected account from session
+            // Dapatkan akun yang dipilih dari sesi
             $selectedAccountId = session('selected_account_id');
             $selectedAccount = Account::findOrFail($selectedAccountId);
             $currentEquity = $this->getCurrentEquity($selectedAccountId);
@@ -149,14 +149,14 @@ class TradeController extends Controller
             }
         }
 
-        // Hitung Exit Pips (keep higher precision here to avoid premature rounding)
+        // Hitung Pips Keluar (pertahankan presisi yang lebih tinggi di sini untuk menghindari pembulatan prematur)
         $pipValue = $trade->symbol->pip_value;
         if ($trade->type === 'buy') {
             $rawExitPips = ($trade->exit - $trade->entry) / $pipValue;
         } else {
             $rawExitPips = ($trade->entry - $trade->exit) / $pipValue;
         }
-        // Store with more precision; rounding for display can be done in view
+        // Simpan dengan lebih presisi; pembulatan untuk tampilan dapat dilakukan di tempat.
         $trade->exit_pips = round($rawExitPips, 4);
 
         // PERBAIKAN: Hitung balance yang benar untuk perhitungan risk%
@@ -172,7 +172,7 @@ class TradeController extends Controller
 
         // VARIABLE UNTUK MENYIMPAN risk_usd
         $calculatedRiskUSD = null;
-        // Use symbol configured pip worth when available to match server-side P/L
+        // Gunakan simbol yang dikonfigurasi dengan nilai pip jika tersedia untuk mencocokkan P/L sisi server.
         $pipWorth = $trade->symbol->pip_worth ?? 10; // default: $10 per pip per 1 lot
         $slPips = $trade->sl_pips ?? 0;
 
@@ -270,7 +270,7 @@ class TradeController extends Controller
         $trade->fill($data);
         $trade->setSessionFromTimestamp();
 
-        // Wrap save + rule sync in transaction
+        // Gabungkan penyimpanan + sinkronisasi aturan dalam transaksi.
         DB::transaction(function () use ($request, $trade, $partialPercent) {
             // SYNC RULES JIKA ADA
             if ($request->has('rules')) {
@@ -315,7 +315,6 @@ class TradeController extends Controller
         try {
             $data = $request->validate([
                 'symbol_id'   => 'required|exists:symbols,id',
-                // accept time-only in H:i format
                 'timestamp'   => 'required|date_format:H:i',
                 'date'        => 'required|date_format:Y-m-d',
                 'type'        => 'required|in:buy,sell',
@@ -328,7 +327,7 @@ class TradeController extends Controller
             ]);
             $perf->checkpoint('validation_passed');
 
-            // Combine date + time into full timestamp (DB stores datetime)
+            // Gabungkan tanggal + waktu menjadi stempel waktu lengkap (DB menyimpan tanggal dan waktu)
             try {
                 $combined = $data['date'] . ' ' . $data['timestamp'];
                 $data['timestamp'] = Carbon::createFromFormat('Y-m-d H:i', $combined)->toDateTimeString();
@@ -354,7 +353,7 @@ class TradeController extends Controller
                 $data['rr'] = 0;
             }
 
-            // Get account_id dari session (selected account)
+            // Dapatkan account_id dari sesi (akun yang dipilih)
             $data['account_id'] = session('selected_account_id');
 
             // Jalankan transaction dan dapatkan hasilnya
@@ -428,7 +427,7 @@ class TradeController extends Controller
         try {
             $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id);
 
-            // Get rule names
+            // Dapatkan nama aturan yang terkait dengan trade ini
             $ruleNames = $trade->tradingRules->pluck('name')->toArray();
 
             return response()->json([

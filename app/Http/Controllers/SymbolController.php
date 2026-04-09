@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class SymbolController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar sumber daya.
      */
     public function index()
     {
@@ -23,7 +23,7 @@ class SymbolController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form untuk membuat sumber daya baru.
      */
     public function create()
     {
@@ -36,7 +36,7 @@ class SymbolController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Simpan sumber daya yang baru dibuat di penyimpanan.
      */
     public function store(Request $request)
     {
@@ -63,15 +63,7 @@ class SymbolController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Tampilkan formulir untuk mengedit sumber daya yang ditentukan.
      */
     public function edit($id)
     {
@@ -85,7 +77,7 @@ class SymbolController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Perbarui sumber daya yang ditentukan dalam penyimpanan.
      */
     public function update(Request $request, $id)
     {
@@ -114,7 +106,7 @@ class SymbolController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus sumber daya yang ditentukan dari penyimpanan.
      */
     public function destroy($id)
     {

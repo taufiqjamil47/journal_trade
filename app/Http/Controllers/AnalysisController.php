@@ -17,21 +17,21 @@ class AnalysisController extends Controller
 
     public function index(Request $request)
     {
-        // Get selected account from session
+        // Dapatkan akun terpilih dari sesi
         $selectedAccountId = session('selected_account_id');
         $account = Account::find($selectedAccountId);
         $initialBalance = $account ? $account->initial_balance : 10000;
 
-        // Get filtered trades
+        // Dapatkan transaksi yang difilter
         $query = $this->analysisService->getFilteredTrades($request);
         $trades = $query->get();
 
-        // Get filter values
+        // Dapatkan nilai filter
         $period = $request->get('period', 'all');
         $sessionFilter = $request->get('session', 'all');
         $entryFilter = $request->get('entry_type', 'all');
 
-        // Get available filters
+        // Dapatkan filter yang tersedia
         $availableSessions = $this->analysisService->getAvailableSessions();
         $availableEntryTypes = $this->analysisService->getAvailableEntryTypes();
 
@@ -49,10 +49,10 @@ class AnalysisController extends Controller
         // ===== BASIC METRICS FOR CONTEXT =====
         $basicMetrics = $this->analysisService->calculateBasicMetrics($trades, $initialBalance);
 
-        // Calculate summary if filters active
+        // Hitung ringkasan jika filter aktif
         $summary = $this->analysisService->calculateSummary($trades, $entryFilter, $sessionFilter);
 
-        // Combine all data
+        // Gabungkan semua data
         return view('analysis.index', array_merge(
             [
                 'period' => $period,
@@ -62,7 +62,7 @@ class AnalysisController extends Controller
                 'availableSessions' => $availableSessions,
                 'availableEntryTypes' => $availableEntryTypes,
             ],
-            $basicMetrics, // Include basic metrics for context
+            $basicMetrics, // Sertakan metrik dasar untuk konteks.
             $timeAnalysis,
             $riskMetrics,
             [
