@@ -338,4 +338,18 @@ return [
     'trade_duplicated_success' => 'The trade has been successfully duplicated. You can edit the new trade.',
     'edit_new_trade' => 'Edit New Trade',
     'refresh_page' => 'Refresh Page',
+
+    // Add the following keys:
+    'partial_close' => 'Partial Close',
+    'enable_partial_close' => 'Enable Partial Close',
+    'close_portion_position' => 'Partial Close',
+    'fixed_percentages' => 'Fixed Percentage',
+    'custom_percentage' => 'Custom Percentage',
+    'enter_any_percentage' => 'Enter any percentage (0-100)',
+    'partial_close_preview' => 'Partial Close Preview',
+    'original_lot_size' => 'Initial Lot Size',
+    'after_partial_close' => 'After Partial Close',
+    'remaining_position' => 'Remaining Position',
+    'full_close' => 'Full Close',
+    'partial_position' => 'Partial Position',
 ];

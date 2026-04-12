@@ -1,7 +1,7 @@
 @extends('Layouts.index')
 @section('title', __('investor-report.title', ['name' => $account->name]))
 @section('content')
-    <div class="container mx-auto px-4 py-6 max-w-7xl">
+    <div id="reportContent" class="container mx-auto px-4 py-6 max-w-7xl">
         <!-- Header -->
         <div class="mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -16,10 +16,10 @@
                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-print mr-2"></i>{{ __('investor-report.print_report') }}
                     </button>
-                    <button onclick="exportToPDF()"
+                    {{-- <button onclick="exportToPDF()"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-download mr-2"></i>{{ __('investor-report.export_pdf') }}
-                    </button>
+                    </button> --}}
                 </div>
             </div>
             <h1 class="text-3xl font-bold text-primary-600 dark:text-primary-400 mt-4">
@@ -262,6 +262,12 @@
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNa5Ak4PsC7Kd9yg/m8LjSEjW4iXlqDT1tU4M45pzkqnH1j+2xk7yql5qDHF6l6AVrtcq/kfC6pTgqSTTMO2XA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+        integrity="sha512-WFwgkL4xJvq3i4uQMl0LS24nHhZSj/PvriJCiOK4FJfsg7uT0N/PYJxpp9g15rLw8RK61m2dRIM4ok82SuzzVg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         // Investment Distribution Pie Chart
@@ -359,9 +365,40 @@
         });
 
         // Export to PDF function
-        function exportToPDF() {
-            // Simple print for now - can be enhanced with jsPDF later
-            window.print();
+        async function exportToPDF() {
+            const reportEl = document.getElementById('reportContent');
+            const originalScrollY = window.scrollY;
+            const {
+                jsPDF
+            } = window.jspdf;
+            const accountSlug = '{{ \Illuminate\Support\Str::slug($account->name, '_') }}';
+            const saveName = `Investor_Report_${accountSlug}_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+            const canvas = await html2canvas(reportEl, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            let heightLeft = pdfHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+            heightLeft -= pdf.internal.pageSize.getHeight();
+
+            while (heightLeft > 0) {
+                position = heightLeft - pdfHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                heightLeft -= pdf.internal.pageSize.getHeight();
+            }
+
+            pdf.save(saveName);
+            window.scrollTo(0, originalScrollY);
         }
     </script>
 
