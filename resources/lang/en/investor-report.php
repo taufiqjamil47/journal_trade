@@ -9,6 +9,7 @@ return [
     'investor_performance_report' => 'Investor Performance Report',
     'account_label' => 'Account',
     'generated_label' => 'Generated',
+    'performance_summary' => 'Performance Summary',
 
     // Key Metrics
     'total_investment' => 'Total Investment',
@@ -32,6 +33,7 @@ return [
     'growth_percentage' => 'Growth %',
     'join_date' => 'Join Date',
     'na' => 'N/A',
+    'performance_status' => 'Performance Status',
 
     // Trading Statistics
     'trading_statistics' => 'Trading Statistics',
@@ -39,6 +41,12 @@ return [
     'best_trade' => 'Best Trade',
     'worst_trade' => 'Worst Trade',
     'average_trade' => 'Average Trade',
+
+    // profit distribution
+    'profit_distribution' => 'Profit Distribution',
+    'profit_share_per_investor' => 'Profit Share per Investor',
+    'growth_comparison' => 'Growth Comparison',
+    'growth_percentage_by_investor' => 'Growth Percentage by Investor',
 
     // Performance Metrics
     'performance_metrics' => 'Performance Metrics',

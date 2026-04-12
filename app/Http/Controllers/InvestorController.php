@@ -102,6 +102,14 @@ class InvestorController extends Controller
             $totalValue = $investor->investment + $allocatedProfit;
             $growthPercentage = $investor->investment > 0 ? ($allocatedProfit / $investor->investment) * 100 : 0;
 
+            // Tentukan performa badge
+            $badge = 'neutral';
+            if ($growthPercentage > 30) $badge = 'excellent';
+            elseif ($growthPercentage > 10) $badge = 'good';
+            elseif ($growthPercentage > 0) $badge = 'fair';
+            elseif ($growthPercentage > -10) $badge = 'caution';
+            else $badge = 'concerning';
+
             return [
                 'name' => $investor->name,
                 'investment' => $investor->investment,
@@ -110,6 +118,7 @@ class InvestorController extends Controller
                 'total_value' => round($totalValue, 2),
                 'growth_percentage' => round($growthPercentage, 2),
                 'join_date' => $investor->join_date,
+                'performance_badge' => $badge,
             ];
         });
 
@@ -151,6 +160,40 @@ class InvestorController extends Controller
         $worstTrade = $trades->min('profit_loss') ?? 0;
         $avgTrade = $totalTrades > 0 ? $trades->avg('profit_loss') : 0;
 
+        // ==== HIGH PRIORITY ADDITIONS ====
+
+        // 1. Executive Summary - Trend Analysis
+        $performanceTrend = null;
+        $performanceSentiment = 'neutral';
+
+        if (count($indexedMonthlyData) > 0) {
+            $lastMonthProfit = end($indexedMonthlyData)['profit'] ?? 0;
+            $firstMonthProfit = reset($indexedMonthlyData)['profit'] ?? 0;
+
+            if ($lastMonthProfit > $firstMonthProfit * 1.1) {
+                $performanceTrend = 'up';
+                $performanceSentiment = 'positive';
+            } elseif ($lastMonthProfit < $firstMonthProfit * 0.9) {
+                $performanceTrend = 'down';
+                $performanceSentiment = $lastMonthProfit < 0 ? 'negative' : 'caution';
+            } else {
+                $performanceTrend = 'stable';
+                $performanceSentiment = 'neutral';
+            }
+        }
+
+        // Generate performance summary text
+        $summaryText = $this->generateExecutiveSummary($account, $totalProfit, $roi, $winRate, $performanceTrend, $performanceSentiment);
+
+        // 2. Profit Distribution Chart Data (per investor)
+        $profitDistributionData = $investorData->map(function ($investor) {
+            return [
+                'name' => $investor['name'],
+                'profit_share' => $investor['profit_share'],
+                'growth_percentage' => $investor['growth_percentage'],
+            ];
+        });
+
         return view('accounts.investor-report', compact(
             'account',
             'investorData',
@@ -163,7 +206,49 @@ class InvestorController extends Controller
             'bestTrade',
             'worstTrade',
             'avgTrade',
-            'totalTrades'
+            'totalTrades',
+            'performanceTrend',
+            'performanceSentiment',
+            'summaryText',
+            'profitDistributionData'
         ));
+    }
+
+    /**
+     * Generate executive summary text untuk investor report
+     */
+    private function generateExecutiveSummary($account, $totalProfit, $roi, $winRate, $trend, $sentiment)
+    {
+        $currency = strtoupper($account->currency ?? 'IDR');
+        $trendIcon = match ($trend) {
+            'up' => '📈',
+            'down' => '📉',
+            default => '→'
+        };
+
+        $investorCount = $account->investors->count();
+        $trendText = match ($trend) {
+            'up' => 'menunjukkan tren positif',
+            'down' => 'menunjukkan tren menurun',
+            default => 'menunjukkan performa stabil'
+        };
+
+        $sentimentGuidance = match ($sentiment) {
+            'positive' => 'Strategi trading berjalan dengan baik, pertahankan momentum.',
+            'negative' => 'Diperlukan evaluasi strategi untuk meningkatkan performa.',
+            'caution' => 'Perlu perhatian khusus dalam performa periode ini.',
+            default => 'Performa dalam kondisi normal, terus dipantau.'
+        };
+
+        $profitFormatted = number_format($totalProfit, 2);
+        $roiFormatted = number_format($roi, 2);
+        $winRateFormatted = number_format($winRate, 1);
+
+        return [
+            'trend_icon' => $trendIcon,
+            'main_text' => "Akun {$account->name} telah menghasilkan profit {$profitFormatted} {$currency} dengan ROI {$roiFormatted}% dan win rate {$winRateFormatted}%. Dari {$investorCount} investor, perkembangan portofolio {$trendText}.",
+            'sentiment' => $sentiment,
+            'guidance' => $sentimentGuidance,
+        ];
     }
 }

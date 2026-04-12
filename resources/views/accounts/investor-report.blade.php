@@ -16,10 +16,6 @@
                         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-print mr-2"></i>{{ __('investor-report.print_report') }}
                     </button>
-                    {{-- <button onclick="exportToPDF()"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
-                        <i class="fas fa-download mr-2"></i>{{ __('investor-report.export_pdf') }}
-                    </button> --}}
                 </div>
             </div>
             <h1 class="text-3xl font-bold text-primary-600 dark:text-primary-400 mt-4">
@@ -31,12 +27,48 @@
             </p>
         </div>
 
+        <!-- Executive Summary -->
+        <div
+            class="mb-8 bg-gradient-to-r {{ match ($performanceSentiment) {
+                'positive' => 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20',
+                'negative' => 'from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20',
+                'caution' => 'from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20',
+                default => 'from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20',
+            } }} p-6 rounded-xl border {{ match ($performanceSentiment) {
+                'positive' => 'border-green-200 dark:border-green-700',
+                'negative' => 'border-red-200 dark:border-red-700',
+                'caution' => 'border-yellow-200 dark:border-yellow-700',
+                default => 'border-blue-200 dark:border-blue-700',
+            } }}">
+            <div class="flex items-start gap-4">
+                <div class="text-4xl">{{ $summaryText['trend_icon'] }}</div>
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        📋 {{ __('investor-report.performance_summary') ?? 'Ringkasan Performa' }}
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-3">
+                        {{ $summaryText['main_text'] }}
+                    </p>
+                    <div
+                        class="inline-block px-3 py-2 rounded-lg {{ match ($performanceSentiment) {
+                            'positive' => 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+                            'negative' => 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
+                            'caution' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',
+                            default => 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+                        } }} text-sm font-medium">
+                        💡 {{ $summaryText['guidance'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Key Metrics -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('investor-report.total_investment') }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('investor-report.total_investment') }}
+                        </p>
                         <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">
                             {{ number_format($totalInvestment, 2) }} {{ $currency }}
                         </p>
@@ -111,6 +143,33 @@
             </div>
         </div>
 
+        <!-- Profit Distribution Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    💰 {{ __('investor-report.profit_distribution') ?? 'Distribusi Profit' }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    {{ __('investor-report.profit_share_per_investor') ?? 'Alokasi profit berdasarkan persentase investasi masing-masing investor' }}
+                </p>
+                <div class="h-80">
+                    <canvas id="profitDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    📈 {{ __('investor-report.growth_comparison') ?? 'Perbandingan Pertumbuhan' }}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    {{ __('investor-report.growth_percentage_by_investor') ?? 'Persentase pertumbuhan dari investasi awal untuk setiap investor' }}
+                </p>
+                <div class="h-80">
+                    <canvas id="growthComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Investor Details Table -->
         <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 mb-8">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -121,6 +180,8 @@
                         <tr class="bg-gray-100 dark:bg-gray-900/40">
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 {{ __('investor-report.investor') }}</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
+                                {{ __('investor-report.performance_status') ?? 'Status' }}</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 {{ __('investor-report.initial_investment') }}</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
@@ -137,9 +198,52 @@
                     </thead>
                     <tbody>
                         @foreach ($investorData as $investor)
-                            <tr class="border-t border-gray-200 dark:border-gray-700">
+                            <tr
+                                class="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30">
                                 <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">
                                     {{ $investor['name'] }}
+                                </td>
+                                <td class="px-4 py-3 text-sm">
+                                    @php
+                                        $badgeConfig = [
+                                            'excellent' => [
+                                                'icon' => '⭐',
+                                                'bg' => 'bg-green-100 dark:bg-green-900/30',
+                                                'text' => 'text-green-800 dark:text-green-300',
+                                                'label' => 'Excellent',
+                                            ],
+                                            'good' => [
+                                                'icon' => '👍',
+                                                'bg' => 'bg-blue-100 dark:bg-blue-900/30',
+                                                'text' => 'text-blue-800 dark:text-blue-300',
+                                                'label' => 'Good',
+                                            ],
+                                            'fair' => [
+                                                'icon' => '➡️',
+                                                'bg' => 'bg-cyan-100 dark:bg-cyan-900/30',
+                                                'text' => 'text-cyan-800 dark:text-cyan-300',
+                                                'label' => 'Fair',
+                                            ],
+                                            'caution' => [
+                                                'icon' => '⚠️',
+                                                'bg' => 'bg-yellow-100 dark:bg-yellow-900/30',
+                                                'text' => 'text-yellow-800 dark:text-yellow-300',
+                                                'label' => 'Caution',
+                                            ],
+                                            'concerning' => [
+                                                'icon' => '⛔',
+                                                'bg' => 'bg-red-100 dark:bg-red-900/30',
+                                                'text' => 'text-red-800 dark:text-red-300',
+                                                'label' => 'Concerning',
+                                            ],
+                                        ];
+                                        $badge = $badgeConfig[$investor['performance_badge']] ?? $badgeConfig['fair'];
+                                    @endphp
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold {{ $badge['bg'] }} {{ $badge['text'] }}">
+                                        {{ $badge['icon'] }}
+                                        {{ $badge['label'] }}
+                                    </span>
                                 </td>
                                 <td class="px-4 py-3 text-sm">
                                     {{ number_format($investor['investment'], 2) }} {{ $currency }}
@@ -357,6 +461,106 @@
                             label: function(context) {
                                 return context.dataset.label + ': ' + context.parsed.y.toLocaleString() +
                                     ' {{ $currency }}';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Profit Distribution Bar Chart
+        const profitDistributionCtx = document.getElementById('profitDistributionChart').getContext('2d');
+        const profitDistributionData = @json($profitDistributionData);
+
+        new Chart(profitDistributionCtx, {
+            type: 'bar',
+            data: {
+                labels: profitDistributionData.map(item => item.name),
+                datasets: [{
+                    label: '{{ __('investor-report.profit_share') ?? 'Alokasi Profit' }}',
+                    data: profitDistributionData.map(item => item.profit_share),
+                    backgroundColor: [
+                        '#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6',
+                        '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6B7280'
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString() + ' {{ $currency }}';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        align: 'end'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.x.toLocaleString() +
+                                    ' {{ $currency }}';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Growth Comparison Chart
+        const growthComparisonCtx = document.getElementById('growthComparisonChart').getContext('2d');
+        const growthData = @json($profitDistributionData);
+
+        new Chart(growthComparisonCtx, {
+            type: 'radar',
+            data: {
+                labels: growthData.map(item => item.name),
+                datasets: [{
+                    label: '{{ __('investor-report.growth_percentage') ?? 'Pertumbuhan (%)' }}',
+                    data: growthData.map(item => item.growth_percentage),
+                    borderColor: '#6366F1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#6366F1',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.r.toFixed(2) + '%';
                             }
                         }
                     }

@@ -9,6 +9,7 @@ return [ // Judul & Header
     'investor_performance_report' => 'Laporan Kinerja Investor',
     'account_label' => 'Akun',
     'generated_label' => 'Dihasilkan',
+    'performance_summary' => 'Ringkasan Kinerja',
 
     // Metrik Utama
     'total_investment' => 'Total Investasi',
@@ -31,6 +32,7 @@ return [ // Judul & Header
     'growth_percentage' => 'Persentase Pertumbuhan',
     'join_date' => 'Tanggal Bergabung',
     'na' => 'Tidak Tersedia',
+    'performance_status' => 'Status Kinerja',
 
     // Statistik Perdagangan
     'trading_statistics' => 'Statistik Perdagangan',
@@ -38,6 +40,12 @@ return [ // Judul & Header
     'best_trade' => 'Perdagangan Terbaik',
     'worst_trade' => 'Perdagangan Terburuk',
     'average_trade' => 'Perdagangan Rata-rata',
+
+    // profit distribution
+    'profit_distribution' => 'Distribusi Keuntungan',
+    'profit_share_per_investor' => 'Bagian Keuntungan per Investor',
+    'growth_comparison' => 'Perbandingan Pertumbuhan',
+    'growth_percentage_by_investor' => 'Persentase Pertumbuhan berdasarkan Investor',
 
     // Metrik Kinerja
     'performance_metrics' => 'Metrik Kinerja',
