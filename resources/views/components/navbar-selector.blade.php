@@ -1,9 +1,9 @@
 <div class="flex flex-wrap gap-3 items-center">
-    <!-- Toggle Button -->
+    <!-- Toggle Button - Menu Icon -->
     <button id="navToggle"
-        class="flex items-center bg-white dark:bg-gray-800 rounded-lg px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 active:scale-95 focus:outline-none"
+        class="flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg w-10 h-10 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 active:scale-95 focus:outline-none"
         data-nav-state-save="true">
-        <i id="navToggleIcon" class="fas fa-chevron-right text-primary-500 mr-2 nav-toggle-icon"></i>
+        <i id="navToggleIcon" class="fas fa-bars text-primary-500 text-lg"></i>
     </button>
 
     <!-- Navigation Items Container -->
@@ -118,6 +118,116 @@
         </div>
     </div>
     @include('components.account-selector')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('navToggle');
+            const navToggleIcon = document.getElementById('navToggleIcon');
+            const navItems = document.getElementById('navItems');
+            const navContainer = document.querySelector('.nav-container');
+
+            // Ambil state dari localStorage (jika ada)
+            let isNavVisible = localStorage.getItem('navVisible') === 'true';
+
+            // Jika belum ada di localStorage, set default ke false
+            if (localStorage.getItem('navVisible') === null) {
+                isNavVisible = false;
+                localStorage.setItem('navVisible', 'false');
+            }
+
+            // Set initial state dengan delay untuk animasi masuk
+            setTimeout(() => {
+                updateNavVisibility(isNavVisible, false);
+            }, 100);
+
+            // Toggle event dengan animasi
+            navToggle.addEventListener('click', function() {
+                isNavVisible = !isNavVisible;
+                updateNavVisibility(isNavVisible, true);
+                localStorage.setItem('navVisible', isNavVisible);
+
+                // Tambahkan efek klik
+                navToggle.classList.add('scale-95');
+                setTimeout(() => {
+                    navToggle.classList.remove('scale-95');
+                }, 150);
+            });
+
+            // Simpan state sebelum pindah halaman
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.href) {
+                    sessionStorage.setItem('navVisibleBeforeNavigate', isNavVisible);
+                }
+            });
+
+            // Handle browser back/forward
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    const savedState = localStorage.getItem('navVisible') === 'true';
+                    if (savedState !== isNavVisible) {
+                        isNavVisible = savedState;
+                        updateNavVisibility(isNavVisible, false);
+                    }
+                }
+            });
+
+            function updateNavVisibility(visible, fromToggle = true) {
+                if (visible) {
+                    // Animate in
+                    navItems.classList.remove('hidden');
+                    navItems.classList.add('flex');
+
+                    // Trigger reflow untuk memulai animasi
+                    void navItems.offsetWidth;
+
+                    if (fromToggle) {
+                        navItems.classList.remove('opacity-0', 'scale-95');
+                        navItems.classList.add('opacity-100', 'scale-100');
+                    } else {
+                        navItems.classList.remove('opacity-0', 'scale-95');
+                        navItems.classList.add('opacity-100', 'scale-100');
+                    }
+
+                    // Ubah icon menu menjadi 'X' (close)
+                    navToggleIcon.classList.remove('fa-bars');
+                    navToggleIcon.classList.add('fa-times');
+
+                    // Add glow effect to toggle button
+                    navToggle.classList.add('border-primary-500', 'dark:border-primary-500', 'bg-primary-50',
+                        'dark:bg-primary-900/20');
+                } else {
+                    // Animate out
+                    if (fromToggle) {
+                        navItems.classList.remove('opacity-100', 'scale-100');
+                        navItems.classList.add('opacity-0', 'scale-95');
+
+                        setTimeout(() => {
+                            if (!isNavVisible) {
+                                navItems.classList.add('hidden');
+                                navItems.classList.remove('flex');
+                            }
+                        }, 300);
+                    } else {
+                        navItems.classList.add('hidden');
+                        navItems.classList.remove('flex', 'opacity-100', 'scale-100');
+                        navItems.classList.add('opacity-0', 'scale-95');
+                    }
+
+                    // Ubah icon 'X' kembali menjadi menu (hamburger)
+                    navToggleIcon.classList.remove('fa-times');
+                    navToggleIcon.classList.add('fa-bars');
+
+                    // Remove glow effect
+                    navToggle.classList.remove('border-primary-500', 'dark:border-primary-500', 'bg-primary-50',
+                        'dark:bg-primary-900/20');
+                }
+            }
+
+            window.addEventListener('beforeunload', function() {
+                localStorage.setItem('navVisible', isNavVisible);
+            });
+        });
+    </script>
 
     <style>
         .tooltip {

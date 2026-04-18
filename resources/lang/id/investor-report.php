@@ -59,6 +59,12 @@ return [ // Judul & Header
     'recovery_factor' => 'Faktor Pemulihan',
     'expectancy' => 'Harapan',
 
+    // Keterangan/rumus Pembagian keuntungan
+    'profit_distribution_explanation' => 'Penjelasan Pembagian Keuntungan',
+    'profit_distribution_description' => 'Bagian keuntungan dihitung berdasarkan persentase kepemilikan investor terhadap total investasi.',
+    'profit_distribution_description_rumus' => 'Rumus untuk menghitung bagian keuntungan adalah: Bagian Keuntungan = (Persentase Kepemilikan / 100) x Total Keuntungan.',
+    'profit_distribution_description_example' => 'Misalnya, jika seorang investor memiliki 25% kepemilikan dan total keuntungan adalah $10.000, maka bagian keuntungannya adalah (25/100) x $10.000 = $2.500.',
+
     // Footer
     'report_footer' => 'Laporan yang dihasilkan oleh Jurnal Sistem Perdagangan | :date',
     'confidential_notice' => 'Rahasia - Hanya untuk Tinjauan Investor',
