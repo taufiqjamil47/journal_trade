@@ -115,6 +115,12 @@ return [
         'currency_select_option' => 'Pilih Mata Uang',
         'commission_label' => 'Komisi per Lot ($)',
         'commission_help_text' => 'Komisi yang dikenakan per lot yang ditradingkan',
+        'manager_fee_section_title' => 'Manager Fee',
+        'manager_fee_investment_label' => 'Manager Fee dari Investasi',
+        'manager_fee_investment_help_text' => 'Persentase fee yang dikenakan dari investasi',
+        'manager_fee_profit_label' => 'Manager Fee dari Keuntungan',
+        'manager_fee_profit_help_text' => 'Persentase fee yang dikenakan dari keuntungan',
+
 
         // Buttons
         'cancel_button' => 'Batal',
@@ -136,6 +142,12 @@ return [
         'currency_select_option' => 'Pilih Mata Uang',
         'commission_label' => 'Komisi per Lot ($)',
         'commission_help_text' => 'Nilai default adalah $1.00 per lot',
+        'manager_fee_section_title' => 'Manager Fee',
+        'manager_fee_investment_label' => 'Manager Fee dari Investasi',
+        'manager_fee_investment_help_text' => 'Persentase fee yang dikenakan dari investasi',
+        'manager_fee_profit_label' => 'Manager Fee dari Keuntungan',
+        'manager_fee_profit_help_text' => 'Persentase fee yang dikenakan dari keuntungan',
+
 
         // Buttons
         'cancel_button' => 'Batal',

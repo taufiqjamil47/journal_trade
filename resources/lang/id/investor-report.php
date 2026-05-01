@@ -16,6 +16,9 @@ return [ // Judul & Header
     'total_profit' => 'Total Keuntungan',
     'roi' => 'ROI',
     'win_rate' => 'Tingkat Kemenangan',
+    'manager_fee' => 'Manager Fee',
+    'profit_after_fee' => 'Keuntungan Setelah Fee',
+
     // Grafik
     'investment_distribution' => '📈 Distribusi Investasi',
     'monthly_performance' => '📊 Kinerja Bulanan',

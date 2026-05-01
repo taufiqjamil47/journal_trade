@@ -2158,6 +2158,8 @@
                 const monthlyData = @json($monthlyPerformance->sortKeys()->take(12));
                 const monthlyLabels = Object.values(monthlyData).map(m => m.month_name);
                 const monthlyProfits = Object.values(monthlyData).map(m => m.profit);
+                const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+                const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
 
                 new Chart(monthlyCtx, {
                     type: 'line',
@@ -2171,6 +2173,12 @@
                             borderWidth: 2,
                             fill: true,
                             tension: 0.4,
+                            segment: {
+                                borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx,
+                                    'rgb(192,75,75)'),
+                                borderDash: ctx => skipped(ctx, [6, 6]),
+                            },
+                            spanGaps: true
                         }]
                     },
                     options: {

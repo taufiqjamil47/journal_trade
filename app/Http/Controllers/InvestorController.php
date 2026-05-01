@@ -72,9 +72,17 @@ class InvestorController extends Controller
             return redirect()->route('accounts.show', $account)->with('error', 'Tidak ada investasi investor untuk dihitung bagi hasil');
         }
 
+        // Calculate manager fees
+        $managerFeeInvestment = ($totalInvested * $account->manager_fee_investment_percent) / 100;
+        $managerFeeProfit = ($totalProfit * $account->manager_fee_profit_percent) / 100;
+        $totalManagerFee = $managerFeeInvestment + $managerFeeProfit;
+
+        // Profit after manager fee
+        $profitAfterManagerFee = $totalProfit - $totalManagerFee;
+
         foreach ($account->investors as $investor) {
             $percentage = $investor->investment / $totalInvested;
-            $investor->profit_share = round($percentage * $totalProfit, 2);
+            $investor->profit_share = round($percentage * $profitAfterManagerFee, 2);
             $investor->save();
         }
 
@@ -95,10 +103,18 @@ class InvestorController extends Controller
         $roi = ($account->initial_balance > 0) ? ($totalProfit / $account->initial_balance) * 100 : 0;
         $currency = strtoupper($account->currency ?? 'IDR');
 
+        // ==== MANAGER FEE CALCULATION ====
+        $managerFeeInvestment = ($totalInvestment * $account->manager_fee_investment_percent) / 100;
+        $managerFeeProfit = ($totalProfit * $account->manager_fee_profit_percent) / 100;
+        $totalManagerFee = $managerFeeInvestment + $managerFeeProfit;
+
+        // Profit untuk dibagi ke investor (setelah dipotong manager fee)
+        $profitAfterManagerFee = $totalProfit - $totalManagerFee;
+
         // Data untuk grafik pie chart (distribusi investasi)
-        $investorData = $account->investors->map(function ($investor) use ($totalInvestment, $totalProfit) {
+        $investorData = $account->investors->map(function ($investor) use ($totalInvestment, $profitAfterManagerFee) {
             $percentage = $totalInvestment > 0 ? ($investor->investment / $totalInvestment) * 100 : 0;
-            $allocatedProfit = ($percentage / 100) * $totalProfit;
+            $allocatedProfit = ($percentage / 100) * $profitAfterManagerFee;
             $totalValue = $investor->investment + $allocatedProfit;
             $growthPercentage = $investor->investment > 0 ? ($allocatedProfit / $investor->investment) * 100 : 0;
 
@@ -200,6 +216,7 @@ class InvestorController extends Controller
             'indexedMonthlyData',
             'totalInvestment',
             'totalProfit',
+            'profitAfterManagerFee',
             'roi',
             'currency',
             'winRate',
@@ -210,7 +227,10 @@ class InvestorController extends Controller
             'performanceTrend',
             'performanceSentiment',
             'summaryText',
-            'profitDistributionData'
+            'profitDistributionData',
+            'managerFeeInvestment',
+            'managerFeeProfit',
+            'totalManagerFee'
         ));
     }
 

@@ -15,6 +15,8 @@ class Account extends Model
         'initial_balance',
         'currency',
         'commission_per_lot',
+        'manager_fee_investment_percent',
+        'manager_fee_profit_percent',
     ];
 
     public function trades()

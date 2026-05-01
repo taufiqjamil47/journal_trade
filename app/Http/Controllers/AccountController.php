@@ -35,6 +35,8 @@ class AccountController extends Controller
             'initial_balance' => 'required|numeric',
             'currency' => 'required|string',
             'commission_per_lot' => 'nullable|numeric',
+            'manager_fee_investment_percent' => 'nullable|numeric|min:0|max:100',
+            'manager_fee_profit_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $account = Account::create($request->all());
@@ -77,6 +79,8 @@ class AccountController extends Controller
             'initial_balance' => 'sometimes|numeric',
             'currency' => 'sometimes|string',
             'commission_per_lot' => 'sometimes|numeric',
+            'manager_fee_investment_percent' => 'nullable|numeric|min:0|max:100',
+            'manager_fee_profit_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $account->update($request->all());

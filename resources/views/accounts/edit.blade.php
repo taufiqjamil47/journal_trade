@@ -117,6 +117,47 @@
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Manager Fee Section -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                            {{ __('account.edit.manager_fee_section_title') }}
+                        </h3>
+
+                        <!-- Manager Fee from Investment Percentage -->
+                        <div>
+                            <label for="manager_fee_investment_percent"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ __('account.edit.manager_fee_investment_label') }} (%)
+                            </label>
+                            <input type="number" step="0.01" min="0" max="100"
+                                name="manager_fee_investment_percent" id="manager_fee_investment_percent"
+                                value="{{ old('manager_fee_investment_percent', $account->manager_fee_investment_percent) }}"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {{ __('account.edit.manager_fee_investment_help_text') }}</p>
+                            @error('manager_fee_investment_percent')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Manager Fee from Profit Percentage -->
+                        <div>
+                            <label for="manager_fee_profit_percent"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ __('account.edit.manager_fee_profit_label') }} (%)
+                            </label>
+                            <input type="number" step="0.01" min="0" max="100"
+                                name="manager_fee_profit_percent" id="manager_fee_profit_percent"
+                                value="{{ old('manager_fee_profit_percent', $account->manager_fee_profit_percent) }}"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {{ __('account.edit.manager_fee_profit_help_text') }}</p>
+                            @error('manager_fee_profit_percent')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->

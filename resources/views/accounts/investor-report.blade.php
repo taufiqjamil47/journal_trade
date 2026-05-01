@@ -58,7 +58,7 @@
         </div>
 
         <!-- Key Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
@@ -112,6 +112,42 @@
                     </div>
                     <div class="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-full">
                         <i class="fas fa-trophy text-indigo-600 dark:text-indigo-400 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('investor-report.manager_fee') }}</p>
+                        <p class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                            {{ number_format($totalManagerFee, 2) }} {{ $currency }}
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {{ number_format($account->manager_fee_investment_percent, 2) }}% inv +
+                            {{ number_format($account->manager_fee_profit_percent, 2) }}% profit
+                        </p>
+                    </div>
+                    <div class="bg-orange-100 dark:bg-orange-900/30 p-3 rounded-full">
+                        <i class="fas fa-briefcase text-orange-600 dark:text-orange-400 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('investor-report.profit_after_fee') }}
+                        </p>
+                        <p
+                            class="text-2xl font-bold {{ $profitAfterManagerFee >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                            {{ number_format($profitAfterManagerFee, 2) }} {{ $currency }}
+                        </p>
+                    </div>
+                    <div
+                        class="{{ $profitAfterManagerFee >= 0 ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30' }} p-3 rounded-full">
+                        <i
+                            class="fas fa-calculator {{ $profitAfterManagerFee >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }} text-xl"></i>
                     </div>
                 </div>
             </div>
@@ -240,7 +276,8 @@
                         <tr>
                             <th class="border border-black dark:border-gray-600 px-3 py-2 text-left dark:text-white">
                                 Investor</th>
-                            <th class="border border-black dark:border-gray-600 px-3 py-2 text-left dark:text-white">Alokasi
+                            <th class="border border-black dark:border-gray-600 px-3 py-2 text-left dark:text-white">
+                                Alokasi
                                 Profit</th>
                             <th class="border border-black dark:border-gray-600 px-3 py-2 text-left dark:text-white">
                                 Pertumbuhan (%)</th>
@@ -358,6 +395,38 @@
                                 </td>
                             </tr>
                         @endforeach
+
+                        <!-- Manager Fee Row -->
+                        <tr
+                            class="border-t-2 border-gray-300 dark:border-gray-600 bg-orange-50 dark:bg-orange-900/20 font-semibold">
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                💼 Manager Fee
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300">
+                                    Management
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                {{ number_format($managerFeeInvestment, 2) }} {{ $currency }}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                {{ number_format($account->manager_fee_investment_percent, 2) }}%
+                            </td>
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                {{ number_format($managerFeeProfit, 2) }} {{ $currency }}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                {{ number_format($totalManagerFee, 2) }} {{ $currency }}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                {{ number_format($account->manager_fee_profit_percent, 2) }}%
+                            </td>
+                            <td class="px-4 py-3 text-sm text-orange-700 dark:text-orange-300">
+                                —
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -468,6 +537,8 @@
             const profitNames = profitDistributionArray.map(item => item.name);
             const profitShares = profitDistributionArray.map(item => item.profit_share);
             const growthPercentages = profitDistributionArray.map(item => item.growth_percentage);
+            const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+            const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
 
             // Array untuk menyimpan semua chart instance
             window.charts = [];
@@ -540,14 +611,26 @@
                             borderColor: '#3B82F6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            segment: {
+                                borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx,
+                                    'rgb(192,75,75)'),
+                                borderDash: ctx => skipped(ctx, [6, 6]),
+                            },
+                            spanGaps: true
                         }, {
                             label: '{{ __('investor-report.cumulative_profit') }}',
                             data: monthlyCumulative,
                             borderColor: '#10B981',
                             backgroundColor: 'rgba(16, 185, 129, 0.1)',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            segment: {
+                                borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx,
+                                    'rgb(192,75,75)'),
+                                borderDash: ctx => skipped(ctx, [6, 6]),
+                            },
+                            spanGaps: true
                         }]
                     },
                     options: {
@@ -669,7 +752,8 @@
                                     callback: function(value) {
                                         return value + '%';
                                     },
-                                    color: getThemeColors().textColor
+                                    color: getThemeColors().textColor,
+                                    backdropColor: 'transparent'
                                 },
                                 grid: {
                                     color: getThemeColors().gridColor

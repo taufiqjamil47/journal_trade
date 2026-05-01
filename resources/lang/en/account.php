@@ -115,6 +115,11 @@ return [
         'currency_select_option' => 'Select Currency',
         'commission_label' => 'Commission per Lot ($)',
         'commission_help_text' => 'Commission charged per lot traded',
+        'manager_fee_section_title' => 'Manager Fee',
+        'manager_fee_investment_label' => 'Manager Fee from Investment',
+        'manager_fee_investment_help_text' => 'Percentage fee charged from investment',
+        'manager_fee_profit_label' => 'Manager Fee from Profit',
+        'manager_fee_profit_help_text' => 'Percentage fee charged from profit',
 
         // Buttons
         'cancel_button' => 'Cancel',
@@ -136,6 +141,11 @@ return [
         'currency_select_option' => 'Select Currency',
         'commission_label' => 'Commission per Lot ($)',
         'commission_help_text' => 'Default is $1.00 per lot',
+        'manager_fee_section_title' => 'Manager Fee',
+        'manager_fee_investment_label' => 'Manager Fee from Investment',
+        'manager_fee_investment_help_text' => 'Percentage fee charged from investment',
+        'manager_fee_profit_label' => 'Manager Fee from Profit',
+        'manager_fee_profit_help_text' => 'Percentage fee charged from profit',
 
         // Buttons
         'cancel_button' => 'Cancel',

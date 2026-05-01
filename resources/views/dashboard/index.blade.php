@@ -289,7 +289,7 @@
                 </div>
             </div>
 
-            <div class="h-64 lg:h-96">
+            <div class="h-64 lg:h-[35rem]">
                 <canvas id="overallEquityChart"></canvas>
             </div>
         </div>
@@ -628,6 +628,8 @@
             const isDark = document.documentElement.classList.contains('dark');
             const borderColor = isDark ? overallColors.darkBorder : overallColors.border;
             const backgroundColor = isDark ? overallColors.darkBackground : overallColors.background;
+            const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+            const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
 
             overallChartInstance = new Chart(overallCtx, {
                 type: 'line',
@@ -645,7 +647,13 @@
                         pointHoverRadius: 4,
                         pointBackgroundColor: borderColor,
                         pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2
+                        pointBorderWidth: 2,
+                        segment: {
+                            borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx,
+                                'rgb(192,75,75)'),
+                            borderDash: ctx => skipped(ctx, [6, 6]),
+                        },
+                        spanGaps: true
                     }]
                 },
                 options: {

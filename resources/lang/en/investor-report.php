@@ -16,6 +16,8 @@ return [
     'total_profit' => 'Total Profit',
     'roi' => 'ROI',
     'win_rate' => 'Win Rate',
+    'manager_fee' => 'Manager Fee',
+    'profit_after_fee' => 'Profit After Fee',
 
     // Charts
     'investment_distribution' => '📈 Investment Distribution',
