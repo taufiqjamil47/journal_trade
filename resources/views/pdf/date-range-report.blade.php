@@ -50,6 +50,7 @@
 <body>
     <div class="header">
         <h2>TRADING REPORT</h2>
+        <div><strong>Account:</strong> {{ $cover['accountName'] ?? 'All Accounts' }}</div>
         <div class="period">
             <strong>Period:</strong> {{ $dateRange['start'] }} to {{ $dateRange['end'] }}
         </div>
@@ -81,28 +82,35 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($trades as $trade)
+            @if ($trades->isEmpty())
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ \Carbon\Carbon::parse($trade->date)->format('d/m/Y') }}</td>
-                    <td>{{ $trade->symbol->name ?? '-' }}</td>
-                    <td>{{ strtoupper($trade->type) }}</td>
-                    <td>{{ $trade->entry }}</td>
-                    <td>{{ $trade->exit ?? '-' }}</td>
-                    <td class="{{ $trade->profit_loss >= 0 ? 'profit' : 'loss' }}">
-                        ${{ number_format($trade->profit_loss, 2) }}
-                    </td>
-                    <td>
-                        @if ($trade->hasil == 'win')
-                            <span style="color: green;">WIN</span>
-                        @elseif($trade->hasil == 'loss')
-                            <span style="color: red;">LOSS</span>
-                        @else
-                            {{ $trade->hasil ?? '-' }}
-                        @endif
-                    </td>
+                    <td colspan="8" style="text-align: center; color: #666; padding: 20px;">No trades found for this
+                        period.</td>
                 </tr>
-            @endforeach
+            @else
+                @foreach ($trades as $trade)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ \Carbon\Carbon::parse($trade->date)->format('d/m/Y') }}</td>
+                        <td>{{ $trade->symbol->name ?? '-' }}</td>
+                        <td>{{ strtoupper($trade->type) }}</td>
+                        <td>{{ $trade->entry }}</td>
+                        <td>{{ $trade->exit ?? '-' }}</td>
+                        <td class="{{ $trade->profit_loss >= 0 ? 'profit' : 'loss' }}">
+                            ${{ number_format($trade->profit_loss ?? 0, 2) }}
+                        </td>
+                        <td>
+                            @if ($trade->hasil == 'win')
+                                <span style="color: green;">WIN</span>
+                            @elseif($trade->hasil == 'loss')
+                                <span style="color: red;">LOSS</span>
+                            @else
+                                {{ $trade->hasil ?? '-' }}
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 

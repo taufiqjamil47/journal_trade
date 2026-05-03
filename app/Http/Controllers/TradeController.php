@@ -870,6 +870,18 @@ class TradeController extends Controller
                     if (!$startDate || !$endDate) {
                         return back()->with('error', 'Start date dan end date diperlukan');
                     }
+
+                    try {
+                        $startDate = Carbon::parse($startDate)->toDateString();
+                        $endDate = Carbon::parse($endDate)->toDateString();
+                    } catch (\Exception $e) {
+                        return back()->with('error', 'Format tanggal tidak valid');
+                    }
+
+                    if ($startDate > $endDate) {
+                        return back()->with('error', 'Start date harus sebelum atau sama dengan end date');
+                    }
+
                     $pdf = $service->generateDateRangeReport($startDate, $endDate);
                     $filename = 'trading_report_' . $startDate . '_to_' . $endDate . '.pdf';
                     break;
@@ -894,27 +906,47 @@ class TradeController extends Controller
 
     public function previewPdfReport(Request $request)
     {
-        $service = new PdfReportService();
+        $selectedAccountId = session('selected_account_id');
+        $service = new PdfReportService($selectedAccountId);
         $type = $request->get('type', 'cover');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
 
         Log::info("Generating PDF type: {$type}");
 
         try {
-            if ($type === 'cover') {
-                $pdf = $service->generateCoverReport();
-                Log::info("Cover PDF generated, class: " . get_class($pdf));
-            } else {
-                $pdf = $service->generateCompleteReport();
-                Log::info("Complete PDF generated, class: " . get_class($pdf));
+            switch ($type) {
+                case 'range':
+                    if (!$startDate || !$endDate) {
+                        return back()->with('error', 'Start date dan end date diperlukan untuk preview range');
+                    }
+                    try {
+                        $startDate = Carbon::parse($startDate)->toDateString();
+                        $endDate = Carbon::parse($endDate)->toDateString();
+                    } catch (\Exception $e) {
+                        return back()->with('error', 'Format tanggal tidak valid untuk preview range');
+                    }
+                    if ($startDate > $endDate) {
+                        return back()->with('error', 'Tanggal mulai harus sebelum atau sama dengan tanggal akhir');
+                    }
+                    $pdf = $service->generateDateRangeReport($startDate, $endDate);
+                    break;
+                case 'complete':
+                    $pdf = $service->generateCompleteReport();
+                    Log::info("Complete PDF generated, class: " . get_class($pdf));
+                    break;
+                case 'cover':
+                default:
+                    $pdf = $service->generateCoverReport();
+                    Log::info("Cover PDF generated, class: " . get_class($pdf));
+                    break;
             }
 
-            // Debug: cek apakah $pdf adalah instance DomPDF
             if (!$pdf instanceof \Barryvdh\DomPDF\PDF) {
                 Log::error("PDF is not DomPDF instance: " . get_class($pdf));
                 dd(get_class($pdf), $pdf); // Tampilkan debug
             }
 
-            // ⚠️ PERBAIKAN: setPaper() dulu baru stream()
             $pdf->setPaper('A4', 'portrait');
 
             return $pdf->stream('preview_trading_report.pdf');
@@ -924,7 +956,7 @@ class TradeController extends Controller
         }
     }
 
-    public function generateSingleTradePdf($id)
+    public function generateTradePdf($id)
     {
         try {
             $trade = Trade::with(['symbol', 'account', 'tradingRules'])->findOrFail($id);

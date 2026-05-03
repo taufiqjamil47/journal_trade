@@ -1002,9 +1002,9 @@ class TradeAnalysisService
     }
 
     /**
-     * Calculate overall equity curve data from start to current
+     * Calculate overall equity curve data from start to current by Time
      */
-    public function calculateOverallEquityData($trades, $initialBalance)
+    public function calculateOverallEquityDataByTime($trades, $initialBalance)
     {
         $equityData = [];
         $runningBalance = $initialBalance;
@@ -1028,5 +1028,43 @@ class TradeAnalysisService
         }
 
         return $equityData;
+    }
+
+    // Calculate overall equity curve data from start to current by Date (ignore time)
+    public function calculateOverallEquityData($trades, $initialBalance)
+    {
+        $dailyEquity = [];
+        $runningBalance = $initialBalance;
+
+        // Sort trades by date (abaikan waktu)
+        $sortedTrades = $trades->sortBy('date');
+
+        $currentDate = null;
+        $lastBalanceOfDay = null;
+
+        foreach ($sortedTrades as $trade) {
+            $runningBalance += $trade->profit_loss ?? 0;
+
+            // Jika ganti tanggal, simpan data hari sebelumnya
+            if ($currentDate && $currentDate != $trade->date) {
+                $dailyEquity[] = [
+                    'date' => $currentDate,
+                    'balance' => $lastBalanceOfDay,
+                ];
+            }
+
+            $currentDate = $trade->date;
+            $lastBalanceOfDay = $runningBalance;
+        }
+
+        // Tambahkan hari terakhir
+        if ($currentDate) {
+            $dailyEquity[] = [
+                'date' => $currentDate,
+                'balance' => $lastBalanceOfDay,
+            ];
+        }
+
+        return $dailyEquity;
     }
 }

@@ -66,7 +66,7 @@
                                 <select id="yearSelect"
                                     class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-2 md:px-3 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-shadow text-sm md:text-base w-auto">
                                     @php $nowJakarta = \Carbon\Carbon::now('Asia/Jakarta'); @endphp
-                                    @for ($y = $nowJakarta->year - 5; $y <= $nowJakarta->year + 1; $y++)
+                                    @for ($y = $nowJakarta->year - 3; $y <= $nowJakarta->year + 1; $y++)
                                         <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
                                             {{ $y }}
                                         </option>
@@ -821,7 +821,7 @@
             // Initialize button icon and behavior
             if (toggleBtn) {
                 toggleBtn.innerHTML = showValues ? '<i class="fas fa-eye"></i>' :
-                '<i class="fas fa-eye-slash"></i>';
+                    '<i class="fas fa-eye-slash"></i>';
                 toggleBtn.addEventListener('click', function() {
                     showValues = !showValues;
                     localStorage.setItem(storageKey, showValues);

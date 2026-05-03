@@ -178,13 +178,16 @@ class PdfReportService
      */
     public function generateDateRangeReport($startDate, $endDate)
     {
+        $startDate = Carbon::parse($startDate)->toDateString();
+        $endDate = Carbon::parse($endDate)->toDateString();
+
         $trades = Trade::where('account_id', $this->accountId)
             ->with(['symbol', 'account', 'tradingRules'])
-            ->whereBetween('date', [$startDate, $endDate])
+            ->whereDate('date', '>=', $startDate)
+            ->whereDate('date', '<=', $endDate)
             ->orderBy('date')
             ->get();
 
-        // Hitung statistik untuk range tersebut
         $coverData = $this->getCoverDataForRange($startDate, $endDate);
 
         $data = [
@@ -309,6 +312,7 @@ class PdfReportService
             'equityGrowth' => number_format($equityGrowth, 2),
             'avgRR' => number_format($avgRR, 2),
             'winRate' => number_format($winRate, 2),
+            'accountName' => $account ? $account->name : 'Unknown',
             'dateRange' => [
                 'start' => Carbon::parse($startDate)->format('d M Y'),
                 'end' => Carbon::parse($endDate)->format('d M Y'),
