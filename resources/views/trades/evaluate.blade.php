@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-7xl mx-auto mb-6">
             <!-- Trade Info Card - Improved -->
             <div
                 class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-6 shadow-lg overflow-hidden">

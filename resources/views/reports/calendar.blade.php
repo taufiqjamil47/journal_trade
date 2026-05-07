@@ -322,7 +322,7 @@
         </div>
 
         <!-- Summary Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Weekly Summary -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">

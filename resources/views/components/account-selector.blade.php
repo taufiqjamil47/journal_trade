@@ -20,7 +20,7 @@
 
     <!-- Account List Dropdown - Repositioned outside button for better control -->
     <div id="accountDropdown"
-        class="hidden fixed sm:absolute top-auto sm:top-full left-0 right-0 sm:left-auto sm:right-0 mt-2 sm:mt-2 mx-4 sm:mx-0 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl z-[9999] sm:min-w-[320px] w-auto sm:w-auto">
+        class="hidden fixed sm:absolute top-auto sm:top-full left-0 right-0 sm:left-auto sm:right-0 mt-2 sm:mt-2 mx-4 sm:mx-0 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl z-[9999] lg:z-50 sm:min-w-[320px] w-auto sm:w-auto">
 
         <div class="p-3 border-b border-gray-200 dark:border-gray-700">
             <p class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Trading Accounts</p>

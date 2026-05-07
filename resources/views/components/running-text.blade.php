@@ -110,155 +110,153 @@
 </style>
 
 <script>
-    // Data pair forex dengan format yang lebih detail
-    const forexPairs = [{
-            pair: "XAUUSD",
-            price: 1985.42,
-            change: 12.35,
-            direction: "up",
-            decimal: 2
+    // Konfigurasi currency pairs untuk di-fetch dari Frankfurter API
+    const currencyPairs = [{
+            base: 'EUR',
+            quote: 'USD'
         },
         {
-            pair: "GBPUSD",
-            price: 1.2650,
-            change: 0.0032,
-            direction: "up",
-            decimal: 4
+            base: 'GBP',
+            quote: 'USD'
         },
         {
-            pair: "EURUSD",
-            price: 1.0925,
-            change: -0.0015,
-            direction: "down",
-            decimal: 4
+            base: 'USD',
+            quote: 'JPY'
         },
         {
-            pair: "USDJPY",
-            price: 147.85,
-            change: 0.45,
-            direction: "up",
-            decimal: 2
+            base: 'AUD',
+            quote: 'USD'
         },
         {
-            pair: "AUDUSD",
-            price: 0.6580,
-            change: -0.0021,
-            direction: "down",
-            decimal: 4
+            base: 'USD',
+            quote: 'CAD'
         },
         {
-            pair: "USDCAD",
-            price: 1.3520,
-            change: 0.0018,
-            direction: "up",
-            decimal: 4
+            base: 'NZD',
+            quote: 'USD'
         },
         {
-            pair: "NZDUSD",
-            price: 0.6125,
-            change: -0.0010,
-            direction: "down",
-            decimal: 4
+            base: 'USD',
+            quote: 'CHF'
         },
         {
-            pair: "USDCHF",
-            price: 0.8820,
-            change: 0.0005,
-            direction: "up",
-            decimal: 4
+            base: 'EUR',
+            quote: 'GBP'
         },
         {
-            pair: "EURGBP",
-            price: 0.8630,
-            change: -0.0008,
-            direction: "down",
-            decimal: 4
+            base: 'EUR',
+            quote: 'JPY'
         },
         {
-            pair: "XAGUSD",
-            price: 23.15,
-            change: 0.42,
-            direction: "up",
-            decimal: 2
+            base: 'GBP',
+            quote: 'JPY'
         },
         {
-            pair: "USDTRY",
-            price: 26.45,
-            change: -0.15,
-            direction: "down",
-            decimal: 2
+            base: 'AUD',
+            quote: 'CAD'
         },
         {
-            pair: "USDMXN",
-            price: 18.75,
-            change: 0.10,
-            direction: "up",
-            decimal: 2
+            base: 'USD',
+            quote: 'MXN'
         },
         {
-            pair: "EURJPY",
-            price: 161.50,
-            change: -0.30,
-            direction: "down",
-            decimal: 2
+            base: 'USD',
+            quote: 'TRY'
         },
         {
-            pair: "GBPJPY",
-            price: 187.20,
-            change: 0.25,
-            direction: "up",
-            decimal: 2
+            base: 'EUR',
+            quote: 'CAD'
         },
         {
-            pair: "COIN",
-            price: 124.85,
-            change: -0.12,
-            direction: "down",
-            decimal: 2
-        },
-        {
-            pair: "IDX30",
-            price: 6350.25,
-            change: 15.75,
-            direction: "up",
-            decimal: 2
-        },
-        {
-            pair: "NAS100",
-            price: 13450.50,
-            change: -25.30,
-            direction: "down",
-            decimal: 2
+            base: 'EUR',
+            quote: 'AUD'
         }
     ];
 
     // Data real-time untuk setiap pair
     const realTimeData = {};
 
-    // Inisialisasi data real-time
-    forexPairs.forEach(pair => {
-        realTimeData[pair.pair] = {
-            ...pair
+    // Inisialisasi data dengan loading state
+    currencyPairs.forEach(pair => {
+        const pairName = `${pair.base}${pair.quote}`;
+        realTimeData[pairName] = {
+            base: pair.base,
+            quote: pair.quote,
+            pair: pairName,
+            price: null,
+            change: 0,
+            direction: 'up',
+            previousPrice: null,
+            decimal: pairName.includes('JPY') ? 2 : 4
         };
     });
 
-    // Fungsi untuk generate perubahan harga random
-    function generateRandomChange(currentPrice, decimalPlaces) {
-        const volatility = decimalPlaces === 2 ? 0.5 : 0.0005;
-        const change = (Math.random() - 0.5) * volatility * 2;
+    // Fungsi untuk fetch rates dari Frankfurter API
+    async function fetchRatesFromFrankfurter() {
+        try {
+            const quotes = currencyPairs.map(p => p.quote).join(',');
+            const bases = [...new Set(currencyPairs.map(p => p.base))];
 
-        const newPrice = currentPrice + change;
-        const roundedPrice = Math.round(newPrice * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
+            const promises = bases.map(base => {
+                const apiUrl = `https://api.frankfurter.dev/v2/rates?base=${base}&quotes=${quotes}`;
+                return fetch(apiUrl).then(r => r.json());
+            });
 
-        return {
-            price: roundedPrice,
-            change: Math.abs(change),
-            direction: change >= 0 ? "up" : "down"
-        };
+            const responses = await Promise.all(promises);
+
+            responses.forEach(response => {
+                if (response && Array.isArray(response)) {
+                    response.forEach(rate => {
+                        const pairName = `${rate.base}${rate.quote}`;
+                        if (realTimeData[pairName]) {
+                            // Simpan harga sebelumnya untuk perhitungan change
+                            realTimeData[pairName].previousPrice = realTimeData[pairName].price ||
+                                rate.rate;
+
+                            // Gunakan harga dari API sebagai base, tapi tambahkan sedikit variasi untuk simulasi real-time
+                            const basePrice = rate.rate;
+                            const volatility = pairName.includes('JPY') ? 0.01 :
+                                0.0001; // Volatilitas lebih kecil untuk JPY
+                            const randomChange = (Math.random() - 0.5) * volatility * 2;
+                            realTimeData[pairName].price = basePrice + randomChange;
+                        }
+                    });
+                }
+            });
+
+            updateUIWithData();
+        } catch (error) {
+            console.error('Error fetching rates:', error);
+        }
     }
 
-    // Fungsi untuk membuat elemen pair
+    // Fungsi untuk update harga secara real-time dengan variasi kecil
+    function updatePricesRealTime() {
+        Object.keys(realTimeData).forEach(pairName => {
+            const pair = realTimeData[pairName];
+            if (pair.price === null) return;
+
+            // Simpan harga sebelumnya
+            pair.previousPrice = pair.price;
+
+            // Tambahkan variasi kecil untuk simulasi real-time
+            const volatility = pairName.includes('JPY') ? 0.001 :
+                0.00001; // Variasi lebih kecil untuk update real-time
+            const randomChange = (Math.random() - 0.5) * volatility * 2;
+            pair.price += randomChange;
+
+            // Pastikan harga tidak negatif
+            pair.price = Math.max(pair.price, 0.0001);
+        });
+
+        updateUIWithData();
+    }
+
     function createPairElement(pairData, index) {
+        if (pairData.price === null) {
+            return null; // Skip jika data belum tersedia
+        }
+
         const pairDiv = document.createElement('div');
         pairDiv.className = `currency-pair ${pairData.direction}`;
         pairDiv.setAttribute('data-pair', pairData.pair);
@@ -279,55 +277,73 @@
         return pairDiv;
     }
 
-    // Fungsi untuk update harga secara real-time
-    function updatePrices() {
-        Object.keys(realTimeData).forEach(pairName => {
-            const pair = realTimeData[pairName];
-            const newData = generateRandomChange(pair.price, pair.decimal);
+    // Fungsi untuk update UI dengan data dari API
+    function updateUIWithData() {
+        const runningText = document.getElementById('runningText');
 
-            // Update data real-time
-            realTimeData[pairName].price = newData.price;
-            realTimeData[pairName].change = newData.change;
-            realTimeData[pairName].direction = newData.direction;
+        // Jika belum ada elemen, buat untuk pertama kali
+        if (runningText.children.length === 0) {
+            populateRunningText();
+        } else {
+            // Update elemen yang sudah ada
+            Object.keys(realTimeData).forEach(pairName => {
+                const pair = realTimeData[pairName];
 
-            // Update semua elemen dengan pair yang sama
-            const pairElements = document.querySelectorAll(`[data-pair="${pairName}"]`);
+                // Hitung perubahan dari harga sebelumnya
+                if (pair.previousPrice !== null && pair.price !== null) {
+                    const change = pair.price - pair.previousPrice;
+                    pair.change = Math.abs(change);
+                    pair.direction = change >= 0 ? 'up' : 'down';
+                } else {
+                    // Jika tidak ada previous price, set change ke 0
+                    pair.change = 0;
+                    pair.direction = 'up';
+                }
 
-            pairElements.forEach(pairElement => {
-                // Update class untuk warna background
-                pairElement.className = `currency-pair ${newData.direction}`;
+                // Update semua elemen dengan pair yang sama
+                const pairElements = document.querySelectorAll(`[data-pair="${pairName}"]`);
 
-                // Update icon dan perubahan
-                const directionIcon = newData.direction === 'up' ? 'fa-arrow-up' : 'fa-arrow-down';
-                const changeClass = newData.direction === 'up' ? 'up' : 'down';
+                pairElements.forEach(pairElement => {
+                    // Update class untuk warna background
+                    pairElement.className = `currency-pair ${pair.direction}`;
 
-                const changeElement = pairElement.querySelector('.change-value');
-                changeElement.className = `text-xs ${changeClass} mr-3 flex items-center change-value`;
-                changeElement.innerHTML = `
-                        <i class="fas ${directionIcon} mr-1"></i>
-                        ${newData.change.toFixed(pair.decimal)}
-                    `;
+                    // Update icon dan perubahan
+                    const directionIcon = pair.direction === 'up' ? 'fa-arrow-up' : 'fa-arrow-down';
+                    const changeClass = pair.direction === 'up' ? 'up' : 'down';
 
-                // Update harga dengan animasi
-                const priceElement = pairElement.querySelector('.price-value');
-                priceElement.classList.remove('price-up', 'price-down');
-                void priceElement.offsetWidth; // Trigger reflow
-                priceElement.classList.add(newData.direction === 'up' ? 'price-up' : 'price-down');
+                    const changeElement = pairElement.querySelector('.change-value');
+                    changeElement.className =
+                        `text-xs ${changeClass} mr-3 flex items-center change-value`;
+                    changeElement.innerHTML = `
+                            <i class="fas ${directionIcon} mr-1"></i>
+                            ${pair.change.toFixed(pair.decimal)}
+                        `;
 
-                // Update harga
-                priceElement.textContent = newData.price.toFixed(pair.decimal);
+                    // Update harga dengan animasi
+                    const priceElement = pairElement.querySelector('.price-value');
+                    priceElement.classList.remove('price-up', 'price-down');
+                    void priceElement.offsetWidth; // Trigger reflow
+                    priceElement.classList.add(pair.direction === 'up' ? 'price-up' : 'price-down');
+
+                    // Update harga
+                    priceElement.textContent = pair.price.toFixed(pair.decimal);
+                });
             });
-        });
+        }
     }
 
     // Fungsi untuk mengisi running text
     function populateRunningText() {
         const runningText = document.getElementById('runningText');
+        runningText.innerHTML = ''; // Clear existing
 
-        // Duplikasi data untuk efek scroll yang smooth (4 set agar infinite)
+        // Filter pair yang sudah memiliki data
+        const pairsWithData = Object.values(realTimeData).filter(p => p.price !== null);
+
+        // Duplikasi data untuk efek scroll yang smooth
         const duplicatedPairs = [];
         for (let i = 0; i < 2; i++) {
-            forexPairs.forEach(pair => {
+            pairsWithData.forEach(pair => {
                 duplicatedPairs.push({
                     ...pair
                 });
@@ -336,15 +352,21 @@
 
         duplicatedPairs.forEach((pair, index) => {
             const pairElement = createPairElement(pair, index);
-            runningText.appendChild(pairElement);
+            if (pairElement) {
+                runningText.appendChild(pairElement);
+            }
         });
     }
 
     // Panggil fungsi saat halaman dimuat
     document.addEventListener('DOMContentLoaded', function() {
-        populateRunningText();
+        // Fetch data pertama kali dari API
+        fetchRatesFromFrankfurter();
 
-        // Update harga setiap 2 detik
-        setInterval(updatePrices, 2000);
+        // Update harga setiap 20 detik dari API untuk refresh base price
+        setInterval(fetchRatesFromFrankfurter, 20000);
+
+        // Update harga secara real-time setiap 20 detik dengan variasi kecil
+        setInterval(updatePricesRealTime, 20000);
     });
 </script>

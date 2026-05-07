@@ -225,7 +225,7 @@
 
             <!-- Form Container - Improved -->
             <div
-                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden">
+                class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden mb-6">
                 <!-- Form Header -->
                 <div
                     class="px-6 py-5 bg-gradient-to-r from-green-50 to-transparent dark:from-green-900/20 dark:to-transparent border-b border-gray-200 dark:border-gray-700">

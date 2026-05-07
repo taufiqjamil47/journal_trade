@@ -89,6 +89,68 @@
                         </div>
                     </div>
 
+                    @if ($totalInvestment > 0 && !empty($initialBalanceMismatch))
+                        <div
+                            class="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20 p-4 mt-4">
+                            <div class="flex items-start gap-3">
+                                <div class="text-amber-600 dark:text-amber-300">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="text-sm text-amber-900 dark:text-amber-100">
+                                    <p class="font-semibold">Total modal investor tidak cocok dengan initial balance akun.
+                                    </p>
+                                    <p>
+                                        Total modal investor saat ini: <strong>{{ number_format($totalInvestment, 2) }}
+                                            {{ $account->currency }}</strong>.
+                                        Disarankan menyesuaikan initial balance akun menjadi
+                                        <strong>{{ number_format($recommendedInitialBalance, 2) }}
+                                            {{ $account->currency }}</strong>.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <form action="{{ route('accounts.sync-initial-balance', $account) }}" method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                        class="inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                                        <i class="fas fa-sync-alt mr-2"></i>Sesuaikan initial balance
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @elseif ($totalInvestment > 0 && !empty(session('sync_completed')))
+                        <div
+                            class="rounded-lg border border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20 p-4 mt-4">
+                            <div class="flex items-start gap-3">
+                                <div class="text-green-600 dark:text-green-300">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="text-sm text-green-900 dark:text-green-100">
+                                    <p class="font-semibold">Initial balance sudah sinkron dengan total modal investor!</p>
+                                    <p>Total modal investor: <strong>{{ number_format($totalInvestment, 2) }}
+                                            {{ $account->currency }}</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif ($totalInvestment > 0)
+                        <div
+                            class="rounded-lg border border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20 p-4 mt-4">
+                            <div class="flex items-start gap-3">
+                                <div class="text-green-600 dark:text-green-300">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="text-sm text-green-900 dark:text-green-100">
+                                    <p class="font-semibold">Initial balance sudah sinkron dengan total modal investor.</p>
+                                    <p>
+                                        Total modal investor saat ini adalah
+                                        <strong>{{ number_format($totalInvestment, 2) }}
+                                            {{ $account->currency }}</strong>, sama dengan initial balance akun.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="flex items-start">
                         <div class="w-32 text-sm font-medium text-gray-500 dark:text-gray-400">
                             {{ __('account.show.currency_label') }}</div>
@@ -177,7 +239,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('account.show.total_investor_modal') }}</p>
-                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">{{ number_format($totalInvestment, 2) }}
+                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                        {{ number_format($totalInvestment, 2) }}
                         {{ $currency }}
                     </p>
                 </div>

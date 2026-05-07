@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Default Title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -242,11 +244,119 @@
         })();
     </script>
 
+    <div class="fixed bottom-6 right-[4.5rem] z-50">
+        <div
+            class="flex items-center gap-2 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-1 border border-white/20">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
+                    <i class="fas fa-user-astronaut text-white text-sm"></i>
+                </div>
+                <div class="hidden md:flex flex-col">
+                    @auth
+                        <span class="text-gray-800 font-semibold text-xs leading-tight">Selamat Datang,</span>
+                        <span class="text-gray-600 font-medium text-sm leading-tight">
+                            {{ explode(' ', Auth::user()->name)[0] }}
+                        </span>
+                    @else
+                        <span class="text-gray-800 font-semibold text-xs leading-tight">Selamat Datang,</span>
+                        <span class="text-gray-600 font-medium text-sm leading-tight">Tamu</span>
+                    @endauth
+                </div>
+            </div>
+
+            <div class="w-px h-8 bg-gray-200 mx-1"></div>
+
+            <button id="logoutBtn"
+                class="group relative bg-red-500 hover:bg-red-600 text-white w-9 h-9 rounded-xl transition-all duration-300 hover:shadow-lg flex items-center justify-center"
+                title="Logout">
+                <i class="fas fa-sign-out-alt text-sm group-hover:rotate-12 transition-transform"></i>
+                <span
+                    class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    Keluar
+                </span>
+            </button>
+        </div>
+    </div>
+
     <!-- Theme Switch Button -->
     <button id="themeSwitch"
-        class="fixed bottom-6 right-6 z-50 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
+        class="fixed bottom-[1.7rem] right-6 z-50 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
         <i id="themeIcon" class="fas fa-moon text-lg"></i>
     </button>
+
+
+    <script>
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Keluar',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan loading
+                    Swal.fire({
+                        title: 'Sedang keluar...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    fetch('{{ route('logout') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content'),
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'same-origin'
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Anda telah keluar dari sistem',
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = '/login';
+                                });
+                            } else {
+                                throw new Error('Logout failed');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan. Silakan coba lagi.',
+                                icon: 'error',
+                                confirmButtonColor: '#dc2626'
+                            });
+                        });
+                }
+            });
+        });
+    </script>
 
     <!-- Page Specific Scripts -->
     @stack('scripts')

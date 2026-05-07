@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -50,11 +51,27 @@ class AccountController extends Controller
     {
         $account = Account::with(['trades', 'investors'])->findOrFail($id);
 
+        // Debug: Log nilai untuk pengecekan
+        Log::info('Account ID: ' . $account->id);
+        Log::info('Initial Balance: ' . $account->initial_balance);
+
+        $totalInvestment = $account->investors->sum('investment');
+        Log::info('Total Investment: ' . $totalInvestment);
+
         $totalInvestment = $account->investors->sum('investment');
         $totalProfit = $account->trades->sum('profit_loss');
         $roi = ($account->initial_balance > 0) ? ($totalProfit / $account->initial_balance) * 100 : 0;
+        $recommendedInitialBalance = $totalInvestment;
+        $initialBalanceMismatch = round($account->initial_balance, 2) !== round($recommendedInitialBalance, 2);
 
-        return view('accounts.show', compact('account', 'totalInvestment', 'totalProfit', 'roi'));
+        return view('accounts.show', compact(
+            'account',
+            'totalInvestment',
+            'totalProfit',
+            'roi',
+            'recommendedInitialBalance',
+            'initialBalanceMismatch'
+        ));
     }
 
     /**
@@ -95,5 +112,19 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
         $account->delete();
         return redirect()->route('accounts.index')->with('success', 'Account deleted successfully');
+    }
+
+    /**
+     * Sinkronisasi initial_balance dengan total modal investor.
+     */
+    public function syncInitialBalance(string $id)
+    {
+        $account = Account::with('investors')->findOrFail($id);
+        $recommendedInitialBalance = round($account->investors->sum('investment'), 2);
+
+        $account->update(['initial_balance' => $recommendedInitialBalance]);
+
+        return redirect()->route('accounts.show', $account)
+            ->with('success', 'Initial balance telah disesuaikan dengan total modal investor.');
     }
 }

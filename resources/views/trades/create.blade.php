@@ -415,7 +415,7 @@
 
             <!-- Tips Section - Improved -->
             <div
-                class="mt-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800/80 rounded-xl p-6 border border-blue-200 dark:border-blue-900/30 shadow-sm">
+                class="mt-6 mb-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800/80 rounded-xl p-6 border border-blue-200 dark:border-blue-900/30 shadow-sm">
                 <div class="flex items-start">
                     <div class="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg mr-4">
                         <i class="fas fa-lightbulb text-blue-600 dark:text-blue-400 text-xl"></i>

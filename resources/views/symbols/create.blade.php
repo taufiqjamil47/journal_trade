@@ -241,7 +241,7 @@
         </div>
 
         <!-- Information Card -->
-        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
             <h3 class="text-lg font-medium text-gray-800 dark:text-gray-300 mb-4">
                 <i class="fas fa-lightbulb text-amber-500 dark:text-amber-400 mr-2"></i>{{ __('symbol.tips_title') }}
             </h3>

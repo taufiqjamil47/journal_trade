@@ -43,6 +43,10 @@ class InvestorController extends Controller
             $request->merge(['note' => $note]);
         }
 
+        $currentTotalInvestment = $account->investors->sum('investment');
+        $newTotalInvestment = $currentTotalInvestment + $investment;
+        $previousInitialBalance = $account->initial_balance;
+
         $account->investors()->create([
             'name' => $request->name,
             'investment' => $investment,
@@ -50,7 +54,19 @@ class InvestorController extends Controller
             'note' => $request->note,
         ]);
 
-        return redirect()->route('accounts.show', $account)->with('success', 'Investor berhasil ditambahkan');
+        $message = 'Investor berhasil ditambahkan.';
+        $flashData = ['success' => $message];
+
+        if ((float) $previousInitialBalance !== (float) $newTotalInvestment) {
+            $account->update(['initial_balance' => $newTotalInvestment]);
+
+            $flashData = [
+                'success' => 'Investor berhasil ditambahkan. Initial balance akun disesuaikan agar mencerminkan total modal investor.',
+                'icon' => 'warning',
+            ];
+        }
+
+        return redirect()->route('accounts.show', $account)->with($flashData);
     }
 
     public function destroy(Account $account, Investor $investor)

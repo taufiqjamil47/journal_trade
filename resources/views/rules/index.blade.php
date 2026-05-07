@@ -242,7 +242,7 @@
         </div>
 
         <!-- Quick Tips -->
-        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
             <div class="flex items-center">
                 <div class="bg-amber-100 dark:bg-amber-500/20 p-2 rounded-lg mr-3">
                     <i class="fas fa-lightbulb text-amber-600 dark:text-amber-400"></i>
