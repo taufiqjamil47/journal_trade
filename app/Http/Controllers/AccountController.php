@@ -49,7 +49,7 @@ class AccountController extends Controller
      */
     public function show(string $id)
     {
-        $account = Account::with(['trades', 'investors'])->findOrFail($id);
+        $account = Account::with(['trades.symbol', 'investors'])->findOrFail($id);
 
         // Debug: Log nilai untuk pengecekan
         Log::info('Account ID: ' . $account->id);

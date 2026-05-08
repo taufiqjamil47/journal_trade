@@ -285,6 +285,8 @@ class TradeAnalysisService
      */
     public function calculateTimeAnalysis($trades)
     {
+        $tradeDurationAnalysis = $this->calculateTradeDurationAnalysis($trades);
+
         return [
             'hourlyPerformance' => $this->calculateHourlyPerformance($trades),
             'dayOfWeekPerformance' => $this->calculateDayOfWeekPerformance($trades),
@@ -294,6 +296,9 @@ class TradeAnalysisService
             'bestHour' => $this->findBestHour($trades),
             'worstHour' => $this->findWorstHour($trades),
             'busiestHour' => $this->findBusiestHour($trades),
+            'fastestTradeDuration' => $tradeDurationAnalysis['fastest'],
+            'medianTradeDuration' => $tradeDurationAnalysis['median'],
+            'longestTradeDuration' => $tradeDurationAnalysis['longest'],
             'tradingTimeStats' => $this->calculateTradingTimeStats($trades),
         ];
     }
@@ -681,6 +686,113 @@ class TradeAnalysisService
     {
         $hourly = $this->calculateHourlyPerformance($trades);
         return $hourly->isNotEmpty() ? $hourly->sortByDesc('trades')->first() : null;
+    }
+
+    private function calculateTradeDurationAnalysis($trades)
+    {
+        $durations = $trades->map(function ($trade) {
+            if (empty($trade->timestamp) || empty($trade->exit_timestamp)) {
+                return null;
+            }
+
+            try {
+                $entryTimestamp = $trade->timestamp instanceof Carbon ? $trade->timestamp : Carbon::parse($trade->timestamp);
+                $exitTimestamp = $trade->exit_timestamp instanceof Carbon ? $trade->exit_timestamp : Carbon::parse($trade->exit_timestamp);
+            } catch (\Exception $e) {
+                return null;
+            }
+
+            if ($exitTimestamp->lessThan($entryTimestamp)) {
+                return null;
+            }
+
+            $durationSeconds = $exitTimestamp->diffInSeconds($entryTimestamp);
+
+            // Skip durations of 0 or less
+            if ($durationSeconds <= 0) {
+                return null;
+            }
+
+            return [
+                'trade' => $trade,
+                'duration_seconds' => $durationSeconds,
+                'duration_text' => $this->formatDuration($durationSeconds),
+            ];
+        })->filter()->sortBy('duration_seconds')->values();
+
+        if ($durations->isEmpty()) {
+            return [
+                'fastest' => null,
+                'median' => null,
+                'longest' => null,
+                'count' => 0,
+            ];
+        }
+
+        $count = $durations->count();
+        $medianIndex = (int) floor(($count - 1) / 2);
+
+        $fastest = $durations->first();
+        $median = $durations->get($medianIndex);
+        $longest = $durations->last();
+
+        // Ensure fastest is different from median
+        // If they are the same, find the next fastest that differs from median
+        if ($fastest['duration_seconds'] === $median['duration_seconds'] && $count > 1) {
+            $fastest = $durations->first(function ($duration) use ($median) {
+                return $duration['duration_seconds'] !== $median['duration_seconds'];
+            });
+
+            // If no different duration found, use the second item
+            if (!$fastest && $count > 1) {
+                $fastest = $durations->get(1);
+            }
+        }
+
+        return [
+            'fastest' => $fastest,
+            'median' => $median,
+            'longest' => $longest,
+            'count' => $count,
+        ];
+    }
+
+    private function formatDuration($seconds)
+    {
+        if ($seconds < 60) {
+            return $seconds . ' detik';
+        } elseif ($seconds < 3600) {
+            $minutes = floor($seconds / 60);
+            return $minutes . ' menit';
+        } elseif ($seconds < 86400) {
+            $hours = floor($seconds / 3600);
+            $remainingMinutes = floor(($seconds % 3600) / 60);
+            if ($remainingMinutes > 0) {
+                return $hours . ' jam ' . $remainingMinutes . ' menit';
+            }
+            return $hours . ' jam';
+        } elseif ($seconds < 604800) { // less than 1 week
+            $days = floor($seconds / 86400);
+            $remainingHours = floor(($seconds % 86400) / 3600);
+            if ($remainingHours > 0) {
+                return $days . ' hari ' . $remainingHours . ' jam';
+            }
+            return $days . ' hari';
+        } elseif ($seconds < 2592000) { // less than 1 month
+            $weeks = floor($seconds / 604800);
+            $remainingDays = floor(($seconds % 604800) / 86400);
+            if ($remainingDays > 0) {
+                return $weeks . ' minggu ' . $remainingDays . ' hari';
+            }
+            return $weeks . ' minggu';
+        } else {
+            $months = floor($seconds / 2592000);
+            $remainingWeeks = floor(($seconds % 2592000) / 604800);
+            if ($remainingWeeks > 0) {
+                return $months . ' bulan ' . $remainingWeeks . ' minggu';
+            }
+            return $months . ' bulan';
+        }
     }
 
     private function calculateTradingTimeStats($trades)

@@ -109,7 +109,7 @@
                     class="nav-link flex items-center justify-center w-10 h-10 rounded-md hover:bg-blue-500 dark:hover:bg-gray-700 duration-100 group relative {{ request()->routeIs('accounts.*') ? 'bg-gray-700' : '' }}"
                     title="Account" data-nav-state-save="true">
                     <i
-                        class="fas fa-user group-hover:text-white dark:group-hover:text-primary-500 text-primary-500 duration-100"></i>
+                        class="fas fa-wallet group-hover:text-white dark:group-hover:text-primary-500 text-primary-500 duration-100"></i>
                     <span class="tooltip">
                         {{ __('nav_header.nav.accounts') }}
                     </span>
