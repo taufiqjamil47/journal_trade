@@ -737,7 +737,7 @@
             </div>
 
             <!-- Trade Duration Overview -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div
                     class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex justify-between items-start">
@@ -789,6 +789,24 @@
                         </div>
                         <div class="bg-rose-100 dark:bg-rose-900/30 p-3 rounded-lg">
                             <i class="fas fa-hourglass-end text-rose-600 dark:text-rose-400 text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                {{ __('analysis.time_analysis.mode_trade') }}</p>
+                            <h3 class="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">
+                                {{ $modeTradeDuration['duration_text'] ?? 'N/A' }}
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
+                                {{ __('analysis.time_analysis.mode_trade_description') }}
+                            </p>
+                        </div>
+                        <div class="bg-yellow-100 dark:bg-yellow-900/30 p-3 rounded-lg">
+                            <i class="fas fa-chart-bar text-yellow-600 dark:text-yellow-400 text-lg"></i>
                         </div>
                     </div>
                 </div>

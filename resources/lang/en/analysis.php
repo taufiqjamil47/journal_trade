@@ -96,6 +96,8 @@ return [
         'fastest_trade_description' => 'Shortest execution time per trade',
         'median_trade_description' => 'Middle trade duration in the dataset',
         'longest_trade_description' => 'Longest execution time per trade',
+        'mode_trade' => 'Most Frequent Duration',
+        'mode_trade_description' => 'Duration that appears most often',
         'no_data' => 'No data available',
         'hourly_performance' => 'Hourly Performance',
         'hourly_description' => 'Profit by Hour of Day (GMT)',

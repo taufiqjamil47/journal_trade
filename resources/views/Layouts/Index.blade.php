@@ -244,7 +244,7 @@
         })();
     </script>
 
-    <div class="fixed bottom-6 right-[4.5rem] z-50">
+    <div class="fixed bottom-6 right-[4.5rem] z-50" id="userInfo">
         <div
             class="flex items-center gap-2 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-1 border border-white/20">
             <div class="flex items-center gap-2">

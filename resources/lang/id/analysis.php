@@ -97,6 +97,8 @@ return [
         'fastest_trade_description' => 'Waktu eksekusi paling pendek per transaksi',
         'median_trade_description' => 'Durasi transaksi tengah dalam dataset',
         'longest_trade_description' => 'Waktu eksekusi paling panjang per transaksi',
+        'mode_trade' => 'Durasi yang Paling Sering Muncul',
+        'mode_trade_description' => 'Durasi yang paling sering muncul',
         'no_data' => 'Tidak ada data tersedia',
         'hourly_performance' => 'Kinerja Per Jam',
         'hourly_description' => 'Profit berdasarkan jam dalam sehari (GMT)',

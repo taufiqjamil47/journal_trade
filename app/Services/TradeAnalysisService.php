@@ -299,6 +299,7 @@ class TradeAnalysisService
             'fastestTradeDuration' => $tradeDurationAnalysis['fastest'],
             'medianTradeDuration' => $tradeDurationAnalysis['median'],
             'longestTradeDuration' => $tradeDurationAnalysis['longest'],
+            'modeTradeDuration' => $tradeDurationAnalysis['mode'],
             'tradingTimeStats' => $this->calculateTradingTimeStats($trades),
         ];
     }
@@ -376,21 +377,20 @@ class TradeAnalysisService
         $peak = $initialBalance;
         $maxDrawdown = 0;
         $maxDrawdownPercentage = 0;
-
         $balances = [];
 
+        // Gunakan sortBy yang lebih efisien
         $sortedTrades = $trades->sortBy(function ($trade) {
-            $date = $trade->date;
-
-            if (is_string($date)) {
-                return strtotime($date);
-            }
-
-            if ($date instanceof Carbon) {
-                return $date->timestamp;
-            }
-
-            return 0;
+            // Gabungkan date dan timestamp untuk sorting yang akurat
+            $date = $trade->date instanceof Carbon
+                ? $trade->date->format('Y-m-d')
+                : $trade->date;
+            $time = $trade->timestamp
+                ? ($trade->timestamp instanceof Carbon
+                    ? $trade->timestamp->format('H:i:s')
+                    : '00:00:00')
+                : '00:00:00';
+            return $date . ' ' . $time;
         });
 
         foreach ($sortedTrades as $trade) {
@@ -416,10 +416,10 @@ class TradeAnalysisService
         $currentDrawdownPercentage = $currentPeak > 0 ? ($currentDrawdown / $currentPeak) * 100 : 0;
 
         return [
-            'max_drawdown' => $maxDrawdown,
-            'max_drawdown_percentage' => $maxDrawdownPercentage,
-            'current_drawdown' => $currentDrawdown,
-            'current_drawdown_percentage' => $currentDrawdownPercentage,
+            'max_drawdown' => round($maxDrawdown, 2),
+            'max_drawdown_percentage' => round($maxDrawdownPercentage, 2),
+            'current_drawdown' => round($currentDrawdown, 2),
+            'current_drawdown_percentage' => round($currentDrawdownPercentage, 2),
             'balances' => $balances
         ];
     }
@@ -749,10 +749,24 @@ class TradeAnalysisService
             }
         }
 
+        $mode = $durations->groupBy('duration_seconds')->map(function ($group, $seconds) {
+            return [
+                'duration_seconds' => (int)$seconds,
+                'count' => $group->count(),
+                'duration_text' => $group->first()['duration_text'],
+            ];
+        })->sortBy(function ($item) {
+            return [
+                $item['count'] * -1,
+                $item['duration_seconds'],
+            ];
+        })->values()->first();
+
         return [
             'fastest' => $fastest,
             'median' => $median,
             'longest' => $longest,
+            'mode' => $mode,
             'count' => $count,
         ];
     }
@@ -809,37 +823,43 @@ class TradeAnalysisService
     {
         if ($trades->count() < 2) return 0;
 
-        $dailyReturns = $trades->groupBy(function ($trade) {
-            $date = $trade->date;
+        // Hitung equity setelah setiap trade
+        $runningBalance = $initialBalance;
+        $dailyReturns = [];
 
-            if (is_string($date)) {
-                try {
-                    $date = Carbon::parse($date);
-                } catch (\Exception $e) {
-                    $date = now();
-                }
+        // Kelompokkan berdasarkan tanggal
+        $tradesByDate = $trades->sortBy('date')->groupBy(function ($trade) {
+            return $trade->date instanceof Carbon
+                ? $trade->date->format('Y-m-d')
+                : date('Y-m-d', strtotime($trade->date));
+        });
+
+        foreach ($tradesByDate as $date => $dayTrades) {
+            $dayProfit = $dayTrades->sum('profit_loss');
+            $equityStartOfDay = $runningBalance;
+            $dailyReturn = $equityStartOfDay > 0 ? ($dayProfit / $equityStartOfDay) * 100 : 0;
+
+            if ($dayProfit != 0 || $dayTrades->count() > 0) {
+                $dailyReturns[] = $dailyReturn;
             }
 
-            if ($date instanceof Carbon) {
-                return $date->format('Y-m-d');
-            } else {
-                return substr($date, 0, 10);
-            }
-        })->map(function ($dayTrades) use ($initialBalance) {
-            return $initialBalance > 0 ?
-                round(($dayTrades->sum('profit_loss') / $initialBalance) * 100, 4) : 0;
-        })->filter(function ($return) {
-            return is_numeric($return);
-        })->values();
+            $runningBalance += $dayProfit;
+        }
 
-        if ($dailyReturns->count() < 2) return 0;
+        if (count($dailyReturns) < 2) return 0;
 
-        $averageReturn = $dailyReturns->avg();
-        $stdDev = $this->calculateStandardDeviation($dailyReturns->toArray());
+        $averageReturn = array_sum($dailyReturns) / count($dailyReturns);
+        $stdDev = $this->calculateStandardDeviation($dailyReturns);
 
         if ($stdDev == 0) return 0;
 
-        return round(($averageReturn - 0) / $stdDev, 2);
+        // Annualized Sharpe (assuming 252 trading days)
+        $annualizedReturn = $averageReturn * sqrt(252);
+        $annualizedStdDev = $stdDev * sqrt(252);
+
+        return $annualizedStdDev > 0
+            ? round($annualizedReturn / $annualizedStdDev, 2)
+            : 0;
     }
 
     private function calculateRiskRewardAnalysis($trades)
@@ -885,63 +905,80 @@ class TradeAnalysisService
 
     private function calculateRiskPerTrade($trades, $initialBalance)
     {
-        $riskPercentages = $trades->map(function ($trade) use ($initialBalance) {
-            $equityAtTrade = $initialBalance; // Simplified
-            $loss = $trade->hasil === 'loss' ? abs($trade->profit_loss) : 0;
-            return $equityAtTrade > 0 ? ($loss / $equityAtTrade) * 100 : 0;
+        $runningBalance = $initialBalance;
+        $riskPercentages = [];
+
+        $sortedTrades = $trades->sortBy(function ($trade) {
+            // $trade->date sudah string 'Y-m-d' dari accessor
+            $datePart = $trade->date;
+
+            // Pastikan timestamp juga ditangani dengan benar
+            $timePart = ($trade->timestamp instanceof \Carbon\Carbon)
+                ? $trade->timestamp->format('H:i:s')
+                : '00:00:00';
+
+            return $datePart . ' ' . $timePart;
         });
 
+        foreach ($sortedTrades as $trade) {
+            // Hitung risk berdasarkan equity SEBELUM trade
+            $equityAtTrade = $runningBalance;
+            $loss = $trade->hasil === 'loss' ? abs($trade->profit_loss) : 0;
+            $riskPercent = $equityAtTrade > 0 ? ($loss / $equityAtTrade) * 100 : 0;
+
+            if ($loss > 0) {
+                $riskPercentages[] = $riskPercent;
+            }
+
+            // Update running balance untuk trade berikutnya
+            $runningBalance += $trade->profit_loss ?? 0;
+        }
+
         return [
-            'average' => $riskPercentages->count() > 0 ?
-                round($riskPercentages->avg(), 2) : 0,
-            'max' => $riskPercentages->count() > 0 ?
-                round($riskPercentages->max(), 2) : 0,
+            'average' => !empty($riskPercentages) ? round(array_sum($riskPercentages) / count($riskPercentages), 2) : 0,
+            'max' => !empty($riskPercentages) ? round(max($riskPercentages), 2) : 0,
             'data' => $riskPercentages
         ];
     }
 
     private function calculateMonthlyReturns($trades, $initialBalance)
     {
-        return $trades->groupBy(function ($trade) {
-            $date = $trade->date;
+        $runningBalance = $initialBalance;
+        $monthlyReturns = [];
 
-            if (is_string($date)) {
-                try {
-                    $date = Carbon::parse($date);
-                } catch (\Exception $e) {
-                    $date = now();
-                }
-            }
+        $sortedTrades = $trades->sortBy('date');
 
-            if ($date instanceof Carbon) {
-                return $date->format('Y-m');
-            } else {
-                return substr($date, 0, 7);
-            }
-        })->map(function ($monthTrades, $month) use ($initialBalance) {
-            $profit = $monthTrades->sum('profit_loss');
+        // Kelompokkan berdasarkan bulan (Y-m)
+        $tradesByMonth = $sortedTrades->groupBy(function ($trade) {
+            return $trade->date instanceof Carbon
+                ? $trade->date->format('Y-m')
+                : substr($trade->date, 0, 7);
+        });
+
+        foreach ($tradesByMonth as $yearMonth => $monthTrades) {
+            $monthProfit = $monthTrades->sum('profit_loss');
+            $equityStartOfMonth = $runningBalance;
+            $returnPercent = $equityStartOfMonth > 0
+                ? round(($monthProfit / $equityStartOfMonth) * 100, 2)
+                : 0;
+
+            // Dapatkan nama bulan dari trade pertama
             $firstTrade = $monthTrades->first();
-            $date = $firstTrade->date;
+            $monthName = $firstTrade->date instanceof Carbon
+                ? $firstTrade->date->format('M Y')
+                : date('M Y', strtotime($firstTrade->date));
 
-            if (is_string($date)) {
-                try {
-                    $date = Carbon::parse($date);
-                } catch (\Exception $e) {
-                    $date = now();
-                }
-            }
-
-            $monthName = $date instanceof Carbon ?
-                $date->format('M Y') :
-                date('M Y', strtotime($date));
-
-            return [
-                'profit' => $profit,
-                'return_percent' => $initialBalance > 0 ? round(($profit / $initialBalance) * 100, 2) : 0,
+            $monthlyReturns[] = [
+                'profit' => $monthProfit,
+                'return_percent' => $returnPercent,
                 'month' => $monthName,
-                'year_month' => $date instanceof Carbon ? $date->format('Y-m') : substr($date, 0, 7)
+                'year_month' => $yearMonth
             ];
-        })->sortBy('year_month');
+
+            $runningBalance += $monthProfit;
+        }
+
+        return collect($monthlyReturns)->sortBy('year_month');
     }
 
     private function calculateConsistencyScore($monthlyReturns)
@@ -976,21 +1013,38 @@ class TradeAnalysisService
     {
         if ($trades->count() < 2) return 0;
 
-        $uniqueDays = $trades->filter(function ($trade) {
+        $totalHours = 0;
+
+        // Kelompokkan berdasarkan tanggal
+        $tradesByDay = $trades->filter(function ($trade) {
             return $trade->timestamp;
         })->groupBy(function ($trade) {
-            try {
-                $timestamp = $trade->timestamp;
-                if (is_string($timestamp)) {
-                    $timestamp = Carbon::parse($timestamp);
-                }
-                return $timestamp->format('Y-m-d');
-            } catch (\Exception $e) {
-                return 'unknown';
-            }
-        })->count();
+            return $trade->date instanceof Carbon
+                ? $trade->date->format('Y-m-d')
+                : $trade->date;
+        });
 
-        return $uniqueDays * 4;
+        foreach ($tradesByDay as $dayTrades) {
+            if ($dayTrades->count() < 2) {
+                // Jika hanya 1 trade di hari itu, asumsikan 1 jam
+                $totalHours += 1;
+                continue;
+            }
+
+            // Cari timestamp pertama dan terakhir di hari itu
+            $firstTrade = $dayTrades->sortBy('timestamp')->first();
+            $lastTrade = $dayTrades->sortByDesc('timestamp')->first();
+
+            if ($firstTrade->timestamp && $lastTrade->timestamp) {
+                $diffInHours = $firstTrade->timestamp->diffInHours($lastTrade->timestamp);
+                // Minimal 0.5 jam, maximal 24 jam
+                $totalHours += max(0.5, min(24, $diffInHours + 1));
+            } else {
+                $totalHours += 1;
+            }
+        }
+
+        return round($totalHours, 1);
     }
 
     private function calcAvgTradesPerDay($trades)

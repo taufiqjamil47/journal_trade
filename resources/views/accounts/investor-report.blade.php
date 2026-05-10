@@ -58,7 +58,7 @@
         </div>
 
         <!-- Key Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8" id="investment-summary">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
@@ -830,15 +830,31 @@
     </script>
 
     <style>
+        /* ========== STYLE UNTUK LAYAR ========== */
+        @media screen {
+            .print-only-data {
+                display: none !important;
+            }
+        }
+
         /* ========== STYLE UNTUK CETAK (OPTIMAL) ========== */
         @media print {
+            @page {
+                margin: 15mm;
+
+                @bottom-center {
+                    content: "Halaman " counter(page) " dari " counter(pages);
+                    font-size: 9pt;
+                }
+            }
 
             /* Sembunyikan elemen interaktif dan chart */
             .no-print,
             .charts-screen-only,
             button,
             .fa-print,
-            .fa-arrow-left {
+            .fa-arrow-left,
+            #userInfo {
                 display: none !important;
             }
 
@@ -852,7 +868,7 @@
                 font-size: 11pt;
                 color: #000 !important;
                 background: #fff !important;
-                line-height: 1.4;
+                line-height: 1.3;
             }
 
             .container {
@@ -872,26 +888,29 @@
                 font-size: 16pt;
                 border-bottom: 2px solid #000;
                 padding-bottom: 5px;
-                margin: 10px 0;
+                margin: 5px 0 10px 0;
             }
 
             h3 {
                 font-size: 12pt;
-                margin: 8px 0 4px 0;
+                margin: 10px 0 5px 0;
+            }
+
+            h4 {
+                font-size: 11pt;
+                margin: 5px 0;
             }
 
             /* Executive summary untuk cetak */
             .executive-summary {
-                border-left: 4px solid #000 !important;
-                border-right: 1px solid #ccc !important;
-                border-top: 1px solid #ccc !important;
-                border-bottom: 1px solid #ccc !important;
+                border: 1px solid #ccc !important;
                 background: #f9f9f9 !important;
-                padding: 10px !important;
-                margin-bottom: 15px !important;
+                padding: 8px 10px !important;
+                margin-bottom: 12px !important;
+                page-break-inside: avoid !important;
             }
 
-            /* Cards styling */
+            /* General card styling */
             .bg-white,
             .rounded-xl,
             .shadow-sm {
@@ -899,7 +918,6 @@
                 background: #fff !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                padding: 8px !important;
             }
 
             /* Grid spacing */
@@ -911,19 +929,123 @@
                 page-break-inside: avoid;
             }
 
-            /* Table styling */
+            /* ========== KHUSUS UNTUK 6 CARD SUMMARY ========== */
+            #investment-summary {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 8px !important;
+                page-break-inside: avoid !important;
+                margin-bottom: 12px !important;
+            }
+
+            #investment-summary>div {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 1px solid #000 !important;
+                padding: 10px 5px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                text-align: center !important;
+                background: #fff !important;
+            }
+
+            #investment-summary>div>div {
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            /* Sembunyikan icon bulat */
+            #investment-summary .rounded-full {
+                display: none !important;
+            }
+
+            /* Ukuran font untuk summary cards */
+            #investment-summary .text-2xl {
+                font-size: 14pt !important;
+            }
+
+            #investment-summary .text-sm {
+                font-size: 10pt !important;
+            }
+
+            #investment-summary .text-xs {
+                font-size: 8pt !important;
+            }
+
+            /* ========== KHUSUS UNTUK TRADING STATISTICS ========== */
+            .grid-cols-1.md\:grid-cols-3:not(#investment-summary) {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 8px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .grid-cols-1.md\:grid-cols-3:not(#investment-summary)>div {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+                page-break-inside: avoid !important;
+                background: #fff !important;
+            }
+
+            /* Ubah flex menjadi layout baris untuk cetak */
+            .grid-cols-1.md\:grid-cols-3:not(#investment-summary) .space-y-3>div {
+                display: block !important;
+                margin: 4px 0 !important;
+                padding: 2px 0 !important;
+                border-bottom: 1px dotted #ccc !important;
+            }
+
+            .grid-cols-1.md\:grid-cols-3:not(#investment-summary) .flex {
+                display: block !important;
+            }
+
+            .grid-cols-1.md\:grid-cols-3:not(#investment-summary) .flex>span:first-child {
+                display: inline-block !important;
+                width: 55% !important;
+                font-weight: normal !important;
+            }
+
+            .grid-cols-1.md\:grid-cols-3:not(#investment-summary) .flex>span:last-child {
+                display: inline-block !important;
+                width: 43% !important;
+                text-align: right !important;
+                font-weight: bold !important;
+            }
+
+            /* Paksa page break sebelum footer atau setelah tabel utama */
+            .bg-gray-100.dark\:bg-gray-700 {
+                page-break-before: avoid;
+                page-break-inside: avoid;
+            }
+
+            /* Pastikan footer di halaman terakhir */
+            .text-center.text-gray-500 {
+                page-break-before: auto;
+                margin-top: 20px;
+            }
+
+            .bg-gray-100.dark\:bg-gray-700 {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* ========== TABLE STYLING UMUM ========== */
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                margin: 10px 0 !important;
+                margin: 8px 0 !important;
                 font-size: 9pt;
+                page-break-inside: avoid !important;
             }
 
             th,
             td {
                 border: 1px solid #000 !important;
-                padding: 6px 4px !important;
+                padding: 5px 4px !important;
                 text-align: left !important;
+                vertical-align: top !important;
             }
 
             th {
@@ -939,28 +1061,57 @@
                 page-break-inside: avoid;
             }
 
-            /* Badge styling untuk cetak */
-            .inline-flex {
+            /* Tabel alternatif untuk cetak */
+            .print-only-data table {
+                margin-bottom: 15px !important;
+            }
+
+            .print-only-data h3 {
+                font-weight: bold;
+                margin-top: 15px;
+                margin-bottom: 5px;
+            }
+
+            /* ========== INVESTOR DETAILS TABLE (yang besar) ========== */
+            .overflow-x-auto {
+                overflow: visible !important;
+            }
+
+            /* Atur agar tabel tidak overflow */
+            .bg-white.dark\:bg-gray-800.rounded-xl {
+                padding: 0 !important;
+                overflow-x: visible !important;
+            }
+
+            /* ========== BADGE STYLING ========== */
+            .inline-flex,
+            .inline-flex.items-center {
                 display: inline-block !important;
                 border: 1px solid #000 !important;
-                padding: 2px 6px !important;
+                padding: 1px 5px !important;
                 background: #f0f0f0 !important;
                 color: #000 !important;
                 font-weight: normal !important;
+                font-size: 8pt !important;
+                border-radius: 2px !important;
             }
 
-            /* Warna dipaksa hitam */
+            /* ========== WARNA DIPAKSA HITAM ========== */
             .text-green-600,
             .text-red-600,
             .text-blue-600,
             .text-purple-600,
             .text-indigo-600,
+            .text-orange-600,
             .text-gray-500,
             .text-gray-600,
             .text-gray-700,
             .text-gray-800,
+            .text-gray-900,
             .text-green-800,
-            .text-red-800 {
+            .text-red-800,
+            .text-yellow-600,
+            .text-cyan-600 {
                 color: #000 !important;
             }
 
@@ -971,29 +1122,54 @@
             .bg-blue-100,
             .bg-purple-100,
             .bg-indigo-100,
-            .bg-gray-100 {
+            .bg-gray-100,
+            .bg-orange-100 {
                 background-color: #f0f0f0 !important;
             }
 
-            /* Icons */
+            /* ========== SEMBUNYIKAN ICON ========== */
             i,
-            .fas {
+            .fas,
+            .far,
+            .fab,
+            .rounded-full i,
+            [class*="fa-"],
+            .fa-wallet,
+            .fa-chart-line,
+            .fa-percentage,
+            .fa-trophy,
+            .fa-briefcase,
+            .fa-calculator {
                 display: none !important;
             }
 
-            /* Margin adjustments */
+            /* ========== MARGIN & SPACING ========== */
             .mb-8,
             .mb-6 {
-                margin-bottom: 10px !important;
+                margin-bottom: 8px !important;
             }
 
-            .mb-4 {
+            .mb-4,
+            .mb-3 {
                 margin-bottom: 5px !important;
             }
 
-            /* Text alignment */
+            .mt-4,
+            .mt-3 {
+                margin-top: 5px !important;
+            }
+
+            .p-6 {
+                padding: 8px !important;
+            }
+
+            /* ========== TEXT ALIGNMENT ========== */
             .text-right {
                 text-align: right !important;
+            }
+
+            .text-center {
+                text-align: center !important;
             }
 
             /* Positive/Negative indicators */
@@ -1005,12 +1181,7 @@
                 font-weight: bold;
             }
 
-            /* Overflow */
-            .overflow-x-auto {
-                overflow: visible !important;
-            }
-
-            /* Page breaks */
+            /* ========== PAGE BREAKS ========== */
             .page-break-before {
                 page-break-before: always;
             }
@@ -1018,12 +1189,22 @@
             .page-break-inside-avoid {
                 page-break-inside: avoid;
             }
-        }
 
-        /* ========== STYLE UNTUK LAYAR ========== */
-        @media screen {
-            .print-only-data {
-                display: none !important;
+            /* Hindari heading terpotong */
+            h1,
+            h2,
+            h3,
+            h4,
+            h5 {
+                page-break-after: avoid !important;
+            }
+
+            /* Footer styling */
+            .text-center.text-gray-500 {
+                margin-top: 15px !important;
+                padding-top: 8px !important;
+                border-top: 1px solid #ccc !important;
+                font-size: 8pt !important;
             }
         }
     </style>
