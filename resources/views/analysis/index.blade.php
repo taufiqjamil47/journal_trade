@@ -1561,6 +1561,28 @@
                 });
             }
 
+            async ensureChartData() {
+                if (window.analysisChartData) {
+                    return;
+                }
+
+                const params = new URLSearchParams(window.location.search);
+                const url = new URL('{{ route('analysis.chart-data') }}', window.location.origin);
+                url.search = params.toString();
+
+                const response = await fetch(url.toString(), {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load analysis chart data');
+                }
+
+                window.analysisChartData = await response.json();
+            }
+
             isChartLoading(chartId) {
                 return Array.from(this.charts).some(chart =>
                     chart.id === chartId && chart.loading === true
@@ -1611,6 +1633,7 @@
 
                 try {
                     await new Promise(resolve => setTimeout(resolve, this.loadDelay));
+                    await this.ensureChartData();
 
                     this.renderChart(chartId);
 
@@ -1676,7 +1699,7 @@
                 const hourlyCtx = document.getElementById('hourlyChart');
                 if (!hourlyCtx) return;
 
-                const hourlyData = @json($hourlyPerformance->sortKeys());
+                const hourlyData = window.analysisChartData?.hourlyPerformance || {};
                 const hourlyLabels = Object.keys(hourlyData).map(hour => {
                     const nextHour = (parseInt(hour) + 1) % 24;
                     return hour.padStart(2, '0') + ':00-' + nextHour.toString().padStart(2, '0') + ':00';
@@ -1810,7 +1833,7 @@
             // pair chart function
             renderPairChart() {
                 const pairCtx = document.getElementById('pairChart').getContext('2d');
-                const pairData = @json($pairData);
+                const pairData = window.analysisChartData?.pairData || {};
                 const pairLabels = Object.keys(pairData);
                 const pairValues = Object.values(pairData);
 
@@ -1907,7 +1930,7 @@
             // entry type chart function
             renderEntryTypeChart() {
                 const etx = document.getElementById('entryTypeChart').getContext('2d');
-                const entryData = @json($entryTypeData);
+                const entryData = window.analysisChartData?.entryTypeData || {};
                 const entryLabels = Object.keys(entryData);
 
                 if (entryLabels.length === 0) return;
@@ -2027,7 +2050,7 @@
                 const dowCtx = document.getElementById('dayOfWeekChart');
                 if (!dowCtx) return;
 
-                const dowData = @json($dayOfWeekPerformance->sortBy('day_number'));
+                const dowData = window.analysisChartData?.dayOfWeekPerformance || [];
                 const dowLabels = Object.values(dowData).map(d => d.short_name);
                 const dowProfits = Object.values(dowData).map(d => d.profit);
                 const dowWinrates = Object.values(dowData).map(d => d.winrate);
@@ -2119,7 +2142,7 @@
                 const quarterlyCtx = document.getElementById('quarterlyChart');
                 if (!quarterlyCtx) return;
 
-                const quarterlyData = @json($quarterlyPerformance->sortDesc());
+                const quarterlyData = window.analysisChartData?.quarterlyPerformance || [];
                 const quarterlyLabels = Object.values(quarterlyData).map(q => q.quarter_name);
                 const quarterlyProfits = Object.values(quarterlyData).map(q => q.profit);
                 const quarterlyWinrates = Object.values(quarterlyData).map(q => q.winrate);
@@ -2231,8 +2254,8 @@
                 const monthlyCtx = document.getElementById('monthlyChart');
                 if (!monthlyCtx) return;
 
-                const monthlyData = @json($monthlyPerformance->sortKeys()->take(12));
-                const monthlyLabels = Object.values(monthlyData).map(m => m.month_name);
+                const monthlyData = window.analysisChartData?.monthlyPerformance || [];
+                const monthlyLabels = Object.values(monthlyData).slice(-12).map(m => m.month_name);
                 const monthlyProfits = Object.values(monthlyData).map(m => m.profit);
                 const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
                 const down = (ctx, value) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
@@ -2316,7 +2339,7 @@
                 const sessionCtx = document.getElementById('sessionPolarChart');
                 if (!sessionCtx) return;
 
-                const sessionData = @json($sessionAnalysis);
+                const sessionData = window.analysisChartData?.sessionAnalysis || {};
                 const sessionLabels = Object.keys(sessionData);
                 const winrates = Object.values(sessionData).map(d => d.winrate);
                 const trades = Object.values(sessionData).map(d => d.trades);

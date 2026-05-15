@@ -22,9 +22,8 @@ class AnalysisController extends Controller
         $account = Account::find($selectedAccountId);
         $initialBalance = $account ? $account->initial_balance : 10000;
 
-        // Dapatkan transaksi yang difilter
-        $query = $this->analysisService->getFilteredTrades($request);
-        $trades = $query->get();
+        // Dapatkan transaksi yang difilter sebagai query builder
+        $query = $this->analysisService->getFilteredTrades($request, false);
 
         // Dapatkan nilai filter
         $period = $request->get('period', 'all');
@@ -35,22 +34,37 @@ class AnalysisController extends Controller
         $availableSessions = $this->analysisService->getAvailableSessions();
         $availableEntryTypes = $this->analysisService->getAvailableEntryTypes();
 
+        // ===== PERFORMANCE ANALYSIS =====
+        $pairData = $this->analysisService->calculatePairAnalysis($query);
+        $entryTypeData = $this->analysisService->calculateEntryTypeAnalysis($query);
+        $sessionAnalysis = $this->analysisService->calculateSessionAnalysis($query);
+
         // ===== TIME ANALYSIS =====
-        $timeAnalysis = $this->analysisService->calculateTimeAnalysis($trades);
+        $timeAnalysis = $this->analysisService->calculateTimeAnalysis($query);
+
+        // Hitung ringkasan jika filter aktif
+        $summary = $this->analysisService->calculateSummary($query, $entryFilter, $sessionFilter);
+
+        // Hanya ambil kolom yang diperlukan untuk metrik lanjutan agar lebih ringan
+        $tradeColumns = [
+            'date',
+            'timestamp',
+            'exit_timestamp',
+            'profit_loss',
+            'hasil',
+            'rr',
+            'entry_type',
+            'session',
+            'lot_size',
+            'risk_percent',
+        ];
+        $trades = (clone $query)->get($tradeColumns);
 
         // ===== ADVANCED RISK METRICS =====
         $riskMetrics = $this->analysisService->calculateAdvancedRiskMetrics($trades, $initialBalance);
 
-        // ===== PERFORMANCE ANALYSIS =====
-        $pairData = $this->analysisService->calculatePairAnalysis($trades); // Ganti nama variabel
-        $entryTypeData = $this->analysisService->calculateEntryTypeAnalysis($trades); // Ganti nama variabel
-        $sessionAnalysis = $this->analysisService->calculateSessionAnalysis($trades);
-
         // ===== BASIC METRICS FOR CONTEXT =====
         $basicMetrics = $this->analysisService->calculateBasicMetrics($trades, $initialBalance);
-
-        // Hitung ringkasan jika filter aktif
-        $summary = $this->analysisService->calculateSummary($trades, $entryFilter, $sessionFilter);
 
         // Gabungkan semua data
         return view('analysis.index', array_merge(
@@ -68,6 +82,25 @@ class AnalysisController extends Controller
             [
                 'pairData' => $pairData, // Ubah jadi pairData
                 'entryTypeData' => $entryTypeData, // Ubah jadi entryTypeData
+                'sessionAnalysis' => $sessionAnalysis,
+            ]
+        ));
+    }
+
+    public function chartData(Request $request)
+    {
+        $query = $this->analysisService->getFilteredTrades($request, false);
+
+        $timeAnalysis = $this->analysisService->calculateTimeAnalysis($query);
+        $pairData = $this->analysisService->calculatePairAnalysis($query);
+        $entryTypeData = $this->analysisService->calculateEntryTypeAnalysis($query);
+        $sessionAnalysis = $this->analysisService->calculateSessionAnalysis($query);
+
+        return response()->json(array_merge(
+            $timeAnalysis,
+            [
+                'pairData' => $pairData,
+                'entryTypeData' => $entryTypeData,
                 'sessionAnalysis' => $sessionAnalysis,
             ]
         ));

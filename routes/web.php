@@ -68,6 +68,7 @@ Route::group([
         // Semua route yang sudah ada
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index');
+        Route::get('/analysis/chart-data', [AnalysisController::class, 'chartData'])->name('analysis.chart-data');
         Route::get('/reports/calendar', [TradeReportController::class, 'calendar'])->name('reports.calendar');
         // ... route lainnya
         Route::get('/trades', [TradeController::class, 'index'])->name('trades.index');

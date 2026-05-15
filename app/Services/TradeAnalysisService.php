@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Trade;
-use App\Models\Account;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +29,7 @@ class TradeAnalysisService
             $query->with(['symbol', 'account', 'tradingRules']);
         }
 
-        $query->orderBy('date');
+        $query->orderBy('date')->orderBy('timestamp');
 
         // Period filter
         $period = $request->get('period', 'all');
@@ -59,6 +59,10 @@ class TradeAnalysisService
      */
     public function calculateBasicMetrics($trades, $initialBalance)
     {
+        if ($trades instanceof Builder) {
+            return $this->calculateBasicMetricsDb($trades, $initialBalance);
+        }
+
         $totalTrades = $trades->count();
         $wins = $trades->where('hasil', 'win')->count();
         $winrate = $totalTrades > 0 ? round(($wins / $totalTrades) * 100, 2) : 0;
@@ -122,6 +126,75 @@ class TradeAnalysisService
         ];
     }
 
+    private function calculateBasicMetricsDb(Builder $query, $initialBalance)
+    {
+        $query = clone $query;
+
+        $totals = $query->selectRaw(
+            "COUNT(*) as total_trades,
+             SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins,
+             SUM(CASE WHEN hasil = 'loss' THEN 1 ELSE 0 END) as losses,
+             SUM(CASE WHEN hasil = 'win' THEN profit_loss ELSE 0 END) as total_profit,
+             SUM(CASE WHEN hasil = 'loss' THEN profit_loss ELSE 0 END) as total_loss,
+             AVG(CASE WHEN hasil = 'win' THEN profit_loss ELSE NULL END) as avg_win,
+             ABS(AVG(CASE WHEN hasil = 'loss' THEN profit_loss ELSE NULL END)) as avg_loss,
+             MAX(CASE WHEN hasil = 'win' THEN profit_loss ELSE NULL END) as largest_win,
+             MIN(CASE WHEN hasil = 'loss' THEN profit_loss ELSE NULL END) as largest_loss"
+        )->first();
+
+        $totalTrades = (int) $totals->total_trades;
+        $wins = (int) $totals->wins;
+        $winrate = $totalTrades > 0 ? round(($wins / $totalTrades) * 100, 2) : 0;
+
+        $totalProfit = (float) $totals->total_profit;
+        $totalLoss = abs((float) $totals->total_loss);
+        $netProfit = $totalProfit - $totalLoss;
+        $balance = $initialBalance + $netProfit;
+
+        $averageWin = $totals->avg_win !== null ? round((float) $totals->avg_win, 2) : 0;
+        $averageLoss = $totals->avg_loss !== null ? round((float) $totals->avg_loss, 2) : 0;
+        $largestWin = $totals->largest_win !== null ? (float) $totals->largest_win : 0;
+        $largestLoss = $totals->largest_loss !== null ? (float) $totals->largest_loss : 0;
+
+        $averageRR = ($averageLoss > 0) ? round($averageWin / $averageLoss, 2) : 0;
+        $profitFactor = ($totalLoss > 0) ?
+            round($totalProfit / $totalLoss, 2) : ($totalProfit > 0 ? '∞' : 0);
+
+        $winrateDecimal = $winrate / 100;
+        $expectancy = round(
+            ($winrateDecimal * $averageWin) - ((1 - $winrateDecimal) * $averageLoss),
+            2
+        );
+
+        $tradeRows = $query->get(['date', 'timestamp', 'profit_loss', 'hasil']);
+        $drawdownData = $this->calculateDrawdown($tradeRows, $initialBalance);
+        $streaks = $this->calculateStreaks($tradeRows);
+
+        return [
+            'balance' => $balance,
+            'equity' => $balance,
+            'winrate' => $winrate,
+            'totalProfit' => $totalProfit,
+            'totalLoss' => $totalLoss,
+            'netProfit' => $netProfit,
+            'averageWin' => $averageWin,
+            'averageLoss' => $averageLoss,
+            'largestWin' => $largestWin,
+            'largestLoss' => $largestLoss,
+            'averageRR' => $averageRR,
+            'profitFactor' => $profitFactor,
+            'expectancy' => $expectancy,
+            'maxDrawdown' => $drawdownData['max_drawdown'],
+            'maxDrawdownPercentage' => $drawdownData['max_drawdown_percentage'],
+            'currentDrawdown' => $drawdownData['current_drawdown'],
+            'currentDrawdownPercentage' => $drawdownData['current_drawdown_percentage'],
+            'longestWinStreak' => $streaks['longest_win_streak'],
+            'longestLossStreak' => $streaks['longest_loss_streak'],
+            'currentStreak' => $streaks['current_streak'],
+            'currentStreakType' => $streaks['current_streak_type'],
+        ];
+    }
+
     /**
      * Calculate summary for active filters
      */
@@ -129,6 +202,31 @@ class TradeAnalysisService
     {
         if ($entryFilter === 'all') {
             return null;
+        }
+
+        if ($trades instanceof Builder) {
+            $query = clone $trades;
+            $query->where('entry_type', $entryFilter);
+
+            if ($sessionFilter !== 'all') {
+                $query->where('session', $sessionFilter);
+            }
+
+            $totals = $query->selectRaw(
+                "COUNT(*) as total, SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins, SUM(profit_loss) as profit_loss"
+            )->first();
+
+            $total = (int) $totals->total;
+            $wins = (int) $totals->wins;
+            $profitLoss = $totals->profit_loss !== null ? (float) $totals->profit_loss : 0;
+
+            return [
+                'entry_type' => $entryFilter,
+                'session' => $sessionFilter !== 'all' ? $sessionFilter : 'All Sessions',
+                'trades' => $total,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit_loss' => $profitLoss
+            ];
         }
 
         $filteredTrades = $trades->where('entry_type', $entryFilter);
@@ -230,6 +328,8 @@ class TradeAnalysisService
      */
     public function calculatePairAnalysisDb($query)
     {
+        $query = clone $query;
+
         $rows = $query->select('symbols.name as symbol_name', DB::raw('SUM(trades.profit_loss) as total'))
             ->join('symbols', 'symbols.id', '=', 'trades.symbol_id')
             ->groupBy('symbols.name')
@@ -243,6 +343,8 @@ class TradeAnalysisService
      */
     public function calculateEntryTypeAnalysisDb($query)
     {
+        $query = clone $query;
+
         $rows = $query->select(
             'entry_type',
             DB::raw("SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins"),
@@ -285,14 +387,21 @@ class TradeAnalysisService
      */
     public function calculateTimeAnalysis($trades)
     {
-        $tradeDurationAnalysis = $this->calculateTradeDurationAnalysis($trades);
+        $tradeRows = $trades instanceof Builder ? $trades->get() : $trades;
+        $tradeDurationAnalysis = $this->calculateTradeDurationAnalysis($tradeRows);
+
+        $hourlyPerformance = $this->calculateHourlyPerformance($trades);
+        $dayOfWeekPerformance = $this->calculateDayOfWeekPerformance($trades);
+        $monthlyPerformance = $this->calculateMonthlyPerformance($trades);
+        $quarterlyPerformance = $this->calculateQuarterlyPerformance($trades);
+        $heatmapData = $this->calculateHeatmapData($trades);
 
         return [
-            'hourlyPerformance' => $this->calculateHourlyPerformance($trades),
-            'dayOfWeekPerformance' => $this->calculateDayOfWeekPerformance($trades),
-            'monthlyPerformance' => $this->calculateMonthlyPerformance($trades),
-            'quarterlyPerformance' => $this->calculateQuarterlyPerformance($trades),
-            'heatmapData' => $this->calculateHeatmapData($trades),
+            'hourlyPerformance' => $hourlyPerformance,
+            'dayOfWeekPerformance' => $dayOfWeekPerformance,
+            'monthlyPerformance' => $monthlyPerformance,
+            'quarterlyPerformance' => $quarterlyPerformance,
+            'heatmapData' => $heatmapData,
             'bestHour' => $this->findBestHour($trades),
             'worstHour' => $this->findWorstHour($trades),
             'busiestHour' => $this->findBusiestHour($trades),
@@ -300,8 +409,420 @@ class TradeAnalysisService
             'medianTradeDuration' => $tradeDurationAnalysis['median'],
             'longestTradeDuration' => $tradeDurationAnalysis['longest'],
             'modeTradeDuration' => $tradeDurationAnalysis['mode'],
-            'tradingTimeStats' => $this->calculateTradingTimeStats($trades),
+            'tradingTimeStats' => $this->calculateTradingTimeStats($tradeRows),
         ];
+    }
+
+    private function calculateHourlyPerformance($trades)
+    {
+        if ($trades instanceof Builder) {
+            return $this->calculateHourlyPerformanceDb($trades);
+        }
+
+        return $trades->groupBy(function ($trade) {
+            if (!$trade->timestamp) {
+                return 'Unknown';
+            }
+
+            try {
+                $timestamp = $trade->timestamp;
+                if (is_string($timestamp)) {
+                    $timestamp = Carbon::parse($timestamp);
+                }
+                return $timestamp->format('H');
+            } catch (\Exception $e) {
+                return 'Unknown';
+            }
+        })->map(function ($hourTrades, $hour) {
+            $total = $hourTrades->count();
+            $wins = $hourTrades->where('hasil', 'win')->count();
+            $profit = $hourTrades->sum('profit_loss');
+
+            return [
+                'hour' => $hour,
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => $profit,
+                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
+            ];
+        })->sortKeys();
+    }
+
+    private function calculateDayOfWeekPerformance($trades)
+    {
+        if ($trades instanceof Builder) {
+            return $this->calculateDayOfWeekPerformanceDb($trades);
+        }
+
+        return $trades->groupBy(function ($trade) {
+            if (!$trade->timestamp) {
+                return 'Unknown';
+            }
+
+            try {
+                $timestamp = $trade->timestamp;
+                if (is_string($timestamp)) {
+                    $timestamp = Carbon::parse($timestamp);
+                }
+                return $timestamp->format('w');
+            } catch (\Exception $e) {
+                return 'Unknown';
+            }
+        })->map(function ($dayTrades, $dayNumber) {
+            $dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            $total = $dayTrades->count();
+            $wins = $dayTrades->where('hasil', 'win')->count();
+            $profit = $dayTrades->sum('profit_loss');
+
+            return [
+                'day_number' => $dayNumber,
+                'day_name' => isset($dayNames[$dayNumber]) ? $dayNames[$dayNumber] : 'Unknown',
+                'short_name' => isset($dayNames[$dayNumber]) ? substr($dayNames[$dayNumber], 0, 3) : 'N/A',
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => $profit,
+                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
+            ];
+        })->sortKeys();
+    }
+
+    private function calculateMonthlyPerformance($trades)
+    {
+        if ($trades instanceof Builder) {
+            return $this->calculateMonthlyPerformanceDb($trades);
+        }
+
+        return $trades->groupBy(function ($trade) {
+            if (!$trade->timestamp) {
+                return 'Unknown';
+            }
+
+            try {
+                $timestamp = $trade->timestamp;
+                if (is_string($timestamp)) {
+                    $timestamp = Carbon::parse($timestamp);
+                }
+                return $timestamp->format('Y-m');
+            } catch (\Exception $e) {
+                return 'Unknown';
+            }
+        })->map(function ($monthTrades, $month) {
+            $total = $monthTrades->count();
+            $wins = $monthTrades->where('hasil', 'win')->count();
+            $profit = $monthTrades->sum('profit_loss');
+
+            $monthName = 'Unknown';
+            if ($month !== 'Unknown' && $monthTrades->first() && $monthTrades->first()->timestamp) {
+                try {
+                    $timestamp = $monthTrades->first()->timestamp;
+                    if (is_string($timestamp)) {
+                        $timestamp = Carbon::parse($timestamp);
+                    }
+                    $monthName = $timestamp->format('M Y');
+                } catch (\Exception $e) {
+                    $monthName = 'Unknown';
+                }
+            }
+
+            return [
+                'month' => $month,
+                'month_name' => $monthName,
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => $profit,
+                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
+            ];
+        })->sortKeys();
+    }
+
+    private function calculateQuarterlyPerformance($trades)
+    {
+        if ($trades instanceof Builder) {
+            return $this->calculateQuarterlyPerformanceDb($trades);
+        }
+
+        return $trades->groupBy(function ($trade) {
+            if (!$trade->timestamp) {
+                return 'Unknown';
+            }
+
+            try {
+                $timestamp = $trade->timestamp;
+                if (is_string($timestamp)) {
+                    $timestamp = Carbon::parse($timestamp);
+                }
+                $year = $timestamp->format('Y');
+                $quarter = ceil($timestamp->month / 3);
+                return "{$year}-Q{$quarter}";
+            } catch (\Exception $e) {
+                return 'Unknown';
+            }
+        })->map(function ($quarterTrades, $quarter) {
+            $total = $quarterTrades->count();
+            $wins = $quarterTrades->where('hasil', 'win')->count();
+            $profit = $quarterTrades->sum('profit_loss');
+
+            $quarterName = 'Unknown';
+            if ($quarter !== 'Unknown' && $quarterTrades->first() && $quarterTrades->first()->timestamp) {
+                try {
+                    $timestamp = $quarterTrades->first()->timestamp;
+                    if (is_string($timestamp)) {
+                        $timestamp = Carbon::parse($timestamp);
+                    }
+                    $year = $timestamp->format('Y');
+                    $quarterNum = ceil($timestamp->month / 3);
+                    $quarterName = "Q{$quarterNum} {$year}";
+                } catch (\Exception $e) {
+                    $quarterName = 'Unknown';
+                }
+            }
+
+            return [
+                'quarter' => $quarter,
+                'quarter_name' => $quarterName,
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => $profit,
+                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
+            ];
+        })->sortKeys();
+    }
+
+    private function calculateHeatmapData($trades)
+    {
+        if ($trades instanceof Builder) {
+            return $this->calculateHeatmapDataDb($trades);
+        }
+
+        $heatmapData = [];
+
+        // Initialize empty array
+        for ($day = 0; $day < 7; $day++) {
+            for ($hour = 0; $hour < 24; $hour++) {
+                $heatmapData[$day][$hour] = [
+                    'profit' => 0,
+                    'trades' => 0,
+                    'hour' => str_pad($hour, 2, '0', STR_PAD_LEFT),
+                    'day' => $day
+                ];
+            }
+        }
+
+        // Fill with actual data
+        foreach ($trades as $trade) {
+            if ($trade->timestamp) {
+                try {
+                    $timestamp = $trade->timestamp;
+                    if (is_string($timestamp)) {
+                        $timestamp = Carbon::parse($timestamp);
+                    }
+
+                    $hour = (int)$timestamp->format('H');
+                    $day = (int)$timestamp->format('w');
+
+                    if (isset($heatmapData[$day][$hour])) {
+                        $heatmapData[$day][$hour]['profit'] += $trade->profit_loss ?? 0;
+                        $heatmapData[$day][$hour]['trades']++;
+                    }
+                } catch (\Exception $e) {
+                    // Skip if error
+                }
+            }
+        }
+
+        return $heatmapData;
+    }
+
+    private function calculateHourlyPerformanceDb(Builder $query)
+    {
+        $query = clone $query;
+
+        $rows = $query->selectRaw(
+            "HOUR(timestamp) as hour, COUNT(*) as trades, SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins, SUM(profit_loss) as profit, AVG(profit_loss) as avg_profit"
+        )
+            ->whereNotNull('timestamp')
+            ->groupByRaw('HOUR(timestamp)')
+            ->orderByRaw('HOUR(timestamp)')
+            ->get();
+
+        return $rows->map(function ($row) {
+            $total = (int) $row->trades;
+            $wins = (int) $row->wins;
+
+            return [
+                'hour' => str_pad($row->hour, 2, '0', STR_PAD_LEFT),
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => (float) $row->profit,
+                'avg_profit' => $total > 0 ? round((float) $row->avg_profit, 2) : 0
+            ];
+        })->keyBy('hour');
+    }
+
+    private function calculateDayOfWeekPerformanceDb(Builder $query)
+    {
+        $query = clone $query;
+        $dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        $rows = $query->selectRaw(
+            "(DAYOFWEEK(timestamp) - 1) as day_number, COUNT(*) as trades, SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins, SUM(profit_loss) as profit, AVG(profit_loss) as avg_profit"
+        )
+            ->whereNotNull('timestamp')
+            ->groupByRaw('(DAYOFWEEK(timestamp) - 1)')
+            ->orderByRaw('(DAYOFWEEK(timestamp) - 1)')
+            ->get();
+
+        return $rows->map(function ($row) use ($dayNames) {
+            $total = (int) $row->trades;
+            $wins = (int) $row->wins;
+
+            return [
+                'day_number' => (int) $row->day_number,
+                'day_name' => $dayNames[(int) $row->day_number] ?? 'Unknown',
+                'short_name' => isset($dayNames[(int) $row->day_number]) ? substr($dayNames[(int) $row->day_number], 0, 3) : 'N/A',
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => (float) $row->profit,
+                'avg_profit' => $total > 0 ? round((float) $row->avg_profit, 2) : 0
+            ];
+        })->keyBy('day_number');
+    }
+
+    private function calculateMonthlyPerformanceDb(Builder $query)
+    {
+        $query = clone $query;
+
+        $rows = $query->selectRaw(
+            "DATE_FORMAT(timestamp, '%Y-%m') as month, COUNT(*) as trades, SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins, SUM(profit_loss) as profit, AVG(profit_loss) as avg_profit"
+        )
+            ->whereNotNull('timestamp')
+            ->groupByRaw("DATE_FORMAT(timestamp, '%Y-%m')")
+            ->orderByRaw("DATE_FORMAT(timestamp, '%Y-%m')")
+            ->get();
+
+        return $rows->map(function ($row) {
+            $total = (int) $row->trades;
+            $wins = (int) $row->wins;
+            $carbon = Carbon::createFromFormat('Y-m', $row->month);
+
+            return [
+                'month' => $row->month,
+                'month_name' => $carbon->format('M Y'),
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => (float) $row->profit,
+                'avg_profit' => $total > 0 ? round((float) $row->avg_profit, 2) : 0
+            ];
+        })->keyBy('month');
+    }
+
+    private function calculateQuarterlyPerformanceDb(Builder $query)
+    {
+        $query = clone $query;
+
+        $rows = $query->selectRaw(
+            "CONCAT(YEAR(timestamp), '-Q', QUARTER(timestamp)) as quarter, COUNT(*) as trades, SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins, SUM(profit_loss) as profit, AVG(profit_loss) as avg_profit"
+        )
+            ->whereNotNull('timestamp')
+            ->groupByRaw("CONCAT(YEAR(timestamp), '-Q', QUARTER(timestamp))")
+            ->orderByRaw("CONCAT(YEAR(timestamp), '-Q', QUARTER(timestamp))")
+            ->get();
+
+        return $rows->map(function ($row) {
+            $total = (int) $row->trades;
+            $wins = (int) $row->wins;
+
+            $parts = explode('-Q', $row->quarter);
+            $year = $parts[0] ?? null;
+            $quarterNum = isset($parts[1]) ? (int) $parts[1] : null;
+            $quarterName = $year && $quarterNum ? "Q{$quarterNum} {$year}" : 'Unknown';
+
+            return [
+                'quarter' => $row->quarter,
+                'quarter_name' => $quarterName,
+                'trades' => $total,
+                'wins' => $wins,
+                'losses' => $total - $wins,
+                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                'profit' => (float) $row->profit,
+                'avg_profit' => $total > 0 ? round((float) $row->avg_profit, 2) : 0
+            ];
+        })->keyBy('quarter');
+    }
+
+    private function calculateHeatmapDataDb(Builder $query)
+    {
+        $query = clone $query;
+
+        $base = [];
+        for ($day = 0; $day < 7; $day++) {
+            for ($hour = 0; $hour < 24; $hour++) {
+                $base[$day][$hour] = [
+                    'profit' => 0,
+                    'trades' => 0,
+                    'hour' => str_pad($hour, 2, '0', STR_PAD_LEFT),
+                    'day' => $day,
+                ];
+            }
+        }
+
+        $rows = $query->selectRaw(
+            "(DAYOFWEEK(timestamp) - 1) as day, HOUR(timestamp) as hour, SUM(profit_loss) as profit, COUNT(*) as trades"
+        )
+            ->whereNotNull('timestamp')
+            ->groupByRaw('(DAYOFWEEK(timestamp) - 1), HOUR(timestamp)')
+            ->get();
+
+        foreach ($rows as $row) {
+            if (isset($base[$row->day][$row->hour])) {
+                $base[$row->day][$row->hour]['profit'] = (float) $row->profit;
+                $base[$row->day][$row->hour]['trades'] = (int) $row->trades;
+            }
+        }
+
+        return $base;
+    }
+
+    private function calculateSessionAnalysisDb(Builder $query)
+    {
+        $query = clone $query;
+
+        $rows = $query->selectRaw(
+            "session, COUNT(*) as trades, SUM(CASE WHEN hasil = 'win' THEN 1 ELSE 0 END) as wins, SUM(profit_loss) as profit, AVG(profit_loss) as avg_profit, AVG(rr) as avg_rr"
+        )
+            ->whereNotNull('session')
+            ->where('session', '!=', '')
+            ->groupBy('session')
+            ->get();
+
+        return $rows->mapWithKeys(function ($row) {
+            $total = (int) $row->trades;
+            $wins = (int) $row->wins;
+
+            return [
+                $row->session => [
+                    'trades' => $total,
+                    'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
+                    'profit_loss' => (float) $row->profit,
+                    'avg_profit' => $total > 0 ? round((float) $row->avg_profit, 2) : 0,
+                    'avg_rr' => $total > 0 ? round((float) $row->avg_rr, 2) : 0,
+                ]
+            ];
+        });
     }
 
     /**
@@ -348,6 +869,10 @@ class TradeAnalysisService
      */
     public function calculateSessionAnalysis($trades)
     {
+        if ($trades instanceof Builder) {
+            return $this->calculateSessionAnalysisDb($trades);
+        }
+
         return $trades->groupBy('session')->map(function ($group) {
             $wins = $group->where('hasil', 'win')->count();
             $total = $group->count();
@@ -460,214 +985,6 @@ class TradeAnalysisService
             'current_streak' => $currentStreak,
             'current_streak_type' => $currentType
         ];
-    }
-
-    private function calculateHourlyPerformance($trades)
-    {
-        return $trades->groupBy(function ($trade) {
-            if (!$trade->timestamp) {
-                return 'Unknown';
-            }
-
-            try {
-                $timestamp = $trade->timestamp;
-                if (is_string($timestamp)) {
-                    $timestamp = Carbon::parse($timestamp);
-                }
-                return $timestamp->format('H');
-            } catch (\Exception $e) {
-                return 'Unknown';
-            }
-        })->map(function ($hourTrades, $hour) {
-            $total = $hourTrades->count();
-            $wins = $hourTrades->where('hasil', 'win')->count();
-            $profit = $hourTrades->sum('profit_loss');
-
-            return [
-                'hour' => $hour,
-                'trades' => $total,
-                'wins' => $wins,
-                'losses' => $total - $wins,
-                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
-                'profit' => $profit,
-                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
-            ];
-        })->sortKeys();
-    }
-
-    private function calculateDayOfWeekPerformance($trades)
-    {
-        return $trades->groupBy(function ($trade) {
-            if (!$trade->timestamp) {
-                return 'Unknown';
-            }
-
-            try {
-                $timestamp = $trade->timestamp;
-                if (is_string($timestamp)) {
-                    $timestamp = Carbon::parse($timestamp);
-                }
-                return $timestamp->format('w');
-            } catch (\Exception $e) {
-                return 'Unknown';
-            }
-        })->map(function ($dayTrades, $dayNumber) {
-            $dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            $total = $dayTrades->count();
-            $wins = $dayTrades->where('hasil', 'win')->count();
-            $profit = $dayTrades->sum('profit_loss');
-
-            return [
-                'day_number' => $dayNumber,
-                'day_name' => isset($dayNames[$dayNumber]) ? $dayNames[$dayNumber] : 'Unknown',
-                'short_name' => isset($dayNames[$dayNumber]) ? substr($dayNames[$dayNumber], 0, 3) : 'N/A',
-                'trades' => $total,
-                'wins' => $wins,
-                'losses' => $total - $wins,
-                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
-                'profit' => $profit,
-                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
-            ];
-        })->sortKeys();
-    }
-
-    private function calculateMonthlyPerformance($trades)
-    {
-        return $trades->groupBy(function ($trade) {
-            if (!$trade->timestamp) {
-                return 'Unknown';
-            }
-
-            try {
-                $timestamp = $trade->timestamp;
-                if (is_string($timestamp)) {
-                    $timestamp = Carbon::parse($timestamp);
-                }
-                return $timestamp->format('Y-m');
-            } catch (\Exception $e) {
-                return 'Unknown';
-            }
-        })->map(function ($monthTrades, $month) {
-            $total = $monthTrades->count();
-            $wins = $monthTrades->where('hasil', 'win')->count();
-            $profit = $monthTrades->sum('profit_loss');
-
-            $monthName = 'Unknown';
-            if ($month !== 'Unknown' && $monthTrades->first() && $monthTrades->first()->timestamp) {
-                try {
-                    $timestamp = $monthTrades->first()->timestamp;
-                    if (is_string($timestamp)) {
-                        $timestamp = Carbon::parse($timestamp);
-                    }
-                    $monthName = $timestamp->format('M Y');
-                } catch (\Exception $e) {
-                    $monthName = 'Unknown';
-                }
-            }
-
-            return [
-                'month' => $month,
-                'month_name' => $monthName,
-                'trades' => $total,
-                'wins' => $wins,
-                'losses' => $total - $wins,
-                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
-                'profit' => $profit,
-                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
-            ];
-        })->sortKeys();
-    }
-
-    private function calculateQuarterlyPerformance($trades)
-    {
-        return $trades->groupBy(function ($trade) {
-            if (!$trade->timestamp) {
-                return 'Unknown';
-            }
-
-            try {
-                $timestamp = $trade->timestamp;
-                if (is_string($timestamp)) {
-                    $timestamp = Carbon::parse($timestamp);
-                }
-                $year = $timestamp->format('Y');
-                $quarter = ceil($timestamp->month / 3);
-                return "{$year}-Q{$quarter}";
-            } catch (\Exception $e) {
-                return 'Unknown';
-            }
-        })->map(function ($quarterTrades, $quarter) {
-            $total = $quarterTrades->count();
-            $wins = $quarterTrades->where('hasil', 'win')->count();
-            $profit = $quarterTrades->sum('profit_loss');
-
-            $quarterName = 'Unknown';
-            if ($quarter !== 'Unknown' && $quarterTrades->first() && $quarterTrades->first()->timestamp) {
-                try {
-                    $timestamp = $quarterTrades->first()->timestamp;
-                    if (is_string($timestamp)) {
-                        $timestamp = Carbon::parse($timestamp);
-                    }
-                    $year = $timestamp->format('Y');
-                    $quarter_num = ceil($timestamp->month / 3);
-                    $quarterName = "Q{$quarter_num} {$year}";
-                } catch (\Exception $e) {
-                    $quarterName = 'Unknown';
-                }
-            }
-
-            return [
-                'quarter' => $quarter,
-                'quarter_name' => $quarterName,
-                'trades' => $total,
-                'wins' => $wins,
-                'losses' => $total - $wins,
-                'winrate' => $total > 0 ? round(($wins / $total) * 100, 2) : 0,
-                'profit' => $profit,
-                'avg_profit' => $total > 0 ? round($profit / $total, 2) : 0
-            ];
-        })->sortKeys();
-    }
-
-    private function calculateHeatmapData($trades)
-    {
-        $heatmapData = [];
-
-        // Initialize empty array
-        for ($day = 0; $day < 7; $day++) {
-            for ($hour = 0; $hour < 24; $hour++) {
-                $heatmapData[$day][$hour] = [
-                    'profit' => 0,
-                    'trades' => 0,
-                    'hour' => str_pad($hour, 2, '0', STR_PAD_LEFT),
-                    'day' => $day
-                ];
-            }
-        }
-
-        // Fill with actual data
-        foreach ($trades as $trade) {
-            if ($trade->timestamp) {
-                try {
-                    $timestamp = $trade->timestamp;
-                    if (is_string($timestamp)) {
-                        $timestamp = Carbon::parse($timestamp);
-                    }
-
-                    $hour = (int)$timestamp->format('H');
-                    $day = (int)$timestamp->format('w');
-
-                    if (isset($heatmapData[$day][$hour])) {
-                        $heatmapData[$day][$hour]['profit'] += $trade->profit_loss ?? 0;
-                        $heatmapData[$day][$hour]['trades']++;
-                    }
-                } catch (\Exception $e) {
-                    // Skip if error
-                }
-            }
-        }
-
-        return $heatmapData;
     }
 
     private function findBestHour($trades)
@@ -883,7 +1200,7 @@ class TradeAnalysisService
     private function calculatePositionSizeAnalysis($trades)
     {
         return $trades->groupBy(function ($trade) {
-            $size = $trade->size ?? $trade->volume ?? 0;
+            $size = $trade->lot_size ?? 0;
             if ($size <= 0.1) return 'Micro (≤0.1)';
             elseif ($size <= 0.5) return 'Small (0.1-0.5)';
             elseif ($size <= 1.0) return 'Standard (0.5-1.0)';
@@ -1148,11 +1465,18 @@ class TradeAnalysisService
      */
     public function getAvailableSessions()
     {
-        return Trade::distinct('session')
-            ->whereNotNull('session')
-            ->where('session', '!=', '')
-            ->pluck('session')
-            ->toArray();
+        $accountId = session('selected_account_id') ?: 'all';
+        return cache()->remember("available_sessions_for_{$accountId}", 300, function () use ($accountId) {
+            $query = Trade::distinct('session')
+                ->whereNotNull('session')
+                ->where('session', '!=', '');
+
+            if ($accountId !== 'all') {
+                $query->where('account_id', $accountId);
+            }
+
+            return $query->pluck('session')->toArray();
+        });
     }
 
     /**
@@ -1160,11 +1484,18 @@ class TradeAnalysisService
      */
     public function getAvailableEntryTypes()
     {
-        return Trade::distinct('entry_type')
-            ->whereNotNull('entry_type')
-            ->where('entry_type', '!=', '')
-            ->pluck('entry_type')
-            ->toArray();
+        $accountId = session('selected_account_id') ?: 'all';
+        return cache()->remember("available_entry_types_for_{$accountId}", 300, function () use ($accountId) {
+            $query = Trade::distinct('entry_type')
+                ->whereNotNull('entry_type')
+                ->where('entry_type', '!=', '');
+
+            if ($accountId !== 'all') {
+                $query->where('account_id', $accountId);
+            }
+
+            return $query->pluck('entry_type')->toArray();
+        });
     }
 
     /**
