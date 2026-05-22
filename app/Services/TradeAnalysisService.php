@@ -405,10 +405,10 @@ class TradeAnalysisService
             'bestHour' => $this->findBestHour($trades),
             'worstHour' => $this->findWorstHour($trades),
             'busiestHour' => $this->findBusiestHour($trades),
-            'fastestTradeDuration' => $tradeDurationAnalysis['fastest'],
-            'medianTradeDuration' => $tradeDurationAnalysis['median'],
-            'longestTradeDuration' => $tradeDurationAnalysis['longest'],
-            'modeTradeDuration' => $tradeDurationAnalysis['mode'],
+            'fastestTradeDuration' => $tradeDurationAnalysis['fastest'] ?? null,
+            'medianTradeDuration' => $tradeDurationAnalysis['median'] ?? null,
+            'longestTradeDuration' => $tradeDurationAnalysis['longest'] ?? null,
+            'modeTradeDuration' => $tradeDurationAnalysis['mode'] ?? null,
             'tradingTimeStats' => $this->calculateTradingTimeStats($tradeRows),
         ];
     }
@@ -666,7 +666,9 @@ class TradeAnalysisService
                 'profit' => (float) $row->profit,
                 'avg_profit' => $total > 0 ? round((float) $row->avg_profit, 2) : 0
             ];
-        })->keyBy('hour');
+        })->sortBy(function ($item) {
+            return (int) $item['hour']; // Sort berdasarkan integer hour
+        })->values();
     }
 
     private function calculateDayOfWeekPerformanceDb(Builder $query)
@@ -1042,6 +1044,7 @@ class TradeAnalysisService
                 'fastest' => null,
                 'median' => null,
                 'longest' => null,
+                'mode' => null,
                 'count' => 0,
             ];
         }
