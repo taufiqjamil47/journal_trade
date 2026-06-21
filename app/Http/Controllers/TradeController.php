@@ -737,6 +737,35 @@ class TradeController extends Controller
             }
         }
 
+        // If exit date and/or time provided, combine into exit_timestamp
+        $exitDate = $request->input('exit_date');
+        $exitTime = $request->input('exit_time');
+
+        if ($exitDate || $exitTime) {
+            $datePart = $exitDate ?? $trade->date?->format('Y-m-d') ?? now()->format('Y-m-d');
+            $timePart = $exitTime ?? now()->format('H:i');
+
+            try {
+                $combined = Carbon::parse($datePart . ' ' . $timePart);
+
+                // VALIDASI: Exit timestamp harus setelah entry timestamp
+                if ($trade->timestamp && $combined->lte($trade->timestamp)) {
+                    return back()->withInput()->withErrors([
+                        'exit_date' => __('trades.exit_time_must_be_after_entry'),
+                        'exit_time' => __('trades.exit_time_must_be_after_entry')
+                    ]);
+                }
+
+                $trade->exit_timestamp = $combined;
+            } catch (\Exception $e) {
+                Log::warning('Gagal parse exit_date/exit_time: ' . $e->getMessage(), [
+                    'exit_date' => $exitDate,
+                    'exit_time' => $exitTime,
+                    'trade_id' => $trade->id
+                ]);
+            }
+        }
+
         // Wrap evaluation save + pivot sync in transaction
         DB::transaction(function () use ($request, $trade) {
             // SYNC RULES: Pivot Table → Kolom Rules

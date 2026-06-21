@@ -287,6 +287,12 @@ return [
     'fill_fields_to_generate' => 'Silakan isi beberapa field terlebih dahulu untuk generate catatan otomatis.',
     'notes_generated' => 'Catatan Digenerate!',
     'generate_error' => 'Terjadi error saat generate catatan. Lihat console untuk detail.',
+    'default_from_entry_time' => 'Default: waktu entry',
+    'default_from_entry_date' => 'Default: tanggal entry',
+    'reset_to_entry_time' => 'Reset ke waktu entry',
+    'reset_done' => 'Reset selesai!',
+    'entry_timestamp_label' => 'Waktu entry',
+    'exit_time_must_be_after_entry' => 'Waktu keluar harus setelah waktu entry',
 
     // Trade Detail Page
     'trade_detail_title' => 'Trade Detail #:id',

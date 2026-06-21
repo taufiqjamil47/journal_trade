@@ -419,7 +419,13 @@
                                         </label>
                                         <input type="time" name="exit_time" id="exit_time"
                                             class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2.5 px-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                            value="{{ optional($trade->exit_timestamp)->format('H:i') }}">
+                                            value="{{ optional($trade->exit_timestamp)->format('H:i') ?? optional($trade->timestamp)->format('H:i') }}">
+                                        @if (!$trade->exit_timestamp && $trade->timestamp)
+                                            <p class="text-xs text-indigo-500 dark:text-indigo-400 mt-1">
+                                                <i class="fas fa-info-circle mr-1"></i>
+                                                {{ __('trades.default_from_entry_time') }}
+                                            </p>
+                                        @endif
                                     </div>
                                     <div class="space-y-2">
                                         <label for="exit_date"
@@ -429,8 +435,27 @@
                                         </label>
                                         <input type="date" name="exit_date" id="exit_date"
                                             class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2.5 px-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                            value="{{ optional($trade->exit_timestamp)->format('Y-m-d') }}">
+                                            value="{{ optional($trade->exit_timestamp)->format('Y-m-d') ?? optional($trade->timestamp)->format('Y-m-d') }}">
+                                        @if (!$trade->exit_timestamp && $trade->timestamp)
+                                            <p class="text-xs text-indigo-500 dark:text-indigo-400 mt-1">
+                                                <i class="fas fa-info-circle mr-1"></i>
+                                                {{ __('trades.default_from_entry_date') }}
+                                            </p>
+                                        @endif
                                     </div>
+                                </div>
+
+                                <!-- Optional: Tombol Reset ke Entry Time -->
+                                <div class="mt-3 flex items-center gap-3">
+                                    <button type="button" id="resetExitTimestampBtn"
+                                        class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center">
+                                        <i class="fas fa-undo mr-1"></i>
+                                        {{ __('trades.reset_to_entry_time') }}
+                                    </button>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ __('trades.entry_timestamp_label') }}:
+                                        {{ optional($trade->timestamp)->format('Y-m-d H:i') }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -1107,5 +1132,39 @@
                 }
             `;
         document.head.appendChild(style);
+    </script>
+
+    <script>
+        // Reset Exit Timestamp ke Entry Timestamp
+        document.addEventListener('DOMContentLoaded', function() {
+            const resetBtn = document.getElementById('resetExitTimestampBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    const entryTime = "{{ optional($trade->timestamp)->format('H:i') }}";
+                    const entryDate = "{{ optional($trade->timestamp)->format('Y-m-d') }}";
+
+                    const exitTimeInput = document.getElementById('exit_time');
+                    const exitDateInput = document.getElementById('exit_date');
+
+                    if (exitTimeInput && entryTime) {
+                        exitTimeInput.value = entryTime;
+                    }
+                    if (exitDateInput && entryDate) {
+                        exitDateInput.value = entryDate;
+                    }
+
+                    // Optional: Feedback visual
+                    const btn = this;
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i> {{ __('trades.reset_done') }}';
+                    btn.classList.add('text-green-600', 'dark:text-green-400');
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('text-green-600', 'dark:text-green-400');
+                    }, 2000);
+                });
+            }
+        });
     </script>
 @endsection

@@ -287,6 +287,12 @@ return [
     'fill_fields_to_generate' => 'Please fill in some fields first to generate notes automatically.',
     'notes_generated' => 'Notes Generated!',
     'generate_error' => 'An error occurred while generating notes. See the console for details.',
+    'default_from_entry_time' => 'Default: entry time',
+    'default_from_entry_date' => 'Default: entry date',
+    'reset_to_entry_time' => 'Reset to entry time',
+    'reset_done' => 'Reset done!',
+    'entry_timestamp_label' => 'Entry time',
+    'exit_time_must_be_after_entry' => 'Exit time must be after entry time',
 
     // Trade Detail Page
     'trade_detail_title' => 'Trade Detail #:id',
