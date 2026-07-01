@@ -282,7 +282,7 @@
                         </div>
 
                         <!-- Management Actions - Improved -->
-                        <div class="relative group flex-1 sm:flex-none min-w-[120px] z-50">
+                        <div class="relative group flex-1 sm:flex-none min-w-[120px] z-20">
                             <button
                                 class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base transition-all shadow-md">
                                 <i class="fas fa-tools mr-1 sm:mr-2"></i>

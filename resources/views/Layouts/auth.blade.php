@@ -10,17 +10,18 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome untuk ikon tambahan (opsional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body class="bg-gray-50">
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-md space-y-8">
-            <!-- Konten utama dengan efek glassmorphism -->
-            <div class="bg-white py-2 px-6 shadow rounded-lg">
-                @yield('content')
-            </div>
-        </div>
+    <div class="min-h-screen">
+        @yield('content')
     </div>
+
+    <!-- Script tambahan untuk animasi -->
+    @stack('scripts')
 </body>
 
 </html>
