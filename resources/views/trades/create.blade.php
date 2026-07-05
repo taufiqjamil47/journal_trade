@@ -339,6 +339,42 @@
                                 </div>
                             </div>
 
+                            <!-- Currency Conversion Section -->
+                            <div
+                                class="my-6 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-800 shadow-inner">
+                                <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
+                                    <i class="fas fa-exchange-alt mr-2 text-amber-500"></i>
+                                    Konversi ke IDR
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <!-- Risk Amount IDR -->
+                                    <div
+                                        class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Jumlah Resiko (IDR)</p>
+                                        <p class="text-lg font-bold text-amber-600 dark:text-amber-400"
+                                            id="riskAmountIDR">-</p>
+                                        <p class="text-xs text-gray-400 mt-1">Kurs: <span
+                                                id="exchangeRateDisplay">Loading...</span></p>
+                                    </div>
+
+                                    <!-- Potential Loss IDR -->
+                                    <div
+                                        class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Potensi Loss (IDR)</p>
+                                        <p class="text-lg font-bold text-red-600 dark:text-red-400" id="potentialLossIDR">
+                                            -</p>
+                                    </div>
+
+                                    <!-- Potential Profit IDR -->
+                                    <div
+                                        class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Potensi Profit (IDR)</p>
+                                        <p class="text-lg font-bold text-green-600 dark:text-green-400"
+                                            id="potentialProfitIDR">-</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Risk Level Selector -->
                             <div
                                 class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
@@ -627,6 +663,120 @@
                 localStorage.setItem('balanceVisible', 'false');
                 toggleBalanceBtn.title = "{{ __('trades.show_balance') }}";
             }
+        });
+    </script>
+
+    <script>
+        // Currency Conversion to IDR
+        let exchangeRate = null;
+        let lastCalculationData = {};
+
+        async function fetchExchangeRate() {
+            try {
+                const response = await fetch('/api/exchange-rate?from=USD&to=IDR', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    exchangeRate = data.rate;
+                    document.getElementById('exchangeRateDisplay').textContent = 'Rp ' + Math.round(exchangeRate)
+                        .toLocaleString('id-ID');
+                    updateCurrencyConversions();
+                }
+            } catch (error) {
+                console.error('Error fetching exchange rate:', error);
+                document.getElementById('exchangeRateDisplay').textContent = 'Error';
+            }
+        }
+
+        function updateCurrencyConversions() {
+            if (!exchangeRate) return;
+
+            const entry = parseFloat(document.getElementById('entryPrice').value) || 0;
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
+            const takeProfit = parseFloat(document.querySelector('input[name="take_profit"]').value) || 0;
+            const type = document.querySelector('input[name="type"]:checked')?.value || 'buy';
+
+            const symbolSelect = document.querySelector('select[name="symbol_id"]');
+            const selectedOption = symbolSelect ? symbolSelect.options[symbolSelect.selectedIndex] : null;
+            const pipValue = selectedOption && (selectedOption.dataset.pipValue || selectedOption.dataset.pip_value) ?
+                parseFloat(selectedOption.dataset.pipValue || selectedOption.dataset.pip_value) : 0.0001;
+            const pipWorth = selectedOption && (selectedOption.dataset.pipWorth || selectedOption.dataset.pip_worth) ?
+                parseFloat(selectedOption.dataset.pipWorth || selectedOption.dataset.pip_worth) : 10;
+
+            const currentEquity = parseFloat({{ $currentEquity }});
+            const selectedRisk = document.querySelector('input[name="risk_percent"]:checked');
+            const riskPercent = selectedRisk ? parseFloat(selectedRisk.value) : 2;
+
+            if (entry && stopLoss && takeProfit && pipValue > 0 && pipWorth > 0) {
+                // Calculate pips
+                let slDistance, tpDistance;
+                if (type === 'buy') {
+                    slDistance = Math.abs(parseFloat((entry - stopLoss).toFixed(5)));
+                    tpDistance = Math.abs(parseFloat((takeProfit - entry).toFixed(5)));
+                } else {
+                    slDistance = Math.abs(parseFloat((stopLoss - entry).toFixed(5)));
+                    tpDistance = Math.abs(parseFloat((entry - takeProfit).toFixed(5)));
+                }
+
+                const slPipsRaw = slDistance / pipValue;
+                const tpPipsRaw = tpDistance / pipValue;
+                const slPips = Math.round(slPipsRaw * 10) / 10;
+                const tpPips = Math.round(tpPipsRaw * 10) / 10;
+
+                // Calculate USD values
+                const riskUSD = currentEquity * (riskPercent / 100);
+                const lotSize = slPips > 0 ? riskUSD / (slPips * pipWorth) : 0;
+                const potentialLossUSD = slPips * lotSize * pipWorth;
+                const potentialProfitUSD = tpPips * lotSize * pipWorth;
+
+                // Convert to IDR
+                const riskIDR = Math.round(riskUSD * exchangeRate);
+                const potentialLossIDR = Math.round(potentialLossUSD * exchangeRate);
+                const potentialProfitIDR = Math.round(potentialProfitUSD * exchangeRate);
+
+                // Update display
+                document.getElementById('riskAmountIDR').textContent = 'Rp ' + riskIDR.toLocaleString('id-ID');
+                document.getElementById('potentialLossIDR').textContent = '-Rp ' + potentialLossIDR.toLocaleString('id-ID');
+
+                const profitEl = document.getElementById('potentialProfitIDR');
+                profitEl.textContent = 'Rp ' + potentialProfitIDR.toLocaleString('id-ID');
+
+                // Store for potential use
+                lastCalculationData = {
+                    riskUSD,
+                    riskIDR,
+                    potentialLossUSD,
+                    potentialLossIDR,
+                    potentialProfitUSD,
+                    potentialProfitIDR,
+                    lotSize
+                };
+            } else {
+                document.getElementById('riskAmountIDR').textContent = '-';
+                document.getElementById('potentialLossIDR').textContent = '-';
+                document.getElementById('potentialProfitIDR').textContent = '-';
+            }
+        }
+
+        // Hook into calculatePositionSize to update currency conversions
+        const originalCalculatePositionSize = window.calculatePositionSize;
+        window.calculatePositionSize = function(slPips, pipWorth) {
+            originalCalculatePositionSize.call(this, slPips, pipWorth);
+            updateCurrencyConversions();
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchExchangeRate();
+
+            // Refresh exchange rate every 5 minutes
+            setInterval(fetchExchangeRate, 5 * 60 * 1000);
         });
     </script>
 

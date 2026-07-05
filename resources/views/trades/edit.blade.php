@@ -387,6 +387,51 @@
                         </div>
                     </div>
 
+                    <!-- Currency Conversion Section -->
+                    <div
+                        class="mb-8 mt-4 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-800 shadow-inner">
+                        <h3 class="text-lg font-bold mb-4 flex items-center text-amber-700 dark:text-amber-400">
+                            <div class="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg mr-3">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            Konversi Mata Uang (USD → IDR)
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Risk Amount IDR -->
+                            <div
+                                class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Jumlah Resiko (IDR)</p>
+                                <p class="text-lg font-bold text-amber-600 dark:text-amber-400">
+                                    <span id="riskAmountIDR">-</span>
+                                </p>
+                                <p class="text-xs text-gray-400 mt-1">Kurs: <span id="riskExchangeRate">Loading...</span>
+                                </p>
+                            </div>
+
+                            <!-- Gross PL IDR -->
+                            <div
+                                class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">PnL Kotor (IDR)</p>
+                                <p class="text-lg font-bold" id="grossPLIDR">-</p>
+                            </div>
+
+                            <!-- Commission IDR -->
+                            <div
+                                class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Komisi (IDR)</p>
+                                <p class="text-lg font-bold text-orange-600 dark:text-orange-400" id="commissionIDR">-</p>
+                            </div>
+
+                            <!-- Net PL IDR -->
+                            <div
+                                class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-amber-200 dark:border-amber-700">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">PnL Bersih (IDR)</p>
+                                <p class="text-lg font-bold" id="netPLIDR">-</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Quick Actions - Improved -->
                     <div
                         class="mt-8 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-inner">
@@ -567,7 +612,7 @@
     </div>
 
     <script>
-        // Use raw JSON-encoded numeric values from server to avoid locale/format mismatch
+        // Gunakan data dari server dengan presisi penuh
         const tradeData = {
             entry: Number(@json($trade->entry)),
             type: @json($trade->type),
@@ -578,12 +623,9 @@
             commissionPerLot: Number(@json($account->commission_per_lot ?? 0))
         };
 
-        // Ensure the exit input contains raw numeric value (not formatted) so parseFloat works
-        // If the view previously displayed a formatted exit, replace it with raw value for calculations
         document.addEventListener('DOMContentLoaded', function() {
             const exitInput = document.getElementById('exit');
             if (exitInput && exitInput.value !== undefined) {
-                // If value contains commas or non-numeric chars, normalize it
                 const rawExit = String(exitInput.value).replace(/,/g, '');
                 if (!isNaN(Number(rawExit))) {
                     exitInput.value = Number(rawExit);
@@ -594,6 +636,7 @@
             const riskPercentEl = document.getElementById('risk_percent');
             const riskUsdEl = document.getElementById('risk_usd');
             const lotSizeEl = document.getElementById('lot_size');
+            const exitPriceEl = document.getElementById('exit');
 
             if (riskPercentEl) {
                 riskPercentEl.addEventListener('input', function() {
@@ -642,22 +685,21 @@
                 });
             }
 
-            if (exitInput) {
-                exitInput.addEventListener('input', calculatePotentialPL);
+            if (exitPriceEl) {
+                exitPriceEl.addEventListener('input', calculatePotentialPL);
             }
 
-            // Trigger initial calculation if values exist
+            // Trigger initial calculation
             if (riskPercentEl && riskPercentEl.value) {
                 riskPercentEl.dispatchEvent(new Event('input'));
             } else {
                 calculatePotentialPL();
             }
 
-            // Update commission amount initially
             updateCommissionAmount();
         });
 
-        // Format currency with abbreviation (K, M, B)
+        // Format currency dengan abbreviation
         function formatCurrencyAbbrev(value) {
             const num = Number(value) || 0;
             const abs = Math.abs(num);
@@ -666,7 +708,6 @@
             return num.toFixed(2);
         }
 
-        // Update calculation preview values with formatting
         function updatePreviewValue(elementId, value, isNegative = false) {
             const el = document.getElementById(elementId);
             if (el) {
@@ -676,7 +717,7 @@
             }
         }
 
-        // Calculate potential P/L using the same logic as server
+        // PERBAIKAN UTAMA: Hitung P/L dengan presisi penuh
         function calculatePotentialPL() {
             const entry = Number(tradeData.entry);
             const exitRaw = document.getElementById('exit')?.value ?? '';
@@ -688,6 +729,7 @@
             const commissionPerLot = Number(tradeData.commissionPerLot) || 0;
 
             if (!isNaN(entry) && !isNaN(exit) && lotSize > 0) {
+                // Hitung pips dengan presisi penuh - JANGAN BULATKAN!
                 let pips;
                 if (type === 'buy') {
                     pips = (exit - entry) / pipValue;
@@ -695,14 +737,18 @@
                     pips = (entry - exit) / pipValue;
                 }
 
-                pips = Math.round(pips * 10) / 10;
+                // Hitung profit/loss dengan presisi penuh
                 const grossProfitLoss = pips * lotSize * pipWorth;
                 const commission = commissionPerLot * lotSize;
                 const netProfitLoss = grossProfitLoss - commission;
 
+                // Bulatkan hanya untuk tampilan (2 desimal)
                 const roundedGrossPL = Math.round(grossProfitLoss * 100) / 100;
                 const roundedCommission = Math.round(commission * 100) / 100;
                 const roundedNetPL = Math.round(netProfitLoss * 100) / 100;
+
+                // Tampilkan juga pips yang dihitung untuk debugging
+                const pipsDisplay = Math.round(pips * 10) / 10;
 
                 // Update gross P/L
                 const grossPLElement = document.getElementById('grossPL');
@@ -718,6 +764,24 @@
                 updatePreviewValue('netPL', roundedNetPL);
                 netPLElement.className =
                     `text-lg font-bold ${roundedNetPL >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`;
+
+                // Update currency conversions jika tersedia
+                if (typeof updateCurrencyConversions === 'function') {
+                    updateCurrencyConversions();
+                }
+
+                // Debug: log hasil perhitungan
+                console.log('=== PERHITUNGAN P/L ===');
+                console.log('Entry:', entry);
+                console.log('Exit:', exit);
+                console.log('Pips (presisi penuh):', pips);
+                console.log('Pips (tampilan):', pipsDisplay);
+                console.log('Lot Size:', lotSize);
+                console.log('Pip Worth:', pipWorth);
+                console.log('Gross P/L:', roundedGrossPL);
+                console.log('Commission:', roundedCommission);
+                console.log('Net P/L:', roundedNetPL);
+
             } else {
                 document.getElementById('grossPL').textContent = '-';
                 document.getElementById('grossPL').className = 'text-lg font-bold text-gray-400';
@@ -727,7 +791,6 @@
             }
         }
 
-        // Update commission amount display
         function updateCommissionAmount() {
             const lotSize = parseFloat(document.getElementById('lot_size')?.value) || 0;
             const commissionPerLot = Number(tradeData.commissionPerLot) || 0;
@@ -735,24 +798,19 @@
             const roundedCommission = Math.round(commission * 100) / 100;
 
             const commissionElement = document.getElementById('commissionAmount');
-            commissionElement.textContent = `-$${roundedCommission.toFixed(2)}`;
+            if (commissionElement) {
+                commissionElement.dataset.raw = roundedCommission;
+                commissionElement.textContent = `-$${roundedCommission.toFixed(2)}`;
+            }
         }
 
-        // Quick action functions
         function formatPrice(price) {
             if (price === null || price === undefined || price === '') return '';
-
-            // Normalize strings (remove commas) and convert to Number
             const num = Number(typeof price === 'string' ? price.replace(/,/g, '') : price);
             if (isNaN(num)) return String(price);
-
             const abs = Math.abs(num);
             const intPart = Math.floor(abs);
-
-            // If integer part has 2+ digits (>=10) -> 3 decimals, otherwise -> 5 decimals
             const decimals = intPart >= 10 ? 3 : 5;
-
-            // Use toFixed to round to required decimals and preserve sign
             return num.toFixed(decimals);
         }
 
@@ -920,4 +978,97 @@
             background-color: #6366f1;
         }
     </style>
+
+    <script>
+        // Currency Conversion to IDR
+        let exchangeRate = null;
+
+        async function fetchExchangeRate() {
+            try {
+                const response = await fetch('/api/exchange-rate?from=USD&to=IDR', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    exchangeRate = data.rate;
+                    document.getElementById('riskExchangeRate').textContent = 'Rp ' + Math.round(exchangeRate)
+                        .toLocaleString('id-ID');
+                    updateCurrencyConversions();
+                }
+            } catch (error) {
+                console.error('Error fetching exchange rate:', error);
+                document.getElementById('riskExchangeRate').textContent = 'Error';
+            }
+        }
+
+        function updateCurrencyConversions() {
+            if (!exchangeRate) return;
+
+            // Get USD values from data attributes or elements
+            const riskAmountEl = document.getElementById('riskAmount');
+            const grossPLEl = document.getElementById('grossPL');
+            const commissionAmountEl = document.getElementById('commissionAmount');
+            const netPLEl = document.getElementById('netPL');
+
+            // Convert Risk Amount
+            if (riskAmountEl && riskAmountEl.dataset.raw) {
+                const riskUSD = parseFloat(riskAmountEl.dataset.raw) || 0;
+                const riskIDR = Math.round(riskUSD * exchangeRate);
+                document.getElementById('riskAmountIDR').textContent = 'Rp ' + riskIDR.toLocaleString('id-ID');
+            }
+
+            // Convert Gross PL
+            if (grossPLEl && grossPLEl.dataset.raw) {
+                const grossUSD = parseFloat(grossPLEl.dataset.raw) || 0;
+                const grossIDR = Math.round(grossUSD * exchangeRate);
+                const grossPLIDREl = document.getElementById('grossPLIDR');
+                grossPLIDREl.textContent = 'Rp ' + Math.abs(grossIDR).toLocaleString('id-ID');
+                grossPLIDREl.className =
+                    `text-lg font-bold ${grossIDR >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-red-600 dark:text-red-400'}`;
+                if (grossIDR < 0) {
+                    grossPLIDREl.textContent = '-Rp ' + Math.abs(grossIDR).toLocaleString('id-ID');
+                }
+            }
+
+            // Convert Commission
+            if (commissionAmountEl && commissionAmountEl.dataset.raw) {
+                const commissionUSD = Math.abs(parseFloat(commissionAmountEl.dataset.raw) || 0);
+                const commissionIDR = Math.round(commissionUSD * exchangeRate);
+                document.getElementById('commissionIDR').textContent = '-Rp ' + commissionIDR.toLocaleString('id-ID');
+            }
+
+            // Convert Net PL
+            if (netPLEl && netPLEl.dataset.raw) {
+                const netUSD = parseFloat(netPLEl.dataset.raw) || 0;
+                const netIDR = Math.round(netUSD * exchangeRate);
+                const netPLIDREl = document.getElementById('netPLIDR');
+                netPLIDREl.textContent = 'Rp ' + Math.abs(netIDR).toLocaleString('id-ID');
+                netPLIDREl.className =
+                    `text-lg font-bold ${netIDR >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`;
+                if (netIDR < 0) {
+                    netPLIDREl.textContent = '-Rp ' + Math.abs(netIDR).toLocaleString('id-ID');
+                }
+            }
+        }
+
+        // Hook into existing calculatePotentialPL to update currency conversions
+        const originalCalculatePotentialPL = window.calculatePotentialPL;
+        window.calculatePotentialPL = function() {
+            originalCalculatePotentialPL.call(this);
+            updateCurrencyConversions();
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchExchangeRate();
+
+            // Refresh exchange rate every 5 minutes
+            setInterval(fetchExchangeRate, 5 * 60 * 1000);
+        });
+    </script>
 @endsection

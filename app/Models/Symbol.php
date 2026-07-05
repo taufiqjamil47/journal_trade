@@ -25,12 +25,34 @@ class Symbol extends Model
     // Symbol.php - tambahkan di class
     public function getPipValueAttribute($value)
     {
-        // Pastikan format konsisten
-        return (float) $value;
+        $value = (float) $value;
+
+        if ($this->isCommoditySymbol()) {
+            return 1.0;
+        }
+
+        return $value;
     }
 
     public function getPipWorthAttribute($value)
     {
-        return (float) ($value ?? 10.00);
+        $value = (float) ($value ?? 10.00);
+
+        if ($this->isCommoditySymbol()) {
+            return 100.0;
+        }
+
+        return $value;
+    }
+
+    protected function isCommoditySymbol(): bool
+    {
+        $name = strtoupper((string) ($this->attributes['name'] ?? ''));
+
+        return str_contains($name, 'XAU')
+            || str_contains($name, 'XAG')
+            || str_contains($name, 'XPT')
+            || str_contains($name, 'XPD')
+            || str_contains($name, 'BTC');
     }
 }
