@@ -358,4 +358,20 @@ return [
     'remaining_position' => 'Remaining Position',
     'full_close' => 'Full Close',
     'partial_position' => 'Partial Position',
+
+    // Bulk Delete
+    'bulk_delete' => 'Bulk Delete',
+    'bulk_delete_title' => 'Bulk Delete Trades',
+    'bulk_delete_warning' => 'You will permanently delete :count trades!',
+    'bulk_delete_confirmation' => 'Enter BULK_DELETE_:count to confirm',
+    'bulk_delete_btn' => 'Bulk Delete',
+    'bulk_delete_success' => ':count trades successfully deleted',
+    'select_trades' => 'Select Trades',
+    'select_at_least_one' => 'Select at least 1 trade to delete',
+    'selected_trades' => '<strong>:count</strong> selected trades',
+    'select_all' => 'Select All',
+    'deselect_all' => 'Deselect Selection',
+    'no_trades_selected' => 'No trades selected',
+    'please_select_trades' => 'Please select trades to delete',
+    'bulk_delete_confirmation_text' => 'Enter the confirmation code below to delete all selected trades',
 ];

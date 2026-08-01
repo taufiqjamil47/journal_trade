@@ -664,6 +664,84 @@ class TradeController extends Controller
         }
     }
 
+    // Bulk delete
+    /**
+     * Bulk delete multiple trades
+     */
+    public function bulkDelete(Request $request)
+    {
+        try {
+            // Validasi input
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'integer|exists:trades,id',
+                'confirmation' => 'required|string'
+            ]);
+
+            $ids = $request->input('ids');
+            $confirmation = $request->input('confirmation');
+            $expectedConfirmation = 'BULK_DELETE_' . count($ids);
+
+            // Validasi konfirmasi
+            if ($confirmation !== $expectedConfirmation) {
+                return response()->json([
+                    'success' => false,
+                    'message' => '❌ Kode konfirmasi tidak valid. Silakan ketik: ' . $expectedConfirmation
+                ], 400);
+            }
+
+            // Get selected account untuk validasi
+            $selectedAccountId = session('selected_account_id');
+
+            // Verifikasi semua trade milik account yang dipilih
+            $trades = Trade::whereIn('id', $ids)
+                ->where('account_id', $selectedAccountId)
+                ->get();
+
+            if ($trades->count() !== count($ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => '❌ Beberapa trade tidak ditemukan atau bukan milik akun yang dipilih'
+                ], 400);
+            }
+
+            // Mulai transaksi database
+            DB::transaction(function () use ($ids) {
+                // 1. Hapus relasi pivot table
+                DB::table('trade_rule')->whereIn('trade_id', $ids)->delete();
+
+                // 2. Hapus trades
+                Trade::whereIn('id', $ids)->delete();
+            });
+
+            Log::info('Bulk delete trades completed', [
+                'account_id' => $selectedAccountId,
+                'deleted_count' => count($ids),
+                'trade_ids' => $ids
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => '✅ ' . count($ids) . ' trade berhasil dihapus!',
+                'count' => count($ids)
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => '❌ Validasi gagal: ' . implode(', ', $e->errors())
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Bulk delete error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => '❌ Gagal menghapus trades: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     private function calculatePips($entry, $target, $type, $symbol)
     {
         $pipValue = $symbol->pip_value; // misal GBPUSD = 0.0001

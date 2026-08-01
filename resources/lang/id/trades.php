@@ -358,4 +358,20 @@ return [
     'remaining_position' => 'Posisi Tersisa',
     'full_close' => 'Tutup Penuh',
     'partial_position' => 'Posisi Parsial',
+
+    // Bulk Delete
+    'bulk_delete' => 'Hapus Massal',
+    'bulk_delete_title' => 'Hapus Massal Trade',
+    'bulk_delete_warning' => 'Anda akan menghapus :count trade secara permanen!',
+    'bulk_delete_confirmation' => 'Ketik BULK_DELETE_:count untuk konfirmasi',
+    'bulk_delete_btn' => 'Hapus Massal',
+    'bulk_delete_success' => ':count trade berhasil dihapus',
+    'select_trades' => 'Pilih Trade',
+    'select_at_least_one' => 'Pilih setidaknya 1 trade untuk dihapus',
+    'selected_trades' => '<strong>:count</strong> trade terpilih',
+    'select_all' => 'Pilih Semua',
+    'deselect_all' => 'Hapus Pilihan',
+    'no_trades_selected' => 'Belum ada trade yang dipilih',
+    'please_select_trades' => 'Silakan pilih trade yang akan dihapus',
+    'bulk_delete_confirmation_text' => 'Ketik kode konfirmasi di bawah ini untuk menghapus semua trade terpilih',
 ];

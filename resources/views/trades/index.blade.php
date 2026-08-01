@@ -17,7 +17,7 @@
             </div>
         </header>
 
-        <!-- Success Alert - Improved contrast -->
+        <!-- Success Alert -->
         @if (session('success'))
             <div
                 class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 border border-green-200 dark:border-green-700/50 mb-6">
@@ -30,7 +30,7 @@
             </div>
         @endif
 
-        <!-- Quick Stats - Improved contrast -->
+        <!-- Quick Stats -->
         @if ($trades->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <!-- Win Rate Card -->
@@ -94,7 +94,36 @@
             </div>
         @endif
 
-        <!-- Table Container - Improved contrast -->
+        <!-- ===== BULK ACTION BAR ===== -->
+        @if ($trades->count() > 0)
+            <div id="bulkActionBar"
+                class="hidden bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl border border-red-200 dark:border-red-700/50 p-4 mb-6 shadow-lg transition-all duration-300">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-red-600 dark:text-red-400">
+                            <i class="fas fa-check-double text-lg"></i>
+                        </span>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">
+                            {!! __('trades.selected_trades', ['count' => '<span id="selectedCount">0</span>']) !!}
+                        </span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="deselectAllTrades()"
+                            class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors">
+                            <i class="fas fa-times mr-2"></i>
+                            {{ __('trades.deselect_all') }}
+                        </button>
+                        <button onclick="confirmBulkDelete()"
+                            class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors shadow-md hover:shadow-lg">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            {{ __('trades.bulk_delete_btn') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- Table Container -->
         <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg mb-6">
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -106,7 +135,7 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <!-- Sorting Dropdown - Improved -->
+                        <!-- Sorting Dropdown -->
                         <div class="relative group flex-1 sm:flex-none min-w-[120px] z-40">
                             <button
                                 class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base">
@@ -163,7 +192,7 @@
                             </div>
                         </div>
 
-                        <!-- Import/Export Group - Improved -->
+                        <!-- Import/Export Group -->
                         <div class="relative group flex-1 sm:flex-none min-w-[120px] z-40">
                             <button
                                 class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base transition-all shadow-md">
@@ -281,7 +310,7 @@
                             </div>
                         </div>
 
-                        <!-- Management Actions - Improved -->
+                        <!-- Management Actions -->
                         <div class="relative group flex-1 sm:flex-none min-w-[120px] z-20">
                             <button
                                 class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center sm:justify-start text-sm sm:text-base transition-all shadow-md">
@@ -304,13 +333,24 @@
                                         </div>
                                     </a>
                                     <button onclick="quickClearAll()"
-                                        class="w-full text-left px-4 py-3 text-sm hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-700 dark:hover:text-red-300 flex items-center">
+                                        class="w-full text-left px-4 py-3 text-sm hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-700 dark:hover:text-red-300 flex items-center border-b border-gray-100 dark:border-gray-700">
                                         <i class="fas fa-trash-alt mr-3 text-red-500 w-5 text-center"></i>
                                         <div class="flex-1">
                                             <div class="font-medium text-gray-800 dark:text-gray-200">
                                                 {{ __('trades.clear_all_trades') }}</div>
                                             <div class="text-xs text-gray-500 dark:text-gray-400">
                                                 {{ __('trades.remove_all_data') }}</div>
+                                        </div>
+                                    </button>
+                                    <!-- Bulk Delete Option -->
+                                    <button onclick="selectAllTrades()"
+                                        class="w-full text-left px-4 py-3 text-sm hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 flex items-center">
+                                        <i class="fas fa-check-double mr-3 text-purple-500 w-5 text-center"></i>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-gray-800 dark:text-gray-200">
+                                                {{ __('trades.select_all') }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ __('trades.bulk_delete') }}</div>
                                         </div>
                                     </button>
                                 </div>
@@ -320,11 +360,16 @@
                 </div>
             </div>
 
-            <!-- Table - Improved contrast -->
+            <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="w-full min-w-max">
                     <thead>
                         <tr class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
+                            <!-- ===== CHECKBOX HEADER ===== -->
+                            <th class="py-4 px-4 text-left w-10">
+                                <input type="checkbox" id="selectAllCheckbox" onclick="toggleAllCheckboxes(this)"
+                                    class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:checked:bg-primary-500 transition-colors">
+                            </th>
                             <th
                                 class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                 #</th>
@@ -354,9 +399,6 @@
                                 P/L ($)</th>
                             <th
                                 class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                {{ __('trades.session') }}</th>
-                            <th
-                                class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('trades.result') }}</th>
                             <th
                                 class="py-4 px-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
@@ -365,39 +407,57 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($trades as $trade)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
-                                onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 trade-row"
+                                data-trade-id="{{ $trade->id }}">
+                                <!-- ===== CHECKBOX CELL ===== -->
+                                <td class="py-4 px-4 w-10" onclick="event.stopPropagation()">
+                                    <input type="checkbox"
+                                        class="trade-checkbox w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:checked:bg-primary-500 transition-colors"
+                                        data-trade-id="{{ $trade->id }}" onchange="updateBulkActionBar()">
+                                </td>
                                 <td class="py-4 px-4">
                                     <span
                                         class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                         {{ ($trades->currentPage() - 1) * $trades->perPage() + $loop->iteration }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-4 font-medium text-sm text-gray-900 dark:text-white">
-                                    {{ $trade->symbol->name }}</td>
-                                <td class="py-4 px-4">
+                                <td class="py-4 px-4 font-medium text-sm text-gray-900 dark:text-white"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
+                                    {{ $trade->symbol->name }}
+                                </td>
+                                <td class="py-4 px-4"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     <span
                                         class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $trade->type == 'buy' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
                                         {{ strtoupper($trade->type) }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-4 font-mono text-sm text-gray-900 dark:text-white">
+                                <td class="py-4 px-4 font-mono text-sm text-gray-900 dark:text-white"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     {{ format_price($trade->entry) }}</td>
-                                <td class="py-4 px-4">
+                                <td class="py-4 px-4"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     <div class="font-mono text-sm text-red-600 dark:text-red-400">
                                         {{ format_price($trade->stop_loss) }}</div>
                                     <div class="text-xs text-red-500 dark:text-red-400/70">{{ $trade->sl_pips }} pips
                                     </div>
                                 </td>
-                                <td class="py-4 px-4">
+                                <td class="py-4 px-4"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     <div class="font-mono text-sm text-green-600 dark:text-green-400">
                                         {{ format_price($trade->take_profit) }}</div>
                                     <div class="text-xs text-green-500 dark:text-green-400/70">{{ $trade->tp_pips }} pips
                                     </div>
                                 </td>
-                                <td class="py-4 px-4 text-sm text-gray-700 dark:text-gray-300">
-                                    {{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}</td>
-                                <td class="py-4 px-4 font-mono">
+                                <td class="py-4 px-4 text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
+                                    <div>{{ \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i') }}</div>
+                                    <div class="text-[10px] font-light text-gray-500 dark:text-gray-400 mt-0.5">
+                                        {{ $trade->session }}
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 font-mono"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     @if ($trade->exit)
                                         <div class="text-sm text-gray-900 dark:text-white">
                                             {{ format_price($trade->exit) }}</div>
@@ -407,20 +467,16 @@
                                         <span class="text-gray-400 dark:text-gray-500 italic">-</span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-4">
+                                <td class="py-4 px-4"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     <span
                                         class="font-mono font-semibold px-2.5 py-1 rounded-lg text-sm pl-display {{ $trade->profit_loss >= 0 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}"
                                         data-raw="{{ $trade->profit_loss ?? 0 }}">
                                         {{ $trade->profit_loss ?? '-' }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-4">
-                                    <span
-                                        class="px-2.5 py-1 rounded-lg text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
-                                        {{ $trade->session }}
-                                    </span>
-                                </td>
-                                <td class="py-4 px-4">
+                                <td class="py-4 px-4"
+                                    onclick="window.location.href='{{ route('trades.show', $trade->id) }}?page={{ $trades->currentPage() }}'">
                                     @if ($trade->hasil)
                                         <span
                                             class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $trade->hasil == 'win' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800' }}">
@@ -457,7 +513,7 @@
                                             </button>
                                         </div>
 
-                                        <!-- Tombol Duplicate - Sekarang akan selalu berfungsi -->
+                                        <!-- Tombol Duplicate -->
                                         <button onclick="duplicateTrade(event, {{ $trade->id }})"
                                             class="duplicate-btn absolute -left-8 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-2 py-2 rounded-lg flex items-center justify-center transition-all duration-200 opacity-0 group-hover/row:opacity-100 group-hover/row:translate-x-0"
                                             title="{{ __('trades.duplicate_trade') }}">
@@ -468,7 +524,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="12" class="py-16 text-center">
+                                <td colspan="13" class="py-16 text-center">
                                     <div
                                         class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 space-y-4">
                                         <div class="bg-gray-100 dark:bg-gray-700 rounded-full p-6">
@@ -527,7 +583,22 @@
             no_data: "{{ __('trades.no_data') }}",
             no_trades_to_clear: "{{ __('trades.no_trades_to_clear') }}",
             connection_error: "{{ __('trades.connection_error') }}",
-            please_check_connection: "{{ __('trades.please_check_connection') }}"
+            please_check_connection: "{{ __('trades.please_check_connection') }}",
+
+            bulk_delete: "{{ __('trades.bulk_delete') }}",
+            bulk_delete_title: "{{ __('trades.bulk_delete_title') }}",
+            bulk_delete_warning: "{{ __('trades.bulk_delete_warning') }}",
+            bulk_delete_confirmation: "{{ __('trades.bulk_delete_confirmation') }}",
+            bulk_delete_btn: "{{ __('trades.bulk_delete_btn') }}",
+            bulk_delete_success: "{{ __('trades.bulk_delete_success') }}",
+            select_trades: "{{ __('trades.select_trades') }}",
+            select_at_least_one: "{{ __('trades.select_at_least_one') }}",
+            selected_trades: "{{ __('trades.selected_trades') }}",
+            select_all: "{{ __('trades.select_all') }}",
+            deselect_all: "{{ __('trades.deselect_all') }}",
+            no_trades_selected: "{{ __('trades.no_trades_selected') }}",
+            please_select_trades: "{{ __('trades.please_select_trades') }}",
+            bulk_delete_confirmation_text: "{{ __('trades.bulk_delete_confirmation_text') }}",
         };
 
         const deleteTranslations = {
@@ -1018,6 +1089,292 @@
         });
     </script>
 
+    <!-- BULK DELETE JAVASCRIPT -->
+    <script>
+        /**
+         * Update Bulk Action Bar berdasarkan checkbox yang dipilih
+         */
+        function updateBulkActionBar() {
+            const checkboxes = document.querySelectorAll('.trade-checkbox:checked');
+            const count = checkboxes.length;
+            const bar = document.getElementById('bulkActionBar');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (count > 0) {
+                bar.classList.remove('hidden');
+                selectedCount.textContent = count;
+            } else {
+                bar.classList.add('hidden');
+            }
+
+            // Update "Select All" checkbox state
+            const allCheckboxes = document.querySelectorAll('.trade-checkbox');
+            const checkedCheckboxes = document.querySelectorAll('.trade-checkbox:checked');
+            const selectAll = document.getElementById('selectAllCheckbox');
+
+            if (allCheckboxes.length === checkedCheckboxes.length && allCheckboxes.length > 0) {
+                selectAll.checked = true;
+                selectAll.indeterminate = false;
+            } else if (checkedCheckboxes.length > 0) {
+                selectAll.checked = false;
+                selectAll.indeterminate = true;
+            } else {
+                selectAll.checked = false;
+                selectAll.indeterminate = false;
+            }
+        }
+
+        /**
+         * Toggle all checkboxes
+         */
+        function toggleAllCheckboxes(selectAll) {
+            const checkboxes = document.querySelectorAll('.trade-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+            });
+            updateBulkActionBar();
+        }
+
+        /**
+         * Select all trades (triggered from dropdown)
+         */
+        function selectAllTrades() {
+            const checkboxes = document.querySelectorAll('.trade-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+            });
+            updateBulkActionBar();
+
+            // Scroll to top of table
+            document.querySelector('.table-container')?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        /**
+         * Deselect all trades
+         */
+        function deselectAllTrades() {
+            const checkboxes = document.querySelectorAll('.trade-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+            updateBulkActionBar();
+        }
+
+        /**
+         * Confirm and execute bulk delete
+         */
+        function confirmBulkDelete() {
+            const selectedCheckboxes = document.querySelectorAll('.trade-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.tradeId));
+            const count = selectedIds.length;
+
+            if (count === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: translations.select_trades,
+                    text: translations.select_at_least_one,
+                    confirmButtonColor: '#3085d6'
+                });
+                return;
+            }
+
+            // Get selected trade info for display
+            const selectedRows = document.querySelectorAll('.trade-checkbox:checked');
+            let tradeDetails = '';
+            selectedRows.forEach((cb, index) => {
+                const row = cb.closest('tr');
+                if (row) {
+                    const symbol = row.querySelector('td:nth-child(3)')?.textContent?.trim() || 'Unknown';
+                    const type = row.querySelector('td:nth-child(4) span')?.textContent?.trim() || '?';
+                    tradeDetails += `
+                        <div class="flex items-center gap-2 text-sm py-1 border-b border-gray-700/30">
+                            <span class="text-gray-400 w-6 text-right">${index + 1}.</span>
+                            <span class="font-medium text-gray-200">${symbol}</span>
+                            <span class="text-xs ${type === 'BUY' ? 'text-green-400' : 'text-red-400'}">${type}</span>
+                            <span class="text-gray-500 text-xs">(ID: ${cb.dataset.tradeId})</span>
+                        </div>
+                    `;
+                }
+            });
+
+            const confirmationCode = `BULK_DELETE_${count}`;
+
+            Swal.fire({
+                title: '🚨 ' + translations.bulk_delete_title + '?',
+                html: `
+                    <div class="text-left text-sm">
+                        <p class="text-red-400 mb-3 font-bold">⚠️ ${translations.bulk_delete_warning.replace(':count', count)}</p>
+                        <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700/30 max-h-40 overflow-y-auto">
+                            ${tradeDetails}
+                        </div>
+                        <p class="text-gray-300 mb-3">${translations.bulk_delete_confirmation_text}</p>
+                        <div class="bg-dark-800/50 p-3 rounded-lg mb-3">
+                            <code class="text-red-400 font-mono font-bold text-lg">${confirmationCode}</code>
+                        </div>
+                        <p class="text-gray-400 text-xs">${translations.bulk_delete_confirmation.replace(':count', count)}</p>
+                        <input type="text" 
+                               id="bulkDeleteConfirmInput" 
+                               class="swal2-input w-full mt-3" 
+                               placeholder="${translations.please_type_confirmation}..."
+                               autocomplete="off">
+                    </div>
+                `,
+                icon: 'warning',
+                iconColor: '#ef4444',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-trash-alt mr-2"></i>' + translations.bulk_delete_btn,
+                cancelButtonText: '<i class="fas fa-times mr-2"></i>' + translations.cancel_btn,
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !Swal.isLoading(),
+                reverseButtons: true,
+                customClass: {
+                    popup: 'bg-gray-800 border border-red-700/30',
+                    title: 'text-red-300',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'hover:bg-red-700',
+                    cancelButton: 'hover:bg-gray-700'
+                },
+                preConfirm: () => {
+                    const input = document.getElementById('bulkDeleteConfirmInput');
+                    const typed = input?.value?.trim() || '';
+
+                    if (typed !== confirmationCode) {
+                        Swal.showValidationMessage(
+                            `<div class="text-red-400 text-sm">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                ${translations.please_type_confirmation} <code class="bg-red-900/30 px-1 py-0.5 rounded">${confirmationCode}</code>
+                            </div>`
+                        );
+                        return false;
+                    }
+
+                    return {
+                        ids: selectedIds,
+                        confirmation: typed
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Menghapus ' + count + ' trade...',
+                        html: `
+                            <div class="text-center">
+                                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500 mb-4"></div>
+                                <p class="text-gray-400">Mohon tunggu, sedang menghapus ${count} trade...</p>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+                    // Execute bulk delete
+                    fetch('{{ route('trades.bulk-delete') }}', {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify(result.value)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    iconColor: '#10b981',
+                                    title: '✅ Berhasil!',
+                                    html: `
+                                    <div class="text-center">
+                                        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                                            <i class="fas fa-check text-green-500 text-2xl"></i>
+                                        </div>
+                                        <p class="text-green-400 font-bold text-lg">${data.message}</p>
+                                        <p class="text-gray-400 text-sm mt-2">Halaman akan di-reload...</p>
+                                    </div>
+                                `,
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    willClose: () => {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal!',
+                                    html: `
+                                    <div class="text-left">
+                                        <p class="text-red-400">${data.message || 'Terjadi kesalahan'}</p>
+                                    </div>
+                                `,
+                                    confirmButtonColor: '#d33'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Bulk Delete Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Koneksi Error',
+                                html: `
+                                <div class="text-left">
+                                    <p class="text-red-400">Gagal terhubung ke server</p>
+                                    <p class="text-gray-400 text-sm mt-2">${error.message}</p>
+                                </div>
+                            `,
+                                confirmButtonColor: '#d33'
+                            });
+                        });
+                }
+            });
+        }
+
+        // Real-time validation for bulk delete confirmation input
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add input validation styling
+            document.addEventListener('input', function(e) {
+                if (e.target.id === 'bulkDeleteConfirmInput') {
+                    const count = document.querySelectorAll('.trade-checkbox:checked').length;
+                    const expected = `BULK_DELETE_${count}`;
+
+                    if (e.target.value.trim() === expected) {
+                        e.target.style.borderColor = '#10b981';
+                        e.target.style.boxShadow = '0 0 0 2px rgba(16, 185, 129, 0.3)';
+                    } else {
+                        e.target.style.borderColor = '#ef4444';
+                        e.target.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.3)';
+                    }
+                }
+            });
+
+            // Initialize bulk action bar state
+            updateBulkActionBar();
+        });
+
+        // Keyboard shortcut: Ctrl+A to select all (only when not in input/textarea)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+                const activeElement = document.activeElement;
+                if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' ||
+                        activeElement.tagName === 'SELECT')) {
+                    return;
+                }
+                e.preventDefault();
+                selectAllTrades();
+            }
+        });
+    </script>
+
     <!-- Duplicate Trade Function -->
     <script>
         // Fungsi untuk duplicate trade
@@ -1194,6 +1551,111 @@
             /* border: 1px solid rgba(239, 68, 68, 0.3) !important; */
             color: #fca5a5 !important;
             /* border-radius: 0.25rem !important; */
+        }
+    </style>
+
+    <!-- Bulk Delete Style -->
+    <style>
+        /* ===== BULK DELETE STYLES ===== */
+
+        /* Checkbox styling */
+        .trade-checkbox,
+        #selectAllCheckbox {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .trade-checkbox:hover,
+        #selectAllCheckbox:hover {
+            transform: scale(1.1);
+        }
+
+        .trade-checkbox:checked,
+        #selectAllCheckbox:checked {
+            background-color: #ef4444 !important;
+            border-color: #ef4444 !important;
+        }
+
+        /* Bulk action bar animation */
+        #bulkActionBar {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Selected row highlight */
+        .trade-checkbox:checked {
+            accent-color: #ef4444;
+        }
+
+        /* Row highlight when checkbox checked */
+        tr:has(.trade-checkbox:checked) {
+            background-color: rgba(239, 68, 68, 0.05) !important;
+        }
+
+        .dark tr:has(.trade-checkbox:checked) {
+            background-color: rgba(239, 68, 68, 0.1) !important;
+        }
+
+        /* SweetAlert custom styles */
+        .swal2-popup {
+            background: #1f2937 !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            border-radius: 0.75rem !important;
+        }
+
+        .swal2-title {
+            color: #fca5a5 !important;
+            font-weight: 600 !important;
+        }
+
+        .swal2-html-container {
+            color: #d1d5db !important;
+        }
+
+        .swal2-input {
+            background-color: rgba(31, 41, 55, 0.8) !important;
+            border: 1px solid rgba(239, 68, 68, 0.4) !important;
+            color: #f3f4f6 !important;
+            border-radius: 0.5rem !important;
+            padding: 0.75rem 1rem !important;
+            margin: 0 !important;
+        }
+
+        .swal2-input:focus {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .swal2-confirm {
+            background: #ef4444 !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 1.5rem !important;
+            font-weight: 500 !important;
+        }
+
+        .swal2-cancel {
+            background-color: #374151 !important;
+            border: 1px solid #4b5563 !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 1.5rem !important;
+            font-weight: 500 !important;
+        }
+
+        .swal2-validation-message {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: #fca5a5 !important;
         }
     </style>
 

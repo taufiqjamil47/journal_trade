@@ -97,6 +97,9 @@ Route::group([
 
         Route::delete('/trades/clear-all', [TradeController::class, 'clearAll'])->name('trades.clear-all');
 
+        // Bulk delete
+        Route::delete('/trades/bulk-delete', [TradeController::class, 'bulkDelete'])->name('trades.bulk-delete');
+
         // Route::put('/trading-rules/{id}', [TradingRuleController::class, 'updateOrder'])
         //     ->name('trading-rules.update');
         Route::put('/trading-rules/{id}/order', [TradingRuleController::class, 'updateOrder'])

@@ -22,37 +22,42 @@ class Symbol extends Model
         return $this->hasMany(Trade::class);
     }
 
-    // Symbol.php - tambahkan di class
     public function getPipValueAttribute($value)
     {
         $value = (float) $value;
 
-        if ($this->isCommoditySymbol()) {
+        // Pertahankan hardcode hanya untuk Emas/Metal tradisional jika dirasa perlu
+        if ($this->isMetalSymbol()) {
             return 1.0;
         }
 
+        // Untuk BTCUSD dan Forex, biarkan menggunakan nilai asli dari database (BTCUSD = 0.1)
         return $value;
     }
 
     public function getPipWorthAttribute($value)
     {
+        // Jika di database null, beri default 10.00 (standar forex)
         $value = (float) ($value ?? 10.00);
 
-        if ($this->isCommoditySymbol()) {
+        if ($this->isMetalSymbol()) {
             return 100.0;
         }
 
+        // Untuk BTCUSD, biarkan menggunakan nilai asli database (BTCUSD = 0.1)
         return $value;
     }
 
-    protected function isCommoditySymbol(): bool
+    /**
+     * Khusus untuk rumpun Metal (Emas, Perak, Platina) yang menggunakan standar kontrak komoditas
+     */
+    protected function isMetalSymbol(): bool
     {
         $name = strtoupper((string) ($this->attributes['name'] ?? ''));
 
         return str_contains($name, 'XAU')
             || str_contains($name, 'XAG')
             || str_contains($name, 'XPT')
-            || str_contains($name, 'XPD')
-            || str_contains($name, 'BTC');
+            || str_contains($name, 'XPD');
     }
 }
