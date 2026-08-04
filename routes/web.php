@@ -63,6 +63,9 @@ Route::group([
         Route::post('/accounts/{account}/investors/profit-share', [App\Http\Controllers\InvestorController::class, 'assignProfitShare'])->name('accounts.investors.profit-share');
         Route::get('/accounts/{account}/investor-report', [App\Http\Controllers\InvestorController::class, 'report'])->name('accounts.investors.report');
         Route::post('/accounts/{account}/sync-initial-balance', [App\Http\Controllers\AccountController::class, 'syncInitialBalance'])->name('accounts.sync-initial-balance');
+        Route::post('/accounts/{account}/connect-mt5', [App\Http\Controllers\AccountController::class, 'connectMt5'])->name('accounts.connect-mt5');
+        Route::post('/accounts/{account}/disconnect-mt5', [App\Http\Controllers\AccountController::class, 'disconnectMt5'])->name('accounts.disconnect-mt5');
+        Route::post('/accounts/{account}/sync-mt5', [App\Http\Controllers\AccountController::class, 'syncMt5'])->name('accounts.sync-mt5');
         Route::post('/currency/clear-cache', [App\Http\Controllers\InvestorController::class, 'clearCurrencyCache'])->name('currency.clear-cache');
 
         // Semua route yang sudah ada

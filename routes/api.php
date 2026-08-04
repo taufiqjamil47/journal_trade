@@ -19,6 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/mt5/webhook', [App\Http\Controllers\Api\Mt5Controller::class, 'webhook']);
+Route::post('/mt5/accounts/{account}/sync', [App\Http\Controllers\Api\Mt5Controller::class, 'sync']);
+
 Route::get('/exchange-rate', function (Request $request) {
     try {
         $from = $request->get('from', 'USD');

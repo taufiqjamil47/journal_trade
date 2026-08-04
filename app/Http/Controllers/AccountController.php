@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Services\Mt5SyncService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -126,5 +127,60 @@ class AccountController extends Controller
 
         return redirect()->route('accounts.show', $account)
             ->with('success', 'Initial balance telah disesuaikan dengan total modal investor.');
+    }
+
+    public function connectMt5(Request $request, string $id)
+    {
+        $account = Account::findOrFail($id);
+
+        $request->validate([
+            'mt5_server' => 'required|string|max:255',
+            'mt5_login' => 'required|string|max:255',
+            'mt5_api_token' => 'nullable|string|max:255',
+        ]);
+
+        $account->update([
+            'mt5_sync_enabled' => true,
+            'mt5_server' => $request->mt5_server,
+            'mt5_login' => $request->mt5_login,
+            'mt5_api_token' => $request->mt5_api_token,
+        ]);
+
+        return redirect()->route('accounts.show', $account)
+            ->with('success', 'Akun MT5 berhasil dihubungkan.');
+    }
+
+    public function disconnectMt5(string $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->update([
+            'mt5_sync_enabled' => false,
+            'mt5_server' => null,
+            'mt5_login' => null,
+            'mt5_api_token' => null,
+        ]);
+
+        return redirect()->route('accounts.show', $account)
+            ->with('success', 'Koneksi MT5 telah diputus.');
+    }
+
+    public function syncMt5(string $id, Mt5SyncService $syncService)
+    {
+        $account = Account::findOrFail($id);
+
+        if (! $account->mt5_sync_enabled) {
+            return redirect()->route('accounts.show', $account)
+                ->with('error', 'Akun MT5 belum terhubung.');
+        }
+
+        try {
+            $result = $syncService->syncAccountTradesFromMt5($account);
+            return redirect()->route('accounts.show', $account)
+                ->with('success', "Sinkronisasi MT5 selesai: {$result['created']} dibuat, {$result['updated']} diperbarui.");
+        } catch (\Throwable $exception) {
+            Log::error('MT5 sync failed for account ' . $account->id . ': ' . $exception->getMessage());
+            return redirect()->route('accounts.show', $account)
+                ->with('error', 'Sinkronisasi MT5 gagal: ' . $exception->getMessage());
+        }
     }
 }

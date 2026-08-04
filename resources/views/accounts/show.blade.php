@@ -1,7 +1,7 @@
 @extends('Layouts.index')
 @section('title', __('account.show.page_title'))
 @section('content')
-    <div class="container mx-auto px-4 py-6 max-w-4xl">
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
         <!-- Flash Messages -->
         @if (session('success'))
             <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800 mb-6">
@@ -175,6 +175,116 @@
                 </div>
             </div>
 
+            <!-- MT5 Connection -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                    <div class="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg mr-3">
+                        <i class="fas fa-plug text-green-600 dark:text-green-400"></i>
+                    </div>
+                    MT5 Sync
+                </h2>
+
+                @if ($account->mt5_sync_enabled)
+                    <div class="space-y-4">
+                        <div
+                            class="rounded-lg border border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20 p-4">
+                            <p class="text-sm text-green-800 dark:text-green-200">Akun MT5 terhubung.</p>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">Server:
+                                <strong>{{ $account->mt5_server }}</strong>
+                            </p>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">Login:
+                                <strong>{{ $account->mt5_login }}</strong>
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {{-- <form action="{{ route('accounts.sync-mt5', $account) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 inline-flex items-center justify-center">
+                                    <i class="fas fa-sync-alt mr-2"></i>Sync MT5 Sekarang
+                                </button>
+                            </form> --}}
+                            <form action="{{ route('accounts.disconnect-mt5', $account) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 inline-flex items-center justify-center">
+                                    <i class="fas fa-unlink mr-2"></i>Putuskan Koneksi MT5
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <form action="{{ route('accounts.connect-mt5', $account) }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Server MT5</label>
+                                <input type="text" name="mt5_server" required value="{{ old('mt5_server') }}"
+                                    placeholder="https://mt5.example.com"
+                                    class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2" />
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Masukkan URL endpoint MT5 yang
+                                    mengembalikan JSON, misalnya <code>https://mt5.example.com/trades</code> atau
+                                    <code>https://mt5.example.com/api/trades</code>. Jika server Anda tidak menyediakan
+                                    endpoint API, gunakan webhook payload dari aplikasi MT5 Anda.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Login MT5</label>
+                                <input type="text" name="mt5_login" required value="{{ old('mt5_login') }}"
+                                    class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2" />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">API Token</label>
+                                <input type="text" name="mt5_api_token" placeholder="API Token (opsional)"
+                                    value="{{ old('mt5_api_token') }}"
+                                    class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-2" />
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="bg-green-600 hover:bg-green-700 text-white rounded-lg px-4 py-2 inline-flex items-center">
+                            <i class="fas fa-link mr-2"></i>Hubungkan ke MT5
+                        </button>
+                    </form>
+                @endif
+            </div>
+
+            <!-- MT5 Sync Status -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                    <div class="bg-primary-100 dark:bg-primary-900/30 p-2 rounded-lg mr-3">
+                        <i class="fas fa-sync-alt text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    Status Sinkronisasi MT5
+                </h2>
+
+                @if ($account->mt5_last_sync_at)
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Terakhir
+                                disinkronkan:</span>
+                            <span
+                                class="text-sm text-gray-900 dark:text-gray-100">{{ $account->mt5_last_sync_at->format('d M Y H:i') }}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Status:</span>
+                            <span
+                                class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold
+                                {{ $account->mt5_last_sync_status === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : ($account->mt5_last_sync_status === 'failed' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300') }}">
+                                {{ ucfirst($account->mt5_last_sync_status) }}</span>
+                        </div>
+                        @if ($account->mt5_last_sync_message)
+                            <div
+                                class="rounded-lg bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 p-3 text-sm text-gray-700 dark:text-gray-300">
+                                {{ $account->mt5_last_sync_message }}
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Belum pernah melakukan sinkronisasi MT5.</p>
+                @endif
+            </div>
+
             <!-- Timestamps -->
             <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
@@ -215,7 +325,8 @@
 
             <!-- Currency Info -->
             @if ($currency === 'USD')
-                <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div
+                    class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                     <div class="flex justify-between items-center">
                         <div class="text-sm text-blue-800 dark:text-blue-300">
                             <strong>💱 {{ __('account.show.currency_info') }}:</strong>

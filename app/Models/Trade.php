@@ -21,6 +21,8 @@ class Trade extends Model
         'take_profit',
         'exit',
         'exit_timestamp',
+        'mt5_ticket',
+        'mt5_comment',
         'sl_pips',
         'tp_pips',
         'exit_pips',

@@ -12,6 +12,9 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'api/*',                    // Semua API routes
+        'api/mt5/webhook',          // Spesifik webhook
+        'mt5/webhook',              // Alternatif
+        '*/webhook',                // Wildcard
     ];
 }
