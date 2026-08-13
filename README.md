@@ -256,6 +256,81 @@ php artisan queue:work
 
 ---
 
+## 🤖 Integrasi MetaTrader 5 (Auto Sync Trade)
+
+Aplikasi ini dilengkapi **Expert Advisor (EA)** khusus — `LaravelTradeBridge.mq5` — yang mengirim data trade dari MetaTrader 5 langsung ke Trading Journal secara otomatis melalui webhook, tanpa perlu input manual.
+
+### 📌 Cara Kerja
+
+EA berjalan di dalam MetaTrader 5 dan mengirim data (posisi terbuka + history) ke endpoint `POST /api/mt5/webhook` dalam format JSON, setiap interval waktu tertentu atau setiap kali ada perubahan posisi (open/close). Data yang dikirim mencakup ticket, symbol, tipe (buy/sell), harga entry/exit, SL/TP, profit/loss, lot size, dan status posisi (terbuka/tertutup).
+
+### 1️⃣ Pasang EA di MetaTrader 5
+
+1. Buka **MetaTrader 5** → menu **File > Open Data Folder**.
+2. Masuk ke folder `MQL5/Experts/`.
+3. Salin file `LaravelTradeBridge.mq5` ke folder tersebut.
+4. Kembali ke MetaTrader 5, buka **MetaEditor** (tekan `F4`), lalu buka file yang baru disalin dan klik **Compile** (`F7`). Pastikan tidak ada error.
+
+### 2️⃣ Izinkan WebRequest ke URL Aplikasi
+
+MetaTrader 5 memblokir semua request HTTP keluar secara default, sehingga URL webhook harus di-whitelist:
+
+1. Di MetaTrader 5, buka **Tools > Options > Expert Advisors**.
+2. Centang **"Allow WebRequest for listed URL"**.
+3. Tambahkan URL aplikasi Anda, misalnya:
+   - Untuk development lokal: `http://127.0.0.1:8000`
+   - Untuk server production: `https://domain-anda.com`
+4. Klik **OK**.
+
+> ⚠️ Tanpa langkah ini, EA akan gagal mengirim data dengan error `4014` di log (`URL tidak di-allow di MetaEditor`).
+
+### 3️⃣ Hubungkan Akun MT5 di Aplikasi
+
+Sebelum EA bisa mengirim data, akun trading harus terhubung dulu di sisi Laravel:
+
+1. Login ke Trading Journal, buka menu **Akun (Accounts)**.
+2. Buat/pilih akun trading, lalu hubungkan ke MT5 melalui aksi **Connect MT5** (route `accounts.connect-mt5`).
+3. Catat **Account ID** (angka ID akun di Laravel, bukan nomor login MT5) — ID ini akan diisi ke parameter EA di langkah berikutnya.
+
+### 4️⃣ Pasang EA ke Chart & Atur Parameter
+
+1. Buka chart simbol apa pun di MT5 (EA ini mengirim seluruh posisi & history akun, bukan hanya simbol pada chart).
+2. Di **Navigator**, cari `LaravelTradeBridge` di bawah **Expert Advisors**, lalu drag ke chart.
+3. Pada tab **Inputs**, atur:
+
+   | Parameter | Keterangan |
+   |---|---|
+   | `WebhookURL` | URL endpoint webhook, contoh: `http://127.0.0.1:8000/api/mt5/webhook` |
+   | `LaravelAccountId` | ID akun di Laravel (dari langkah 3️⃣ di atas) |
+   | `SendOnTimer` | Kirim data otomatis tiap interval waktu |
+   | `TimerInterval` | Interval pengiriman dalam detik (minimum 5) |
+   | `SendOnTrade` | Kirim data setiap kali ada perubahan posisi (open/close) |
+   | `IncludeHistory` | Sertakan history trade yang sudah tertutup |
+   | `HistoryDays` | Jumlah hari ke belakang untuk history yang diambil |
+   | `DebugMode` | Tampilkan log detail di tab **Experts** untuk debugging |
+
+4. Pastikan tombol **AutoTrading** di toolbar MT5 dalam keadaan **aktif (hijau)** — tanpa ini EA tidak akan berjalan.
+5. Klik **OK**. EA akan langsung mengirim data pertama kali saat dipasang.
+
+### 5️⃣ Verifikasi Data Terkirim
+
+- Buka tab **Experts** atau **Toolbox > Experts** di MT5 untuk melihat log pengiriman. Log sukses ditandai dengan `✅ Webhook sent successfully`.
+- Sync manual kapan saja dengan menekan tombol **`s`** saat chart yang berisi EA sedang aktif/fokus.
+- Di sisi Laravel, cek apakah trade baru muncul di halaman **Trades** atau **Dashboard**.
+- Anda juga bisa memicu sinkronisasi dari sisi aplikasi lewat aksi **Sync MT5** pada akun terkait (route `accounts.sync-mt5`, memanggil `POST /api/mt5/accounts/{account}/sync`).
+
+### 🩺 Troubleshooting EA
+
+| Gejala | Penyebab | Solusi |
+|---|---|---|
+| Error `4014` di log | URL webhook belum di-whitelist | Tambahkan URL di **Tools > Options > Expert Advisors** |
+| Error `1003` (timeout) | Server lambat merespons atau data terlalu besar | Perbesar `TimerInterval`, kurangi `HistoryDays`, atau cek performa server |
+| Webhook mengembalikan status selain 200 | `account_id` tidak valid/tidak ditemukan, atau payload ditolak validasi | Pastikan `LaravelAccountId` sesuai ID akun yang benar-benar ada di database |
+| EA tidak mengirim sama sekali | AutoTrading nonaktif atau EA gagal di-attach | Aktifkan tombol AutoTrading dan pastikan tidak ada error saat compile |
+| Data tidak realtime | `SendOnTimer`/`SendOnTrade` dimatikan, atau interval terlalu besar | Aktifkan keduanya dan kecilkan `TimerInterval` sesuai kebutuhan |
+
+---
+
 ## 🧪 Testing
 
 Jalankan test suite untuk memastikan aplikasi berjalan dengan baik:
