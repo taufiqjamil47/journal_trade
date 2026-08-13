@@ -12,23 +12,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Mt5Controller extends Controller
 {
+    // Mt5Controller.php
     public function webhook(Request $request, Mt5SyncService $syncService): JsonResponse
     {
-        // 🔥 FIX: Bersihkan raw content dari null terminator
         $rawContent = $request->getContent();
         $rawContent = str_replace("\0", "", $rawContent);
-
-        // Parse ulang dengan raw content yang sudah dibersihkan
         $decoded = json_decode($rawContent, true);
 
-        Log::info('MT5 Webhook Received (cleaned)', [
-            'raw_cleaned' => substr($rawContent, 0, 500),
+        Log::info('MT5 Webhook Received', [
             'decoded' => $decoded,
             'account_id' => $decoded['account_id'] ?? null,
         ]);
 
         $accountId = $decoded['account_id'] ?? null;
-
         if (!$accountId) {
             return response()->json([
                 'success' => false,
@@ -45,7 +41,9 @@ class Mt5Controller extends Controller
         }
 
         try {
+            // 🔥 PISAHKAN POSISI TERBUKA DAN HISTORY
             $result = $syncService->syncAccountTradesFromPayload($account, $decoded);
+
             return response()->json([
                 'success' => true,
                 'message' => 'MT5 webhook sinkronisasi berhasil.',

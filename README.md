@@ -1,147 +1,380 @@
 ﻿# 📊 Trading Journal
 
-Aplikasi Trading Journal berbasis Laravel untuk mencatat dan memonitor aktivitas trading. Dokumentasi ini disajikan secara umum agar aman untuk dilihat publik.
+<div align="center">
 
-![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
+<h3>Aplikasi Manajemen dan Monitoring Trading berbasis Laravel</h3>
+
+<p>Aplikasi untuk mencatat, memonitor, dan menganalisis aktivitas trading secara efisien</p>
+
+![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=flat-square&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1?style=flat-square&logo=mysql&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
----
-
-## 🎯 Sekilas
-
-Aplikasi ini dirancang untuk membantu trader mencatat transaksi dan melihat ringkasan performa. Dokumentasi ini fokus pada instalasi dan penggunaan dasar tanpa menyertakan detail struktur database internal.
+</div>
 
 ---
 
-## 🛠️ Stack Teknologi
+## 📋 Daftar Isi
 
-- PHP 8.1+ dengan Laravel
-- Blade templates dan Vite
-- MySQL / MariaDB atau database relasional serupa
-- Composer dan npm/yarn
+- [Tentang Aplikasi](#-tentang-aplikasi)
+- [Teknologi yang Digunakan](#️-teknologi-yang-digunakan)
+- [Persyaratan Sistem](#-persyaratan-sistem)
+- [Panduan Instalasi](#-panduan-instalasi)
+- [Konfigurasi Environment](#️-konfigurasi-environment)
+- [Menjalankan Aplikasi](#️-menjalankan-aplikasi)
+- [Fitur Utama](#-fitur-utama)
+- [Testing](#-testing)
+- [Troubleshooting](#-troubleshooting)
+- [Kontribusi](#-kontribusi)
+- [Lisensi](#-lisensi)
+
+---
+
+## 🎯 Tentang Aplikasi
+
+**Trading Journal** adalah aplikasi web yang dirancang khusus untuk membantu trader dalam mencatat dan memonitor aktivitas trading mereka. Dengan antarmuka yang intuitif, aplikasi ini memungkinkan pengguna untuk:
+
+- Mencatat setiap transaksi trading secara detail
+- Melihat ringkasan performa trading secara real-time
+- Mengimpor dan mengekspor data trading
+- Mengelola akun trading dan simbol aset
+
+> 📌 **Catatan**: Dokumentasi ini disajikan secara umum tanpa menyertakan detail struktur database internal untuk menjaga keamanan dan kerahasiaan.
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+| Teknologi         | Versi  | Keterangan                   |
+| ----------------- | ------ | ---------------------------- |
+| **PHP**           | ^8.1   | Bahasa pemrograman backend   |
+| **Laravel**       | ^10.10 | Framework PHP utama          |
+| **MySQL/MariaDB** | 5.7+   | Database relasional          |
+| **Node.js**       | 16+    | Runtime JavaScript           |
+| **Vite**          | ^5.0   | Build tool dan asset bundler |
+| **Composer**      | 2.x    | Dependency manager PHP       |
+
+### 📦 Package Penting
+
+| Package                        | Fungsi                          |
+| ------------------------------ | ------------------------------- |
+| `barryvdh/laravel-dompdf`      | Generate PDF dari HTML          |
+| `maatwebsite/excel`            | Import/Export Excel (CSV, XLSX) |
+| `laravel/sanctum`              | Autentikasi API                 |
+| `guzzlehttp/guzzle`            | HTTP client untuk API eksternal |
+| `mcamara/laravel-localization` | Manajemen multi-bahasa          |
 
 ---
 
 ## 📋 Persyaratan Sistem
 
-- PHP 8.1+ dengan ekstensi umum Laravel
-- Composer
-- Node.js 16+ dan npm/yarn
-- MySQL / MariaDB
-- Git
+Pastikan sistem Anda memenuhi persyaratan berikut:
+
+- ✅ **PHP** 8.1 atau lebih baru dengan ekstensi:
+    - `BCMath`
+    - `Ctype`
+    - `Fileinfo`
+    - `JSON`
+    - `Mbstring`
+    - `OpenSSL`
+    - `PDO`
+    - `Tokenizer`
+    - `XML`
+- ✅ **Composer** 2.x
+- ✅ **Node.js** 16.x atau lebih baru
+- ✅ **MySQL** 5.7+ atau **MariaDB** 10.2+
+- ✅ **Git** (untuk cloning repository)
 
 ---
 
-## 🚀 Instalasi Cepat
+## 🚀 Panduan Instalasi
 
-1. Clone repository:
-   ```powershell
+Ikuti langkah-langkah berikut untuk menginstal aplikasi di lingkungan lokal Anda:
+
+### 1️⃣ Clone Repository
+
+```bash
 git clone https://github.com/taufiqjamil47/journal_trade.git
 cd journal_trade
 ```
-2. Install dependencies PHP:
-   ```powershell
+
+### 2️⃣ Install Dependencies PHP
+
+```bash
 composer install
 ```
-3. Install dependencies JavaScript:
-   ```powershell
+
+> ⏱️ Proses ini akan mengunduh semua package PHP yang diperlukan sesuai dengan `composer.json`.
+
+### 3️⃣ Install Dependencies JavaScript
+
+```bash
 npm install
 ```
-4. Siapkan environment:
-   ```powershell
+
+> ⏱️ Proses ini akan mengunduh semua package Node.js yang diperlukan sesuai dengan `package.json`.
+
+### 4️⃣ Setup Environment
+
+```bash
+# Windows
 copy .env.example .env
+
+# Linux/Mac
+cp .env.example .env
+```
+
+### 5️⃣ Generate Application Key
+
+```bash
 php artisan key:generate
 ```
-5. Konfigurasikan database di `.env`.
-6. Jalankan migrasi dan seed data standar:
-   ```powershell
+
+> 🔑 Key ini digunakan untuk enkripsi session, cookie, dan data sensitif lainnya.
+
+### 6️⃣ Konfigurasi Database
+
+Buka file `.env` dan sesuaikan konfigurasi database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=journal_trade
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+> 💡 **Tips**: Pastikan database `journal_trade` sudah dibuat terlebih dahulu di MySQL.
+
+### 7️⃣ Jalankan Migrasi & Seeder
+
+```bash
 php artisan migrate
 php artisan db:seed
 ```
-7. Jalankan aplikasi:
-   ```powershell
+
+> 📊 Seeder akan mengisi data awal seperti akun contoh, simbol trading, dan konfigurasi dasar.
+
+---
+
+## ⚙️ Konfigurasi Environment
+
+Selain database, ada beberapa konfigurasi penting lainnya di file `.env`:
+
+### 📧 Konfigurasi Email (untuk notifikasi)
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+> 💡 Untuk development, Anda bisa menggunakan **Mailpit** (bawaan Laravel Sail) atau **Mailtrap**.
+
+### 💱 Konfigurasi API Kurs Mata Uang (Opsional)
+
+```env
+EXCHANGE_RATE_API_KEY=your-api-key
+CURRENCY_CACHE_TTL=3600
+CURRENCY_API_URL=https://v6.exchangerate-api.com/v6
+```
+
+> 🔑 Dapatkan API key gratis di [ExchangeRate-API](https://www.exchangerate-api.com/).
+
+### 🔒 Konfigurasi MT5 Sync (Opsional)
+
+```env
+MT5_SYNC_TOKEN=your-secret-token
+```
+
+> Digunakan untuk sinkronisasi dengan MetaTrader 5 (jika diaktifkan).
+
+---
+
+## ▶️ Menjalankan Aplikasi
+
+### Mode Development
+
+Jalankan dua terminal secara bersamaan:
+
+**Terminal 1 - Laravel Server:**
+
+```bash
 php artisan serve
+```
+
+Aplikasi akan berjalan di `http://127.0.0.1:8000`
+
+**Terminal 2 - Vite Development Server:**
+
+```bash
+npm run dev
+```
+
+Vite akan berjalan untuk hot-reload asset frontend.
+
+### Mode Production
+
+Untuk deployment production, build asset terlebih dahulu:
+
+```bash
+npm run build
+php artisan optimize
+```
+
+### Queue Worker (untuk job asynchronous)
+
+Jika menggunakan queue untuk tugas berat:
+
+```bash
+php artisan queue:work
 ```
 
 ---
 
-## 📁 Struktur Proyek
+## ✨ Fitur Utama
 
-- `app/` - Logika aplikasi, model, controller, import/export
-- `resources/` - Tampilan dan aset front-end
-- `database/` - Migrasi, seeders, factory
-- `public/` - Aset publik dan entry point web
-- `routes/` - Definisi rute web dan API
-- `tests/` - Unit dan feature tests
-
----
-
-## 📤 Fitur Utama
-
-- Pencatatan trade
-- Dashboard ringkasan performa
-- Impor dan ekspor data
-- Manajemen akun dan simbol
-- Autentikasi pengguna
-
----
-
-## 🔧 Arsitektur Umum
-
-Aplikasi ini dibangun sebagai aplikasi Laravel standar dengan model Eloquent, controller untuk logika request, Blade view untuk tampilan, dan middleware otentikasi.
-
-> Dokumentasi ini sengaja tidak memasukkan detail struktur database internal.
+| Fitur                   | Deskripsi                                                            |
+| ----------------------- | -------------------------------------------------------------------- |
+| 📝 **Pencatatan Trade** | Catat setiap transaksi dengan detail (entry, exit, lot, profit/loss) |
+| 📊 **Dashboard**        | Ringkasan performa trading dengan grafik dan statistik               |
+| 📁 **Import/Export**    | Impor dan ekspor data trading dalam format Excel (XLSX/CSV)          |
+| 👤 **Manajemen Akun**   | Kelola multiple akun trading dalam satu platform                     |
+| 🏷️ **Manajemen Simbol** | Tambahkan dan kelola simbol aset trading                             |
+| 🔐 **Autentikasi**      | Sistem login dan registrasi dengan Laravel Sanctum                   |
+| 📧 **Notifikasi Email** | Notifikasi terkait aktivitas trading via email                       |
+| 🌐 **Multi-language**   | Dukungan multi-bahasa (dengan `mcamara/laravel-localization`)        |
 
 ---
 
 ## 🧪 Testing
 
-Jalankan test dengan:
-```powershell
+Jalankan test suite untuk memastikan aplikasi berjalan dengan baik:
+
+```bash
 php artisan test
 ```
 
-Atau:
-```powershell
+Atau menggunakan PHPUnit secara langsung:
+
+```bash
 vendor/bin/phpunit
 ```
 
 ---
 
-## 📖 Panduan Penggunaan
+## 🔧 Troubleshooting
 
-- Buka `http://127.0.0.1:8000`
-- Login atau daftar akun
-- Tambah dan kelola catatan trade
-- Gunakan fitur impor/ekspor untuk data massal
+### ❌ Masalah Koneksi Database
+
+**Gejala**: Error `SQLSTATE[HY000] [2002] Connection refused`
+
+**Solusi**:
+
+1. Pastikan MySQL/MariaDB berjalan: `sudo systemctl status mysql`
+2. Cek kredensial di `.env` sudah benar
+3. Buat database terlebih dahulu: `CREATE DATABASE journal_trade;`
+
+### ❌ Asset Tidak Dimuat
+
+**Gejala**: CSS/JS tidak muncul atau error 404
+
+**Solusi**:
+
+```bash
+npm run build
+php artisan optimize:clear
+```
+
+### ❌ Error "Class not found"
+
+**Gejala**: Class tertentu tidak ditemukan setelah `composer update`
+
+**Solusi**:
+
+```bash
+composer dump-autoload
+```
+
+### ❌ Cache Tidak Terupdate
+
+**Gejala**: Perubahan tidak muncul di aplikasi
+
+**Solusi**: Jalankan perintah berikut:
+
+```bash
+php artisan optimize:clear
+php artisan view:clear
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+```
+
+### ❌ Error Permission (Linux/Mac)
+
+**Solusi**:
+
+```bash
+chmod -R 775 storage bootstrap/cache
+chmod -R 775 public
+```
 
 ---
 
-## ⚠️ Troubleshooting
+## 🤝 Kontribusi
 
-- Pastikan service database berjalan
-- Pastikan `.env` dikonfigurasi dengan benar
-- Jika perubahan tidak muncul, jalankan:
-  ```powershell
-  php artisan optimize:clear
-  php artisan view:clear
-  php artisan cache:clear
-  php artisan config:clear
-  ```
+Kami sangat terbuka untuk kontribusi dari komunitas! Berikut langkah-langkahnya:
 
----
+1. **Fork** repository ini
+2. **Clone** hasil fork ke lokal:
 
-## 🤝 Berkontribusi
+    ```bash
+    git clone https://github.com/username-anda/journal_trade.git
+    ```
 
-- Fork repository
-- Buat branch baru
-- Commit perubahan dengan pesan jelas
-- Buat pull request
+3. **Buat branch** baru untuk fitur/perbaikan:
+
+    ```bash
+    git checkout -b fitur/nama-fitur
+    ```
+
+4. **Commit** perubahan dengan pesan jelas:
+
+    ```bash
+    git commit -m "Menambahkan fitur X untuk Y"
+    ```
+
+5. **Push** ke branch:
+
+    ```bash
+    git push origin fitur/nama-fitur
+    ```
+
+6. Buat **Pull Request** ke repository utama
 
 ---
 
 ## 📄 Lisensi
 
-Proyek ini menggunakan **MIT License**.
+Proyek ini dilisensikan di bawah **MIT License** - lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
+
+---
+
+<div align="center">
+
+<p>Dibuat dengan ❤️ oleh <a href="https://github.com/taufiqjamil47">Taufiq Jamil</a></p>
+
+<p>
+<a href="https://github.com/taufiqjamil47/journal_trade/issues">Laporkan Bug</a> •
+<a href="https://github.com/taufiqjamil47/journal_trade/issues">Request Fitur</a>
+</p>
+
+</div>

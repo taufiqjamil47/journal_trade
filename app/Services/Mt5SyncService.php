@@ -115,6 +115,7 @@ class Mt5SyncService
         $normalized = $this->normalizeArrayKeys($record);
         $symbolName = $this->getValue($normalized, ['symbol', 'symbolname', 'pair', 'currency_pair']);
         $ticket = $this->getValue($normalized, ['mt5ticket', 'ticket', 'orderid', 'order_id']);
+        $isOpen = $this->parseBoolean($this->getValue($normalized, ['is_open'], false));
 
         if (empty($symbolName)) {
             throw new Mt5SyncException('MT5 trade record missing symbol.');
@@ -137,6 +138,13 @@ class Mt5SyncService
 
         $date = $this->parseDate($normalized, $timestamp);
 
+        // 🔥 AMBIL SL DAN TP DARI PAYLOAD
+        $stopLoss = $this->parseNumeric($normalized, ['stop_loss', 'sl', 'stoploss']);
+        $takeProfit = $this->parseNumeric($normalized, ['take_profit', 'tp', 'takeprofit']);
+        $exit = $this->parseNumeric($normalized, ['exit', 'close_price', 'close']);
+        $profitLoss = $this->parseNumeric($normalized, ['profit_loss', 'pnl', 'profit']);
+        $lotSize = $this->parseNumeric($normalized, ['lot_size', 'lotsize', 'volume']);
+
         $attributes = [
             'account_id' => $account->id,
             'symbol_id' => $symbol->id,
@@ -144,13 +152,14 @@ class Mt5SyncService
             'date' => $date,
             'type' => $type,
             'entry' => $this->parseNumeric($normalized, ['entry', 'open_price']),
-            'stop_loss' => $this->parseNumeric($normalized, ['stop_loss', 'sl', 'stoploss']),
-            'take_profit' => $this->parseNumeric($normalized, ['take_profit', 'tp', 'takeprofit']),
-            'exit' => $this->parseNumeric($normalized, ['exit', 'close_price', 'close']),
+            'stop_loss' => $stopLoss,      // 🔥 SL DARI PAYLOAD
+            'take_profit' => $takeProfit,  // 🔥 TP DARI PAYLOAD
+            'exit' => $exit,
             'mt5_ticket' => $ticket,
             'mt5_comment' => $this->getValue($normalized, ['comment', 'mt5_comment', 'order_comment']),
-            'profit_loss' => $this->parseNumeric($normalized, ['profit_loss', 'pnl', 'profit']),
-            'lot_size' => $this->parseNumeric($normalized, ['lot_size', 'lotsize', 'volume']),
+            'profit_loss' => $profitLoss,
+            'lot_size' => $lotSize,
+            'is_open' => $isOpen,          // 🔥 SIMPAN STATUS POSISI
             'rr' => $this->parseNumeric($normalized, ['rr', 'risk_reward_ratio']),
             'risk_usd' => $this->parseNumeric($normalized, ['risk_usd', 'riskusd']),
             'sl_pips' => $this->parseNumeric($normalized, ['sl_pips', 'slpips']),
@@ -166,6 +175,7 @@ class Mt5SyncService
             'note' => $this->getValue($normalized, ['note', 'description']),
         ];
 
+        // 🔥 CARI TRADE BERDASARKAN MT5_TICKET
         if (!empty($ticket)) {
             $trade = Trade::where('account_id', $account->id)
                 ->where('mt5_ticket', $ticket)
@@ -179,6 +189,26 @@ class Mt5SyncService
         }
 
         if ($trade) {
+            // 🔥 UPDATE TANPA MENIMPA SL/TP JIKA SUDAH ADA
+            // Ini penting agar SL/TP dari posisi terbuka tidak hilang saat update dari history
+            $existingStopLoss = $trade->stop_loss;
+            $existingTakeProfit = $trade->take_profit;
+
+            // Jika SL/TP sudah ada (dari posisi terbuka) dan payload memberikan 0 (dari history)
+            // maka pertahankan nilai yang sudah ada
+            if ($existingStopLoss != 0 && $existingStopLoss != null && ($stopLoss == 0 || $stopLoss == null)) {
+                $attributes['stop_loss'] = $existingStopLoss;
+            }
+
+            if ($existingTakeProfit != 0 && $existingTakeProfit != null && ($takeProfit == 0 || $takeProfit == null)) {
+                $attributes['take_profit'] = $existingTakeProfit;
+            }
+
+            // Update is_open jika ada data baru
+            if ($isOpen !== null) {
+                $attributes['is_open'] = $isOpen;
+            }
+
             $trade->update($attributes);
             return $trade;
         }
