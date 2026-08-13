@@ -1,4 +1,4 @@
-﻿# 📊 Trading Journal
+# 📊 Trading Journal
 
 <div align="center">
 
@@ -25,6 +25,7 @@
 - [Konfigurasi Environment](#️-konfigurasi-environment)
 - [Menjalankan Aplikasi](#️-menjalankan-aplikasi)
 - [Fitur Utama](#-fitur-utama)
+- [Integrasi MetaTrader 5 (Auto Sync Trade)](#-integrasi-metatrader-5-auto-sync-trade)
 - [Testing](#-testing)
 - [Troubleshooting](#-troubleshooting)
 - [Kontribusi](#-kontribusi)
@@ -47,24 +48,24 @@
 
 ## 🛠️ Teknologi yang Digunakan
 
-| Teknologi         | Versi  | Keterangan                   |
-| ----------------- | ------ | ---------------------------- |
-| **PHP**           | ^8.1   | Bahasa pemrograman backend   |
-| **Laravel**       | ^10.10 | Framework PHP utama          |
-| **MySQL/MariaDB** | 5.7+   | Database relasional          |
-| **Node.js**       | 16+    | Runtime JavaScript           |
-| **Vite**          | ^5.0   | Build tool dan asset bundler |
-| **Composer**      | 2.x    | Dependency manager PHP       |
+| Teknologi | Versi | Keterangan |
+|---|---|---|
+| **PHP** | ^8.1 | Bahasa pemrograman backend |
+| **Laravel** | ^10.10 | Framework PHP utama |
+| **MySQL/MariaDB** | 5.7+ | Database relasional |
+| **Node.js** | 16+ | Runtime JavaScript |
+| **Vite** | ^5.0 | Build tool dan asset bundler |
+| **Composer** | 2.x | Dependency manager PHP |
 
 ### 📦 Package Penting
 
-| Package                        | Fungsi                          |
-| ------------------------------ | ------------------------------- |
-| `barryvdh/laravel-dompdf`      | Generate PDF dari HTML          |
-| `maatwebsite/excel`            | Import/Export Excel (CSV, XLSX) |
-| `laravel/sanctum`              | Autentikasi API                 |
-| `guzzlehttp/guzzle`            | HTTP client untuk API eksternal |
-| `mcamara/laravel-localization` | Manajemen multi-bahasa          |
+| Package | Fungsi |
+|---|---|
+| `barryvdh/laravel-dompdf` | Generate PDF dari HTML |
+| `maatwebsite/excel` | Import/Export Excel (CSV, XLSX) |
+| `laravel/sanctum` | Autentikasi API |
+| `guzzlehttp/guzzle` | HTTP client untuk API eksternal |
+| `mcamara/laravel-localization` | Manajemen multi-bahasa |
 
 ---
 
@@ -73,15 +74,15 @@
 Pastikan sistem Anda memenuhi persyaratan berikut:
 
 - ✅ **PHP** 8.1 atau lebih baru dengan ekstensi:
-    - `BCMath`
-    - `Ctype`
-    - `Fileinfo`
-    - `JSON`
-    - `Mbstring`
-    - `OpenSSL`
-    - `PDO`
-    - `Tokenizer`
-    - `XML`
+  - `BCMath`
+  - `Ctype`
+  - `Fileinfo`
+  - `JSON`
+  - `Mbstring`
+  - `OpenSSL`
+  - `PDO`
+  - `Tokenizer`
+  - `XML`
 - ✅ **Composer** 2.x
 - ✅ **Node.js** 16.x atau lebih baru
 - ✅ **MySQL** 5.7+ atau **MariaDB** 10.2+
@@ -242,16 +243,16 @@ php artisan queue:work
 
 ## ✨ Fitur Utama
 
-| Fitur                   | Deskripsi                                                            |
-| ----------------------- | -------------------------------------------------------------------- |
+| Fitur | Deskripsi |
+|---|---|
 | 📝 **Pencatatan Trade** | Catat setiap transaksi dengan detail (entry, exit, lot, profit/loss) |
-| 📊 **Dashboard**        | Ringkasan performa trading dengan grafik dan statistik               |
-| 📁 **Import/Export**    | Impor dan ekspor data trading dalam format Excel (XLSX/CSV)          |
-| 👤 **Manajemen Akun**   | Kelola multiple akun trading dalam satu platform                     |
-| 🏷️ **Manajemen Simbol** | Tambahkan dan kelola simbol aset trading                             |
-| 🔐 **Autentikasi**      | Sistem login dan registrasi dengan Laravel Sanctum                   |
-| 📧 **Notifikasi Email** | Notifikasi terkait aktivitas trading via email                       |
-| 🌐 **Multi-language**   | Dukungan multi-bahasa (dengan `mcamara/laravel-localization`)        |
+| 📊 **Dashboard** | Ringkasan performa trading dengan grafik dan statistik |
+| 📁 **Import/Export** | Impor dan ekspor data trading dalam format Excel (XLSX/CSV) |
+| 👤 **Manajemen Akun** | Kelola multiple akun trading dalam satu platform |
+| 🏷️ **Manajemen Simbol** | Tambahkan dan kelola simbol aset trading |
+| 🔐 **Autentikasi** | Sistem login dan registrasi dengan Laravel Sanctum |
+| 📧 **Notifikasi Email** | Notifikasi terkait aktivitas trading via email |
+| 🌐 **Multi-language** | Dukungan multi-bahasa (dengan `mcamara/laravel-localization`) |
 
 ---
 
@@ -336,27 +337,27 @@ Kami sangat terbuka untuk kontribusi dari komunitas! Berikut langkah-langkahnya:
 1. **Fork** repository ini
 2. **Clone** hasil fork ke lokal:
 
-    ```bash
-    git clone https://github.com/username-anda/journal_trade.git
-    ```
+   ```bash
+   git clone https://github.com/username-anda/journal_trade.git
+   ```
 
 3. **Buat branch** baru untuk fitur/perbaikan:
 
-    ```bash
-    git checkout -b fitur/nama-fitur
-    ```
+   ```bash
+   git checkout -b fitur/nama-fitur
+   ```
 
 4. **Commit** perubahan dengan pesan jelas:
 
-    ```bash
-    git commit -m "Menambahkan fitur X untuk Y"
-    ```
+   ```bash
+   git commit -m "Menambahkan fitur X untuk Y"
+   ```
 
 5. **Push** ke branch:
 
-    ```bash
-    git push origin fitur/nama-fitur
-    ```
+   ```bash
+   git push origin fitur/nama-fitur
+   ```
 
 6. Buat **Pull Request** ke repository utama
 
