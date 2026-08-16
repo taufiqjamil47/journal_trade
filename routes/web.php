@@ -85,7 +85,8 @@ Route::group([
         Route::get('/trades/generate-pdf', [TradeController::class, 'generatePdfReport'])->name('trades.generate.pdf');
         Route::get('/trades/preview-pdf', [TradeController::class, 'previewPdfReport'])->name('trades.preview.pdf');
 
-        // Opsi: Route khusus untuk report per trade
+        // Opsi: Route khusus untuk next previous per trade
+        Route::get('/trades/list-ids', [TradeController::class, 'getTradeIds'])->name('trades.list-ids');
 
         // Route::get('/trades/confirm-clear', [TradeController::class, 'confirmClear'])->name('trades.confirm-clear');
         Route::put('/trades/{id}', [TradeController::class, 'update'])->name('trades.update');

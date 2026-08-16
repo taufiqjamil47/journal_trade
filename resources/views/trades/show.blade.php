@@ -5,12 +5,39 @@
         <!-- Header - Improved contrast -->
         <header class="mb-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                        {{ __('trades.trade_detail') }}
-                    </h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">
-                        {{ __('trades.detail_for_trade', ['id' => $trade->id]) }}</p>
+                <div class="flex items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                            {{ __('trades.trade_detail') }}
+                        </h1>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">
+                            {{ __('trades.detail_for_trade', ['id' => $trade->id]) }}
+                        </p>
+                    </div>
+                </div>
+                <!-- Di header, di sebelah navigasi prev/next -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open"
+                        class="flex items-center px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-list-ul mr-2"></i>
+                        <span>{{ __('trades.jump_to') }}</span>
+                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                    </button>
+
+                    <div x-show="open" @click.away="open = false"
+                        class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-60 overflow-y-auto z-50">
+                        <div class="p-2">
+                            <input type="text" placeholder="{{ __('trades.search_trade_id') }}..."
+                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700"
+                                onkeyup="filterTradeList(this)">
+                            <div class="mt-2 space-y-1" id="tradeListContainer">
+                                <!-- Data akan di-load via AJAX atau static -->
+                                <div class="text-center text-sm text-gray-500 dark:text-gray-400 py-2">
+                                    {{ __('trades.loading_trades') }}...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     @php
@@ -24,6 +51,64 @@
                 </div>
             </div>
         </header>
+
+        <!-- Floating Navigation - Prev/Next -->
+        @if (isset($navigation))
+            <!-- Previous Button - Floating Left -->
+            <div class="floating-nav prev">
+                @if ($navigation['prev'])
+                    <a href="{{ route('trades.show', $navigation['prev']) }}" class="floating-nav-btn"
+                        title="{{ __('trades.previous_trade') }}" aria-label="Previous trade">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                @else
+                    <span class="floating-nav-btn disabled">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                @endif
+            </div>
+
+            <!-- Next Button - Floating Right -->
+            <div class="floating-nav next">
+                @if ($navigation['next'])
+                    <a href="{{ route('trades.show', $navigation['next']) }}" class="floating-nav-btn"
+                        title="{{ __('trades.next_trade') }}" aria-label="Next trade">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                @else
+                    <span class="floating-nav-btn disabled">
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                @endif
+            </div>
+
+            <!-- Progress Indicator - Vertical di samping Prev Button -->
+            @if (isset($navigation))
+                <div class="floating-nav-progress-vertical"
+                    title="{{ $navigation['current_position'] }} / {{ $navigation['total'] }}">
+                    <i class="fas fa-arrows-alt-h"></i>
+                    <span class="progress-text">
+                        <span class="progress-current">{{ $navigation['current_position'] }}</span>
+                        <span class="progress-slash">/</span>
+                        <span class="progress-total">{{ $navigation['total'] }}</span>
+                    </span>
+                </div>
+            @endif
+        @endif
+
+        <!-- Di bawah header, sebelum konten utama -->
+        @if (isset($navigation))
+            <div class="mb-6 bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 h-full rounded-full transition-all duration-300"
+                    style="width: {{ ($navigation['current_position'] / $navigation['total']) * 100 }}%">
+                </div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-6">
+                <span>{{ __('trades.first') }}</span>
+                <span>{{ $navigation['current_position'] }} / {{ $navigation['total'] }}</span>
+                <span>{{ __('trades.last') }}</span>
+            </div>
+        @endif
 
         <!-- Trade Information Cards - Improved -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -598,6 +683,124 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Keyboard navigation untuk prev/next
+            document.addEventListener('keydown', function(e) {
+                // Cek jika modal gambar tidak aktif
+                if (document.getElementById('imageZoomModal')?.classList.contains('hidden') === false) {
+                    return;
+                }
+
+                @if (isset($navigation))
+                    // Panah kiri = Previous
+                    if (e.key === 'ArrowLeft' && {{ $navigation['prev'] ? 'true' : 'false' }}) {
+                        window.location.href = "{{ route('trades.show', $navigation['prev'] ?? 0) }}";
+                        e.preventDefault();
+                    }
+                    // Panah kanan = Next
+                    if (e.key === 'ArrowRight' && {{ $navigation['next'] ? 'true' : 'false' }}) {
+                        window.location.href = "{{ route('trades.show', $navigation['next'] ?? 0) }}";
+                        e.preventDefault();
+                    }
+                @endif
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load trade list untuk jump to
+            loadTradeList();
+
+            // Event listener untuk search input
+            const searchInput = document.querySelector('[placeholder="{{ __('trades.search_trade_id') }}..."]');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    filterTradeList(this);
+                });
+            }
+        });
+
+        // Fungsi untuk memuat daftar trade
+        function loadTradeList(search = '') {
+            const container = document.getElementById('tradeListContainer');
+            if (!container) return;
+
+            // Tampilkan loading
+            container.innerHTML = `
+            <div class="text-center text-sm text-gray-500 dark:text-gray-400 py-2">
+                <i class="fas fa-spinner fa-spin mr-2"></i>
+                {{ __('trades.loading_trades') }}...
+            </div>
+        `;
+
+            // Build URL dengan parameter search
+            let url = '{{ route('trades.list-ids') }}';
+            if (search) {
+                url += '?search=' + encodeURIComponent(search);
+            }
+
+            // Fetch data
+            fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    renderTradeList(data);
+                })
+                .catch(error => {
+                    console.error('Error loading trades:', error);
+                    container.innerHTML = `
+                <div class="text-center text-sm text-red-500 dark:text-red-400 py-2">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    {{ __('trades.error_loading_trades') }}
+                </div>
+            `;
+                });
+        }
+
+        // Fungsi untuk render daftar trade
+        function renderTradeList(trades) {
+            const container = document.getElementById('tradeListContainer');
+            if (!container) return;
+
+            if (!trades || trades.length === 0) {
+                container.innerHTML = `
+                <div class="text-center text-sm text-gray-500 dark:text-gray-400 py-2">
+                    <i class="fas fa-inbox mr-2"></i>
+                    {{ __('trades.no_trades_found') }}
+                </div>
+            `;
+                return;
+            }
+
+            let html = '';
+            trades.forEach(trade => {
+                html += `
+                <a href="${trade.url}"
+                   class="block px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${trade.id == {{ $trade->id }} ? 'bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500' : ''}">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium text-sm text-gray-900 dark:text-white">${trade.label}</span>
+                        ${trade.id == {{ $trade->id }} ? '<span class="text-xs text-primary-600 dark:text-primary-400"><i class="fas fa-check-circle"></i></span>' : ''}
+                    </div>
+                </a>
+            `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Fungsi filter trade list (dipanggil dari onkeyup di input)
+        function filterTradeList(input) {
+            const search = input.value.trim();
+            loadTradeList(search);
+        }
+    </script>
+
     <!-- Image Zoom Modal - Improved -->
     <div id="imageZoomModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeImageModal()"></div>
@@ -854,6 +1057,9 @@
         });
     </script>
 
+    <!-- Di bagian head atau sebelum closing body -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
         /* Update CSS untuk zoom dan drag */
         #zoomedImage {
@@ -908,6 +1114,219 @@
 
         .chart-image:hover {
             transform: scale(1.01);
+        }
+    </style>
+
+    <style>
+        /* Floating Navigation - Prev/Next */
+        .floating-nav {
+            position: fixed;
+            top: 40%;
+            transform: translateY(-50%);
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .floating-nav.prev {
+            left: 20px;
+        }
+
+        .floating-nav.next {
+            right: 20px;
+        }
+
+        .floating-nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            /* border: 1px solid rgba(229, 231, 235, 0.8); */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #374151;
+            text-decoration: none;
+        }
+
+        .dark .floating-nav-btn {
+            background: rgba(48, 61, 78, 0.9);
+            border-color: rgba(75, 85, 99, 0.8);
+            color: #d1d5db;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-nav-btn:hover {
+            transform: scale(1.1);
+            background: rgba(59, 130, 246, 0.9);
+            border-color: #3b82f6;
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .dark .floating-nav-btn:hover {
+            background: rgba(59, 130, 246, 0.8);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .floating-nav-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .floating-nav-btn i {
+            font-size: 20px;
+        }
+
+        /* Progress indicator - optional */
+        .floating-nav-progress {
+            position: fixed;
+            right: 50%;
+            bottom: 30px;
+            z-index: 40;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark .floating-nav-progress {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .floating-nav.prev {
+                left: 10px;
+            }
+
+            .floating-nav.next {
+                right: 10px;
+            }
+
+            .floating-nav-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .floating-nav-btn i {
+                font-size: 16px;
+            }
+
+            .floating-nav-progress {
+                right: 10px;
+                bottom: 20px;
+                font-size: 10px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+
+    <style>
+        /* Progress Indicator - Vertical di samping Prev Button */
+        .floating-nav-progress-vertical {
+            position: fixed;
+            left: 20px;
+            bottom: 10rem;
+            /* Di atas bottom, sesuaikan dengan kebutuhan */
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 12px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            font-weight: 600;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            letter-spacing: 2px;
+            min-height: 60px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .dark .floating-nav-progress-vertical {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hover effect */
+        .floating-nav-progress-vertical:hover {
+            transform: rotate(180deg) scale(1.05);
+            background: rgba(59, 130, 246, 0.8);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .dark .floating-nav-progress-vertical:hover {
+            background: rgba(59, 130, 246, 0.6);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        /* Icon dalam progress */
+        .floating-nav-progress-vertical i {
+            transform: rotate(90deg);
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .floating-nav-progress-vertical {
+                left: 10px;
+                bottom: 80px;
+                padding: 10px 6px;
+                font-size: 10px;
+                min-height: 50px;
+            }
+        }
+
+        /* Jika progress terlalu panjang, bisa dipisah menjadi 2 baris */
+        .floating-nav-progress-vertical .progress-text {
+            /* display: flex; */
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.6;
+        }
+
+        .floating-nav-progress-vertical .progress-current {
+            font-size: 16px;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .dark .floating-nav-progress-vertical .progress-current {
+            color: #60a5fa;
+        }
+
+        .floating-nav-progress-vertical .progress-total {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .floating-nav-progress-vertical .progress-slash {
+            opacity: 0.4;
+            margin: 0 2px;
         }
     </style>
 

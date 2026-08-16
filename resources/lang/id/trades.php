@@ -345,6 +345,16 @@ return [
     'edit_new_trade' => 'Edit Trade Baru',
     'refresh_page' => 'Refresh Halaman',
 
+    'error_loading_trades' => 'Gagal memuat daftar trade',
+    'no_trades_found' => 'Tidak ada trade ditemukan',
+    'search_trade_id' => 'Cari Trade ID atau Symbol',
+    'loading_trades' => 'Memuat trades...',
+    'first' => 'Trade Pertama',
+    'last' => 'Trade Terakhir',
+    'jump_to' => 'Pergi ke Transaksi lainnya..',
+    'next_trade' => 'Transaksi selanjutnya',
+    'previous_trade' => 'Transaksi sebelumnya',
+
     // Tambahkan key berikut:
     'partial_close' => 'Partial Close',
     'enable_partial_close' => 'Aktifkan Partial Close',

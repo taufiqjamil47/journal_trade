@@ -403,16 +403,28 @@ class TradeController extends Controller
         }
     }
 
+    // Update show method
     public function show($id)
     {
         try {
             $trade = Trade::with('symbol', 'account', 'tradingRules')->findOrFail($id);
 
-            // Generate image URLs dari berbagai tipe link (TradingView, S3, direct images, etc)
+            // Get selected account
+            $accountId = session('selected_account_id');
+
+            // Get adjacent trades
+            $navigation = $this->getAdjacentTrades($id, $accountId);
+
+            // Generate image URLs
             $beforeChartImage = $this->processImageUrl($trade->before_link);
             $afterChartImage = $this->processImageUrl($trade->after_link);
 
-            return view('trades.show', compact('trade', 'beforeChartImage', 'afterChartImage'));
+            return view('trades.show', compact(
+                'trade',
+                'beforeChartImage',
+                'afterChartImage',
+                'navigation' // Tambahkan ini
+            ));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::warning("Trade not found: ID {$id}");
             return back()->with('error', "Trade dengan ID {$id} tidak ditemukan");
@@ -1208,5 +1220,59 @@ class TradeController extends Controller
     {
         // DEPRECATED: Use processImageUrl() instead
         return $this->processImageUrl($tradingViewLink);
+    }
+
+    /**
+     * Get previous and next trade IDs for navigation
+     */
+    private function getAdjacentTrades($currentTradeId, $accountId)
+    {
+        // Ambil semua trade IDs untuk account yang sama, urut descending (terbaru dulu)
+        $tradeIds = Trade::where('account_id', $accountId)
+            ->orderBy('id', 'desc')
+            ->pluck('id')
+            ->values()
+            ->toArray();
+
+        $currentIndex = array_search($currentTradeId, $tradeIds);
+
+        return [
+            'prev' => $currentIndex < count($tradeIds) - 1 ? $tradeIds[$currentIndex + 1] : null,
+            'next' => $currentIndex > 0 ? $tradeIds[$currentIndex - 1] : null,
+            'total' => count($tradeIds),
+            'current_position' => $currentIndex + 1,
+        ];
+    }
+
+    // Di TradeController.php
+    public function getTradeIds(Request $request)
+    {
+        $accountId = session('selected_account_id');
+        $search = $request->get('search');
+
+        $query = Trade::where('account_id', $accountId)
+            ->select('id', 'symbol_id', 'type', 'timestamp');
+
+        if ($search) {
+            $query->where('id', 'LIKE', "%{$search}%")
+                ->orWhereHas('symbol', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+        }
+
+        $trades = $query->orderBy('id', 'desc')
+            ->limit(20)
+            ->with('symbol')
+            ->get()
+            ->map(function ($trade) {
+                return [
+                    'id' => $trade->id,
+                    'label' => "#{$trade->id} - {$trade->symbol->name} ({$trade->type}) - " .
+                        \Carbon\Carbon::parse($trade->timestamp)->format('d/m/Y H:i'),
+                    'url' => route('trades.show', $trade->id)
+                ];
+            });
+
+        return response()->json($trades);
     }
 }

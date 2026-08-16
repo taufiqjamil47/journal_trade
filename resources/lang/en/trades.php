@@ -345,6 +345,16 @@ return [
     'edit_new_trade' => 'Edit New Trade',
     'refresh_page' => 'Refresh Page',
 
+    'error_loading_trades' => 'Failed to load trade list',
+    'no_trades_found' => 'No trades found',
+    'search_trade_id' => 'Search Trade ID or Symbol',
+    'loading_trades' => 'Loading trades...',
+    'first' => 'First Trade',
+    'last' => 'Last Trade',
+    'jump_to' => 'Go to next Transaction..',
+    'next_trade' => 'Next Trade',
+    'previous_trade' => 'Previous Trade',
+
     // Add the following keys:
     'partial_close' => 'Partial Close',
     'enable_partial_close' => 'Enable Partial Close',
